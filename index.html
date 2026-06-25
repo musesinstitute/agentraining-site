@@ -1,12 +1,905 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agent Training Site</title>
+  <title>AgentTraining AI — Train Smarter. Close Faster.</title>
+  <meta name="description" content="The AI-powered sales training platform for insurance agents, financial advisors, and real estate professionals. Practice objection handling 24/7 with AI role-play." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --ink:       #0D0F14;
+      --ink-soft:  #3D4151;
+      --ink-muted: #7B8099;
+      --canvas:    #F7F8FC;
+      --white:     #FFFFFF;
+      --accent:    #1A56DB;
+      --accent-lt: #EEF3FF;
+      --gold:      #F59E0B;
+      --green:     #059669;
+      --border:    #E4E7F0;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --shadow-sm: 0 1px 4px rgba(13,15,20,.06);
+      --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+      --shadow-lg: 0 12px 48px rgba(13,15,20,.14);
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --max: 1120px;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: var(--font-body); border: none; }
+
+    /* ── UTILS ── */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-size: 18px; font-weight: 800;
+      color: var(--ink); letter-spacing: -.3px;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-mark svg { width: 18px; height: 18px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      font-size: 14px; font-weight: 500; color: var(--ink-soft);
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .lang-toggle {
+      display: flex; border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; font-size: 12px; font-weight: 600;
+    }
+    .lang-btn {
+      padding: 5px 12px; background: transparent;
+      color: var(--ink-muted); transition: all .15s;
+    }
+    .lang-btn.active { background: var(--ink); color: var(--white); }
+    .btn-nav {
+      padding: 9px 20px; border-radius: 8px;
+      background: var(--accent); color: var(--white);
+      font-size: 14px; font-weight: 600;
+      transition: opacity .15s;
+    }
+    .btn-nav:hover { opacity: .88; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 96px 0 80px;
+      background: linear-gradient(160deg, #F0F4FF 0%, #FFFFFF 55%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -120px; right: -80px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,86,219,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 20px;
+      background: var(--accent-lt); border: 1px solid rgba(26,86,219,.2);
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      letter-spacing: .4px; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 58px);
+      font-weight: 800; line-height: 1.08;
+      letter-spacing: -1.5px; color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal; color: var(--accent);
+      position: relative;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--ink-soft);
+      line-height: 1.7; margin-bottom: 40px; max-width: 480px;
+    }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 14px 28px; border-radius: 10px;
+      background: var(--accent); color: var(--white);
+      font-size: 15px; font-weight: 600;
+      box-shadow: 0 4px 14px rgba(26,86,219,.35);
+      transition: all .15s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,86,219,.4); }
+    .btn-secondary {
+      padding: 14px 28px; border-radius: 10px;
+      background: var(--white); color: var(--ink);
+      font-size: 15px; font-weight: 600;
+      border: 1.5px solid var(--border);
+      transition: all .15s;
+    }
+    .btn-secondary:hover { border-color: var(--ink-soft); }
+    .hero-trust {
+      margin-top: 36px; display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--ink-muted);
+    }
+    .trust-avatars { display: flex; }
+    .trust-avatars span {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--white);
+      margin-left: -8px;
+    }
+    .trust-avatars span:first-child { margin-left: 0; }
+
+    /* Hero demo card */
+    .hero-demo {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .demo-topbar {
+      background: var(--ink); padding: 14px 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-title {
+      flex: 1; text-align: center;
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,.5);
+      letter-spacing: .5px;
+    }
+    .demo-body { padding: 20px; }
+    .demo-scenario {
+      font-size: 11px; font-weight: 600; color: var(--ink-muted);
+      letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .demo-msg { display: flex; gap: 10px; margin-bottom: 12px; }
+    .demo-msg.agent { flex-direction: row-reverse; }
+    .demo-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .demo-avatar.client { background: #FEE2E2; color: #991B1B; }
+    .demo-avatar.agent  { background: var(--accent-lt); color: var(--accent); }
+    .demo-bubble {
+      max-width: 78%; padding: 10px 14px; border-radius: 12px;
+      font-size: 13px; line-height: 1.5;
+    }
+    .demo-bubble.client { background: var(--canvas); color: var(--ink); border-top-left-radius: 3px; }
+    .demo-bubble.agent  { background: var(--accent); color: var(--white); border-top-right-radius: 3px; }
+    .demo-score {
+      margin-top: 14px; padding: 12px 14px;
+      background: #F0FDF4; border: 1px solid #BBF7D0;
+      border-radius: var(--radius-sm);
+      font-size: 12px; color: #065F46;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .demo-score strong { font-weight: 700; font-size: 14px; }
+
+    /* ── LOGOS ── */
+    .logos { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .logos-label {
+      text-align: center; font-size: 12px; font-weight: 600;
+      color: var(--ink-muted); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 28px;
+    }
+    .logos-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 48px; flex-wrap: wrap;
+    }
+    .logo-item {
+      font-family: var(--font-display); font-size: 15px; font-weight: 800;
+      color: var(--ink-muted); opacity: .55; letter-spacing: -.3px;
+    }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 96px 0; }
+    .section-eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800; letter-spacing: -1px;
+      line-height: 1.1; color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--ink-soft);
+      line-height: 1.7; max-width: 560px;
+    }
+    .section-header { margin-bottom: 56px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin: 0 auto; }
+
+    /* ── INDUSTRIES ── */
+    .industries { background: var(--canvas); }
+    .industries-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .industry-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 36px 32px;
+      position: relative; overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .industry-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .industry-card.coming {
+      opacity: .6; pointer-events: none;
+    }
+    .industry-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 22px;
+    }
+    .industry-card:nth-child(1) .industry-icon { background: #EEF3FF; }
+    .industry-card:nth-child(2) .industry-icon { background: #ECFDF5; }
+    .industry-card:nth-child(3) .industry-icon { background: #FFF7ED; }
+    .industry-tag {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 10px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .tag-live { background: #DCFCE7; color: #14532D; }
+    .tag-soon { background: var(--canvas); color: var(--ink-muted); border: 1px solid var(--border); }
+    .industry-title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 800; margin-bottom: 12px; color: var(--ink);
+    }
+    .industry-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 20px; }
+    .industry-features { list-style: none; }
+    .industry-features li {
+      font-size: 13px; color: var(--ink-soft);
+      padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;
+    }
+    .industry-features li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── HOW IT WORKS ── */
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent-lt); color: var(--accent);
+      font-family: var(--font-display); font-size: 18px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .step-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+    .step-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+
+    /* ── FEATURES ── */
+    .features { background: var(--canvas); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 30px;
+      transition: box-shadow .2s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-sm); }
+    .feature-card.wide { grid-column: span 2; }
+    .feature-icon { font-size: 28px; margin-bottom: 16px; }
+    .feature-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+    .feature-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      align-items: start;
+    }
+    .plan {
+      border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+      padding: 36px 30px; background: var(--white);
+      transition: box-shadow .2s;
+    }
+    .plan:hover { box-shadow: var(--shadow-md); }
+    .plan.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(26,86,219,.1);
+      position: relative;
+    }
+    .plan-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: var(--white);
+      font-size: 11px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; padding: 4px 14px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .plan-name { font-size: 13px; font-weight: 700; color: var(--ink-muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; }
+    .plan-price {
+      font-family: var(--font-display); font-size: 44px;
+      font-weight: 800; color: var(--ink); letter-spacing: -1.5px;
+      margin-bottom: 4px;
+    }
+    .plan-price sup { font-size: 22px; vertical-align: top; margin-top: 8px; }
+    .plan-price span { font-size: 16px; font-weight: 400; color: var(--ink-muted); }
+    .plan-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; }
+    .plan-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .plan-features li {
+      font-size: 14px; color: var(--ink-soft);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .plan-features li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .plan-features li.off { color: var(--ink-muted); }
+    .plan-features li.off::before { content: "–"; color: var(--border); }
+    .plan-cta {
+      width: 100%; margin-top: 28px; padding: 13px;
+      border-radius: 10px; font-size: 15px; font-weight: 600;
+      transition: all .15s;
+    }
+    .plan-cta.outline {
+      background: transparent; border: 1.5px solid var(--border);
+      color: var(--ink);
+    }
+    .plan-cta.outline:hover { border-color: var(--ink-soft); }
+    .plan-cta.solid {
+      background: var(--accent); color: var(--white); border: none;
+      box-shadow: 0 4px 14px rgba(26,86,219,.3);
+    }
+    .plan-cta.solid:hover { opacity: .9; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--ink); }
+    .testimonials .section-title { color: var(--white); }
+    .testimonials .section-eyebrow { color: #93C5FD; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testi-card {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-md); padding: 28px;
+    }
+    .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+    .testi-text { font-size: 15px; color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--white);
+    }
+    .testi-name { font-size: 14px; font-weight: 600; color: var(--white); }
+    .testi-role { font-size: 12px; color: rgba(255,255,255,.45); }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--accent) 0%, #1E40AF 100%);
+      padding: 80px 0; text-align: center;
+    }
+    .cta-banner h2 {
+      font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800; color: var(--white); letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .cta-banner p { font-size: 17px; color: rgba(255,255,255,.8); margin-bottom: 36px; }
+    .cta-banner .btn-white {
+      padding: 15px 36px; border-radius: 10px;
+      background: var(--white); color: var(--accent);
+      font-size: 16px; font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+      transition: all .15s;
+    }
+    .cta-banner .btn-white:hover { transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); padding: 56px 0 32px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 48px; margin-bottom: 48px;
+    }
+    .footer-brand .nav-logo { color: var(--white); margin-bottom: 14px; }
+    .footer-tagline { font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.7; }
+    .footer-col h4 {
+      font-size: 12px; font-weight: 700; color: rgba(255,255,255,.4);
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block; font-size: 14px; color: rgba(255,255,255,.65);
+      margin-bottom: 10px; transition: color .15s;
+    }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 28px; display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 13px; color: rgba(255,255,255,.3); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 13px; color: rgba(255,255,255,.3); transition: color .15s; }
+    .footer-legal a:hover { color: rgba(255,255,255,.6); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .hero-inner, .industries-grid, .steps-grid, .pricing-grid, .testi-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card.wide { grid-column: span 1; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .hero { padding: 64px 0 56px; }
+    }
+
+    /* ── LANG HIDDEN ── */
+    [data-lang] { display: none; }
+    [data-lang="en"] { display: block; }
+    .inline-lang { display: none; }
+    .inline-lang.en { display: inline; }
+  </style>
 </head>
 <body>
-  <h1>Agent Training Site</h1>
-  <p><a href="simulator.html">前往模擬器</a></p>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="15" cy="4" r="2" fill="#93C5FD"/>
+        </svg>
+      </div>
+      AgentTraining<span style="color:var(--accent)">AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="#industries" data-en="Industries" data-zh="行業領域">Industries</a>
+      <a href="#features"   data-en="Features"   data-zh="核心功能">Features</a>
+      <a href="#pricing"    data-en="Pricing"     data-zh="訂閱方案">Pricing</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn"        onclick="setLang('zh')">中文</button>
+      </div>
+      <a href="#pricing" class="btn-nav" id="nav-cta">Start Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span></span>
+        <span data-en="AI-Powered Sales Training" data-zh="AI 驅動的銷售培訓">AI-Powered Sales Training</span>
+      </div>
+      <h1 data-en="Stop Practicing<br>on <em>Real Clients.</em>" data-zh="別再拿真實客戶<br>當<em>白老鼠。</em>">
+        Stop Practicing<br>on <em>Real Clients.</em>
+      </h1>
+      <p class="hero-sub" data-en="AgentTraining AI gives insurance agents, financial advisors, and real estate professionals an AI practice partner available 24/7 — so new agents close deals, not lose them." data-zh="AgentTraining AI 為保險業務員、理財顧問和地產經紀提供全天候 AI 陪練夥伴——讓新人一入行就能成交，而非錯失客戶。">
+        AgentTraining AI gives insurance agents, financial advisors, and real estate professionals an AI practice partner available 24/7 — so new agents close deals, not lose them.
+      </p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn-primary" data-en="Start Free — No Credit Card" data-zh="免費開始 — 無需信用卡">Start Free — No Credit Card</a>
+        <a href="#features" class="btn-secondary" data-en="See How It Works" data-zh="了解運作方式">See How It Works</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <span style="background:#1A56DB">JL</span>
+          <span style="background:#059669">MK</span>
+          <span style="background:#D97706">SR</span>
+          <span style="background:#7C3AED">AT</span>
+        </div>
+        <span data-en="Trusted by 500+ agents across the US, Hong Kong & Singapore" data-zh="已獲美國、香港及新加坡 500+ 位業務員信賴">Trusted by 500+ agents across the US, Hong Kong & Singapore</span>
+      </div>
+    </div>
+
+    <!-- DEMO CARD -->
+    <div class="hero-demo">
+      <div class="demo-topbar">
+        <div class="demo-dot" style="background:#FF5F57"></div>
+        <div class="demo-dot" style="background:#FFBD2E"></div>
+        <div class="demo-dot" style="background:#28CA41"></div>
+        <div class="demo-title">AI Role-Play Simulator</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-scenario" data-en="SCENARIO: Objection Handling — Life Insurance" data-zh="情境：反對問題處理 — 人壽保險">SCENARIO: Objection Handling — Life Insurance</div>
+        <div class="demo-msg">
+          <div class="demo-avatar client">C</div>
+          <div class="demo-bubble client" data-en="Honestly, I'd rather just put that money into an ETF. Better returns, right?" data-zh="說實話，我寧願把那筆錢拿去買 ETF，報酬率更高，不是嗎？">
+            Honestly, I'd rather just put that money into an ETF. Better returns, right?
+          </div>
+        </div>
+        <div class="demo-msg agent">
+          <div class="demo-avatar agent">A</div>
+          <div class="demo-bubble agent" data-en="That's a great point — ETFs are excellent for long-term growth. The question is: if you were hospitalized tomorrow, would you sell your ETF at a loss to cover the bills?" data-zh="您說得很對——ETF 確實是很好的長期投資工具。但我想請問：如果您明天突然住院，您願意虧損賣掉 ETF 來支付醫療費用嗎？">
+            That's a great point — ETFs are excellent for long-term growth. The question is: if you were hospitalized tomorrow, would you sell your ETF at a loss to cover the bills?
+          </div>
+        </div>
+        <div class="demo-score">
+          <span>🎯</span>
+          <div>
+            <strong data-en="Score: 88/100" data-zh="得分：88/100">Score: 88/100</strong>
+            <span style="color:#065F46;font-size:11px;display:block" data-en="Great empathy + concrete scenario. Tip: add the leverage ratio next." data-zh="同理心強且情境具體。建議：下一句補充槓桿效益概念。">Great empathy + concrete scenario. Tip: add the leverage ratio next.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos">
+  <div class="container">
+    <p class="logos-label" data-en="Trusted by agents at leading firms" data-zh="各大機構業務員的信賴之選">Trusted by agents at leading firms</p>
+    <div class="logos-row">
+      <span class="logo-item">Prudential</span>
+      <span class="logo-item">AIA Group</span>
+      <span class="logo-item">Sun Life</span>
+      <span class="logo-item">Manulife</span>
+      <span class="logo-item">Century 21</span>
+      <span class="logo-item">RE/MAX</span>
+    </div>
+  </div>
+</div>
+
+<!-- INDUSTRIES -->
+<section class="industries" id="industries">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow" data-en="BUILT FOR YOUR INDUSTRY" data-zh="專為您的行業打造">BUILT FOR YOUR INDUSTRY</p>
+      <h2 class="section-title" data-en="One platform, three<br>high-value professions." data-zh="一個平台，三大<br>高價值專業行業。">One platform, three<br>high-value professions.</h2>
+      <p class="section-sub" data-en="Deep industry-specific training content, not generic sales scripts. Every scenario is built around real objections professionals face every day." data-zh="深度行業專屬培訓內容，而非通用銷售腳本。每一個情境都是針對從業人員每天真實遇到的反對問題而設計。">Deep industry-specific training content, not generic sales scripts. Every scenario is built around real objections professionals face every day.</p>
+    </div>
+    <div class="industries-grid">
+      <!-- Finance -->
+      <div class="industry-card">
+        <span class="industry-tag tag-live" data-en="LIVE" data-zh="上線中">LIVE</span>
+        <div class="industry-icon">💼</div>
+        <h3 class="industry-title" data-en="Finance & Insurance" data-zh="金融與保險">Finance & Insurance</h3>
+        <p class="industry-desc" data-en="Train insurance agents and financial advisors to handle complex products, compliance requirements, and high-value client objections." data-zh="培訓保險業務員和理財顧問應對複雜產品、合規要求以及高資產客戶的反對問題。">Train insurance agents and financial advisors to handle complex products, compliance requirements, and high-value client objections.</p>
+        <ul class="industry-features">
+          <li data-en="Life, health, and annuity product role-play" data-zh="壽險、醫療及年金產品情境模擬">Life, health, and annuity product role-play</li>
+          <li data-en="Compliance objection training" data-zh="合規反對問題培訓">Compliance objection training</li>
+          <li data-en="HNW client conversation simulation" data-zh="高資產客戶對話模擬">HNW client conversation simulation</li>
+          <li data-en="Multilingual: English & Traditional Chinese" data-zh="多語言：英文及繁體中文">Multilingual: English & Traditional Chinese</li>
+        </ul>
+      </div>
+      <!-- Real Estate -->
+      <div class="industry-card">
+        <span class="industry-tag tag-live" data-en="LIVE" data-zh="上線中">LIVE</span>
+        <div class="industry-icon">🏡</div>
+        <h3 class="industry-title" data-en="Real Estate" data-zh="房地產">Real Estate</h3>
+        <p class="industry-desc" data-en="Help realtors and property brokers master buyer/seller negotiations, cold prospecting, and high-stakes price discussions." data-zh="協助地產經紀掌握買賣方談判、陌生開發及高風險議價技巧。">Help realtors and property brokers master buyer/seller negotiations, cold prospecting, and high-stakes price discussions.</p>
+        <ul class="industry-features">
+          <li data-en="Buyer & seller objection scenarios" data-zh="買方與賣方反對情境">Buyer & seller objection scenarios</li>
+          <li data-en="Cold call & open house simulation" data-zh="陌生電話與開放參觀模擬">Cold call & open house simulation</li>
+          <li data-en="Price negotiation role-play" data-zh="議價談判情境模擬">Price negotiation role-play</li>
+          <li data-en="Market condition conversation scripts" data-zh="市場行情溝通話術">Market condition conversation scripts</li>
+        </ul>
+      </div>
+      <!-- Tech - Coming Soon -->
+      <div class="industry-card coming">
+        <span class="industry-tag tag-soon" data-en="COMING SOON" data-zh="即將推出">COMING SOON</span>
+        <div class="industry-icon">💻</div>
+        <h3 class="industry-title" data-en="Technology & SaaS" data-zh="科技與 SaaS">Technology & SaaS</h3>
+        <p class="industry-desc" data-en="Train B2B account executives and CSMs to navigate complex enterprise sales cycles and multi-stakeholder decisions." data-zh="培訓 B2B 業務主管和客戶成功經理應對複雜的企業銷售週期與多方決策流程。">Train B2B account executives and CSMs to navigate complex enterprise sales cycles and multi-stakeholder decisions.</p>
+        <ul class="industry-features">
+          <li data-en="Enterprise discovery call training" data-zh="企業需求探詢培訓">Enterprise discovery call training</li>
+          <li data-en="Multi-stakeholder navigation (IT/CFO/CEO)" data-zh="多方決策者應對（IT/CFO/CEO）">Multi-stakeholder navigation (IT/CFO/CEO)</li>
+          <li data-en="Demo objection handling" data-zh="產品展示反對問題處理">Demo objection handling</li>
+          <li data-en="Renewal & upsell conversation scripts" data-zh="續約與加購話術">Renewal & upsell conversation scripts</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow" data-en="HOW IT WORKS" data-zh="運作方式">HOW IT WORKS</p>
+      <h2 class="section-title" data-en="From day one to deal closed." data-zh="從第一天到成功成交。">From day one to deal closed.</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3 class="step-title" data-en="Choose Your Scenario" data-zh="選擇練習情境">Choose Your Scenario</h3>
+        <p class="step-desc" data-en="Pick from dozens of real-world objections curated by industry veterans — from 'premiums are too high' to 'I'll think about it.'" data-zh="從數十個由業界資深人士整理的真實反對情境中選擇——從「保費太貴」到「我再考慮」，全面覆蓋。">Pick from dozens of real-world objections curated by industry veterans — from 'premiums are too high' to 'I'll think about it.'</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3 class="step-title" data-en="Practice with AI Client" data-zh="與 AI 客戶對練">Practice with AI Client</h3>
+        <p class="step-desc" data-en="Have a real conversation with an AI that pushes back, follows up, and responds just like a real prospect would. No judgment, unlimited reps." data-zh="與會反駁、追問、反應如真實客戶般的 AI 進行真實對話。無需擔心犯錯，可無限次練習。">Have a real conversation with an AI that pushes back, follows up, and responds just like a real prospect would. No judgment, unlimited reps.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3 class="step-title" data-en="Get Scored & Improve" data-zh="獲得評分並進步">Get Scored & Improve</h3>
+        <p class="step-desc" data-en="Receive instant coaching feedback on empathy, product accuracy, and closing technique. Track progress over time and share reports with your manager." data-zh="即時獲得關於同理心、產品準確度和成交技巧的教練回饋。追蹤長期進步並與主管分享報告。">Receive instant coaching feedback on empathy, product accuracy, and closing technique. Track progress over time and share reports with your manager.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow" data-en="CORE FEATURES" data-zh="核心功能">CORE FEATURES</p>
+      <h2 class="section-title" data-en="Everything your team<br>needs to ramp faster." data-zh="讓您的團隊<br>更快成熟所需的一切。">Everything your team<br>needs to ramp faster.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3 class="feature-title" data-en="AI Role-Play Simulator" data-zh="AI 角色扮演模擬器">AI Role-Play Simulator</h3>
+        <p class="feature-desc" data-en="Powered by Claude AI, our virtual client responds naturally, pushes back on weak answers, and adapts to your training level — just like a real prospect." data-zh="由 Claude AI 驅動，我們的虛擬客戶自然回應、對薄弱答案提出質疑，並根據您的訓練程度調整難度——就像真實客戶一樣。">Powered by Claude AI, our virtual client responds naturally, pushes back on weak answers, and adapts to your training level — just like a real prospect.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3 class="feature-title" data-en="Product Knowledge Base" data-zh="產品知識庫">Product Knowledge Base</h3>
+        <p class="feature-desc" data-en="Searchable library of insurance products, policy clauses, and real estate contracts — explained in plain language agents can actually use with clients." data-zh="可搜尋的保險產品、保單條款和地產合約庫——以業務員可直接向客戶使用的白話文說明。">Searchable library of insurance products, policy clauses, and real estate contracts — explained in plain language agents can actually use with clients.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title" data-en="Manager Dashboard" data-zh="主管後台">Manager Dashboard</h3>
+        <p class="feature-desc" data-en="See every rep's practice history, scores, and weak spots in one view. No more guessing who's ready to go live." data-zh="在一個視圖中查看每位業務員的練習記錄、得分和薄弱環節。不再需要猜測誰已準備好上場。">See every rep's practice history, scores, and weak spots in one view. No more guessing who's ready to go live.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title" data-en="Gamified Leaderboard" data-zh="遊戲化排行榜">Gamified Leaderboard</h3>
+        <p class="feature-desc" data-en="Healthy competition drives practice. Agents earn badges, climb weekly leaderboards, and unlock advanced scenarios as they improve." data-zh="良性競爭驅動練習。業務員可獲得徽章、攀升週排行榜，並隨著進步解鎖進階情境。">Healthy competition drives practice. Agents earn badges, climb weekly leaderboards, and unlock advanced scenarios as they improve.</p>
+      </div>
+      <div class="feature-card wide">
+        <div class="feature-icon">🌏</div>
+        <h3 class="feature-title" data-en="Multilingual Support — English & Traditional Chinese" data-zh="多語言支援 — 英文及繁體中文">Multilingual Support — English & Traditional Chinese</h3>
+        <p class="feature-desc" data-en="Purpose-built for the US, Hong Kong, and Singapore markets. Practice in the language your clients speak, with culturally-appropriate scenarios for each market." data-zh="專為美國、香港及新加坡市場打造。以您客戶使用的語言練習，每個市場均有文化適切的情境。">Purpose-built for the US, Hong Kong, and Singapore markets. Practice in the language your clients speak, with culturally-appropriate scenarios for each market.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow" data-en="SIMPLE PRICING" data-zh="簡單透明定價">SIMPLE PRICING</p>
+      <h2 class="section-title" data-en="No demos. No contracts.<br>Start in 60 seconds." data-zh="無需預約展示。無需合約。<br>60 秒內開始使用。">No demos. No contracts.<br>Start in 60 seconds.</h2>
+      <p class="section-sub" data-en="Unlike enterprise platforms that hide pricing and require sales calls, we believe you should be able to try before you buy." data-zh="與需要預約銷售電話才能知道價格的企業平台不同，我們相信您應該可以先試後買。">Unlike enterprise platforms that hide pricing and require sales calls, we believe you should be able to try before you buy.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="plan">
+        <p class="plan-name" data-en="STARTER" data-zh="入門版">STARTER</p>
+        <div class="plan-price"><sup>$</sup>0<span data-en="/mo" data-zh="/月">/mo</span></div>
+        <p class="plan-desc" data-en="For individual agents getting started" data-zh="適合剛入行的個人業務員">For individual agents getting started</p>
+        <hr class="plan-divider" />
+        <ul class="plan-features">
+          <li data-en="5 AI role-play sessions/month" data-zh="每月 5 次 AI 模擬對練">5 AI role-play sessions/month</li>
+          <li data-en="3 objection scenarios" data-zh="3 個反對問題情境">3 objection scenarios</li>
+          <li data-en="Basic score & feedback" data-zh="基礎評分與回饋">Basic score & feedback</li>
+          <li class="off" data-en="Manager dashboard" data-zh="主管後台">Manager dashboard</li>
+          <li class="off" data-en="Knowledge base access" data-zh="知識庫存取">Knowledge base access</li>
+        </ul>
+        <button class="plan-cta outline" data-en="Start Free" data-zh="免費開始">Start Free</button>
+      </div>
+      <!-- Pro -->
+      <div class="plan featured">
+        <div class="plan-badge" data-en="MOST POPULAR" data-zh="最受歡迎">MOST POPULAR</div>
+        <p class="plan-name" data-en="PROFESSIONAL" data-zh="專業版">PROFESSIONAL</p>
+        <div class="plan-price"><sup>$</sup>29<span data-en="/mo" data-zh="/月">/mo</span></div>
+        <p class="plan-desc" data-en="For individual agents serious about closing" data-zh="適合認真提升成交率的個人業務員">For individual agents serious about closing</p>
+        <hr class="plan-divider" />
+        <ul class="plan-features">
+          <li data-en="Unlimited AI role-play sessions" data-zh="無限次 AI 模擬對練">Unlimited AI role-play sessions</li>
+          <li data-en="All objection scenarios" data-zh="所有反對問題情境">All objection scenarios</li>
+          <li data-en="Full score, feedback & coaching tips" data-zh="完整評分、回饋與教練建議">Full score, feedback & coaching tips</li>
+          <li data-en="Knowledge base access" data-zh="知識庫完整存取">Knowledge base access</li>
+          <li data-en="Progress tracking & history" data-zh="進度追蹤與歷史記錄">Progress tracking & history</li>
+          <li class="off" data-en="Manager dashboard" data-zh="主管後台">Manager dashboard</li>
+        </ul>
+        <button class="plan-cta solid" data-en="Get Started" data-zh="立即開始">Get Started</button>
+      </div>
+      <!-- Team -->
+      <div class="plan">
+        <p class="plan-name" data-en="TEAM" data-zh="團隊版">TEAM</p>
+        <div class="plan-price"><sup>$</sup>99<span data-en="/mo" data-zh="/月">/mo</span></div>
+        <p class="plan-desc" data-en="For agency directors & team managers (up to 15 agents)" data-zh="適合通訊處主管及團隊主管（最多 15 位業務員）">For agency directors & team managers (up to 15 agents)</p>
+        <hr class="plan-divider" />
+        <ul class="plan-features">
+          <li data-en="Everything in Professional" data-zh="包含專業版所有功能">Everything in Professional</li>
+          <li data-en="Manager dashboard & team analytics" data-zh="主管後台與團隊數據分析">Manager dashboard & team analytics</li>
+          <li data-en="Custom scenario builder" data-zh="自訂情境建立工具">Custom scenario builder</li>
+          <li data-en="Weekly performance reports" data-zh="每週績效報告">Weekly performance reports</li>
+          <li data-en="Up to 15 agent seats" data-zh="最多 15 個業務員席位">Up to 15 agent seats</li>
+          <li data-en="Priority email support" data-zh="優先電子郵件支援">Priority email support</li>
+        </ul>
+        <button class="plan-cta outline" data-en="Start Team Trial" data-zh="開始團隊試用">Start Team Trial</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow" data-en="WHAT AGENTS SAY" data-zh="業務員怎麼說">WHAT AGENTS SAY</p>
+      <h2 class="section-title" data-en="Real results from real agents." data-zh="真實業務員的真實成果。">Real results from real agents.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" data-en='"My new agents used to freeze when clients said "I need to think about it." After two weeks on AgentTraining AI, they handle it without missing a beat."' data-zh='"我的新人以前聽到客戶說「我需要再考慮」就不知所措。使用 AgentTraining AI 兩週後，他們應對自如，毫不遲疑。"'>"My new agents used to freeze when clients said "I need to think about it." After two weeks on AgentTraining AI, they handle it without missing a beat."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#1A56DB">JL</div>
+          <div>
+            <p class="testi-name">Jason L.</p>
+            <p class="testi-role" data-en="Agency Director, Prudential — Los Angeles" data-zh="通訊處主管，保誠保險 — 洛杉磯">Agency Director, Prudential — Los Angeles</p>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" data-en='"As a new agent in Hong Kong, I practiced every morning before client visits. My closing rate went from 15% to 38% in three months."' data-zh='"作為香港的新入行業務員，我每天早上客戶拜訪前都會練習。三個月內，我的成交率從 15% 提升到 38%。"'>"As a new agent in Hong Kong, I practiced every morning before client visits. My closing rate went from 15% to 38% in three months."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#059669">MC</div>
+          <div>
+            <p class="testi-name">Michelle C.</p>
+            <p class="testi-role" data-en="Financial Advisor, AIA — Hong Kong" data-zh="理財顧問，友邦保險 — 香港">Financial Advisor, AIA — Hong Kong</p>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text" data-en='"The manager dashboard is a game changer. I can see exactly who practiced, who improved, and who needs coaching — before they go in front of clients."' data-zh='"主管後台改變了遊戲規則。我可以清楚看到誰在練習、誰有進步、誰需要指導——在他們面對客戶之前。"'>"The manager dashboard is a game changer. I can see exactly who practiced, who improved, and who needs coaching — before they go in front of clients."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#7C3AED">SR</div>
+          <div>
+            <p class="testi-name">Sandra R.</p>
+            <p class="testi-role" data-en="Team Manager, RE/MAX — Singapore" data-zh="團隊主管，RE/MAX — 新加坡">Team Manager, RE/MAX — Singapore</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="container">
+    <h2 data-en="Ready to build a team that<br>closes with confidence?" data-zh="準備好打造一支<br>充滿信心成交的團隊了嗎？">Ready to build a team that<br>closes with confidence?</h2>
+    <p data-en="Start free today. Upgrade when you're ready. No credit card required." data-zh="今天免費開始。準備好再升級。無需信用卡。">Start free today. Upgrade when you're ready. No credit card required.</p>
+    <a href="#pricing" class="btn-white" data-en="Start Free Today →" data-zh="今天免費開始 →">Start Free Today →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:14px">
+          <div class="nav-logo-mark">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+          </div>
+          AgentTraining<span style="color:#93C5FD">AI</span>
+        </div>
+        <p class="footer-tagline" data-en="The AI-powered training platform for insurance agents, financial advisors, and real estate professionals in the US, Hong Kong, and Singapore." data-zh="專為美國、香港及新加坡的保險業務員、理財顧問和地產經紀打造的 AI 培訓平台。">The AI-powered training platform for insurance agents, financial advisors, and real estate professionals in the US, Hong Kong, and Singapore.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Product" data-zh="產品">Product</h4>
+        <a href="#features" data-en="Features" data-zh="核心功能">Features</a>
+        <a href="#pricing" data-en="Pricing" data-zh="定價方案">Pricing</a>
+        <a href="#industries" data-en="Industries" data-zh="行業領域">Industries</a>
+        <a href="#" data-en="Roadmap" data-zh="產品路線圖">Roadmap</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Markets" data-zh="市場">Markets</h4>
+        <a href="#">🇺🇸 <span data-en="United States" data-zh="美國">United States</span></a>
+        <a href="#">🇭🇰 <span data-en="Hong Kong" data-zh="香港">Hong Kong</span></a>
+        <a href="#">🇸🇬 <span data-en="Singapore" data-zh="新加坡">Singapore</span></a>
+        <a href="#" style="opacity:.4">🇯🇵 <span data-en="Japan (coming)" data-zh="日本（即將）">Japan (coming)</span></a>
+      </div>
+      <div class="footer-col">
+        <h4 data-en="Company" data-zh="公司">Company</h4>
+        <a href="#" data-en="About" data-zh="關於我們">About</a>
+        <a href="#" data-en="Contact" data-zh="聯絡我們">Contact</a>
+        <a href="#" data-en="Blog" data-zh="部落格">Blog</a>
+        <a href="#" data-en="Privacy Policy" data-zh="隱私政策">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 AgentTraining AI. <span data-en="All rights reserved." data-zh="版權所有。">All rights reserved.</span></p>
+      <div class="footer-legal">
+        <a href="#" data-en="Terms" data-zh="使用條款">Terms</a>
+        <a href="#" data-en="Privacy" data-zh="隱私政策">Privacy</a>
+        <a href="#" data-en="Cookie Policy" data-zh="Cookie 政策">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── LANGUAGE SWITCHER ──
+  let currentLang = 'en';
+
+  function setLang(lang) {
+    currentLang = lang;
+
+    // Update toggle buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      if ((lang === 'en' && btn.textContent === 'EN') ||
+          (lang === 'zh' && btn.textContent === '中文')) {
+        btn.classList.add('active');
+      }
+    });
+
+    // Update all elements with data-en / data-zh
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const text = el.getAttribute('data-' + lang);
+      if (!text) return;
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = text;
+      } else {
+        el.innerHTML = text;
+      }
+    });
+
+    // Update html lang attribute
+    document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+
+    // Update nav CTA
+    document.getElementById('nav-cta').textContent = lang === 'zh' ? '免費開始' : 'Start Free';
+  }
+
+  // ── SMOOTH SCROLL ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
 </body>
 </html>
