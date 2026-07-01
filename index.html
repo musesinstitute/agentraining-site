@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AgentTraining AI — AI-Powered Sales Training Simulator</title>
 <meta name="description" content="AI-powered sales training simulator for insurance, real estate, and technology professionals. Practice real conversations, get instant feedback, close more deals."/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#1a56db"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="AgentTraining AI"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -169,6 +176,124 @@
   .feature-bullets li { font-size: 13px; color: #4b5563; display: flex; align-items: flex-start; gap: 8px; }
   .feature-bullets li::before { content: "•"; color: var(--brand); font-weight: 700; flex-shrink: 0; }
 
+  /* METHOD - SIGNATURE DIFFERENTIATOR */
+  .method-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+  @media (max-width: 640px) { .method-compare { grid-template-columns: 1fr; } }
+  .method-compare-col { border-radius: var(--radius); overflow: hidden; }
+  .method-compare-header { padding: 12px 20px; font-size: 13px; font-weight: 700; text-align: center; }
+  .method-compare-header.bad { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .method-compare-header.good { background: rgba(168,85,247,0.25); color: #d8b4fe; }
+  .method-compare-list { list-style: none; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.03); }
+  .method-compare-list li { font-size: 13px; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+  .bad-list li { color: #94a3b8; }
+  .bad-list li::before { content: "✗"; color: #f87171; flex-shrink: 0; font-weight: 700; }
+  .good-list li { color: #e2e8f0; }
+  .good-list li::before { content: "✓"; color: #a78bfa; flex-shrink: 0; font-weight: 700; }
+
+  /* REFERRAL PROGRAM */
+  .referral {
+    background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+    border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
+  }
+  .referral-inner { max-width: 1100px; margin: 0 auto; padding: 64px 20px; }
+  .referral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 720px) { .referral-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .referral-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #dcfce7; color: #15803d;
+    padding: 6px 14px; border-radius: 99px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .referral h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; margin-bottom: 14px; }
+  .referral-sub { font-size: 16px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 10px; }
+  .referral-zh { font-size: 15px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 28px; }
+  .referral-steps { display: flex; flex-direction: column; gap: 16px; }
+  .referral-step { display: flex; align-items: flex-start; gap: 14px; }
+  .referral-step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--brand); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0;
+  }
+  .referral-step-text { font-size: 14px; color: var(--ink); line-height: 1.6; padding-top: 5px; }
+  .referral-step-text strong { color: var(--ink); font-weight: 700; }
+  .referral-card {
+    background: var(--white); border: 2px solid #16a34a;
+    border-radius: 16px; padding: 32px; text-align: center;
+    box-shadow: 0 8px 32px rgba(22,163,74,0.12);
+  }
+  .referral-reward-icon { font-size: 48px; margin-bottom: 16px; }
+  .referral-reward-title { font-size: 20px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .referral-reward-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 20px; }
+  .referral-reward-both {
+    background: #f0fdf4; border-radius: 10px; padding: 16px;
+    font-size: 13px; color: #15803d; font-weight: 600; margin-bottom: 20px;
+  }
+  .btn-referral {
+    display: inline-block; background: #16a34a; color: white;
+    padding: 12px 28px; border-radius: 10px; text-decoration: none;
+    font-size: 15px; font-weight: 700; transition: opacity 0.2s;
+  }
+  .btn-referral:hover { opacity: 0.88; }
+  .referral-note { font-size: 12px; color: var(--ink-muted); margin-top: 12px; }
+
+  /* UNIVERSAL BLOG */
+  .universal-blog { background: var(--surface); }
+  .universal-blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .universal-blog-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    text-decoration: none; color: inherit; display: block;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .universal-blog-card:hover { box-shadow: var(--shadow); border-color: var(--brand); }
+  .universal-blog-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--brand); margin-bottom: 10px; }
+  .universal-blog-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
+  .universal-blog-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 16px; }
+  .universal-blog-read { font-size: 13px; font-weight: 600; color: var(--brand); }
+  .method {
+    background: linear-gradient(135deg, #1a1530 0%, #2d1b4e 100%);
+    color: var(--white); position: relative; overflow: hidden;
+  }
+  .method::before {
+    content: ""; position: absolute; top: -50%; right: -10%;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
+  }
+  .method .section-inner { position: relative; z-index: 1; }
+  .method-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+    color: #d8b4fe; padding: 6px 16px; border-radius: 99px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .method h2 { color: var(--white); font-size: clamp(28px, 4.5vw, 44px); }
+  .method-sub { font-size: 17px; color: #c4b5fd; max-width: 640px; line-height: 1.65; margin-bottom: 16px; }
+  .method-warning {
+    font-size: 15px; color: #fbbf24; max-width: 640px; line-height: 1.6;
+    margin-bottom: 44px; font-weight: 500;
+  }
+  .method-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .method-grid { grid-template-columns: 1fr; } }
+  .method-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius); padding: 28px;
+  }
+  .method-card-num {
+    font-family: var(--font-display, inherit); font-size: 13px; font-weight: 800;
+    color: #a855f7; margin-bottom: 10px; letter-spacing: 1px;
+  }
+  .method-card h3 { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+  .method-card p { font-size: 14px; color: #c4b5fd; line-height: 1.65; }
+  .method-footer-note {
+    margin-top: 36px; padding: 20px 24px;
+    background: rgba(255,255,255,0.06); border-radius: var(--radius);
+    font-size: 14px; color: #e9d5ff; line-height: 1.6;
+    border-left: 3px solid #a855f7;
+  }
+
   /* AI TECHNOLOGY */
   .ai-tech { background: #0f172a; color: var(--white); }
   .ai-tech .section-tag { color: #60a5fa; }
@@ -226,6 +351,13 @@
     border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px;
   }
 
+  /* INDUSTRY BLOG LINKS */
+  .industry-blog-links { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .industry-blog-links p { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 8px; }
+  .industry-blog-link { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--brand); text-decoration: none; line-height: 1.4; margin-bottom: 5px; }
+  .industry-blog-link:hover { text-decoration: underline; }
+  .industry-blog-link::before { content: "→"; flex-shrink: 0; }
+
   /* TESTIMONIALS */
   .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
   .testimonial {
@@ -281,6 +413,15 @@
     background: var(--brand); color: var(--white); border: 2px solid var(--brand);
   }
   .btn-plan-fill:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
+  .faq-item {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px 28px;
+  }
+  .faq-q { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .faq-a { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
 
   /* BILINGUAL NOTE */
   .bilingual { text-align: center; padding: 48px 20px; background: #fffbeb; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
@@ -351,6 +492,56 @@
   <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Always-available practice</div></div>
   <div class="stat"><div class="stat-num">3</div><div class="stat-label">Industries covered</div></div>
 </div>
+
+<!-- METHOD - SIGNATURE DIFFERENTIATOR -->
+<section class="method">
+  <div class="section-inner">
+    <div class="method-badge">⚔️ Our Exclusive Method</div>
+    <h2>Practicing Alone With AI Won't Make You Better.<br/>Training Here Will.</h2>
+    <p class="method-sub">You can open ChatGPT right now and roleplay a sales call. It will tell you "great job." It has no idea what good actually looks like in your industry — and it has no consistent standard to measure you against.</p>
+    <p class="method-warning">⚠️ That's not training. That's rehearsing in the dark. The difference is what happens after you respond.</p>
+
+    <div class="method-compare">
+      <div class="method-compare-col">
+        <div class="method-compare-header bad">Any Generic AI Chatbot</div>
+        <ul class="method-compare-list bad-list">
+          <li>Improvises — no consistent standard</li>
+          <li>Tells you "great job" regardless</li>
+          <li>Can't evaluate if you actually understood the client</li>
+          <li>No industry-specific objection knowledge</li>
+          <li>Session 1 and session 100 scored the same way: not at all</li>
+        </ul>
+      </div>
+      <div class="method-compare-col">
+        <div class="method-compare-header good">AgentTraining AI</div>
+        <ul class="method-compare-list good-list">
+          <li>Same scoring framework every session</li>
+          <li>Scores whether you understood before you persuaded</li>
+          <li>Flags when you assumed instead of listened</li>
+          <li>Built on real insurance, real estate &amp; wellness objections</li>
+          <li>Catches the habits no one else is correcting anymore</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="method-grid" style="margin-top:32px;">
+      <div class="method-card">
+        <div class="method-card-num">EASTERN STRATEGY</div>
+        <h3>知己知彼 — Understand Before You Persuade</h3>
+        <p>Sun Tzu: victory comes from understanding your counterpart first. Our AI coach scores whether you understood the client's real concern before you tried to move them — not just whether you sounded confident.</p>
+      </div>
+      <div class="method-card">
+        <div class="method-card-num">WESTERN INFLUENCE</div>
+        <h3>Dale Carnegie — Let Them Arrive at "Yes"</h3>
+        <p>Real influence comes from genuine interest, not pressure. Our scoring rewards agents who guide clients to their own conclusion — not agents who argue their way to a close.</p>
+      </div>
+    </div>
+
+    <div class="method-footer-note">
+      <strong>This applies equally to a brand-new agent and a 15-year veteran.</strong> Experienced agents lose major deals not because they don't know enough — but because experience creates blind spots no one corrects anymore. Our scoring catches what self-assessment misses. Every time.
+    </div>
+  </div>
+</section>
 
 <!-- FEATURES -->
 <section class="features" id="features">
@@ -539,6 +730,11 @@
             <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Medicare &amp; Senior Markets
           </div>
         </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="blog/iul-vs-whole-life-en.html">IUL vs Whole Life: A Talking-Points Guide</a>
+          <a class="industry-blog-link" href="blog/think-about-it-insurance-en.html">"I Need to Think About It" — What to Say Next</a>
+        </div>
       </div>
 
       <div class="industry-card">
@@ -555,23 +751,76 @@
             <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Objection Handling
           </div>
         </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="blog/see-more-houses-en.html">"I Want to See More Houses First" — What to Say Next</a>
+        </div>
       </div>
 
       <div class="industry-card">
+        <h3>🌿 Health &amp; Wellness</h3>
+        <p>Build trust in a skeptical market. Practice handling effectiveness doubts, price resistance, and competing claims — without making promises you can't keep.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Trust &amp; Effectiveness Objections
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Value Conversations
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Nutritional &amp; Supplement Sales
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Wellness Service Consultations
+          </div>
+        </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="blog/does-it-work-health-en.html">"Does This Actually Work?" — How to Handle the Trust Objection</a>
+        </div>
+      </div>
+
+      <div class="industry-card" style="opacity:0.7;">
         <h3>💻 Technology</h3>
         <p>SaaS demos, ROI justification, multi-stakeholder selling. Practice with skeptical IT directors and budget-conscious CFOs.</p>
         <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> SaaS Product Demos
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> SaaS Product Demos
           </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> ROI &amp; Budget Conversations
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> ROI &amp; Budget Conversations
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
             <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Enterprise Multi-Stakeholder
           </div>
         </div>
       </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSAL BLOG - for all sales professionals -->
+<section class="universal-blog">
+  <div class="section-inner">
+    <div class="section-tag">For Every Sales Professional</div>
+    <h2>The reads that matter — regardless of your industry</h2>
+    <p class="section-sub">Whether you sell insurance, real estate, or wellness products, these two articles apply directly to you.</p>
+    <div class="universal-blog-grid">
+
+      <a class="universal-blog-card" href="blog/why-platform-not-just-ai-en.html">
+        <div class="universal-blog-tag">📖 Must Read</div>
+        <h3>AI Sales Roleplay Won't Make You Better — Unless It Does This One Thing</h3>
+        <p>Why practicing alone with ChatGPT or any generic AI gives you a false sense of progress — and what structured, scored training actually changes.</p>
+        <span class="universal-blog-read">Read the article →</span>
+      </a>
+
+      <a class="universal-blog-card" href="blog/veteran-blind-spots-en.html">
+        <div class="universal-blog-tag">⚠️ For Experienced Agents</div>
+        <h3>The Close You Were Sure You Had — And Lost Anyway</h3>
+        <p>Veteran agents don't lose big deals because they lack skill. They lose them because experience creates blind spots nobody corrects anymore. A direct read for anyone who's been selling for 5+ years.</p>
+        <span class="universal-blog-read">Read the article →</span>
+      </a>
 
     </div>
   </div>
@@ -616,6 +865,38 @@
 <div class="bilingual">
   <p>🌏 &nbsp; AgentTraining AI supports <strong>English</strong> and <strong>Traditional Chinese (繁體中文)</strong> — built for US, Hong Kong, and Singapore markets.</p>
 </div>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner">
+    <div class="section-tag">Common Questions</div>
+    <h2>Before you ask, we'll answer</h2>
+    <p class="section-sub">Including the question every skeptical agent asks first.</p>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q">Why should I use your platform instead of just opening ChatGPT or Claude myself and practicing?</div>
+        <div class="faq-a">You can absolutely improvise a roleplay with any general AI chatbot — but improvising isn't the same as training. A generic chatbot doesn't know what "good" looks like in an insurance or real estate sales conversation, won't push back the way a real skeptical client does, and at the end it will just tell you "great job" without telling you why or what to fix. AgentTraining AI scores every response against a consistent framework built on Sun Tzu's strategic thinking and Dale Carnegie's principles of influence — the same standard every time, so your progress is actually measurable instead of just a feeling.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">I've been selling for 10 years. Isn't this just for new agents?</div>
+        <div class="faq-a">No. The scoring framework doesn't get easier or simpler based on experience — it's the same standard for everyone. Veteran agents often discover their blind spots are in places they stopped paying attention to years ago: jumping to persuasion before fully understanding an objection, or pushing toward a close instead of letting the client arrive there themselves. Practicing against a consistent standard is valuable precisely because experience can create bad habits that nobody is correcting anymore.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How is the AI client different from a real client?</div>
+        <div class="faq-a">It isn't trying to be identical — it's trying to be useful. The AI is built with industry-specific knowledge (life insurance, annuities, real estate negotiation) and responds the way real clients actually push back, not with generic objections. You can fail safely here, as many times as you need to, before that same conversation happens with a real client and real money on the line.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What if I don't like the feedback I get?</div>
+        <div class="faq-a">Then it's doing its job. The point of structured feedback isn't to make you feel good — it's to show you specifically where the conversation went off track, so you can fix it before it costs you a real deal. Every session includes both what you did well and what to improve.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 <!-- PRICING -->
 <section id="pricing">
@@ -669,6 +950,51 @@
   </div>
 </section>
 
+<!-- REFERRAL PROGRAM -->
+<section class="referral">
+  <div class="referral-inner">
+    <div class="referral-grid">
+
+      <div>
+        <div class="referral-badge">🎁 Referral Program</div>
+        <h2>Refer a Colleague.<br/>Both of You Train Free.</h2>
+        <p class="referral-sub">Know someone in insurance, real estate, or health &amp; wellness sales who could use this? Share your link. When they subscribe, you both get <strong>30% off your next month</strong> — automatically applied at renewal.</p>
+        <p class="referral-zh">介紹一位同事訂閱，雙方下一個月續費各享 <strong>七折優惠</strong>，自動扣抵，無需申請。</p>
+
+        <div class="referral-steps">
+          <div class="referral-step">
+            <div class="referral-step-num">1</div>
+            <div class="referral-step-text"><strong>Try the simulator</strong> — complete at least 3 sessions yourself first.</div>
+          </div>
+          <div class="referral-step">
+            <div class="referral-step-num">2</div>
+            <div class="referral-step-text"><strong>Share your link</strong> — email, WeChat, or any channel. Your contact gets instant free access to try it.</div>
+          </div>
+          <div class="referral-step">
+            <div class="referral-step-num">3</div>
+            <div class="referral-step-text"><strong>Both of you get rewarded</strong> — once they subscribe to any paid plan, you both get 30% off your next month's renewal. Applied automatically.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="referral-card">
+        <div class="referral-reward-icon">🎉</div>
+        <div class="referral-reward-title">The Referral Reward</div>
+        <div class="referral-reward-desc">For you and the colleague you refer:</div>
+        <div class="referral-reward-both">
+          ✓ <strong>30% off</strong> your next month — both of you<br/>
+          ✓ Applied automatically at renewal<br/>
+          ✓ No cap — refer multiple colleagues<br/>
+          ✓ Stackable: refer 3 people, save on 3 months
+        </div>
+        <a class="btn-referral" href="simulator.html">Start Practicing First →</a>
+        <div class="referral-note">To refer someone, email <a href="mailto:contact@agentraining.ai" style="color:#15803d">contact@agentraining.ai</a> with your name and your colleague's name.<br/>30% discount applied to your next renewal once they subscribe.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- BANNER CTA -->
 <div class="banner">
   <h2>Ready to build a team that closes?</h2>
@@ -688,5 +1014,14 @@
   <p>© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
 </footer>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW failed:', err));
+  });
+}
+</script>
 </body>
 </html>

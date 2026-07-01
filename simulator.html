@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Role-Play Simulator — AgentTraining AI</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#1a56db"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="AgentTraining AI"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
@@ -196,6 +203,78 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
     .feedback-body { padding: 16px; flex: 1; }
+    /* SESSION SUMMARY MODAL */
+    .summary-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500; padding: 20px;
+    }
+    .summary-card {
+      background: var(--white); border-radius: 16px;
+      padding: 28px; max-width: 460px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-height: 88vh; overflow-y: auto;
+    }
+    .summary-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .summary-logo { font-size: 13px; font-weight: 800; color: var(--accent); }
+    .summary-title { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+    .summary-close {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--canvas); border: none; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      color: var(--ink-muted);
+    }
+    .summary-meta { font-size: 12px; color: var(--ink-muted); margin-bottom: 18px; line-height: 1.8; }
+    .summary-overall {
+      text-align: center; background: var(--canvas);
+      border-radius: 12px; padding: 16px; margin-bottom: 16px;
+    }
+    .summary-overall-num { font-size: 44px; font-weight: 800; }
+    .summary-overall-label { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+    .summary-scores {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;
+    }
+    .summary-score-item {
+      background: var(--canvas); border-radius: 10px; padding: 10px;
+      text-align: center;
+    }
+    .summary-score-num { font-size: 20px; font-weight: 800; }
+    .summary-score-label { font-size: 10px; color: var(--ink-muted); margin-top: 2px; }
+    .summary-section { margin-bottom: 14px; }
+    .summary-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 6px; }
+    .summary-item { font-size: 13px; color: var(--ink); padding: 7px 10px; border-radius: 6px; margin-bottom: 4px; line-height: 1.5; }
+    .summary-item.good { background: #f0fdf4; border-left: 3px solid #16a34a; }
+    .summary-item.tip { background: #fffbeb; border-left: 3px solid #d97706; }
+    .summary-coach-note { font-size: 12px; color: var(--ink-muted); font-style: italic; padding: 10px 12px; background: var(--canvas); border-radius: 8px; margin-bottom: 18px; line-height: 1.6; }
+    .summary-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .summary-share-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 8px; }
+    .summary-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-copy-summary {
+      background: var(--accent); color: var(--white);
+      border: none; border-radius: 10px; padding: 12px;
+      font-size: 14px; font-weight: 700; cursor: pointer; width: 100%;
+      transition: opacity 0.2s;
+    }
+    .btn-copy-summary:hover { opacity: 0.88; }
+    .btn-close-summary {
+      background: transparent; border: 2px solid var(--border);
+      border-radius: 10px; padding: 10px;
+      font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;
+      color: var(--ink-muted);
+    }
+    .btn-close-summary:hover { background: var(--canvas); }
+    .copy-success { text-align: center; font-size: 12px; color: #16a34a; margin-top: 6px; display: none; font-weight: 600; }
+    .referral-note-box {
+      margin-top: 16px; padding: 14px 16px;
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 10px; text-align: center;
+    }
+    .referral-note-box p { font-size: 12px; color: #15803d; line-height: 1.6; }
+    .referral-note-box strong { font-weight: 700; }
+
     .score-card {
       background: var(--canvas); border-radius: var(--radius-md);
       padding: 20px; margin-bottom: 16px; text-align: center;
@@ -259,9 +338,47 @@
       .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
       .panel-left, .panel-right { display: none; }
     }
+
+    /* ACCESS GATE */
+    .access-gate {
+      position: fixed; inset: 0; background: var(--canvas);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .gate-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 48px 40px;
+      max-width: 420px; text-align: center; box-shadow: var(--shadow-md);
+    }
+    .gate-icon { font-size: 40px; margin-bottom: 16px; }
+    .gate-card h2 { font-family: var(--font-display); font-size: 22px; margin-bottom: 12px; }
+    .gate-card p { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 24px; }
+    .gate-card a.gate-btn {
+      display: inline-block; background: var(--accent); color: var(--white);
+      padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    }
+    .gate-welcome {
+      position: fixed; top: 70px; right: 20px; z-index: 200;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 14px;
+      font-size: 12px; color: var(--ink-muted); box-shadow: var(--shadow-md);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .gate-welcome strong { color: var(--ink); }
   </style>
 </head>
 <body>
+
+<!-- ACCESS GATE (shown only if no valid ref code in URL) -->
+<div class="access-gate" id="access-gate" style="display:none;">
+  <div class="gate-card">
+    <div class="gate-icon">🔒</div>
+    <h2>Private Beta Access</h2>
+    <p>AgentTraining AI is currently in private beta. You'll need an invite link from your contact to try the simulator.</p>
+    <p style="font-size:13px;">Have a link? Make sure you opened it directly — copying just the page address won't work.</p>
+    <a class="gate-btn" href="mailto:contact@agentraining.ai">Request Access</a>
+  </div>
+</div>
 
 <nav>
   <a href="index.html" class="nav-back">← <span id="back-label">Back to Home</span></a>
@@ -276,6 +393,43 @@
     <button class="lang-btn" onclick="setLang('zh')">中文</button>
   </div>
 </nav>
+
+<!-- SESSION SUMMARY MODAL -->
+<div id="summary-modal" class="summary-modal" style="display:none;">
+  <div class="summary-card" id="summary-card-content">
+    <div class="summary-header">
+      <span class="summary-logo">AgentTraining.AI</span>
+      <button class="summary-close" onclick="closeSummary()">✕</button>
+    </div>
+    <div class="summary-title" id="sum-title"></div>
+    <div class="summary-meta" id="sum-meta"></div>
+    <div class="summary-overall">
+      <div class="summary-overall-num" id="sum-overall-num"></div>
+      <div class="summary-overall-label" id="sum-overall-label">Overall Score / 100</div>
+    </div>
+    <div class="summary-scores" id="sum-scores"></div>
+    <div class="summary-section" id="sum-strengths-section">
+      <div class="summary-section-title" id="sum-strengths-label">✅ Strengths</div>
+      <div id="sum-strengths"></div>
+    </div>
+    <div class="summary-section" id="sum-tips-section">
+      <div class="summary-section-title" id="sum-tips-label">💡 Coach Suggestions</div>
+      <div id="sum-tips"></div>
+    </div>
+    <div class="summary-coach-note" id="sum-coach-note"></div>
+    <hr class="summary-divider"/>
+    <div class="summary-share-label" id="sum-share-label">Share with your manager</div>
+    <div class="summary-actions">
+      <button class="btn-copy-summary" id="btn-copy" onclick="copySummaryText()">📋 Copy Summary for Manager</button>
+      <div class="copy-success" id="copy-success">✓ Copied! Paste into WeChat, email, or your team group.</div>
+      <button class="btn-close-summary" onclick="closeSummary()" id="btn-close-sum">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="gate-welcome" id="gate-welcome" style="display:none;">
+  👋 <span id="gate-welcome-text"></span>
+</div>
 
 <div class="app">
 
@@ -406,6 +560,48 @@ let currentScenario = null;
 let conversationHistory = [];
 let isLoading = false;
 let turnCount = 0;
+
+// ── PRIVATE ACCESS CONTROL ──
+// Each person gets their own ref code: simulator.html?ref=john
+// Add new names here as you invite more people.
+// VIP managers (individually tracked) + WeChat bulk channel
+const allowedRefs = {
+  'angeline':   { name: 'Angeline',       team: 'vip' },
+  'caleb':      { name: 'Caleb',          team: 'vip' },
+  'alex-b':     { name: 'Alex Brother',   team: 'vip' },
+  'tom':        { name: 'Tom',            team: 'vip' },
+  'bingo':      { name: 'Bingo',          team: 'vip' },
+  'dawson':     { name: '道森',            team: 'vip' },
+  'george-f':   { name: 'George Founder', team: 'vip' },
+  'gordon':     { name: 'Gordon Wang',    team: 'vip' },
+  'kathy':      { name: 'Kathy Chen',     team: 'vip' },
+  'rejuv':      { name: 'Rejuvenation',   team: 'vip' },
+  'yongtian':   { name: 'Yongtian',       team: 'vip' },
+  'yubing':     { name: '于冰',            team: 'vip' },
+  'lisheng':    { name: '李勝',            team: 'vip' },
+  'wechat2026': { name: 'WeChat User',    team: 'wechat' },
+  'demo':       { name: 'Demo User',      team: 'default' }
+};
+
+function checkAccess() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = (params.get('ref') || '').toLowerCase().trim();
+  const entry = allowedRefs[ref];
+
+  if (!entry) {
+    document.getElementById('access-gate').style.display = 'flex';
+    return false;
+  }
+
+  // Store for this session so refresh doesn't lose access
+  sessionStorage.setItem('agentraining_ref', ref);
+  sessionStorage.setItem('agentraining_name', entry.name);
+  sessionStorage.setItem('agentraining_team', entry.team || 'default');
+
+  document.getElementById('gate-welcome').style.display = 'flex';
+  document.getElementById('gate-welcome-text').textContent = entry.name + ' · Beta Access';
+  return true;
+}
 
 const strings = {
   en: {
@@ -623,9 +819,11 @@ async function getFeedback(history, isFinal) {
   const lastAgent = agentMessages[agentMessages.length - 1].content;
   const fullConvo = history.map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n');
 
+  const coachPhilosophy = `You are an elite sales coach trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
+
   const prompt = isFinal
-    ? `You are an expert sales coach. Evaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment"}`
-    : `You are an expert sales coach. Evaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"]}`;
+    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment"}\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (Carnegie: see it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (Sun Tzu: win without the fight feeling like a fight).`
+    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"]}\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   try {
     const result = await callClaude([{ role: 'user', content: prompt }],
@@ -651,8 +849,169 @@ async function callClaude(messages, system) {
   return data.content[0].text;
 }
 
+
+
+// ── SILENT SESSION UPLOAD (for manager dashboard) ──
+async function uploadSession(data) {
+  try {
+    const ref   = sessionStorage.getItem('agentraining_ref') || 'demo';
+    const name  = sessionStorage.getItem('agentraining_name') || 'Demo User';
+    const team  = sessionStorage.getItem('agentraining_team') || 'default';
+
+    await fetch('/.netlify/functions/save-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ref, name, team,
+        scenario:  currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
+        industry:  currentScenario?.industry || '',
+        lang:      currentLang,
+        scores: {
+          overall:  data.overallScore || 0,
+          empathy:  data.empathy      || 0,
+          accuracy: data.accuracy     || 0,
+          closing:  data.closing      || 0
+        },
+        strengths: data.strengths || [],
+        tips:      data.tips      || [],
+        summary:   data.summary   || ''
+      })
+    });
+    // Silent — no UI feedback needed
+  } catch (err) {
+    // Fail silently — doesn't interrupt the user experience
+    console.warn('Session upload failed (non-critical):', err.message);
+  }
+}
+
+// ── SESSION SUMMARY ──
+let lastFinalData = null;
+
+function showSummary(data) {
+  lastFinalData = data;
+  uploadSession(data); // silent background upload
+  const isZh = currentLang === 'zh';
+  const name = sessionStorage.getItem('agentraining_name') || 'Agent';
+  const ref  = sessionStorage.getItem('agentraining_ref') || '';
+  const now  = new Date();
+  const dateStr = now.toLocaleDateString(isZh ? 'zh-TW' : 'en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+  const scenario  = currentScenario?.name[currentLang] || '';
+  const industry  = currentScenario?.industry || '';
+  const score     = data.overallScore || 0;
+  const scoreColor = score >= 80 ? '#16a34a' : score >= 65 ? '#d97706' : '#dc2626';
+
+  // Header
+  document.getElementById('sum-title').textContent = isZh ? '練習完成 — 會話摘要' : 'Session Complete — Practice Summary';
+  document.getElementById('sum-meta').innerHTML =
+    `<strong>${isZh ? '學員' : 'Trainee'}:</strong> ${name}${ref ? ' (' + ref + ')' : ''}<br>` +
+    `<strong>${isZh ? '情境' : 'Scenario'}:</strong> ${scenario}<br>` +
+    `<strong>${isZh ? '行業' : 'Industry'}:</strong> ${industry}<br>` +
+    `<strong>${isZh ? '日期' : 'Date'}:</strong> ${dateStr}`;
+
+  // Overall
+  document.getElementById('sum-overall-num').textContent = score;
+  document.getElementById('sum-overall-num').style.color = scoreColor;
+  document.getElementById('sum-overall-label').textContent = isZh ? '總體評分 / 100' : 'Overall Score / 100';
+
+  // Sub scores
+  const labels = isZh
+    ? ['同理心', '專業知識', '成交技巧']
+    : ['Empathy', 'Accuracy', 'Closing'];
+  const vals = [data.empathy || 0, data.accuracy || 0, data.closing || 0];
+  document.getElementById('sum-scores').innerHTML = vals.map((v, i) => {
+    const c = v >= 80 ? '#16a34a' : v >= 65 ? '#d97706' : '#dc2626';
+    return `<div class="summary-score-item">
+      <div class="summary-score-num" style="color:${c}">${v}</div>
+      <div class="summary-score-label">${labels[i]}</div>
+    </div>`;
+  }).join('');
+
+  // Strengths
+  document.getElementById('sum-strengths-label').textContent = isZh ? '✅ 做得好的地方' : '✅ Strengths';
+  document.getElementById('sum-strengths').innerHTML = (data.strengths || [])
+    .map(s => `<div class="summary-item good">${s}</div>`).join('');
+
+  // Tips
+  document.getElementById('sum-tips-label').textContent = isZh ? '💡 教練建議' : '💡 Coach Suggestions';
+  document.getElementById('sum-tips').innerHTML = (data.tips || [])
+    .map(t => `<div class="summary-item tip">${t}</div>`).join('');
+
+  // Coach summary note
+  if (data.summary) {
+    document.getElementById('sum-coach-note').textContent = '"' + data.summary + '"';
+  }
+
+  // Share label & button
+  document.getElementById('sum-share-label').textContent = isZh ? '分享給你的主管' : 'Share with your manager';
+
+  // Referral note
+  document.getElementById('referral-note-text').innerHTML = isZh
+    ? '🎁 <strong>覺得有用嗎？</strong>介紹一位同事訂閱，你們雙方下一個月各享 <strong>七折優惠</strong>。發郵件至 <a href="mailto:contact@agentraining.ai" style="color:#15803d">contact@agentraining.ai</a> 申請。'
+    : '🎁 <strong>Enjoying the training?</strong> Refer a colleague — when they subscribe, you both get <strong>30% off your next month</strong>. Email <a href="mailto:contact@agentraining.ai" style="color:#15803d">contact@agentraining.ai</a> to claim.';
+  document.getElementById('btn-copy').textContent = isZh ? '📋 複製摘要給主管' : '📋 Copy Summary for Manager';
+  document.getElementById('btn-close-sum').textContent = isZh ? '關閉' : 'Close';
+
+  document.getElementById('summary-modal').style.display = 'flex';
+}
+
+function closeSummary() {
+  document.getElementById('summary-modal').style.display = 'none';
+  document.getElementById('copy-success').style.display = 'none';
+}
+
+function copySummaryText() {
+  if (!lastFinalData) return;
+  const isZh = currentLang === 'zh';
+  const name = sessionStorage.getItem('agentraining_name') || 'Agent';
+  const ref  = sessionStorage.getItem('agentraining_ref') || '';
+  const now  = new Date();
+  const dateStr = now.toLocaleDateString(isZh ? 'zh-TW' : 'en-US', {
+    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+  const scenario = currentScenario?.name[currentLang] || '';
+  const industry = currentScenario?.industry || '';
+  const d = lastFinalData;
+
+  const text = isZh
+    ? `【AgentTraining AI 練習記錄】
+學員：${name}${ref ? ' (' + ref + ')' : ''}
+情境：${scenario}（${industry}）
+日期：${dateStr}
+
+總體評分：${d.overallScore}/100
+同理心：${d.empathy}/100
+專業知識：${d.accuracy}/100
+成交技巧：${d.closing}/100
+
+✅ 優點：
+${(d.strengths||[]).map(s=>'• '+s).join('\n')}
+
+💡 改進建議：
+${(d.tips||[]).map(t=>'• '+t).join('\n')}
+
+教練總評：${d.summary || '—'}
+
+— 由 AgentTraining AI 生成 (agentraining.ai)`
+    : `[AgentTraining AI — Practice Session Report]\nTrainee: ${name}${ref ? ' (' + ref + ')' : ''}\nScenario: ${scenario} (${industry})\nDate: ${dateStr}\n\nOverall Score: ${d.overallScore}/100\nEmpathy: ${d.empathy}/100\nAccuracy: ${d.accuracy}/100\nClosing: ${d.closing}/100\n\n✅ Strengths:\n${(d.strengths||[]).map(s=>'• '+s).join('\n')}\n\n💡 Coach Suggestions:\n${(d.tips||[]).map(t=>'• '+t).join('\n')}\n\nCoach Assessment: ${d.summary || '—'}\n\n— Generated by AgentTraining AI (agentraining.ai)`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const el = document.getElementById('copy-success');
+    el.style.display = 'block';
+    el.textContent = isZh ? '✓ 已複製！貼到 WeChat、email 或團隊群組即可。' : '✓ Copied! Paste into WeChat, email, or your team group.';
+    setTimeout(() => { el.style.display = 'none'; }, 4000);
+  });
+}
+
 // ── RENDER FEEDBACK ──
 function renderFeedback(data, isFinal) {
+  // Show session summary modal on final feedback
+  if (isFinal) {
+    setTimeout(() => showSummary(data), 800);
+  }
+
   const s = strings[currentLang];
   const score = data.overallScore || 0;
   const grade = score >= 80 ? { label: 'A', css: 'grade-A' } : score >= 65 ? { label: 'B', css: 'grade-B' } : { label: 'C', css: 'grade-C' };
@@ -743,7 +1102,18 @@ function setLang(lang) {
 }
 
 // ── INIT ──
-renderScenarios();
+if (checkAccess()) {
+  renderScenarios();
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW failed:', err));
+  });
+}
 </script>
 </body>
 </html>

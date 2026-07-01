@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Team Dashboard — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
+    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
+    --white: #ffffff; --border: #e5e7eb; --radius: 12px;
+    --green: #16a34a; --gold: #d97706; --red: #dc2626;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; color: var(--ink); background: var(--surface); }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; background: var(--white);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
+  }
+  .logo { font-size: 18px; font-weight: 800; color: var(--brand); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+  .nav-badge { font-size: 12px; color: var(--ink-muted); background: var(--surface); padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border); }
+
+  /* LOGIN */
+  .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 80vh; padding: 20px; }
+  .login-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow); }
+  .login-icon { font-size: 40px; margin-bottom: 16px; }
+  .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .login-card p { font-size: 14px; color: var(--ink-muted); margin-bottom: 24px; }
+  .login-input { width: 100%; padding: 11px 14px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; margin-bottom: 12px; outline: none; }
+  .login-input:focus { border-color: var(--brand); }
+  .login-btn { width: 100%; background: var(--brand); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .login-btn:hover { background: var(--brand-dark); }
+  .login-error { font-size: 13px; color: var(--red); margin-top: 10px; display: none; }
+
+  /* DASHBOARD */
+  .dashboard { display: none; max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* SUMMARY STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .stat-num { font-size: 32px; font-weight: 800; color: var(--brand); }
+  .stat-label { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* FILTERS */
+  .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .filter-label { font-size: 13px; color: var(--ink-muted); }
+  .filter-select { padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: inherit; background: var(--white); cursor: pointer; }
+  .refresh-btn { margin-left: auto; background: var(--brand); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .refresh-btn:hover { background: var(--brand-dark); }
+
+  /* MEMBER OVERVIEW */
+  .section-title { font-size: 18px; font-weight: 800; margin-bottom: 14px; }
+  .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .member-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+  .member-card:hover { box-shadow: var(--shadow); border-color: var(--brand); }
+  .member-card.active { border-color: var(--brand); box-shadow: var(--shadow); }
+  .member-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+  .member-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .member-stats { font-size: 12px; color: var(--ink-muted); }
+  .member-avg { font-size: 22px; font-weight: 800; margin-top: 8px; }
+  .member-trend { font-size: 11px; margin-top: 2px; }
+  .trend-up { color: var(--green); }
+  .trend-down { color: var(--red); }
+  .trend-flat { color: var(--ink-muted); }
+
+  /* SESSION TABLE */
+  .sessions-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .sessions-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .sessions-header h3 { font-size: 15px; font-weight: 700; }
+  .sessions-count { font-size: 12px; color: var(--ink-muted); }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--surface); padding: 10px 16px; text-align: left; font-size: 12px; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  tbody td { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+  tbody tr:hover td { background: #f8faff; }
+  .score-badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
+  .score-a { background: #dcfce7; color: #15803d; }
+  .score-b { background: #fef9c3; color: #854d0e; }
+  .score-c { background: #fee2e2; color: #991b1b; }
+  .sub-scores { font-size: 11px; color: var(--ink-muted); margin-top: 3px; }
+  .detail-toggle { color: var(--brand); font-size: 12px; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+  .detail-row { display: none; }
+  .detail-row td { background: #f8faff; padding: 12px 16px; }
+  .detail-inner { font-size: 12px; line-height: 1.7; }
+  .detail-inner strong { color: var(--ink); }
+  .detail-item-good { color: var(--green); }
+  .detail-item-tip { color: #92400e; }
+
+  /* WEAK AREAS */
+  .weak-section { margin-top: 20px; }
+  .weak-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .weak-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .weak-card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-muted); margin-bottom: 8px; }
+  .weak-bar-wrap { margin-top: 6px; }
+  .weak-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+  .weak-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .weak-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
+  .fill-green { background: var(--green); }
+  .fill-gold  { background: var(--gold); }
+  .fill-red   { background: var(--red); }
+
+  /* EMPTY */
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--ink-muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* LOADING */
+  .loading { text-align: center; padding: 40px; color: var(--ink-muted); font-size: 14px; }
+
+  @media (max-width: 640px) {
+    nav { padding: 14px 16px; }
+    .dashboard { padding: 20px 12px 40px; }
+    .weak-grid { grid-template-columns: 1fr; }
+    table thead { display: none; }
+    tbody td { display: block; padding: 6px 16px; }
+    tbody td::before { content: attr(data-label) ': '; font-weight: 600; font-size: 11px; color: var(--ink-muted); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+  <div class="nav-right">
+    <span class="nav-badge" id="nav-team-badge" style="display:none;">Team Dashboard</span>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-section">
+  <div class="login-card">
+    <div class="login-icon">📊</div>
+    <h2>Manager Dashboard</h2>
+    <p>Enter your manager access code to view your team's practice records.</p>
+    <input class="login-input" type="password" id="mgr-code-input" placeholder="Manager access code" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">View Team Dashboard</button>
+    <div class="login-error" id="login-error">Invalid access code. Please check with your administrator.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard-section">
+  <div id="loading-msg" class="loading">⏳ Loading team records…</div>
+
+  <!-- Stats row -->
+  <div class="stats-row" id="stats-row" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">—</div>
+      <div class="stat-label">Total Sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-members">—</div>
+      <div class="stat-label">Active Members</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-avg">—</div>
+      <div class="stat-label">Team Avg Score</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-week">—</div>
+      <div class="stat-label">Sessions This Week</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filters-row" style="display:none;">
+    <span class="filter-label">Filter:</span>
+    <select class="filter-select" id="filter-member" onchange="renderAll()">
+      <option value="">All Members</option>
+    </select>
+    <select class="filter-select" id="filter-industry" onchange="renderAll()">
+      <option value="">All Industries</option>
+      <option value="Insurance">Insurance</option>
+      <option value="Real Estate">Real Estate</option>
+      <option value="Health">Health & Wellness</option>
+    </select>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+
+  <!-- Members overview -->
+  <div id="members-section" style="display:none;">
+    <div class="section-title">Team Members</div>
+    <div class="members-grid" id="members-grid"></div>
+  </div>
+
+  <!-- Weak areas -->
+  <div class="weak-section" id="weak-section" style="display:none;">
+    <div class="section-title">Team Skill Breakdown</div>
+    <div class="weak-grid" id="weak-grid"></div>
+  </div>
+
+  <!-- Sessions table -->
+  <div class="sessions-section" id="sessions-section" style="display:none;">
+    <div class="sessions-header">
+      <h3 id="sessions-title">Practice Sessions</h3>
+      <span class="sessions-count" id="sessions-count"></span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Scenario</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Sub-scores</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="sessions-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="empty-state" id="empty-state" style="display:none;">
+    <div class="empty-icon">📭</div>
+    <div>No practice sessions yet for this team.</div>
+    <div style="font-size:13px;margin-top:8px;">Sessions will appear here after team members complete their first practice.</div>
+  </div>
+</div>
+
+<script>
+let allSessions = [];
+let selectedMember = null;
+let managerCode = '';
+
+// ── LOGIN ──
+async function doLogin() {
+  const code = document.getElementById('mgr-code-input').value.trim();
+  if (!code) return;
+  managerCode = code;
+  document.getElementById('login-error').style.display = 'none';
+
+  const res = await fetch(`/.netlify/functions/get-sessions?code=${encodeURIComponent(code)}`);
+  if (res.status === 401) {
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  const data = await res.json();
+  if (data.error) {
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+
+  allSessions = data.sessions || [];
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('dashboard-section').style.display = 'block';
+  document.getElementById('nav-team-badge').style.display = 'inline-block';
+  document.getElementById('nav-team-badge').textContent = `Team: ${data.team}`;
+  document.getElementById('loading-msg').style.display = 'none';
+
+  populateMemberFilter();
+  renderAll();
+}
+
+async function loadData() {
+  if (!managerCode) return;
+  document.getElementById('loading-msg').style.display = 'block';
+  document.getElementById('loading-msg').textContent = '⏳ Refreshing…';
+  const res = await fetch(`/.netlify/functions/get-sessions?code=${encodeURIComponent(managerCode)}`);
+  const data = await res.json();
+  allSessions = data.sessions || [];
+  document.getElementById('loading-msg').style.display = 'none';
+  renderAll();
+}
+
+// ── HELPERS ──
+function getFilteredSessions() {
+  const memberFilter   = document.getElementById('filter-member').value;
+  const industryFilter = document.getElementById('filter-industry').value;
+  return allSessions.filter(s =>
+    (!memberFilter   || s.ref === memberFilter) &&
+    (!industryFilter || s.industry === industryFilter)
+  );
+}
+
+function scoreColor(v) {
+  return v >= 80 ? 'var(--green)' : v >= 65 ? 'var(--gold)' : 'var(--red)';
+}
+function scoreBadgeClass(v) {
+  return v >= 80 ? 'score-a' : v >= 65 ? 'score-b' : 'score-c';
+}
+function barClass(v) {
+  return v >= 80 ? 'fill-green' : v >= 65 ? 'fill-gold' : 'fill-red';
+}
+
+function avg(arr) {
+  if (!arr.length) return 0;
+  return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+}
+
+function isThisWeek(ts) {
+  const d = new Date(ts);
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  return d >= weekAgo;
+}
+
+function populateMemberFilter() {
+  const refs = [...new Set(allSessions.map(s => s.ref))].sort();
+  const sel = document.getElementById('filter-member');
+  sel.innerHTML = '<option value="">All Members</option>';
+  refs.forEach(r => {
+    const name = allSessions.find(s => s.ref === r)?.name || r;
+    sel.innerHTML += `<option value="${r}">${name}</option>`;
+  });
+}
+
+// ── RENDER ALL ──
+function renderAll() {
+  const sessions = getFilteredSessions();
+
+  document.getElementById('stats-row').style.display = '';
+  document.getElementById('filters-row').style.display = '';
+
+  if (sessions.length === 0) {
+    document.getElementById('members-section').style.display = 'none';
+    document.getElementById('weak-section').style.display = 'none';
+    document.getElementById('sessions-section').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'block';
+  } else {
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('members-section').style.display = '';
+    document.getElementById('weak-section').style.display = '';
+    document.getElementById('sessions-section').style.display = '';
+  }
+
+  renderStats(sessions);
+  renderMembers(sessions);
+  renderWeakAreas(sessions);
+  renderTable(sessions);
+}
+
+// ── STATS ──
+function renderStats(sessions) {
+  const members = new Set(sessions.map(s => s.ref)).size;
+  const avgScore = avg(sessions.map(s => s.scores?.overall || 0));
+  const weekCount = sessions.filter(s => isThisWeek(s.timestamp)).length;
+
+  document.getElementById('stat-total').textContent   = sessions.length;
+  document.getElementById('stat-members').textContent  = members;
+  document.getElementById('stat-avg').textContent      = avgScore || '—';
+  document.getElementById('stat-week').textContent     = weekCount;
+
+  if (avgScore) document.getElementById('stat-avg').style.color = scoreColor(avgScore);
+}
+
+// ── MEMBERS OVERVIEW ──
+function renderMembers(sessions) {
+  const byMember = {};
+  sessions.forEach(s => {
+    if (!byMember[s.ref]) byMember[s.ref] = { name: s.name, sessions: [] };
+    byMember[s.ref].sessions.push(s);
+  });
+
+  const grid = document.getElementById('members-grid');
+  grid.innerHTML = Object.entries(byMember).map(([ref, m]) => {
+    const scores = m.sessions.map(s => s.scores?.overall || 0);
+    const avgVal = avg(scores);
+    const last2  = scores.slice(0, 2);
+    const trend  = last2.length >= 2
+      ? (last2[0] > last2[1] ? '↑ Improving' : last2[0] < last2[1] ? '↓ Declining' : '→ Stable')
+      : '— First session';
+    const trendClass = trend.startsWith('↑') ? 'trend-up' : trend.startsWith('↓') ? 'trend-down' : 'trend-flat';
+    const initials = m.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+    return `<div class="member-card" onclick="filterByMember('${ref}')">
+      <div class="member-avatar">${initials}</div>
+      <div class="member-name">${m.name}</div>
+      <div class="member-stats">${m.sessions.length} session${m.sessions.length !== 1 ? 's' : ''}</div>
+      <div class="member-avg" style="color:${scoreColor(avgVal)}">${avgVal}</div>
+      <div class="member-trend ${trendClass}">${trend}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterByMember(ref) {
+  document.getElementById('filter-member').value = ref;
+  renderAll();
+}
+
+// ── WEAK AREAS ──
+function renderWeakAreas(sessions) {
+  if (!sessions.length) return;
+  const empathy  = avg(sessions.map(s => s.scores?.empathy  || 0));
+  const accuracy = avg(sessions.map(s => s.scores?.accuracy || 0));
+  const closing  = avg(sessions.map(s => s.scores?.closing  || 0));
+
+  document.getElementById('weak-grid').innerHTML = [
+    { label: 'Empathy (Understanding First)', val: empathy,
+      note: empathy < 70 ? '⚠️ Team is often jumping to solutions before understanding client concern.' : '✓ Team demonstrates good client understanding.' },
+    { label: 'Product Accuracy', val: accuracy,
+      note: accuracy < 70 ? '⚠️ Product knowledge or explanation clarity needs reinforcement.' : '✓ Team communicates product information clearly.' },
+    { label: 'Closing Technique', val: closing,
+      note: closing < 70 ? '⚠️ Team tends to push rather than guide clients to conclusions.' : '✓ Team guides clients effectively toward decisions.' }
+  ].map(item => `
+    <div class="weak-card">
+      <div class="weak-card-title">${item.label}</div>
+      <div class="weak-bar-wrap">
+        <div class="weak-bar-label"><span>Team Avg</span><span style="color:${scoreColor(item.val)};font-weight:700">${item.val}/100</span></div>
+        <div class="weak-bar-track"><div class="weak-bar-fill ${barClass(item.val)}" style="width:${item.val}%"></div></div>
+      </div>
+      <div style="font-size:12px;color:var(--ink-muted);margin-top:10px;line-height:1.5">${item.note}</div>
+    </div>
+  `).join('');
+}
+
+// ── SESSION TABLE ──
+function renderTable(sessions) {
+  const memberFilter = document.getElementById('filter-member').value;
+  document.getElementById('sessions-title').textContent = memberFilter
+    ? `Sessions — ${sessions[0]?.name || memberFilter}`
+    : 'All Practice Sessions';
+  document.getElementById('sessions-count').textContent = `${sessions.length} record${sessions.length !== 1 ? 's' : ''}`;
+
+  document.getElementById('sessions-tbody').innerHTML = sessions.map((s, i) => {
+    const sc = s.scores || {};
+    const overall = sc.overall || 0;
+    const rowId = 'detail-' + i;
+    return `
+    <tr>
+      <td data-label="Member"><strong>${s.name}</strong><br><span style="font-size:11px;color:var(--ink-muted)">${s.ref}</span></td>
+      <td data-label="Scenario">${s.scenario || '—'}<br><span style="font-size:11px;color:var(--ink-muted)">${s.industry || ''}</span></td>
+      <td data-label="Date" style="font-size:12px;color:var(--ink-muted)">${s.date || '—'}</td>
+      <td data-label="Score">
+        <span class="score-badge ${scoreBadgeClass(overall)}">${overall}/100</span>
+      </td>
+      <td data-label="Sub-scores">
+        <div class="sub-scores">
+          Empathy: <strong>${sc.empathy||0}</strong> &nbsp;
+          Accuracy: <strong>${sc.accuracy||0}</strong> &nbsp;
+          Closing: <strong>${sc.closing||0}</strong>
+        </div>
+      </td>
+      <td><button class="detail-toggle" onclick="toggleDetail('${rowId}')">Details ▾</button></td>
+    </tr>
+    <tr class="detail-row" id="${rowId}">
+      <td colspan="6">
+        <div class="detail-inner">
+          ${s.strengths?.length ? `<strong>✅ Strengths:</strong><br>${s.strengths.map(x=>`<span class="detail-item-good">• ${x}</span>`).join('<br>')}<br><br>` : ''}
+          ${s.tips?.length ? `<strong>💡 Coach Suggestions:</strong><br>${s.tips.map(x=>`<span class="detail-item-tip">• ${x}</span>`).join('<br>')}<br><br>` : ''}
+          ${s.summary ? `<strong>Coach Assessment:</strong> <em>${s.summary}</em>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleDetail(id) {
+  const row = document.getElementById(id);
+  const isOpen = row.style.display === 'table-row';
+  row.style.display = isOpen ? 'none' : 'table-row';
+}
+</script>
+</body>
+</html>
