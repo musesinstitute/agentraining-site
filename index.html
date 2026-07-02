@@ -99,12 +99,15 @@
   .nav-links { display: flex; gap: 28px; align-items: center; }
   .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
   .nav-links a:hover { color: var(--brand); }
+  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
+  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   .btn-nav {
-    background: var(--brand); color: var(--white);
+    background: var(--accent); color: #111827;
     padding: 8px 20px; border-radius: 8px; text-decoration: none;
-    font-size: 14px; font-weight: 600;
+    font-size: 14px; font-weight: 700; border: none;
   }
-  .btn-nav:hover { background: var(--brand-dark); }
+  .btn-nav:hover { background: #e08800; color: #111827; }
 
   /* HERO */
   .hero {
@@ -469,6 +472,10 @@
     <a href="#features">Features</a>
     <a href="#pricing">Pricing</a>
     <a href="#industries">Industries</a>
+    <div class="nav-lang">
+      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchIndexLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchIndexLang('zh')">中文</button>
+    </div>
     <a class="btn-nav" href="simulator.html">Try Free Demo</a>
   </div>
 </nav>
@@ -476,8 +483,8 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-badge">🚀 AI-Powered Sales Training</div>
-  <h1>Train Smarter.<br/><span>Close More.</span> Win Faster.</h1>
-  <p>Practice real sales conversations with AI prospects. Get instant feedback. Build the confidence and skills to close more deals — in insurance, real estate, and tech.</p>
+  <h1>Your Next Sales Call<br/><span>Shouldn't Be Your</span> First Attempt.</h1>
+  <p>Stop practicing on real clients — train with AI instead. Practice real sales conversations, get instant feedback, and close more deals.</p>
   <div class="hero-cta">
     <a class="btn-primary" href="simulator.html">Try AI Simulator Free →</a>
     <a class="btn-secondary" href="#pricing">See Pricing</a>
@@ -1021,6 +1028,27 @@ if ('serviceWorker' in navigator) {
       .then(reg => console.log('SW registered'))
       .catch(err => console.log('SW failed:', err));
   });
+}
+</script>
+<script>
+function switchIndexLang(lang) {
+  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
+  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
+  // Store preference for simulator
+  sessionStorage.setItem('agentraining_lang', lang);
+  // Update hero text
+  const h1 = document.querySelector('.hero h1');
+  const heroP = document.querySelector('.hero p');
+  const badge = document.querySelector('.hero-badge');
+  if (lang === 'zh') {
+    h1.innerHTML = '別讓真實客戶，<br/><span>成為你的練習對象。</span>';
+    heroP.textContent = '用 AI 先練好，每一通電話都更有把握——練得越多，成交越穩。陪你練習真實情境，隨時隨地，不怕說錯。';
+    badge.textContent = '🚀 AI 銷售訓練平台';
+  } else {
+    h1.innerHTML = "Your Next Sales Call<br/><span>Shouldn't Be Your</span> First Attempt.";
+    heroP.textContent = 'Stop practicing on real clients — train with AI instead. Practice real sales conversations, get instant feedback, and close more deals.';
+    badge.textContent = '🚀 AI-Powered Sales Training';
+  }
 }
 </script>
 </body>

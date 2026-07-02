@@ -337,7 +337,68 @@
     @media (max-width: 900px) {
       .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
       .panel-left, .panel-right { display: none; }
+      .panel-left.mobile-open {
+        display: flex !important; position: fixed; inset: 0; z-index: 300;
+        background: var(--canvas); width: 100%; max-width: 100%;
+        flex-direction: column; overflow-y: auto; padding-bottom: 20px;
+      }
+      .mobile-scenario-btn {
+        display: flex !important; position: fixed; bottom: 80px; left: 50%;
+        transform: translateX(-50%); z-index: 200;
+        background: var(--accent); color: var(--white);
+        border: none; border-radius: 99px; padding: 14px 28px;
+        font-size: 15px; font-weight: 700; cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        font-family: inherit; white-space: nowrap;
+        align-items: center; gap: 8px;
+      }
+      .mobile-close-btn {
+        display: flex !important; align-items: center; gap: 8px;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 10px; padding: 12px 20px; margin: 16px;
+        font-size: 14px; font-weight: 600; cursor: pointer;
+        font-family: inherit; color: var(--ink); width: calc(100% - 32px);
+      }
     }
+    .mobile-scenario-btn { display: none; }
+    .mobile-close-btn { display: none; }
+
+
+    /* LANGUAGE PICKER */
+    .lang-picker-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000; padding: 20px;
+    }
+    .lang-picker-card {
+      background: var(--white); border-radius: 20px;
+      padding: 40px 32px; max-width: 360px; width: 100%;
+      text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .lang-picker-logo {
+      font-size: 15px; font-weight: 800; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .lang-picker-card h2 {
+      font-size: 22px; font-weight: 800; color: var(--ink);
+      margin-bottom: 8px; line-height: 1.3;
+    }
+    .lang-picker-sub {
+      font-size: 14px; color: var(--ink-muted); margin-bottom: 28px;
+    }
+    .lang-picker-btns { display: flex; flex-direction: column; gap: 12px; }
+    .lang-picker-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 16px 24px; border-radius: 12px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; font-family: inherit;
+      font-size: 16px; font-weight: 700; color: var(--ink);
+      transition: all 0.2s;
+    }
+    .lang-picker-btn:hover { border-color: var(--accent); background: #fffbeb; }
+    .lang-picker-btn .flag { font-size: 28px; }
+    .lang-picker-btn .lang-name { display: flex; flex-direction: column; text-align: left; }
+    .lang-picker-btn .lang-main { font-size: 16px; font-weight: 700; }
+    .lang-picker-btn .lang-sub { font-size: 12px; color: var(--ink-muted); font-weight: 400; }
 
     /* ACCESS GATE */
     .access-gate {
@@ -368,6 +429,32 @@
   </style>
 </head>
 <body>
+
+
+<!-- LANGUAGE PICKER -->
+<div class="lang-picker-overlay" id="lang-picker" style="display:none;">
+  <div class="lang-picker-card">
+    <div class="lang-picker-logo">AgentTraining.AI</div>
+    <h2>Welcome!<br/>歡迎！</h2>
+    <p class="lang-picker-sub">Choose your language / 請選擇語言</p>
+    <div class="lang-picker-btns">
+      <button class="lang-picker-btn" onclick="pickLang('en')">
+        <span class="flag">🇺🇸</span>
+        <span class="lang-name">
+          <span class="lang-main">English</span>
+          <span class="lang-sub">Continue in English</span>
+        </span>
+      </button>
+      <button class="lang-picker-btn" onclick="pickLang('zh')">
+        <span class="flag">🇹🇼</span>
+        <span class="lang-name">
+          <span class="lang-main">繁體中文</span>
+          <span class="lang-sub">以中文繼續</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ACCESS GATE (shown only if no valid ref code in URL) -->
 <div class="access-gate" id="access-gate" style="display:none;">
@@ -431,10 +518,13 @@
   👋 <span id="gate-welcome-text"></span>
 </div>
 
+<button class="mobile-scenario-btn" id="mobile-scenario-btn" onclick="toggleMobilePanel()">📋 Choose Scenario</button>
+
 <div class="app">
 
   <!-- LEFT: Scenario List -->
-  <div class="panel-left">
+  <div class="panel-left" id="panel-left">
+  <button class="mobile-close-btn" onclick="toggleMobilePanel()">✕ Close</button>
     <div class="panel-header" id="scenarios-label">Scenarios</div>
     <div class="panel-search">
       <input type="text" id="search-input" placeholder="Search scenarios..." oninput="filterScenarios()" />
@@ -681,6 +771,13 @@ function renderScenarios(filter = '') {
 
 // ── SELECT SCENARIO ──
 function selectScenario(sc) {
+  // Close mobile panel if open
+  const panel = document.getElementById('panel-left');
+  const btn   = document.getElementById('mobile-scenario-btn');
+  if (panel && panel.classList.contains('mobile-open')) {
+    panel.classList.remove('mobile-open');
+    if (btn) btn.textContent = '📋 Choose Scenario';
+  }
   currentScenario = sc;
   conversationHistory = [];
   turnCount = 0;
@@ -883,6 +980,37 @@ async function uploadSession(data) {
     console.warn('Session upload failed (non-critical):', err.message);
   }
 }
+
+
+// ── LANGUAGE PICKER ──
+function showLangPicker() {
+  // Check if user already chose a language
+  const saved = sessionStorage.getItem('agentraining_lang');
+  if (saved) {
+    setLang(saved);
+    return;
+  }
+  document.getElementById('lang-picker').style.display = 'flex';
+}
+
+function pickLang(lang) {
+  document.getElementById('lang-picker').style.display = 'none';
+  sessionStorage.setItem('agentraining_lang', lang);
+  setLang(lang);
+}
+
+// ── MOBILE PANEL TOGGLE ──
+function toggleMobilePanel() {
+  const panel = document.getElementById('panel-left');
+  const btn   = document.getElementById('mobile-scenario-btn');
+  if (!panel) return;
+  const isOpen = panel.classList.contains('mobile-open');
+  panel.classList.toggle('mobile-open', !isOpen);
+  if (btn) btn.textContent = isOpen ? '📋 Choose Scenario' : '✕ Close Scenarios';
+}
+
+// Auto-close panel when scenario selected on mobile
+const origSelectScenario = window.selectScenario;
 
 // ── SESSION SUMMARY ──
 let lastFinalData = null;
@@ -1104,6 +1232,7 @@ function setLang(lang) {
 // ── INIT ──
 if (checkAccess()) {
   renderScenarios();
+  showLangPicker();
 }
 </script>
 <script>
