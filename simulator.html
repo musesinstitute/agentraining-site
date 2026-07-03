@@ -563,6 +563,8 @@
 
 <div class="gate-welcome" id="gate-welcome" style="display:none;">
   👋 <span id="gate-welcome-text"></span>
+  &nbsp;·&nbsp;
+  <button onclick="activateTeamLeaderMode()" id="tl-toggle-btn" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink-muted);font-family:inherit;padding:0;" title="Switch to Team Leader Mode">👔</button>
 </div>
 <div class="team-leader-badge" id="tl-badge">
   👔 <span id="tl-badge-text">Team Leader Mode</span>
@@ -1382,6 +1384,14 @@ function selectScenario(sc) {
         sendMessage();
       }
     }, 600);
+  }
+  // Reset TL mode when switching scenarios
+  if (sc.id !== 0) {
+    isTeamLeaderMode = false;
+    const badge = document.getElementById('tl-badge');
+    const actions = document.getElementById('tl-actions');
+    if (badge) badge.classList.remove('visible');
+    if (actions) actions.classList.remove('visible');
   }
   document.getElementById('chat-input').placeholder = strings[currentLang].inputPlaceholder;
 
