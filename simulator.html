@@ -488,16 +488,14 @@
     <p class="lang-picker-sub">Choose your language / 請選擇語言</p>
     <div class="lang-picker-btns">
       <button class="lang-picker-btn" onclick="pickLang('en')">
-        <span class="flag">🇺🇸</span>
         <span class="lang-name">
           <span class="lang-main">English</span>
           <span class="lang-sub">Continue in English</span>
         </span>
       </button>
       <button class="lang-picker-btn" onclick="pickLang('zh')">
-        <span class="flag">🇹🇼</span>
         <span class="lang-name">
-          <span class="lang-main">繁體中文</span>
+          <span class="lang-main">中文</span>
           <span class="lang-sub">以中文繼續</span>
         </span>
       </button>
@@ -653,6 +651,11 @@ const scenarios = [
     systemPrompt: {
       en: `You are a warm, experienced AI sales coach. Your job is to help the agent practice their REAL sales situation.
 
+IMPORTANT RULES:
+1. If the user mentions they are a manager, team leader, or manage a team — immediately say "Wonderful, you're a team leader!" and give a leader-specific welcome.
+2. After the user mentions their industry (Insurance/Real Estate/Health & Wellness) — immediately suggest in your reply: "By the way, the left panel has scenarios built specifically for [their industry], like [list 2-3 relevant scenario names]. You can click any of them to start practicing right away!"
+3. Always stay warm, encouraging, like a trusted friend.
+
 Start with EXACTLY this opening message — warm, personal, encouraging:
 
 "Welcome to AgentTraining AI! 😊
@@ -678,7 +681,12 @@ Then if they want to continue in free chat, ask 1-2 more questions to understand
 
 Then play that exact client — be realistic, push back naturally. Stay in character until the session ends.`,
 
-      zh: `你是一位溫暖、經驗豐富的AI銷售教練。你的任務是幫助業務員練習他們真實的銷售情況。所有回覆必須使用繁體中文。
+      zh: `你是一位溫暖、經驗豐富的AI銷售教練。所有回覆必須使用繁體中文。
+
+重要規則：
+1. 如果用戶提到他們是主管、帶團隊、team leader、銷售主管——立刻說「太好了，您是團隊領導者！」然後給出領導者專屬的歡迎辭和建議。
+2. 用戶說出行業後（保險/房地產/大健康）——立刻在回覆中提示：「左側面板有針對您行業的專屬情境，例如：[列出2-3個相關情境名稱]，您可以點擊直接開始練習！」
+3. 始終保持溫暖、鼓勵、像朋友一樣的語氣。
 
 用這個確切的開場白——溫暖、親切、充滿鼓勵：
 
@@ -1364,6 +1372,17 @@ function selectScenario(sc) {
   document.getElementById('client-avatar').textContent = sc.clientName.split(' ').map(w=>w[0]).join('');
   document.getElementById('chat-input').disabled = false;
   document.getElementById('send-btn').disabled = false;
+
+  // Auto-trigger welcome for free practice (id=0)
+  if (sc.id === 0) {
+    setTimeout(() => {
+      const inputEl = document.getElementById('chat-input');
+      if (inputEl) {
+        inputEl.value = currentLang === 'zh' ? '你好' : 'Hello';
+        sendMessage();
+      }
+    }, 600);
+  }
   document.getElementById('chat-input').placeholder = strings[currentLang].inputPlaceholder;
 
   // Clear chat
@@ -1570,6 +1589,13 @@ function showLangPicker() {
   const saved = sessionStorage.getItem('agentraining_lang');
   if (saved) {
     setLang(saved);
+    // Auto-start free practice for returning users too
+    setTimeout(() => {
+      const freeScenario = scenarios.find(sc => sc.id === 0);
+      if (freeScenario) {
+        selectScenario(freeScenario);
+      }
+    }, 300);
     return;
   }
   document.getElementById('lang-picker').style.display = 'flex';
@@ -1579,6 +1605,13 @@ function pickLang(lang) {
   document.getElementById('lang-picker').style.display = 'none';
   sessionStorage.setItem('agentraining_lang', lang);
   setLang(lang);
+  // Auto-start free practice with welcome message
+  setTimeout(() => {
+    const freeScenario = scenarios.find(sc => sc.id === 0);
+    if (freeScenario) {
+      selectScenario(freeScenario);
+    }
+  }, 300);
 }
 
 
