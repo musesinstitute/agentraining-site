@@ -226,6 +226,32 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
     .feedback-body { padding: 16px; flex: 1; }
+    /* TEAM LEADER MODE */
+    .team-leader-badge {
+      display: none; position: fixed; top: 70px; left: 50%;
+      transform: translateX(-50%); z-index: 201;
+      background: linear-gradient(135deg, #1a56db, #7c3aed);
+      color: white; padding: 6px 18px; border-radius: 99px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+      white-space: nowrap;
+    }
+    .team-leader-badge.visible { display: flex; align-items: center; gap: 6px; }
+    .tl-actions {
+      display: none; position: fixed; bottom: 80px; right: 16px;
+      z-index: 201; flex-direction: column; gap: 8px;
+    }
+    .tl-actions.visible { display: flex; }
+    .tl-action-btn {
+      background: white; border: 2px solid var(--brand);
+      color: var(--brand); border-radius: 10px; padding: 8px 14px;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      font-family: inherit; white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .tl-action-btn:hover { background: var(--brand); color: white; }
+
     /* SESSION SUMMARY MODAL */
     .summary-modal {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6);
@@ -540,6 +566,13 @@
 <div class="gate-welcome" id="gate-welcome" style="display:none;">
   👋 <span id="gate-welcome-text"></span>
 </div>
+<div class="team-leader-badge" id="tl-badge">
+  👔 <span id="tl-badge-text">Team Leader Mode</span>
+</div>
+<div class="tl-actions" id="tl-actions">
+  <button class="tl-action-btn" id="tl-dashboard-btn" onclick="window.open('manager.html', '_blank')">📊 Team Dashboard</button>
+  <button class="tl-action-btn" id="tl-share-btn" onclick="copyTeamLink()">🔗 Share with Team</button>
+</div>
 
 <button class="mobile-scenario-btn" id="mobile-scenario-btn" onclick="toggleMobilePanel()">📋 選擇情境 / Choose Scenario</button>
 
@@ -618,45 +651,59 @@ const scenarios = [
     level: '★ START HERE',
     clientName: 'AI Coach',
     systemPrompt: {
-      en: `You are a warm, experienced AI sales coach. Your job is to help the agent practice their REAL sales situation — not a scripted one.
+      en: `You are a warm, experienced AI sales coach. Your job is to help the agent practice their REAL sales situation.
 
-Start with this exact opening message (friendly, encouraging, not clinical):
+Start with EXACTLY this opening message — warm, personal, encouraging:
 
-"Hi there! I'm your personal AI sales coach. 😊 Let's practice YOUR real situation — not some textbook script.
+"Welcome to AgentTraining AI! 😊
 
-Tell me about what's been on your mind lately:
-• What product or service are you selling right now?
-• Who is the client you're trying to win over? (A specific person, or a type of client)
-• What's making them hesitate — what objections or concerns keep coming up?
-• Have you ever been SO close to a sale... and then somehow lost it? What happened?
-• What's your next big sales opportunity coming up?
+I'm your dedicated AI sales coach — honored to be your partner and companion on your sales journey!
 
-Don't worry about being perfect — just talk to me like I'm a trusted colleague. The more real you are, the more useful this will be. I'm here to help you WIN. 💪"
+No pressure here, no judgment — just real practice, instant feedback, and a coach who's always by your side.
 
-After they share (2-4 exchanges to understand their situation fully), say:
-"Perfect — I've got a clear picture now. Let me step into the role of [client name/type they described]. Let's begin the roleplay. I'll respond exactly like your real client would."
+Tell me your story:
+• Which industry are you in? Insurance, Real Estate, or Health & Wellness?
+• What sales challenges have you been facing lately?
+• Are you leading a sales team and want to help them level up?
 
-Then play that exact client they described — use their name, their specific objection, their personality as described. Be realistic, push back naturally. Stay in character until they end the session.`,
+Share as much or as little as you like — the more real you are, the more effective the practice. Together, we'll turn every sales opportunity into a win! 💪
 
-      zh: `你是一位溫暖、經驗豐富的AI銷售教練。你的任務是幫助業務員練習他們真實的銷售情況——不是照本宣科的劇本。
+Or if you prefer — you can tap the 'Choose Scenario' button below to jump straight into the most common or challenging situations in your industry."
 
-用這個確切的開場白（友好、鼓勵、不要太正式）：
+After they tell you their industry and situation (1-2 exchanges), naturally say something like:
+"Great! By the way, I have specific scenarios built just for [their industry] — situations like [mention 2-3 relevant scenario names]. You can find them in the left panel under [industry category]. Or we can keep going right here — just describe your specific client and I'll play that role for you."
 
-「您好！我是您的專屬AI銷售教練。😊 我們來練習您真實遇到的情況——不是教科書上的例子。
+Then if they want to continue in free chat, ask 1-2 more questions to understand the specific client situation, then say:
+"Perfect. Let me now step into the role of your client. Let's begin!"
 
-跟我聊聊您最近的困惑和挑戰：
-• 您現在主要在推銷什麼產品或服務？
-• 您想拿下的是哪位客戶？（具體的人，或某一類客戶）
-• 是什麼讓他們猶豫——最常遇到什麼樣的異議或顧慮？
-• 您有沒有試過——眼看就要成交了，結果卻功虧一簣？當時發生了什麼？
-• 您最近有什麼重要的銷售計劃或即將拜訪的客戶？
+Then play that exact client — be realistic, push back naturally. Stay in character until the session ends.`,
 
-不用想太多，就像跟一位信任的老同事聊天一樣，把心裡的話說給我聽。越真實，練習就越有效。我在這裡，是為了幫您贏得更多！💪」
+      zh: `你是一位溫暖、經驗豐富的AI銷售教練。你的任務是幫助業務員練習他們真實的銷售情況。所有回覆必須使用繁體中文。
 
-在他們分享之後（2-4次交流充分了解他們的情況），說：
-「好的，我已經很清楚了。讓我現在扮演您剛才描述的那位客戶。我們開始角色扮演吧——我會像您真實的客戶一樣回應您。」
+用這個確切的開場白——溫暖、親切、充滿鼓勵：
 
-然後扮演他們描述的那個確切客戶——使用他們的名字、他們的具體異議、他們描述的個性。要真實，自然地反駁。保持角色直到會話結束。`
+「歡迎來到 AgentTraining AI！😊
+
+我是您的專屬AI銷售教練，很榮幸能陪伴您，成為您銷售生涯中最忠實的夥伴與幫手！
+
+在這裡，沒有壓力，沒有評判——只有真實的練習、即時的反饋，和一個永遠在您身邊的教練。
+
+告訴我您的故事吧：
+• 您從事哪個行業？保險理財、房地產、還是大健康產業？
+• 最近遇到什麼樣的銷售困境或挑戰？
+• 還是您正在領導一支銷售團隊，想讓團隊更上一層樓？
+
+跟我說說吧——越真實，練習就越有效。我們一起，把每一個銷售機會，都變成您的囊中之物！💪
+
+或者，如果您願意，也可以按下面的「選擇情境」按鈕——針對您的行業，我們有專屬的真實情境供您練習！」
+
+當他們告訴你行業和情況後（1-2次交流），自然地說：
+「太好了！順帶一提，我有針對【他們的行業】設計的專屬情境——像是【提到2-3個相關情境名稱】。您可以在左側面板的【行業分類】下找到它們。或者我們可以繼續在這裡練習——只要描述您的具體客戶，我就來扮演那個角色。」
+
+然後繼續了解具體情況，說：
+「好的，我現在扮演您剛才描述的那位客戶。我們開始吧！」
+
+扮演那個確切的客戶——真實自然地反駁。保持角色直到會話結束。`
     }
   },
 
@@ -1386,6 +1433,10 @@ function removeTyping() {
 }
 
 async function sendMessage() {
+  const inputEl = document.getElementById('chat-input');
+  if (inputEl && inputEl.value.trim()) {
+    detectTeamLeader(inputEl.value);
+  }
   if (isLoading || !currentScenario) return;
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
@@ -1444,7 +1495,10 @@ async function getFeedback(history, isFinal) {
   const lastAgent = agentMessages[agentMessages.length - 1].content;
   const fullConvo = history.map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n');
 
-  const coachPhilosophy = `You are an elite sales coach trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
+  const coachLang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
+  const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}.
+
+You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
 
   const prompt = isFinal
     ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment"}\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (Carnegie: see it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (Sun Tzu: win without the fight feeling like a fight).`
@@ -1525,6 +1579,53 @@ function pickLang(lang) {
   document.getElementById('lang-picker').style.display = 'none';
   sessionStorage.setItem('agentraining_lang', lang);
   setLang(lang);
+}
+
+
+// ── TEAM LEADER MODE ──
+let isTeamLeaderMode = false;
+
+function activateTeamLeaderMode() {
+  isTeamLeaderMode = true;
+  const badge = document.getElementById('tl-badge');
+  const actions = document.getElementById('tl-actions');
+  const badgeText = document.getElementById('tl-badge-text');
+  if (badge) badge.classList.add('visible');
+  if (actions) actions.classList.add('visible');
+  if (badgeText) badgeText.textContent = currentLang === 'zh' ? '👔 團隊領導者模式' : '👔 Team Leader Mode';
+  // Update dashboard button text
+  const dashBtn = document.getElementById('tl-dashboard-btn');
+  const shareBtn = document.getElementById('tl-share-btn');
+  if (dashBtn) dashBtn.textContent = currentLang === 'zh' ? '📊 查看團隊記錄' : '📊 Team Dashboard';
+  if (shareBtn) shareBtn.textContent = currentLang === 'zh' ? '🔗 分享給團隊' : '🔗 Share with Team';
+}
+
+function copyTeamLink() {
+  const ref = sessionStorage.getItem('agentraining_ref') || 'demo';
+  const baseUrl = 'https://agentraining.ai/simulator.html?ref=';
+  // Share the base link without specific ref so team members can use their own
+  const shareText = currentLang === 'zh'
+    ? `加入我的AI銷售訓練團隊！\n使用此連結開始練習：\n${baseUrl}wechat2026\n\n管理員儀表板：https://agentraining.ai/manager.html`
+    : `Join my AI sales training team!\nStart practicing here:\n${baseUrl}wechat2026\n\nManager dashboard: https://agentraining.ai/manager.html`;
+  navigator.clipboard.writeText(shareText).then(() => {
+    alert(currentLang === 'zh' ? '✓ 已複製！可以分享給您的團隊了。' : '✓ Copied! Ready to share with your team.');
+  });
+}
+
+// Detect team leader keywords in chat
+function detectTeamLeader(message) {
+  if (isTeamLeaderMode) return;
+  const tlKeywords = [
+    'team leader', 'team manager', 'manager', 'leader', 'manage a team',
+    'my team', 'my agents', 'leading a team', 'train my team',
+    '團隊領導', '主管', '我是領導', '帶團隊', '我的團隊', '管理團隊',
+    '團隊訓練', '我帶團隊', '我是主管', 'team lead', 'sales manager',
+    'agency manager', '我領導', '銷售主管', '業務主管'
+  ];
+  const msg = message.toLowerCase();
+  if (tlKeywords.some(kw => msg.includes(kw.toLowerCase()))) {
+    activateTeamLeaderMode();
+  }
 }
 
 // ── MOBILE PANEL TOGGLE ──
@@ -1714,6 +1815,14 @@ function initSpeechRecognition() {
 }
 
 function toggleMic() {
+  // Check if running inside WeChat browser
+  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+  if (isWeChat) {
+    alert(currentLang === 'zh'
+      ? '微信瀏覽器不支援語音輸入。\n\n請點右上角「...」→「在瀏覽器中打開」，再使用語音功能。'
+      : 'WeChat browser does not support voice input.\n\nPlease tap ··· → Open in Browser to use voice input.');
+    return;
+  }
   // Check browser support
   if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
     alert(currentLang === 'zh'
