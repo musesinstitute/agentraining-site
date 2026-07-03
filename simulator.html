@@ -1822,8 +1822,8 @@ function initSpeechRecognition() {
   if (!SpeechRecognition) return null;
   
   const r = new SpeechRecognition();
-  r.continuous = true;       // Keep listening until user stops
-  r.interimResults = true;   // Show text as user speaks
+  r.continuous = false;      // Stop after user pauses
+  r.interimResults = false;  // Only return final result, no accumulation
   r.maxAlternatives = 1;
   
   r.onstart = () => {
@@ -1832,21 +1832,17 @@ function initSpeechRecognition() {
     if (btn) { 
       btn.classList.add('recording'); 
       btn.textContent = '🔴';
-      btn.title = currentLang === 'zh' ? '點擊停止錄音' : 'Click to stop';
+      btn.title = currentLang === 'zh' ? '說完後自動停止' : 'Will stop automatically';
     }
   };
   
   r.onresult = (event) => {
-    // Only use the most recent result to avoid repetition
-    let transcript = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
-    }
-    const input = document.getElementById('chat-input');
-    if (input) {
-      // Append to existing text if there's already something
-      const existing = input.value.trim();
-      input.value = existing ? existing + ' ' + transcript : transcript;
+    // Only take the final result - no interim accumulation
+    const result = event.results[event.results.length - 1];
+    if (result.isFinal) {
+      const transcript = result[0].transcript.trim();
+      const input = document.getElementById('chat-input');
+      if (input && transcript) input.value = transcript;
     }
   };
   
@@ -1858,8 +1854,7 @@ function initSpeechRecognition() {
       btn.textContent = '🎤';
       btn.title = currentLang === 'zh' ? '語音輸入' : 'Voice input';
     }
-    // Do NOT auto-send — let user review and press Send themselves
-    // This gives user time to finish speaking and check the text
+    // Don't auto-send - let user check the text first
   };
   
   r.onerror = (event) => {
