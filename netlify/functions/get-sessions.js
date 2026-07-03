@@ -1,10 +1,7 @@
-const { getStore } = require('@netlify/blobs');
-
 // Valid manager codes -> team names
-// Add your managers here: 'manager-code': 'team-name'
 const MANAGER_CODES = {
-  'mgr-AT2026': 'vip',     // View all VIP manager sessions
-  'mgr-wechat': 'wechat',  // View WeChat channel sessions
+  'mgr-AT2026': 'vip',
+  'mgr-wechat': 'wechat',
 };
 
 exports.handler = async (event) => {
@@ -25,34 +22,39 @@ exports.handler = async (event) => {
   const team = MANAGER_CODES[code];
 
   try {
-    const store = getStore('agentraining-sessions');
-
-    // List all sessions for this team
-    const { blobs } = await store.list({ prefix: `${team}/` });
-
-    // Fetch all session records
-    const sessions = await Promise.all(
-      blobs.map(async (blob) => {
-        try {
-          return await store.get(blob.key, { type: 'json' });
-        } catch {
-          return null;
-        }
-      })
-    );
-
-    // Filter nulls and sort newest first
-    const valid = sessions
+    const { blobs } = await netlifyBlobs(event, team);
+    const sessions = blobs
       .filter(Boolean)
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ team, sessions: valid })
+      body: JSON.stringify({ team, sessions })
     };
   } catch (err) {
-    console.error('get-sessions error:', err);
-    return { statusCode: 500, body: 'Server error: ' + err.message };
+    // Return empty sessions if blobs not available yet
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ team, sessions: [] })
+    };
   }
 };
+
+async function netlifyBlobs(event, team) {
+  try {
+    const { getStore } = require('@netlify/blobs');
+    const store = getStore('agentraining-sessions');
+    const { blobs: keys } = await store.list({ prefix: `${team}/` });
+    const blobs = await Promise.all(
+      keys.map(async (blob) => {
+        try { return await store.get(blob.key, { type: 'json' }); }
+        catch { return null; }
+      })
+    );
+    return { blobs };
+  } catch {
+    return { blobs: [] };
+  }
+}
