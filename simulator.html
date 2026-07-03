@@ -1472,7 +1472,7 @@ async function sendMessage() {
   turnCount++;
 
   // End after 4 agent turns
-  if (turnCount >= 4) {
+  if (turnCount >= 10) {
     removeTyping();
     appendMessage('system', '', strings[currentLang].sessionEnded);
     isLoading = false;
@@ -1805,19 +1805,26 @@ function initSpeechRecognition() {
   if (!SpeechRecognition) return null;
   
   const r = new SpeechRecognition();
-  r.continuous = false;
-  r.interimResults = true;
+  r.continuous = true;       // Keep listening until user stops
+  r.interimResults = true;   // Show text as user speaks
   r.maxAlternatives = 1;
   
   r.onstart = () => {
     isRecording = true;
     const btn = document.getElementById('mic-btn');
-    if (btn) { btn.classList.add('recording'); btn.textContent = '🔴'; }
+    if (btn) { 
+      btn.classList.add('recording'); 
+      btn.textContent = '🔴';
+      btn.title = currentLang === 'zh' ? '點擊停止錄音' : 'Click to stop';
+    }
   };
   
   r.onresult = (event) => {
-    const transcript = Array.from(event.results)
-      .map(r => r[0].transcript).join('');
+    // Collect all results (interim + final)
+    let transcript = '';
+    for (let i = 0; i < event.results.length; i++) {
+      transcript += event.results[i][0].transcript;
+    }
     const input = document.getElementById('chat-input');
     if (input) input.value = transcript;
   };
@@ -1825,12 +1832,13 @@ function initSpeechRecognition() {
   r.onend = () => {
     isRecording = false;
     const btn = document.getElementById('mic-btn');
-    if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
-    // Auto-send if we got text
-    const input = document.getElementById('chat-input');
-    if (input && input.value.trim()) {
-      setTimeout(() => sendMessage(), 500);
+    if (btn) { 
+      btn.classList.remove('recording'); 
+      btn.textContent = '🎤';
+      btn.title = currentLang === 'zh' ? '語音輸入' : 'Voice input';
     }
+    // Do NOT auto-send — let user review and press Send themselves
+    // This gives user time to finish speaking and check the text
   };
   
   r.onerror = (event) => {
