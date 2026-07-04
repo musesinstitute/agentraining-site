@@ -32,6 +32,68 @@
     a { text-decoration: none; color: inherit; }
     button { cursor: pointer; font-family: var(--font-body); border: none; }
 
+    /* ONBOARDING OVERLAY */
+    #onboarding-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1A56DB 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .onboard-card {
+      background: white; border-radius: 24px; padding: 48px 40px;
+      max-width: 520px; width: 100%; text-align: center;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      animation: slideUp 0.5s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .onboard-logo { font-size: 48px; margin-bottom: 16px; }
+    .onboard-title {
+      font-family: var(--font-display); font-size: 26px; font-weight: 800;
+      color: var(--ink); margin-bottom: 8px; line-height: 1.2;
+    }
+    .onboard-subtitle {
+      font-size: 15px; color: var(--ink-muted); margin-bottom: 28px; line-height: 1.5;
+    }
+    .onboard-steps {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 32px; text-align: left;
+    }
+    .onboard-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 16px; border-radius: 12px; background: var(--canvas);
+    }
+    .onboard-step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; flex-shrink: 0;
+    }
+    .onboard-step-text strong {
+      display: block; font-size: 14px; font-weight: 700;
+      color: var(--ink); margin-bottom: 2px;
+    }
+    .onboard-step-text span { font-size: 13px; color: var(--ink-muted); line-height: 1.4; }
+    .onboard-lang-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .onboard-lang-btn {
+      flex: 1; padding: 16px 12px; border-radius: 14px;
+      border: 2px solid var(--border); background: var(--white);
+      font-size: 16px; font-weight: 700; color: var(--ink);
+      cursor: pointer; transition: all 0.2s; font-family: var(--font-body);
+    }
+    .onboard-lang-btn:hover {
+      border-color: var(--accent); background: var(--accent-lt);
+      color: var(--accent); transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(26,86,219,0.15);
+    }
+    .onboard-lang-btn .flag { font-size: 28px; display: block; margin-bottom: 6px; }
+    .onboard-skip {
+      font-size: 12px; color: var(--ink-muted); cursor: pointer;
+      text-decoration: underline; margin-top: 8px; display: inline-block;
+    }
+    .onboard-skip:hover { color: var(--ink); }
     /* NAV */
     nav {
       background: var(--white); border-bottom: 1px solid var(--border);
@@ -480,27 +542,54 @@
 <body>
 
 
-<!-- LANGUAGE PICKER -->
-<div class="lang-picker-overlay" id="lang-picker" style="display:none;">
-  <div class="lang-picker-card">
-    <div class="lang-picker-logo">AgentTraining.AI</div>
-    <h2>Welcome!<br/>歡迎！</h2>
-    <p class="lang-picker-sub">Choose your language / 請選擇語言</p>
-    <div class="lang-picker-btns">
-      <button class="lang-picker-btn" onclick="pickLang('en')">
-        <span class="lang-name">
-          <span class="lang-main">English</span>
-          <span class="lang-sub">Continue in English</span>
-        </span>
+<!-- ONBOARDING OVERLAY (replaces old lang-picker) -->
+<div id="onboarding-overlay" style="display:none;">
+  <div class="onboard-card">
+    <div class="onboard-logo">🎯</div>
+    <div class="onboard-title" id="ob-title">AI Sales Practice Simulator</div>
+    <div class="onboard-subtitle" id="ob-subtitle">Practice real client conversations with AI. Get instant coaching feedback. No judgment — just results.</div>
+
+    <div class="onboard-steps" id="ob-steps">
+      <div class="onboard-step">
+        <div class="onboard-step-num">1</div>
+        <div class="onboard-step-text">
+          <strong id="ob-s1t">Choose a Scenario</strong>
+          <span id="ob-s1d">Pick a client situation from the left panel — insurance, real estate, or health.</span>
+        </div>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-step-num">2</div>
+        <div class="onboard-step-text">
+          <strong id="ob-s2t">Talk to the AI Client</strong>
+          <span id="ob-s2d">Type your sales response. The AI plays a real, skeptical client. Practice handling objections.</span>
+        </div>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-step-num">3</div>
+        <div class="onboard-step-text">
+          <strong id="ob-s3t">Get Instant Coaching</strong>
+          <span id="ob-s3d">After each reply, your AI coach scores your empathy, accuracy, and closing technique.</span>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:12px;" id="ob-lang-label">Choose your language / 請選擇語言</p>
+    <div class="onboard-lang-row">
+      <button class="onboard-lang-btn" onclick="startWithLang('en')">
+        <span class="flag">🇺🇸</span>
+        English
       </button>
-      <button class="lang-picker-btn" onclick="pickLang('zh')">
-        <span class="lang-name">
-          <span class="lang-main">中文</span>
-          <span class="lang-sub">以中文繼續</span>
-        </span>
+      <button class="onboard-lang-btn" onclick="startWithLang('zh')">
+        <span class="flag">🇹🇼</span>
+        中文
       </button>
     </div>
+    <span class="onboard-skip" onclick="startWithLang('en')" id="ob-skip">Skip intro and start →</span>
   </div>
+</div>
+
+<!-- OLD LANG PICKER (kept for backward compat, hidden) -->
+<div class="lang-picker-overlay" id="lang-picker" style="display:none;">
 </div>
 
 <!-- ACCESS GATE (shown only if no valid ref code in URL) -->
@@ -1609,35 +1698,46 @@ async function uploadSession(data) {
 }
 
 
-// ── LANGUAGE PICKER ──
+// ── ONBOARDING OVERLAY ──
 function showLangPicker() {
-  // Check if user already chose a language
   const saved = sessionStorage.getItem('agentraining_lang');
   if (saved) {
+    // Returning user — skip onboarding, go straight in
     setLang(saved);
-    // Auto-start free practice for returning users too
     setTimeout(() => {
       const freeScenario = scenarios.find(sc => sc.id === 0);
-      if (freeScenario) {
-        selectScenario(freeScenario);
-      }
+      if (freeScenario) selectScenario(freeScenario);
     }, 300);
     return;
   }
-  document.getElementById('lang-picker').style.display = 'flex';
+  // New user — show onboarding
+  const overlay = document.getElementById('onboarding-overlay');
+  overlay.style.display = 'flex';
+}
+
+function startWithLang(lang) {
+  // Update onboarding text to chosen language before hiding
+  if (lang === 'zh') {
+    document.getElementById('ob-title').textContent = 'AI 銷售練習模擬器';
+    document.getElementById('ob-subtitle').textContent = '用 AI 模擬真實客戶對話，獲得即時教練回饋。沒有壓力，只有進步。';
+  }
+  // Hide overlay with fade
+  const overlay = document.getElementById('onboarding-overlay');
+  overlay.style.transition = 'opacity 0.4s ease';
+  overlay.style.opacity = '0';
+  setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 400);
+
+  sessionStorage.setItem('agentraining_lang', lang);
+  setLang(lang);
+  // Auto-start free practice with AI welcome message
+  setTimeout(() => {
+    const freeScenario = scenarios.find(sc => sc.id === 0);
+    if (freeScenario) selectScenario(freeScenario);
+  }, 500);
 }
 
 function pickLang(lang) {
-  document.getElementById('lang-picker').style.display = 'none';
-  sessionStorage.setItem('agentraining_lang', lang);
-  setLang(lang);
-  // Auto-start free practice with welcome message
-  setTimeout(() => {
-    const freeScenario = scenarios.find(sc => sc.id === 0);
-    if (freeScenario) {
-      selectScenario(freeScenario);
-    }
-  }, 300);
+  startWithLang(lang);
 }
 
 
