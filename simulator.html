@@ -90,6 +90,26 @@
     }
     .onboard-lang-btn { font-size: 18px; padding: 18px; }
     .onboard-lang-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(26,86,219,0.2); }
+    /* MARKDOWN IN CHAT */
+    .md-list-item {
+      display: flex; gap: 10px; margin: 6px 0; align-items: flex-start;
+    }
+    .md-num {
+      background: var(--accent); color: white;
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    }
+    .md-bullet {
+      color: var(--accent); font-size: 18px; line-height: 1.2;
+      flex-shrink: 0; margin-top: -1px;
+    }
+    .md-hr {
+      border: none; border-top: 1px solid var(--border);
+      margin: 12px 0;
+    }
+    .msg-bubble.client strong { color: #1e3a8a; }
+    .msg-bubble.client .md-num { background: #1e3a8a; }
     /* NAV */
     nav {
       background: var(--white); border-bottom: 1px solid var(--border);
@@ -1484,6 +1504,25 @@ function selectScenario(sc) {
 }
 
 // ── CHAT ──
+// Simple markdown renderer for chat bubbles
+function renderMarkdown(text) {
+  return text
+    // Bold: **text**
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Italic: *text*
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Numbered list: lines starting with 1. 2. 3.
+    .replace(/^(\d+)\.\s+(.+)$/gm, '<div class="md-list-item"><span class="md-num">$1</span><span>$2</span></div>')
+    // Bullet list: lines starting with •
+    .replace(/^[•\-]\s+(.+)$/gm, '<div class="md-list-item"><span class="md-bullet">•</span><span>$1</span></div>')
+    // Horizontal rule: ---
+    .replace(/^---$/gm, '<hr class="md-hr">')
+    // Double newline = paragraph break
+    .replace(/\n\n/g, '<br><br>')
+    // Single newline = line break
+    .replace(/\n/g, '<br>');
+}
+
 function appendMessage(type, name, text) {
   const msgs = document.getElementById('chat-messages');
   const div = document.createElement('div');
@@ -1495,13 +1534,13 @@ function appendMessage(type, name, text) {
   const labelText = type === 'agent' ? strings[currentLang].yourResponse : (type === 'system' ? '' : strings[currentLang].clientLabel);
 
   if (type === 'system') {
-    div.innerHTML = `<div class="msg-bubble system">${text}</div>`;
+    div.innerHTML = `<div class="msg-bubble system">${renderMarkdown(text)}</div>`;
   } else {
     div.innerHTML = `
       <div class="msg-avatar ${avatarClass}">${initials}</div>
       <div class="msg-content">
         <div class="msg-label">${labelText}</div>
-        <div class="msg-bubble ${bubbleClass}">${text}</div>
+        <div class="msg-bubble ${bubbleClass}">${renderMarkdown(text)}</div>
       </div>
     `;
   }
@@ -1723,8 +1762,11 @@ function startWithLang(lang) {
 • 专业知识
 • 成交技巧
 
-📊 Dashboard（管理面板）
-如果您是主管，可以追踪您团队每个学员的练习记录和进步。
+📊 管理面板（主管专用）
+
+如果您是主管，完成练习后，右侧面板会出现：
+「查看团队记录」— 查看每位学员的练习次数和进步
+「分享给团队」— 把情境分享给您的团队成员
 
 ---
 
@@ -1844,7 +1886,10 @@ After each reply, your AI coach gives you a score:
 • Closing skill
 
 📊 Manager Dashboard
-If you are a team manager, you can track each team member's practice sessions and scores.
+
+If you are a team manager, after a practice session, you will see two buttons on the right panel:
+"View Team Records" — see each team member's practice count and scores
+"Share with Team" — send a scenario to your team members
 
 ---
 
