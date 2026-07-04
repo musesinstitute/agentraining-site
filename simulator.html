@@ -88,12 +88,8 @@
       color: var(--accent); transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(26,86,219,0.15);
     }
-    .onboard-lang-btn .flag { font-size: 28px; display: block; margin-bottom: 6px; }
-    .onboard-skip {
-      font-size: 12px; color: var(--ink-muted); cursor: pointer;
-      text-decoration: underline; margin-top: 8px; display: inline-block;
-    }
-    .onboard-skip:hover { color: var(--ink); }
+    .onboard-lang-btn { font-size: 18px; padding: 18px; }
+    .onboard-lang-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(26,86,219,0.2); }
     /* NAV */
     nav {
       background: var(--white); border-bottom: 1px solid var(--border);
@@ -542,55 +538,22 @@
 <body>
 
 
-<!-- ONBOARDING OVERLAY (replaces old lang-picker) -->
+<!-- ONBOARDING OVERLAY -->
 <div id="onboarding-overlay" style="display:none;">
   <div class="onboard-card">
-    <div class="onboard-logo">🎯</div>
-    <div class="onboard-title" id="ob-title">AI Sales Practice Simulator</div>
-    <div class="onboard-subtitle" id="ob-subtitle">Practice real client conversations with AI. Get instant coaching feedback. No judgment — just results.</div>
-
-    <div class="onboard-steps" id="ob-steps">
-      <div class="onboard-step">
-        <div class="onboard-step-num">1</div>
-        <div class="onboard-step-text">
-          <strong id="ob-s1t">Choose a Scenario</strong>
-          <span id="ob-s1d">Pick a client situation from the left panel — insurance, real estate, or health.</span>
-        </div>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-step-num">2</div>
-        <div class="onboard-step-text">
-          <strong id="ob-s2t">Talk to the AI Client</strong>
-          <span id="ob-s2d">Type your sales response. The AI plays a real, skeptical client. Practice handling objections.</span>
-        </div>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-step-num">3</div>
-        <div class="onboard-step-text">
-          <strong id="ob-s3t">Get Instant Coaching</strong>
-          <span id="ob-s3d">After each reply, your AI coach scores your empathy, accuracy, and closing technique.</span>
-        </div>
-      </div>
-    </div>
-
-    <p style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:12px;" id="ob-lang-label">Choose your language / 請選擇語言</p>
+    <div class="onboard-logo">🤝</div>
+    <div class="onboard-title">Your AI Sales Coach</div>
+    <div class="onboard-subtitle">Talk to real AI clients. Get coached after every reply.<br/>Free to start — no setup needed.</div>
     <div class="onboard-lang-row">
-      <button class="onboard-lang-btn" onclick="startWithLang('en')">
-        <span class="flag">🇺🇸</span>
-        English
-      </button>
-      <button class="onboard-lang-btn" onclick="startWithLang('zh')">
-        <span class="flag">🇹🇼</span>
-        中文
-      </button>
+      <button class="onboard-lang-btn" onclick="startWithLang('en')">English</button>
+      <button class="onboard-lang-btn" onclick="startWithLang('zh')">中文</button>
     </div>
-    <span class="onboard-skip" onclick="startWithLang('en')" id="ob-skip">Skip intro and start →</span>
+    <p style="font-size:11px;color:var(--ink-muted);margin-top:10px;">AI adapts to your language automatically</p>
   </div>
 </div>
 
-<!-- OLD LANG PICKER (kept for backward compat, hidden) -->
-<div class="lang-picker-overlay" id="lang-picker" style="display:none;">
-</div>
+<!-- OLD LANG PICKER (hidden) -->
+<div class="lang-picker-overlay" id="lang-picker" style="display:none;"></div>
 
 <!-- ACCESS GATE (shown only if no valid ref code in URL) -->
 <div class="access-gate" id="access-gate" style="display:none;">
@@ -1716,24 +1679,64 @@ function showLangPicker() {
 }
 
 function startWithLang(lang) {
-  // Update onboarding text to chosen language before hiding
-  if (lang === 'zh') {
-    document.getElementById('ob-title').textContent = 'AI 銷售練習模擬器';
-    document.getElementById('ob-subtitle').textContent = '用 AI 模擬真實客戶對話，獲得即時教練回饋。沒有壓力，只有進步。';
-  }
   // Hide overlay with fade
   const overlay = document.getElementById('onboarding-overlay');
-  overlay.style.transition = 'opacity 0.4s ease';
+  overlay.style.transition = 'opacity 0.35s ease';
   overlay.style.opacity = '0';
-  setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 400);
+  setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 350);
 
   sessionStorage.setItem('agentraining_lang', lang);
   setLang(lang);
-  // Auto-start free practice with AI welcome message
+
+  // Auto-start free practice — AI will send tutorial welcome
   setTimeout(() => {
     const freeScenario = scenarios.find(sc => sc.id === 0);
-    if (freeScenario) selectScenario(freeScenario);
-  }, 500);
+    if (freeScenario) {
+      // Override the free scenario system prompt to include tutorial offer
+      const tutorialPrompt = lang === 'zh'
+        ? `你是 AgentTraining AI 的專屬銷售教練。
+
+用這個確切的開場白，溫暖、親切：
+
+「歡迎來到 AgentTraining AI！😊 我是您的 AI 銷售教練。
+
+這裡很簡單——我來扮演您的客戶，您練習如何跟我說話，我給您即時的回饋和評分。
+
+**需要我先帶您走一遍嗎？**
+回覆「帶我走一遍」，我就一步一步引導您。
+或者直接告訴我：您做哪個行業？保險、房地產、還是健康產業？」
+
+如果用戶說「帶我走一遍」或類似意思，就用中文一步一步引導：
+步驟1：「好的！首先，告訴我您的行業——保險、房地產、還是健康？」
+步驟2：選好後，「太好了！我現在扮演一個[行業]客戶。您好，我想了解一下…」然後開始角色扮演。
+如果用戶直接說行業，立刻開始角色扮演，不需要教程。
+根據用戶輸入的語言（繁體/簡體）自動調整回應語言。`
+        : `You are the AgentTraining AI sales coach.
+
+Open with exactly this — warm and inviting:
+
+"Welcome to AgentTraining AI! 😊 I'm your AI sales coach.
+
+Here's how this works: I play a real client, you practice your sales conversation, and I give you instant feedback and a score after each reply.
+
+**Want me to walk you through it first?**
+Reply "walk me through it" and I'll guide you step by step.
+Or just tell me: what industry are you in — insurance, real estate, or health & wellness?"
+
+If user says "walk me through it" or similar, guide step by step in English:
+Step 1: "Great! First, pick your industry — insurance, real estate, or health?"
+Step 2: Once chosen, "Perfect! I'll now play a [industry] client. Hi there, I'm looking into…" and begin role-play.
+If user directly states their industry, skip tutorial and start role-play immediately.
+If user writes in Chinese, respond in Chinese automatically.`;
+
+      // Temporarily override the free scenario system prompt
+      const originalPrompt = freeScenario.systemPrompt;
+      freeScenario.systemPrompt = { en: tutorialPrompt, zh: tutorialPrompt };
+      selectScenario(freeScenario);
+      // Restore original after 500ms (it's already been used for the first API call)
+      setTimeout(() => { freeScenario.systemPrompt = originalPrompt; }, 500);
+    }
+  }, 450);
 }
 
 function pickLang(lang) {
