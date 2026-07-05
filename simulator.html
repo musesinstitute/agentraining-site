@@ -88,6 +88,28 @@
       color: var(--accent); transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(26,86,219,0.15);
     }
+    .ob-choice-btn {
+      width: 100%; padding: 12px 16px; border-radius: 12px;
+      border: 2px solid var(--border); background: var(--white);
+      font-size: 14px; font-weight: 600; color: var(--ink);
+      cursor: pointer; transition: all 0.2s; text-align: left;
+      font-family: var(--font-body);
+    }
+    .ob-choice-btn:hover, .ob-choice-btn.selected {
+      border-color: var(--accent); background: var(--accent-lt);
+      color: var(--accent);
+    }
+    .ob-opener-btn {
+      width: 100%; padding: 13px 16px; border-radius: 12px;
+      border: 2px solid var(--border); background: var(--white);
+      font-size: 13px; font-weight: 500; color: var(--ink);
+      cursor: pointer; transition: all 0.2s; text-align: left;
+      font-family: var(--font-body); line-height: 1.4;
+    }
+    .ob-opener-btn:hover {
+      border-color: var(--accent); background: var(--accent-lt);
+      color: var(--accent); transform: translateX(4px);
+    }
     .onboard-lang-btn { font-size: 18px; padding: 18px; }
     .onboard-lang-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(26,86,219,0.2); }
     /* MARKDOWN IN CHAT */
@@ -558,17 +580,89 @@
 <body>
 
 
-<!-- ONBOARDING OVERLAY -->
+<!-- ONBOARDING OVERLAY — Complete 3-Screen Flow -->
 <div id="onboarding-overlay" style="display:none;">
   <div class="onboard-card">
-    <div class="onboard-logo">🤝</div>
-    <div class="onboard-title">Your AI Sales Coach</div>
-    <div class="onboard-subtitle">Talk to real AI clients. Get coached after every reply.<br/>Free to start — no setup needed.</div>
-    <div class="onboard-lang-row">
-      <button class="onboard-lang-btn" onclick="startWithLang('en')">English</button>
-      <button class="onboard-lang-btn" onclick="startWithLang('zh')">中文</button>
+
+    <!-- Screen 1: Coach Declaration + Language -->
+    <div id="ob-screen-1">
+      <div class="onboard-logo">🤝</div>
+      <div class="onboard-title" id="ob-title-1">I am your AI Sales Coach</div>
+      <div class="onboard-subtitle" id="ob-sub-1">
+        In the months and years ahead, I will accompany your career journey —
+        growing with you, guiding you, and helping you become an outstanding sales professional.
+        Together we will elevate your personal and team performance.
+      </div>
+      <div style="border-top:1px solid var(--border);margin:24px 0;"></div>
+      <p style="font-size:13px;font-weight:700;color:var(--ink-muted);margin-bottom:14px;" id="ob-lang-prompt">Choose your language / 請選擇語言</p>
+      <div class="onboard-lang-row">
+        <button class="onboard-lang-btn" onclick="obScreen2('en')">English</button>
+        <button class="onboard-lang-btn" onclick="obScreen2('zh')">中文</button>
+      </div>
+      <p style="font-size:11px;color:var(--ink-muted);margin-top:10px;">AI adapts to your input language automatically</p>
     </div>
-    <p style="font-size:11px;color:var(--ink-muted);margin-top:10px;">AI adapts to your language automatically</p>
+
+    <!-- Screen 2: Learn about user -->
+    <div id="ob-screen-2" style="display:none;">
+      <div class="onboard-logo">👋</div>
+      <div class="onboard-title" id="ob-title-2">Nice to meet you!</div>
+      <div class="onboard-subtitle" id="ob-sub-2">Let me customize your training. Two quick questions:</div>
+
+      <div style="text-align:left;margin-bottom:20px;">
+        <p style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;" id="ob-q1">① What industry are you in?</p>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="ob-industry-btns">
+          <button class="ob-choice-btn" onclick="obSetIndustry('insurance')" id="ob-ind-1">🏦 Insurance / Financial Planning</button>
+          <button class="ob-choice-btn" onclick="obSetIndustry('realestate')" id="ob-ind-2">🏠 Real Estate</button>
+          <button class="ob-choice-btn" onclick="obSetIndustry('health')" id="ob-ind-3">💊 Health & Wellness</button>
+        </div>
+      </div>
+
+      <div style="text-align:left;margin-bottom:24px;">
+        <p style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;" id="ob-q2">② What is your role?</p>
+        <div style="display:flex;gap:10px;">
+          <button class="ob-choice-btn" style="flex:1;" onclick="obSetRole('agent')" id="ob-role-agent">👤 Individual Agent</button>
+          <button class="ob-choice-btn" style="flex:1;" onclick="obSetRole('manager')" id="ob-role-manager">👥 Team Manager</button>
+        </div>
+      </div>
+
+      <button class="onboard-lang-btn" style="width:100%;font-size:15px;padding:16px;background:var(--accent);color:white;border-color:var(--accent);opacity:0.4;cursor:not-allowed;" id="ob-next-btn" disabled onclick="obScreen3()">
+        Next →
+      </button>
+    </div>
+
+    <!-- Screen 3: Mission Briefing -->
+    <div id="ob-screen-3" style="display:none;">
+      <div style="background:var(--accent);color:white;border-radius:10px;padding:7px 16px;font-size:12px;font-weight:700;display:inline-block;margin-bottom:18px;" id="ob-mission-tag">TODAY'S MISSION</div>
+
+      <div style="background:var(--canvas);border-radius:14px;padding:18px;margin-bottom:18px;text-align:left;">
+        <div style="font-size:12px;font-weight:700;color:var(--ink-muted);margin-bottom:10px;">👤 YOUR CLIENT</div>
+        <div style="font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px;" id="ob-client-name">Mrs. Patricia Miller, 52</div>
+        <div style="font-size:13px;color:var(--ink-muted);line-height:1.9;" id="ob-client-bio">
+          Retired teacher · Has savings<br>
+          Skeptical of salespeople<br>
+          Says: "I don't need insurance. I have savings."
+        </div>
+      </div>
+
+      <div style="text-align:left;margin-bottom:18px;">
+        <div style="font-size:12px;font-weight:700;color:var(--ink-muted);margin-bottom:8px;">✅ YOUR MISSION</div>
+        <div style="font-size:14px;line-height:2.1;color:var(--ink);" id="ob-mission-tasks">
+          ① Build trust with a skeptical client<br>
+          ② Uncover her real concerns<br>
+          ③ Schedule a follow-up meeting
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--ink-muted);margin-bottom:10px;">🗣 CHOOSE YOUR OPENING</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;" id="ob-openers">
+        <button class="ob-opener-btn" onclick="obStartWithOpener(0)"></button>
+        <button class="ob-opener-btn" onclick="obStartWithOpener(1)"></button>
+        <button class="ob-opener-btn" onclick="obStartWithOpener(2)"></button>
+      </div>
+
+      <button class="ob-choice-btn" style="width:100%;text-align:center;font-size:13px;color:var(--ink-muted);" onclick="obStartWithOpener(-1)" id="ob-custom-opener">✍️ Type my own opening</button>
+    </div>
+
   </div>
 </div>
 
@@ -594,9 +688,12 @@
     </div>
     AgentTraining<span style="color:var(--accent)">AI</span>
   </div>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button id="voice-toggle-btn" onclick="toggleVoice()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🔇 Voice OFF</button>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('zh')">中文</button>
+    </div>
   </div>
 </nav>
 
@@ -1504,6 +1601,77 @@ function selectScenario(sc) {
 }
 
 // ── CHAT ──
+// ── VOICE READOUT ──
+let voiceEnabled = false;
+const synth = window.speechSynthesis;
+
+function speakText(text) {
+  if (!voiceEnabled || !synth) return;
+  synth.cancel();
+  const clean = text.replace(/💡[^\n]*/g, '').replace(/<[^>]+>/g, '').replace(/[①②③④⑤]/g, '').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.lang = obLang === 'zh' ? 'zh-TW' : 'en-US';
+  utter.rate = 0.95;
+  synth.speak(utter);
+}
+
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('voice-toggle-btn');
+  if (btn) btn.textContent = voiceEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+}
+
+// ── TEXT SELECTION MENU ──
+function setupTextSelectionMenu() {
+  const menu = document.createElement('div');
+  menu.id = 'text-select-menu';
+  menu.style.cssText = `
+    position:fixed; display:none; z-index:9000;
+    background:var(--ink); color:white; border-radius:10px;
+    padding:6px 4px; gap:4px; flex-direction:column;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3); min-width:160px;
+  `;
+  menu.innerHTML = `
+    <button onclick="replyToSelection()" style="background:none;border:none;color:white;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;border-radius:6px;text-align:left;width:100%;">↩ Reply to this</button>
+    <button onclick="askCoachAboutSelection()" style="background:none;border:none;color:white;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;border-radius:6px;text-align:left;width:100%;">💡 Ask coach about this</button>
+  `;
+  document.body.appendChild(menu);
+
+  document.addEventListener('mouseup', (e) => {
+    const sel = window.getSelection();
+    const text = sel?.toString().trim();
+    if (text && text.length > 5 && e.target.closest('#chat-messages')) {
+      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      menu.style.display = 'flex';
+      menu.style.top = (rect.top + window.scrollY - 70) + 'px';
+      menu.style.left = Math.max(10, rect.left + rect.width/2 - 80) + 'px';
+      menu.dataset.selectedText = text;
+    } else if (!e.target.closest('#text-select-menu')) {
+      menu.style.display = 'none';
+    }
+  });
+}
+
+function replyToSelection() {
+  const text = document.getElementById('text-select-menu').dataset.selectedText;
+  const input = document.getElementById('chat-input');
+  if (input && text) {
+    input.value = `[Responding to: "${text.slice(0, 60)}..."] `;
+    input.focus();
+  }
+  document.getElementById('text-select-menu').style.display = 'none';
+}
+
+function askCoachAboutSelection() {
+  const text = document.getElementById('text-select-menu').dataset.selectedText;
+  const input = document.getElementById('chat-input');
+  if (input && text) {
+    input.value = `[Asking coach]: What is the best way to respond to: "${text.slice(0, 80)}"?`;
+    input.focus();
+  }
+  document.getElementById('text-select-menu').style.display = 'none';
+}
+
 // Simple markdown renderer for chat bubbles
 function renderMarkdown(text) {
   return text
@@ -1546,6 +1714,7 @@ function appendMessage(type, name, text) {
   }
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
+  if (type === 'client') speakText(text);
 }
 
 function showTyping() {
@@ -1700,297 +1869,244 @@ async function uploadSession(data) {
 }
 
 
-// ── ONBOARDING OVERLAY ──
+// ── ONBOARDING — 3-Screen Flow ──
+let obLang = 'en';
+let obIndustry = '';
+let obRole = '';
+let obSelectedOpenerIndex = -1;
+
+const obContent = {
+  en: {
+    title1: 'I am your AI Sales Coach',
+    sub1: 'In the months and years ahead, I will accompany your career journey — growing with you, guiding you, and helping you become an outstanding sales professional. Together we will elevate your personal and team performance.',
+    langPrompt: 'Choose your language',
+    title2: 'Nice to meet you!',
+    sub2: 'Let me customize your training. Two quick questions:',
+    q1: '① What industry are you in?',
+    q2: '② What is your role?',
+    ind1: '🏦 Insurance / Financial Planning',
+    ind2: '🏠 Real Estate',
+    ind3: '💊 Health & Wellness',
+    roleAgent: '👤 Individual Agent',
+    roleMgr: '👥 Team Manager',
+    nextBtn: 'Next →',
+    missionTag: "TODAY'S MISSION",
+    clientLabel: '👤 YOUR CLIENT',
+    missionLabel: '✅ YOUR MISSION',
+    openerLabel: '🗣 CHOOSE YOUR OPENING',
+    customOpener: '✍️ Type my own opening',
+    clients: {
+      insurance: { name: 'Mrs. Patricia Miller, 52', bio: 'Retired teacher · Has savings\nSkeptical of salespeople\nSays: "I don\'t need insurance. I have savings."', tasks: '① Build trust with a skeptical client\n② Uncover her real concerns\n③ Schedule a follow-up meeting', openers: ['Mrs. Miller, I understand you have savings. May I ask — if something unexpected happened, how long would those savings support your family?', 'Mrs. Miller, I am not here to pressure you. I have one question — what would your family do financially if you were no longer here?', 'Mrs. Miller, many of my clients had the same view before we spoke. May I share what changed their thinking?'] },
+      realestate: { name: 'Mr. David Johnson, 48', bio: 'Business owner · Looking to invest\nWants high returns, price-sensitive\nSays: "The market is too risky right now."', tasks: '① Understand his investment goals\n② Address his risk concerns\n③ Present one specific property', openers: ['Mr. Johnson, I understand the market feels uncertain. What level of return would make an investment feel worthwhile to you?', 'Mr. Johnson, I found a property that matches the criteria you mentioned. Do you have five minutes to review it?', 'Mr. Johnson, many experienced investors find opportunity in uncertain markets. May I show you one example?'] },
+      health: { name: 'Ms. Sarah Parker, 38', bio: 'Working mother · Busy schedule\nHealth-conscious but budget-aware\nSays: "I don\'t have time for this."', tasks: '① Connect with her on family wellbeing\n② Show clear, simple value\n③ Make it easy to say yes', openers: ['Ms. Parker, I will be brief. What is your biggest health concern for your family at this time?', 'Ms. Parker, I am also a working parent. That is why I focus on health planning. May I share one thing I wish I had known earlier?', 'Ms. Parker, this will take five minutes. May I show you a simple option that fits a busy schedule?'] }
+    },
+    managerClients: { name: 'New Agent Jake, 26', bio: 'Just joined your team · Enthusiastic but nervous\nAfraid of rejection · Does not know how to start', tasks: '① Build his confidence\n② Teach him his first opening line\n③ Role-play his first client call with him', openers: ['Jake, every strong agent started exactly where you are. Let me share the one thing that made the biggest difference.', 'Jake, set the script aside for now. Tell me — what concerns you most about making your first call?', 'Jake, I will play a difficult client. You practice responding to me. Are you ready?'] }
+  },
+  zh: {
+    title1: '我是你的 AI 銷售教練',
+    sub1: '在今後的歲月裡，我將陪伴你的職業生涯，與你共同成長，幫助你成為出色的銷售員，提升你個人和團隊的銷售業績。',
+    langPrompt: '請選擇語言',
+    title2: '很高興認識你！',
+    sub2: '讓我為你量身定制訓練。兩個快速問題：',
+    q1: '① 你做哪個行業？',
+    q2: '② 你的身份是？',
+    ind1: '🏦 保險 / 理財',
+    ind2: '🏠 房地產',
+    ind3: '💊 健康 / 保健產業',
+    roleAgent: '👤 個人業務員',
+    roleMgr: '👥 團隊主管',
+    nextBtn: '下一步 →',
+    missionTag: '今日任務',
+    clientLabel: '👤 你的客戶',
+    missionLabel: '✅ 你的任務',
+    openerLabel: '🗣 選擇你的開場白',
+    customOpener: '✍️ 自己輸入開場白',
+    clients: {
+      insurance: { name: '吳女士，52歲', bio: '退休教師 · 有積蓄\n對推銷人員保持警惕\n她說：「我不需要保險，我有積蓄。」', tasks: '① 與難搞的客戶建立信任\n② 發現她真正的擔憂\n③ 安排下次會面', openers: ['吳女士，我了解您在財務上做得很好。我想請教您——如果發生意外，您的積蓄能保護您的家人多久？', '吳女士，我今天不是來賣保險的。我只有一個問題——如果您不在了，您的家人在財務上怎麼辦？', '吳女士，我很多客戶在跟我談之前，跟您想法一樣。我可以分享是什麼改變了他們的想法嗎？'] },
+      realestate: { name: '陳先生，48歲', bio: '企業主 · 想投資\n追求高回報，對價格敏感\n他說：「現在市場太不穩定了。」', tasks: '① 了解他的投資目標\n② 解決他的風險顧慮\n③ 介紹一個具體的房產', openers: ['陳先生，我完全理解市場讓人感覺不確定。請問什麼樣的回報會讓您覺得值得投資？', '陳先生，我追蹤到一個房產，跟您上次說的條件完全吻合。您有5分鐘嗎？', '陳先生，我合作過的成功投資者，其實最喜歡市場不穩定的時候。我可以告訴您為什麼嗎？'] },
+      health: { name: '林女士，38歲', bio: '職業媽媽 · 行程繁忙\n注重健康但預算有限\n她說：「我沒有時間談這個。」', tasks: '① 從家庭健康角度建立連結\n② 展示清晰、簡單的價值\n③ 讓她容易說是', openers: ['林女士，我知道您很忙，我長話短說。一個問題——您現在對家人健康最大的擔憂是什麼？', '林女士，我也是職業父母。這正是我進入健康規劃行業的原因。我可以分享我希望早點知道的事嗎？', '林女士，我大部分客戶都說沒有時間——直到真正需要保障的那一天。我可以給您看一個5分鐘的方案嗎？'] }
+    },
+    managerClients: { name: '新學員小湯，26歲', bio: '剛加入你的團隊 · 熱情但緊張\n害怕被拒絕 · 不知道如何開口', tasks: '① 建立他的自信心\n② 教他第一句開場白\n③ 跟他角色扮演第一個客戶電話', openers: ['小湯，每個優秀的業務員都曾經是你現在的樣子。讓我分享改變一切的那一件事。', '小湯，先忘記話術。告訴我——你對打第一個電話最害怕什麼？', '小湯，我來扮演一個難搞的客戶，你來練習。準備好了嗎？'] }
+  }
+};
+
 function showLangPicker() {
   const saved = sessionStorage.getItem('agentraining_lang');
   if (saved) {
-    // Returning user — skip onboarding, go straight in
     setLang(saved);
-    setTimeout(() => {
-      const freeScenario = scenarios.find(sc => sc.id === 0);
-      if (freeScenario) selectScenario(freeScenario);
-    }, 300);
+    setTimeout(() => obSkipToApp(saved), 300);
     return;
   }
-  // New user — show onboarding
-  const overlay = document.getElementById('onboarding-overlay');
-  overlay.style.display = 'flex';
+  document.getElementById('onboarding-overlay').style.display = 'flex';
 }
 
-function startWithLang(lang) {
-  // Hide overlay with fade
+function obScreen2(lang) {
+  obLang = lang;
+  const c = obContent[lang];
+  document.getElementById('ob-screen-1').style.display = 'none';
+  document.getElementById('ob-screen-2').style.display = 'block';
+  document.getElementById('ob-title-2').textContent = c.title2;
+  document.getElementById('ob-sub-2').textContent = c.sub2;
+  document.getElementById('ob-q1').textContent = c.q1;
+  document.getElementById('ob-q2').textContent = c.q2;
+  document.getElementById('ob-ind-1').textContent = c.ind1;
+  document.getElementById('ob-ind-2').textContent = c.ind2;
+  document.getElementById('ob-ind-3').textContent = c.ind3;
+  document.getElementById('ob-role-agent').textContent = c.roleAgent;
+  document.getElementById('ob-role-manager').textContent = c.roleMgr;
+  document.getElementById('ob-next-btn').textContent = c.nextBtn;
+}
+
+function obSetIndustry(ind) {
+  obIndustry = ind;
+  document.querySelectorAll('#ob-industry-btns .ob-choice-btn').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  obCheckReady();
+}
+
+function obSetRole(role) {
+  obRole = role;
+  document.querySelectorAll('#ob-screen-2 .ob-choice-btn[onclick*="obSetRole"]').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  obCheckReady();
+}
+
+function obCheckReady() {
+  const btn = document.getElementById('ob-next-btn');
+  if (obIndustry && obRole) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
+}
+
+function obScreen3() {
+  if (!obIndustry || !obRole) return;
+  const c = obContent[obLang];
+  const clientData = obRole === 'manager' ? c.managerClients : c.clients[obIndustry];
+
+  document.getElementById('ob-screen-2').style.display = 'none';
+  document.getElementById('ob-screen-3').style.display = 'block';
+  document.getElementById('ob-mission-tag').textContent = c.missionTag;
+  document.getElementById('ob-client-name').textContent = clientData.name;
+  document.getElementById('ob-client-bio').innerHTML = clientData.bio.replace(/\n/g, '<br>');
+  document.getElementById('ob-mission-tasks').innerHTML = clientData.tasks.replace(/\n/g, '<br>');
+  document.querySelector('#ob-screen-3 div:nth-child(4) div:first-child').textContent = c.clientLabel;
+  document.querySelector('#ob-screen-3 > div:nth-child(5) > div:first-child').textContent = c.missionLabel;
+  document.getElementById('ob-openerLabel') && (document.getElementById('ob-openerLabel').textContent = c.openerLabel);
+  document.getElementById('ob-custom-opener').textContent = c.customOpener;
+
+  const openerBtns = document.querySelectorAll('.ob-opener-btn');
+  clientData.openers.forEach((text, i) => {
+    if (openerBtns[i]) openerBtns[i].textContent = `"${text}"`;
+  });
+}
+
+function obStartWithOpener(index) {
+  const c = obContent[obLang];
+  const clientData = obRole === 'manager' ? c.managerClients : c.clients[obIndustry];
+  const opener = index >= 0 ? clientData.openers[index] : null;
+
+  // Hide overlay
   const overlay = document.getElementById('onboarding-overlay');
   overlay.style.transition = 'opacity 0.35s ease';
   overlay.style.opacity = '0';
   setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = '1'; }, 350);
 
-  sessionStorage.setItem('agentraining_lang', lang);
-  setLang(lang);
+  sessionStorage.setItem('agentraining_lang', obLang);
+  setLang(obLang);
 
-  // Auto-start free practice — AI will send tutorial welcome
   setTimeout(() => {
     const freeScenario = scenarios.find(sc => sc.id === 0);
-    if (freeScenario) {
-      // Override the free scenario system prompt to include tutorial offer
-      const tutorialPrompt = lang === 'zh'
-        ? `你是 AgentTraining AI 的专属销售教练。语言规则：用户用繁体中文 → 你用繁体回答。用户用简体中文 → 你用简体回答。用户用英文 → 你用英文回答。
-
-用这个开场白，每一点单独一行，字句简单清晰：
-
-「欢迎来到 AgentTraining AI！😊
-
-我是您的 AI 销售教练。
-
-我先用 1 分钟，把这里的一切介绍给您。
-
----
-
-📱 这个平台有三个区域：
-
-① 左边栏 — 选择练习情境
-选择您行业中的真实客户场景。
-保险 / 房地产 / 健康产业，共 40 多个情境。
-
-② 中间 — 和 AI 客户对话
-我来扮演您的客户。
-您练习如何回应客户的问题和拒绝。
-越真实，练习越有效。
-
-③ 右边 — AI 教练即时评分
-每次您回复后，AI 教练给您评分：
-• 同理心
-• 专业知识
-• 成交技巧
-
-📊 管理面板（主管专用）
-
-如果您是主管，完成练习后，右侧面板会出现：
-「查看团队记录」— 查看每位学员的练习次数和进步
-「分享给团队」— 把情境分享给您的团队成员
-
----
-
-现在我想先了解一下您：
-
-**第一个问题：您的身份是？**
-
-A — 个人业务员（自己练习）
-B — 团队主管（管理团队 + 自己练习）
-
-请回复 A 或 B。」
-
----
-
-如果用户回复 A（个人业务员）：
-问：「您主要做哪个行业？
-1 — 保险 / 理财
-2 — 房地产
-3 — 健康 / 保健产业
-请回复 1、2 或 3。」
-
-收到答案后，说明：
-「好的！我已经帮您筛选好左边的情境了。
-
-另外想问您：
-
-除了客户对话练习，您有没有对某个产品有疑问？
-
-比如：
-• 保险 / 理财产品的细节和优劣
-• 健康产品的适用人群和卖点
-• 房产类型的投资逻辑和客户适配
-
-我们可以深入研究——帮您搞清楚哪类客户最适合哪类产品。
-
-您有这方面的问题吗？」
-
-然后问：
-「现在告诉我您的开始方式：
-
-选项 1 — 我来推荐一个适合您的情境，马上开始
-选项 2 — 您自己从左边选一个情境
-选项 3 — 自由练习：告诉我您最近遇到的一个真实客户，我来扮演那个客户
-
-您还有什么不明白的吗？」
-
-收到没有问题后，根据用户选择开始。
-
----
-
-如果用户回复 B（团队主管）：
-说：「您好，主管！您可以在这里做两件事：
-
-① 自己练习销售技巧
-② 练习主管角色：
-• 如何招募新学员
-• 如何训练和辅导团队成员
-• 如何处理团队内部的挑战
-
-另外想问您：
-
-您在 招募或培训学员 方面，有没有遇到什么困难或问题？
-
-比如：
-• 新学员不知道如何开口
-• 团队士气低落
-• 如何帮助学员克服拒绝
-
-我们可以针对这些问题，设计专属的练习情境。
-
-您想先从哪个开始？
-1 — 自己练习销售
-2 — 练习招募 / 培训团队成员的对话
-3 — 探讨团队管理的具体问题
-
-请回复 1、2 或 3。」
-
----
-
-角色扮演规则（非常重要）：
-• 开始扮演前，先说：「我现在扮演[角色]。准备好了吗？」
-• 扮演时，完全保持角色，真实自然地回应
-• 用户说「暂停」或「我不明白」，立刻退出角色，用教练身份解释
-• 每次扮演结束，给出评分和具体改进建议
-
-记住：语言跟着用户走。用户用简体 → 简体。用户用繁体 → 繁体。`
-
-        : `You are the AgentTraining AI sales coach.
-
-Language rule: always match the user's language. If they write in Chinese, reply in Chinese.
-
-Open with this welcome message. Use clear line breaks. Keep English simple — avoid idioms or complex phrases:
-
-"Welcome to AgentTraining AI! 😊
-
-I am your AI sales coach.
-
-Let me show you how this works in 1 minute.
-
----
-
-📱 This platform has three areas:
-
-① Left panel — Choose a practice scenario
-Pick a real client situation from your industry.
-Insurance / Real Estate / Health & Wellness — 40+ scenarios.
-
-② Center — Talk to the AI client
-I play the role of your client.
-You practice how to respond to questions and objections.
-The more realistic you are, the more you learn.
-
-③ Right panel — AI coach feedback
-After each reply, your AI coach gives you a score:
-• Empathy
-• Product knowledge
-• Closing skill
-
-📊 Manager Dashboard
-
-If you are a team manager, after a practice session, you will see two buttons on the right panel:
-"View Team Records" — see each team member's practice count and scores
-"Share with Team" — send a scenario to your team members
-
----
-
-Now I want to learn about you:
-
-First question: What is your role?
-
-A — Individual agent (practice for yourself)
-B — Team manager (manage a team + practice yourself)
-
-Please reply A or B."
-
----
-
-If user replies A (individual agent):
-Ask: "Which industry are you in?
-1 — Insurance / Financial planning
-2 — Real estate
-3 — Health & Wellness
-Please reply 1, 2, or 3."
-
-After they answer, say:
-"Good! I have filtered the left panel for your industry.
-
-One more question:
-
-Do you have any questions about a specific product?
-
-For example:
-• How to explain an insurance or financial product clearly
-• Which health products work best for which clients
-• How to match the right property type to a buyer
-
-We can study these together — so you feel confident with any client.
-
-Do you have questions like this?"
-
-Then ask:
-"How would you like to start?
-
-Option 1 — I recommend a scenario for you, and we start now
-Option 2 — You choose a scenario from the left panel
-Option 3 — Free practice: tell me about a real client, and I will play that client
-
-Do you have any other questions?"
-
-Wait for their answer, then begin.
-
----
-
-If user replies B (team manager):
-Say: "Welcome, manager! You can do two things here:
-
-① Practice your own sales skills
-② Practice manager skills:
-• How to recruit new agents
-• How to coach and train your team
-• How to handle team challenges
-
-One more question:
-
-Do you have any challenges with recruiting or training your team?
-
-For example:
-• New agents do not know how to start a conversation
-• Team morale is low
-• Helping agents handle rejection
-
-We can create practice scenarios for these specific situations.
-
-Which would you like to start with?
-1 — Practice my own sales skills
-2 — Practice recruiting or coaching conversations
-3 — Discuss a specific team management challenge
-
-Please reply 1, 2, or 3."
-
----
-
-Role-play rules (important):
-• Before starting, always say: "I will now play the role of [character]. Ready?"
-• Stay in character fully during the role-play
-• If user says "pause" or "I don't understand", step out of character and explain clearly
-• After each role-play, give a score and specific tips to improve
-
-Keep all replies short and clear. Use line breaks. Never put too much text in one block.`;
-
-      // Temporarily override the free scenario system prompt
-      const originalPrompt = freeScenario.systemPrompt;
-      freeScenario.systemPrompt = { en: tutorialPrompt, zh: tutorialPrompt };
-      selectScenario(freeScenario);
-      // Restore original after 500ms (it's already been used for the first API call)
-      setTimeout(() => { freeScenario.systemPrompt = originalPrompt; }, 500);
+    if (!freeScenario) return;
+
+    const clientData2 = obRole === 'manager' ? c.managerClients : c.clients[obIndustry];
+    const systemPrompt = buildMissionPrompt(obLang, obIndustry, obRole, clientData2);
+    const originalPrompt = freeScenario.systemPrompt;
+    freeScenario.systemPrompt = { en: systemPrompt, zh: systemPrompt };
+    selectScenario(freeScenario);
+    setTimeout(() => { freeScenario.systemPrompt = originalPrompt; }, 500);
+
+    // If opener selected, auto-send it
+    if (opener) {
+      setTimeout(() => {
+        const input = document.getElementById('chat-input');
+        if (input) {
+          input.value = opener;
+          setTimeout(() => sendMessage(), 300);
+        }
+      }, 2000);
     }
   }, 450);
 }
 
-function pickLang(lang) {
-  startWithLang(lang);
+function buildMissionPrompt(lang, industry, role, clientData) {
+  if (lang === 'zh') {
+    if (role === 'manager') {
+      return `你扮演新學員小湯，26歲，剛加入團隊，熱情但緊張，害怕被拒絕。
+用戶是你的主管，來幫助你成長。
+
+直接以小湯的身份開口：
+「主管，我...我今天要打第一個客戶電話，但是我真的不知道該怎麼開口...您能幫幫我嗎？」
+
+保持完全的角色。每隔3-4輪，插入：
+💡 教練提示：[針對主管的一句具體建議]
+然後繼續扮演小湯。根據用戶語言（繁體/簡體）自動調整。`;
+    }
+    return `你扮演${clientData.name}。
+背景：${clientData.bio.replace(/\n/g, '。')}
+用戶是銷售員，來跟你談${industry === 'insurance' ? '保險/理財' : industry === 'realestate' ? '房地產' : '健康產品'}。
+
+直接以客戶身份開口，不要解釋你是AI：
+「你好，請問你是...？」（然後表現出你的性格——稍微警惕或忙碌）
+
+完全保持客戶角色。每隔3-4輪插入：
+💡 教練提示：[一句具體的銷售建議]
+然後繼續扮演客戶。根據用戶語言自動調整。`;
+  } else {
+    if (role === 'manager') {
+      return `You play Jake, 26, a new agent who just joined the team. Enthusiastic but nervous. Afraid of rejection.
+The user is your manager, here to help you grow.
+
+Language rule: Use simple, clear, formal English. Avoid slang and idiomatic expressions. Speak in a way that is easy to understand for non-native English speakers.
+
+Open immediately as Jake:
+"Hello. I have my first client call scheduled for today and I am not sure how to begin. Could you give me some guidance?"
+
+Stay fully in character. Every 3-4 exchanges, insert:
+💡 Coach Tip: [one specific tip for the manager, written in simple clear English]
+Then continue as Jake.`;
+    }
+    return `You play ${clientData.name}.
+Background: ${clientData.bio.replace(/\n/g, '. ')}
+The user is a salesperson speaking with you about ${industry === 'insurance' ? 'insurance or financial planning' : industry === 'realestate' ? 'real estate' : 'health and wellness products'}.
+
+Language rule: Use simple, clear, formal English. Avoid slang and idiomatic expressions. Speak in a way that is easy to understand for non-native English speakers.
+
+Open immediately as the client — do NOT identify yourself as AI:
+"Hello. I understand you would like to speak with me about ${industry === 'insurance' ? 'insurance' : industry === 'realestate' ? 'a property' : 'health products'}. I have some questions." (then show your personality — slightly skeptical or cautious)
+
+Stay fully in character. Every 3-4 exchanges, insert:
+💡 Coach Tip: [one specific, actionable sales tip — written in simple, clear English]
+Then continue as the client. If the user writes in Chinese, respond in Chinese.`;
+  }
 }
 
+function obSkipToApp(lang) {
+  const freeScenario = scenarios.find(sc => sc.id === 0);
+  if (freeScenario) selectScenario(freeScenario);
+}
+
+function startWithLang(lang) { obScreen2(lang); }
+function pickLang(lang) { obScreen2(lang); }
+function startMission() { obScreen3(); }
+function obChooseOwn() {
+  const overlay = document.getElementById('onboarding-overlay');
+  overlay.style.display = 'none';
+  sessionStorage.setItem('agentraining_lang', obLang);
+  setLang(obLang);
+}
+function obSetLang(lang) { obScreen2(lang); }
 
 // ── TEAM LEADER MODE ──
 let isTeamLeaderMode = false;
@@ -2392,6 +2508,7 @@ function setLang(lang) {
 if (checkAccess()) {
   renderScenarios();
   showLangPicker();
+  setupTextSelectionMenu();
 }
 </script>
 <script>
