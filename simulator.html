@@ -1490,12 +1490,38 @@ const strings = {
 };
 
 // ── RENDER SCENARIOS ──
+const hotScenarios = [1, 3, 7, 19, 21]; // IDs of hot/recommended scenarios
+const financeSubgroups = {
+  starter: { ids: [1, 3, 7, 19, 21], label: { en: '🔥 Recommended for Beginners', zh: '🔥 新手強烈推薦' } },
+  objections: { ids: [2, 4, 9, 10, 16, 17, 18, 20], label: { en: 'Common Objections', zh: '常見異議處理' } },
+  advanced: { ids: [8, 22], label: { en: 'Advanced & Specialty', zh: '進階與特殊情境' } }
+};
+
+const scenarioMeta = {
+  1:  { focus: { en: 'Objection handling · Value reframing', zh: '異議處理 · 價值重構' }, time: '5-8' },
+  2:  { focus: { en: 'Investment vs protection', zh: '投資 vs 保障論述' }, time: '6-9' },
+  3:  { focus: { en: 'Closing techniques · Handling hesitation', zh: '成交技巧 · 化解猶豫' }, time: '6-9' },
+  4:  { focus: { en: 'Risk awareness · Young clients', zh: '風險意識 · 年輕客戶' }, time: '5-8' },
+  7:  { focus: { en: 'Product explanation · IUL basics', zh: '產品解說 · IUL 基礎' }, time: '7-10' },
+  8:  { focus: { en: 'Retirement planning · Annuity', zh: '退休規劃 · 年金說明' }, time: '8-12' },
+  9:  { focus: { en: 'Coverage gaps · Portability', zh: '保障缺口 · 可攜性' }, time: '6-9' },
+  10: { focus: { en: 'Third-party objection', zh: '第三方異議處理' }, time: '7-10' },
+  16: { focus: { en: 'Trust rebuilding', zh: '重建信任' }, time: '8-12' },
+  17: { focus: { en: 'Social influence objection', zh: '社交影響力異議' }, time: '6-9' },
+  18: { focus: { en: 'Self-insurance mindset', zh: '自我保障心態' }, time: '6-9' },
+  19: { focus: { en: 'Product comparison · Whole Life vs Term', zh: '產品比較 · 定期 vs 終身' }, time: '7-10' },
+  20: { focus: { en: 'Flexible options · Timing objection', zh: '彈性方案 · 時機異議' }, time: '5-8' },
+  21: { focus: { en: 'Critical illness · Needs discovery', zh: '重疾保障 · 需求探索' }, time: '6-9' },
+  22: { focus: { en: 'Business protection · Key-man', zh: '企業保障 · 關鍵人壽險' }, time: '10-15' },
+};
+
+let collapsedSections = { realestate: true, health: true };
+
 function renderScenarios(filter = '') {
   const s = strings[currentLang];
   const list = document.getElementById('scenario-list');
   const filtered = scenarios.filter(sc => {
     const f = filter.toLowerCase();
-    // Level filter
     if (currentLevelFilter !== 'all' && sc.level !== currentLevelFilter) return false;
     if (!f) return true;
     const name = sc.name[currentLang].toLowerCase();
@@ -1504,7 +1530,7 @@ function renderScenarios(filter = '') {
     const keywords = (sc.keywords || []).join(' ').toLowerCase();
     const nameEn = sc.name.en.toLowerCase();
     const previewEn = sc.preview.en.toLowerCase();
-    return name.includes(f) || preview.includes(f) || industry.includes(f) 
+    return name.includes(f) || preview.includes(f) || industry.includes(f)
         || keywords.includes(f) || nameEn.includes(f) || previewEn.includes(f);
   });
 
@@ -1515,19 +1541,12 @@ function renderScenarios(filter = '') {
   });
 
   list.innerHTML = '';
-  Object.entries(groups).forEach(([cat, items]) => {
-    const groupLabel = document.createElement('div');
-    groupLabel.style.cssText = 'padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted)';
-    groupLabel.textContent = cat === 'finance' ? s.catFinance
-      : cat === 'realestate' ? s.catRealestate
-      : cat === 'health' ? s.catHealth
-      : cat === 'free' ? s.catFree
-      : cat;
-    list.appendChild(groupLabel);
 
-    items.forEach(sc => {
+  // FREE PRACTICE first
+  if (groups.free) {
+    groups.free.forEach(sc => {
       const el = document.createElement('div');
-      el.className = 'scenario-item' + (currentScenario?.id === sc.id ? ' active' : '') + (sc.cat === 'free' ? ' scenario-free' : '');
+      el.className = 'scenario-item scenario-free' + (currentScenario?.id === sc.id ? ' active' : '');
       el.onclick = () => selectScenario(sc);
       el.innerHTML = `
         <div class="scenario-name">${sc.name[currentLang]}</div>
@@ -1536,6 +1555,91 @@ function renderScenarios(filter = '') {
       `;
       list.appendChild(el);
     });
+  }
+
+  // FINANCE with subgroups
+  if (groups.finance) {
+    const catHeader = document.createElement('div');
+    catHeader.style.cssText = 'padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted)';
+    catHeader.textContent = s.catFinance + ` (${groups.finance.length})`;
+    list.appendChild(catHeader);
+
+    const allFinanceIds = groups.finance.map(sc => sc.id);
+    ['starter', 'objections', 'advanced'].forEach(subkey => {
+      const sub = financeSubgroups[subkey];
+      const subItems = groups.finance.filter(sc => sub.ids.includes(sc.id));
+      if (subItems.length === 0) return;
+
+      const subHeader = document.createElement('div');
+      subHeader.style.cssText = 'padding:6px 14px 2px;font-size:11px;font-weight:700;color:var(--accent);margin-top:4px;';
+      subHeader.textContent = sub.label[currentLang];
+      list.appendChild(subHeader);
+
+      subItems.forEach(sc => {
+        const meta = scenarioMeta[sc.id];
+        const isHot = hotScenarios.includes(sc.id);
+        const el = document.createElement('div');
+        el.className = 'scenario-item' + (currentScenario?.id === sc.id ? ' active' : '');
+        el.onclick = () => selectScenario(sc);
+        el.innerHTML = `
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="scenario-name" style="flex:1;">${sc.name[currentLang]}</div>
+            ${isHot ? '<span style="font-size:10px;background:#fff3cd;color:#856404;padding:2px 7px;border-radius:10px;font-weight:700;white-space:nowrap;">🔥 Hot</span>' : ''}
+          </div>
+          <div class="scenario-preview">${sc.preview[currentLang]}</div>
+          ${meta ? `<div style="font-size:11px;color:var(--ink-muted);margin-top:3px;">📌 ${meta.focus[currentLang]} · ⏱ ${meta.time} min</div>` : ''}
+          <span class="scenario-lv">${sc.level}</span>
+        `;
+        list.appendChild(el);
+      });
+
+      // Show remaining finance scenarios not in any subgroup
+      if (subkey === 'advanced') {
+        const categorizedIds = [...financeSubgroups.starter.ids, ...financeSubgroups.objections.ids, ...financeSubgroups.advanced.ids];
+        const uncategorized = groups.finance.filter(sc => !categorizedIds.includes(sc.id));
+        uncategorized.forEach(sc => {
+          const meta = scenarioMeta[sc.id];
+          const el = document.createElement('div');
+          el.className = 'scenario-item' + (currentScenario?.id === sc.id ? ' active' : '');
+          el.onclick = () => selectScenario(sc);
+          el.innerHTML = `
+            <div class="scenario-name">${sc.name[currentLang]}</div>
+            <div class="scenario-preview">${sc.preview[currentLang]}</div>
+            ${meta ? `<div style="font-size:11px;color:var(--ink-muted);margin-top:3px;">📌 ${meta.focus[currentLang]} · ⏱ ${meta.time} min</div>` : ''}
+            <span class="scenario-lv">${sc.level}</span>
+          `;
+          list.appendChild(el);
+        });
+      }
+    });
+  }
+
+  // HEALTH & REAL ESTATE — collapsible
+  [['health', s.catHealth], ['realestate', s.catRealestate]].forEach(([cat, label]) => {
+    if (!groups[cat]) return;
+    const isCollapsed = collapsedSections[cat] && !filter;
+    const catHeader = document.createElement('div');
+    catHeader.style.cssText = 'padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted);cursor:pointer;display:flex;justify-content:space-between;align-items:center;';
+    catHeader.innerHTML = `<span>${label} (${groups[cat].length})</span><span style="font-size:14px;">${isCollapsed ? '▶' : '▼'}</span>`;
+    catHeader.onclick = () => {
+      collapsedSections[cat] = !collapsedSections[cat];
+      renderScenarios(document.getElementById('search-input').value);
+    };
+    list.appendChild(catHeader);
+
+    if (!isCollapsed) {
+      groups[cat].forEach(sc => {
+        const el = document.createElement('div');
+        el.className = 'scenario-item' + (currentScenario?.id === sc.id ? ' active' : '');
+        el.onclick = () => selectScenario(sc);
+        el.innerHTML = `
+          <div class="scenario-name">${sc.name[currentLang]}</div>
+          <div class="scenario-preview">${sc.preview[currentLang]}</div>
+          <span class="scenario-lv">${sc.level}</span>
+        `;
+        list.appendChild(el);
+      });
+    }
   });
 }
 
