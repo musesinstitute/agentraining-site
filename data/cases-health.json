@@ -1,0 +1,305 @@
+{
+  "industry": "health",
+  "cases": [
+    {
+      "id": "health-01",
+      "tags": {
+        "objectionType": "time_constrained",
+        "difficulty": 1,
+        "archetype": "busy_working_mother"
+      },
+      "en": {
+        "name": "Ms. Sarah Parker, 38",
+        "bio": "Working mother · Busy schedule\nHealth-conscious but budget-aware\nSays: \"I don't have time for this.\"",
+        "greeting": "Hi, I only have a few minutes. I'm quite busy with work and family, so please keep this brief.",
+        "tasks": "① Connect with her on family wellbeing\n② Show clear, simple value\n③ Make it easy to say yes",
+        "openers": [
+          "Ms. Parker, I will be brief. What is your biggest health concern for your family at this time?",
+          "Ms. Parker, I am also a working parent. That is why I focus on health planning. May I share one thing I wish I had known earlier?",
+          "Ms. Parker, this will take five minutes. May I show you a simple option that fits a busy schedule?"
+        ]
+      },
+      "zh": {
+        "name": "林女士，38歲",
+        "bio": "職業媽媽 · 行程繁忙\n注重健康但預算有限\n她說：「我沒有時間談這個。」",
+        "greeting": "你好，我時間不多，工作跟家庭都很忙，麻煩你長話短說。",
+        "tasks": "① 從家庭健康角度建立連結\n② 展示清晰、簡單的價值\n③ 讓她容易說是",
+        "openers": [
+          "林女士，我知道您很忙，我長話短說。一個問題——您現在對家人健康最大的擔憂是什麼？",
+          "林女士，我也是職業父母。這正是我進入健康規劃行業的原因。我可以分享我希望早點知道的事嗎？",
+          "林女士，我大部分客戶都說沒有時間——直到真正需要保障的那一天。我可以給您看一個5分鐘的方案嗎？"
+        ]
+      }
+    },
+    {
+      "id": "health-02",
+      "tags": {
+        "objectionType": "overwhelmed_by_options",
+        "difficulty": 2,
+        "archetype": "recent_health_scare"
+      },
+      "en": {
+        "name": "Mr. James Park, 50",
+        "bio": "Recently had a health scare · Motivated but overwhelmed\nToo many options, unsure which fits\nSays: \"There are so many plans, I don't know which one is right.\"",
+        "greeting": "Hello. My doctor recently gave me some news that got my attention. But there are so many options, I don't know which one is right for me.",
+        "tasks": "① Acknowledge his concern with empathy\n② Simplify his options into one clear choice\n③ Move him toward a decision, not more research",
+        "openers": [
+          "Mr. Park, I am sorry to hear that. Let us start simple — what matters most to you in a plan right now?",
+          "Mr. Park, instead of comparing every option, let me recommend just one that fits your situation. Is that helpful?",
+          "Mr. Park, many people feel the same way after news like that. What questions can I answer for you first?"
+        ]
+      },
+      "zh": {
+        "name": "朴先生，50歲",
+        "bio": "最近健康檢查有狀況 · 有意願但被太多方案搞得無所適從\n他說：「方案太多了，我不知道哪個適合我。」",
+        "greeting": "你好，我最近健康檢查有一些狀況，讓我開始重視這件事。但方案真的太多了，我不知道哪一個適合我。",
+        "tasks": "① 用同理心回應他的擔憂\n② 把選項簡化成一個清楚的建議\n③ 引導他做決定，而不是繼續比較",
+        "openers": [
+          "朴先生，聽到這個消息我也很替您擔心。我們先從一件事開始好嗎——您現在最在意方案裡的哪個部分？",
+          "朴先生，與其一個個比較，不如讓我根據您的狀況推薦一個最適合的方案，這樣可以嗎？",
+          "朴先生，聽到這樣的消息，很多人都會有類似的感覺。您想先了解哪方面呢？"
+        ]
+      }
+    },
+    {
+      "id": "health-03",
+      "tags": {
+        "objectionType": "no_urgency",
+        "difficulty": 1,
+        "archetype": "young_and_healthy"
+      },
+      "en": {
+        "name": "Ms. Grace Kim, 29",
+        "bio": "Young professional · Feels healthy\nDoes not see the urgency\nSays: \"I'm healthy. I don't need this right now.\"",
+        "greeting": "Hi. I have to be honest, I'm young and healthy. I don't think I really need this right now.",
+        "tasks": "① Reframe health planning as protecting the future, not the present\n② Keep the tone light, not fear-based\n③ Offer a low-commitment starting point",
+        "openers": [
+          "Ms. Kim, that is great to hear. This is actually the best time to start, while it is simple and affordable.",
+          "Ms. Kim, I am not here to worry you. I just want you to have options later, when they matter most.",
+          "Ms. Kim, many of my healthiest clients started exactly like you. Can I show you the simplest starting option?"
+        ]
+      },
+      "zh": {
+        "name": "金小姐，29歲",
+        "bio": "年輕上班族 · 自覺很健康\n不覺得現在有急迫性\n她說：「我很健康，現在不需要這個。」",
+        "greeting": "你好，老實說我年輕又健康，我覺得現在應該不太需要這個。",
+        "tasks": "① 把健康規劃重新定位成保障未來、而非現在\n② 保持輕鬆語氣，不用恐懼訴求\n③ 提供一個低門檻的入門方案",
+        "openers": [
+          "金小姐，聽到這樣很棒。其實現在正是最好的開始時機，因為方案簡單、費用也划算。",
+          "金小姐，我不是要讓您擔心，只是希望您以後真正需要的時候，手上已經有選擇。",
+          "金小姐，我很多最健康的客戶都是像您這樣開始的。要不要看看最簡單的入門方案？"
+        ]
+      }
+    },
+    {
+      "id": "health-04",
+      "tags": {
+        "objectionType": "distrust_of_salesperson",
+        "difficulty": 3,
+        "archetype": "fears_denial_due_to_condition"
+      },
+      "en": {
+        "name": "Mr. Victor Alvarez, 55",
+        "bio": "Has an existing chronic condition · Worried about being denied coverage\nGuarded, expects rejection\nSays: \"Companies always find a reason to deny people like me.\"",
+        "greeting": "Look, I have a condition already. Companies always find a reason to deny people like me, so why waste our time?",
+        "tasks": "① Address his fear of rejection directly and honestly\n② Clarify what is and isn't affected by his condition\n③ Avoid overpromising, build trust through accuracy",
+        "openers": [
+          "Mr. Alvarez, I understand that fear. Let's look together at exactly what your condition would and wouldn't affect.",
+          "Mr. Alvarez, I won't promise something I can't guarantee, but I can walk you through this honestly, step by step.",
+          "Mr. Alvarez, many people with your condition are surprised by what's actually available. Can I show you the real options?"
+        ]
+      },
+      "zh": {
+        "name": "徐先生，55歲",
+        "bio": "已有慢性病史 · 擔心會被拒保\n心態防備，預期會被拒絕\n他說：「你們這些公司總是有辦法拒絕我這種人。」",
+        "greeting": "我老實說，我已經有病史了。你們這些公司總是有辦法拒絕我這種人，何必浪費彼此時間？",
+        "tasks": "① 直接且誠實地回應他害怕被拒絕的心情\n② 釐清他的病史實際會不會影響、影響到哪裡\n③ 不要過度承諾，用準確建立信任",
+        "openers": [
+          "徐先生，我理解這個擔心。我們一起實際看看，您的病史到底會不會影響、影響哪個部分。",
+          "徐先生，我不會給您無法保證的承諾，但我可以誠實地一步一步帶您看清楚。",
+          "徐先生，很多跟您有相同病史的客戶，其實都對實際能選的方案感到意外。我可以讓您看看真正的選項嗎？"
+        ]
+      }
+    },
+    {
+      "id": "health-05",
+      "tags": {
+        "objectionType": "price_sensitive",
+        "difficulty": 2,
+        "archetype": "fixed_income_retiree"
+      },
+      "en": {
+        "name": "Mrs. Susan Blake, 63",
+        "bio": "Retired · Living on a fixed income\nVery worried about ongoing cost\nSays: \"On a fixed income, I have to know exactly what this will cost every month.\"",
+        "greeting": "Hi. I'm on a fixed income now, so I need to know exactly what this is going to cost me every single month.",
+        "tasks": "① Respect the reality of her fixed budget\n② Give exact, predictable numbers, not ranges\n③ Show the cost of not having coverage in retirement",
+        "openers": [
+          "Mrs. Blake, that's completely fair. Let's find the exact monthly number that fits your budget first.",
+          "Mrs. Blake, I'll give you a precise number, not an estimate, so there are no surprises.",
+          "Mrs. Blake, may I also show you what an unexpected health cost could mean for a fixed income, so we compare both sides?"
+        ]
+      },
+      "zh": {
+        "name": "白太太，63歲",
+        "bio": "退休人士 · 靠固定收入生活\n非常在意每個月的花費\n她說：「我收入固定，我得知道每個月到底要花多少。」",
+        "greeting": "你好，我現在收入是固定的，所以我需要知道每個月確切要付多少錢。",
+        "tasks": "① 尊重她固定預算的現實狀況\n② 給出精確、可預期的數字，而不是區間\n③ 說明退休後沒有保障可能會付出的代價",
+        "openers": [
+          "白太太，這完全合理。我們先找出符合您預算的確切月費金額。",
+          "白太太，我會給您一個精確的數字，不是估算，這樣才不會有意外。",
+          "白太太，我也可以讓您看看，萬一有突發的健康花費，對固定收入會是什麼影響，這樣我們可以兩邊一起比較，好嗎？"
+        ]
+      }
+    },
+    {
+      "id": "health-06",
+      "tags": {
+        "objectionType": "distrust_of_salesperson",
+        "difficulty": 3,
+        "archetype": "burned_by_pushy_agent"
+      },
+      "en": {
+        "name": "Mr. Derek Huang, 41",
+        "bio": "Was sold a bad plan before by a pushy salesperson\nGuarded and slow to trust now\nSays: \"The last guy pressured me into something I didn't need.\"",
+        "greeting": "I'll be upfront — the last person I talked to pressured me into a plan I didn't actually need. I'm cautious now.",
+        "tasks": "① Show restraint, do not push at all\n② Let him set the pace of the conversation\n③ Focus only on what he actually needs, nothing extra",
+        "openers": [
+          "Mr. Huang, I'm sorry that happened. I promise to only show you what's actually relevant to you — nothing more.",
+          "Mr. Huang, take all the time you need. I would rather you feel informed than rushed.",
+          "Mr. Huang, what would need to happen this time for you to feel like this was actually your decision?"
+        ]
+      },
+      "zh": {
+        "name": "黃先生，41歲",
+        "bio": "之前被強勢推銷買了不需要的方案\n現在很有戒心，不容易信任\n他說：「上次那個人硬是推銷我根本不需要的東西。」",
+        "greeting": "我先說清楚——上次跟我談的那個人硬推銷我一個我根本不需要的方案。這次我比較謹慎。",
+        "tasks": "① 完全不施加壓力\n② 讓他自己決定對話的節奏\n③ 只聚焦在他真正需要的部分，不多加東西",
+        "openers": [
+          "黃先生，很遺憾您有這樣的經驗。我保證只讓您看真正跟您有關的部分，不會多加。",
+          "黃先生，您需要多少時間都可以，我寧願您覺得資訊充足，也不想催促您。",
+          "黃先生，這次要怎麼進行，才會讓您覺得這真的是您自己的決定？"
+        ]
+      }
+    },
+    {
+      "id": "health-07",
+      "tags": {
+        "objectionType": "no_urgency",
+        "difficulty": 2,
+        "archetype": "procrastinating_entrepreneur"
+      },
+      "en": {
+        "name": "Ms. Rachel Nolan, 34",
+        "bio": "Busy entrepreneur · Always meaning to get to it later\nProcrastinates on personal matters\nSays: \"I'll deal with this once things settle down at work.\"",
+        "greeting": "Hi. Honestly, I keep meaning to sort this out, but I always think I'll deal with it once things settle down at work.",
+        "tasks": "① Gently challenge the 'someday' mindset\n② Make the first step feel effortless, not another task\n③ Get a concrete small commitment today",
+        "openers": [
+          "Ms. Nolan, I hear that a lot from entrepreneurs. What would it take to make this a five-minute task instead of a someday task?",
+          "Ms. Nolan, things rarely settle down on their own. Could we just take the smallest first step today?",
+          "Ms. Nolan, if nothing changed for another year, how would you feel about that? Let's start with just one small thing."
+        ]
+      },
+      "zh": {
+        "name": "羅小姐，34歲",
+        "bio": "忙碌的創業者 · 總是想著以後再處理\n個人事務常常一拖再拖\n她說：「等工作忙完這一陣子我再來處理。」",
+        "greeting": "你好，老實說我一直想處理這件事，但總覺得等工作忙完這陣子再說。",
+        "tasks": "① 溫和地挑戰「以後再說」的心態\n② 讓第一步變得毫不費力，而不是又一件待辦事項\n③ 今天就拿到一個具體但小的承諾",
+        "openers": [
+          "羅小姐，很多創業者都這麼說。要怎麼樣才能讓這件事變成一個五分鐘就能完成的小事，而不是「以後再說」？",
+          "羅小姐，事情很少會自己「忙完」。我們今天可以先跨出最小的第一步嗎？",
+          "羅小姐，如果再過一年都沒有處理，您會怎麼想？我們先從一件小事開始就好。"
+        ]
+      }
+    },
+    {
+      "id": "health-08",
+      "tags": {
+        "objectionType": "distrust_of_salesperson",
+        "difficulty": 3,
+        "archetype": "general_industry_skeptic"
+      },
+      "en": {
+        "name": "Mr. Tony Reyes, 48",
+        "bio": "Skeptical of the wellness industry in general\nBelieves most of it is marketing hype\nSays: \"Honestly, I think most of this industry is a scam.\"",
+        "greeting": "I'll just say it — I think most of this wellness industry is a scam dressed up in nice marketing.",
+        "tasks": "① Don't argue with his skepticism, validate part of it\n② Separate genuine value from industry hype\n③ Let facts, not persuasion, do the work",
+        "openers": [
+          "Mr. Reyes, honestly, you're not wrong that there's a lot of hype out there. Can I show you just the facts and let you judge?",
+          "Mr. Reyes, I'd rather you stay skeptical and check everything I say than just trust me blindly.",
+          "Mr. Reyes, what would actual proof look like to you, rather than marketing claims?"
+        ]
+      },
+      "zh": {
+        "name": "雷先生，48歲",
+        "bio": "對整個健康產業普遍不信任\n認為大部分都是行銷噱頭\n他說：「老實說，我覺得這個產業大部分都是騙局。」",
+        "greeting": "我直說了——我覺得這個健康產業大部分都是包裝得很好看的騙局。",
+        "tasks": "① 不要跟他的懷疑爭辯，先承認部分合理性\n② 把真正的價值跟產業噱頭分開來看\n③ 用事實說話，而不是說服話術",
+        "openers": [
+          "雷先生，老實說，您說的沒錯，市面上確實有很多噱頭。我可以只給您看事實，讓您自己判斷嗎？",
+          "雷先生，我反而希望您保持懷疑，去查證我說的每一句話，而不是盲目相信我。",
+          "雷先生，對您來說，什麼樣的東西才算是真正的證據，而不是行銷話術？"
+        ]
+      }
+    },
+    {
+      "id": "health-09",
+      "tags": {
+        "objectionType": "time_constrained",
+        "difficulty": 2,
+        "archetype": "sandwich_generation_caregiver"
+      },
+      "en": {
+        "name": "Mrs. Helen Cho, 52",
+        "bio": "Caring for aging parents · Stretched thin financially and emotionally\nHer own needs come last\nSays: \"Between my parents and everything else, I don't have room for one more thing.\"",
+        "greeting": "Hi. Honestly, between caring for my parents and everything else, I don't really have room for one more thing right now.",
+        "tasks": "① Acknowledge the emotional load she is carrying\n② Show this as something that reduces her burden, not adds to it\n③ Keep any next step extremely small",
+        "openers": [
+          "Mrs. Cho, that sounds like a lot to carry. What if this actually took one worry off your plate instead of adding one?",
+          "Mrs. Cho, I'm not asking for more of your time today — just five minutes to see if this fits.",
+          "Mrs. Cho, caregivers often put themselves last. What would it take for you to feel it's okay to spend a moment on yourself?"
+        ]
+      },
+      "zh": {
+        "name": "卓太太，52歲",
+        "bio": "照顧年邁父母 · 財務跟情緒都被拉得很緊\n總是把自己的需求放在最後\n她說：「照顧父母加上其他事情，我真的沒有多餘的心力了。」",
+        "greeting": "你好，老實說，光是照顧父母加上其他事情，我現在真的沒有多餘的心力再處理別的了。",
+        "tasks": "① 認同她背負的情緒重擔\n② 把這件事定位成減輕負擔、而不是增加負擔\n③ 下一步一定要非常小",
+        "openers": [
+          "卓太太，聽起來您承擔了很多。如果這件事其實能幫您卸下一個擔憂、而不是增加一個，會不會不一樣？",
+          "卓太太，我今天不是要佔用您更多時間，只需要五分鐘看看這是不是適合您。",
+          "卓太太，照顧者常常把自己放在最後。要怎麼樣，您才會覺得花一點時間在自己身上是可以的？"
+        ]
+      }
+    },
+    {
+      "id": "health-10",
+      "tags": {
+        "objectionType": "price_sensitive",
+        "difficulty": 1,
+        "archetype": "financially_strapped_young_adult"
+      },
+      "en": {
+        "name": "Mr. Isaac Bennett, 27",
+        "bio": "Young, financially strapped · Other spending feels more urgent\nSees this as a lower priority\nSays: \"Right now, other bills come first.\"",
+        "greeting": "Hey. Honestly, right now other bills just come first. This feels like something I can put off.",
+        "tasks": "① Meet him where his budget actually is\n② Reframe this as protection, not another bill\n③ Offer the smallest realistic starting point",
+        "openers": [
+          "Isaac, that's fair — what if we found an option that costs less than what you spend on something small each week?",
+          "Isaac, I'm not asking you to choose this over your other bills. Let's just see what fits alongside them.",
+          "Isaac, starting small now is easier than starting big later. Can I show you the lowest-cost option?"
+        ]
+      },
+      "zh": {
+        "name": "班先生，27歲",
+        "bio": "年輕、財務吃緊 · 覺得其他花費更急迫\n把這件事排在優先順序後面\n他說：「現在其他帳單比較重要。」",
+        "greeting": "嘿，老實說，現在其他帳單比較重要，這件事感覺可以先放著。",
+        "tasks": "① 從他實際的預算出發\n② 把這件事重新定位成保障，而不是多一筆帳單\n③ 提供最小、最實際的入門方案",
+        "openers": [
+          "班先生，這很合理——如果我們找到一個方案，費用比您每週花在小東西上的錢還少呢？",
+          "班先生，我不是要您選這個、放棄其他帳單。我們只是看看有沒有可以並存的方案。",
+          "班先生，現在先從小的開始，會比以後再從頭開始容易得多。我可以讓您看看最低費用的方案嗎？"
+        ]
+      }
+    }
+  ]
+}

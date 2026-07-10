@@ -1,0 +1,39 @@
+{
+  "_purpose": "This is the controlled vocabulary shared between the AI Coach practice case library (cases-*.json) and the future AI Case Management module. Every practice case is tagged with an objectionType; when Case Management ships, real client cases logged by agents should use this SAME vocabulary so the two systems can cross-reference each other (e.g. 'this real case matches practice scenario insurance-06 — practice it before your next call').",
+
+  "objectionTypes": {
+    "no_urgency":                        { "zh": "沒有急迫性", "appliesTo": ["insurance", "realestate", "health"] },
+    "already_has_solution":               { "zh": "已有解決方案", "appliesTo": ["insurance", "realestate", "health"] },
+    "price_sensitive":                    { "zh": "對價格敏感", "appliesTo": ["insurance", "realestate", "health"] },
+    "needs_third_party_approval":         { "zh": "決定權在別人手上", "appliesTo": ["insurance", "realestate"] },
+    "overwhelmed_by_options":             { "zh": "選項太多、無所適從", "appliesTo": ["insurance", "realestate", "health"] },
+    "distrust_of_salesperson":            { "zh": "對業務員/產業不信任", "appliesTo": ["insurance", "realestate", "health"] },
+    "time_constrained":                   { "zh": "時間有限", "appliesTo": ["insurance", "realestate", "health"] },
+    "emotional_attachment":               { "zh": "情感依戀、不易放手", "appliesTo": ["realestate"] },
+    "risk_aversion":                      { "zh": "風險趨避", "appliesTo": ["realestate"] },
+
+    "low_confidence":                     { "zh": "缺乏自信", "appliesTo": ["manager"] },
+    "overconfidence_resistant_to_feedback": { "zh": "過度自信、不聽建議", "appliesTo": ["manager"] },
+    "performance_decline_defensive":      { "zh": "業績下滑、防衛心重", "appliesTo": ["manager"] },
+    "burnout_motivation_loss":            { "zh": "職業倦怠、動力流失", "appliesTo": ["manager"] },
+    "closing_hesitation":                 { "zh": "敢聊不敢收單", "appliesTo": ["manager"] },
+    "poor_listening":                     { "zh": "不擅傾聽、搶話", "appliesTo": ["manager"] },
+    "resistance_to_change":               { "zh": "抗拒新工具/新方法", "appliesTo": ["manager"] },
+    "followup_inconsistency":             { "zh": "追蹤不穩定、不系統化", "appliesTo": ["manager"] },
+    "low_resilience":                     { "zh": "抗壓性低、易被拒絕打擊", "appliesTo": ["manager"] },
+    "complacency":                        { "zh": "安於現狀、缺乏進取心", "appliesTo": ["manager"] }
+  },
+
+  "difficultyLevels": {
+    "1": { "zh": "基礎", "en": "Beginner — straightforward, cooperative persona" },
+    "2": { "zh": "中等", "en": "Intermediate — some resistance, needs skill to redirect" },
+    "3": { "zh": "進階", "en": "Advanced — high resistance, emotionally charged or high-stakes" }
+  },
+
+  "howToUseWhenBuildingCaseManagement": [
+    "When an agent logs a real client case, let them (or an AI classifier) pick the closest objectionType from this same list, instead of free text.",
+    "Store the picked practice case id + tags in sessionStorage/localStorage when a practice session starts (see simulator.html: obPickedClient._id / obPickedClient._tags) so future features can read 'what did this user practice recently' without re-architecting the data model.",
+    "A simple v1 binding: if a real case's objectionType matches a practice case the agent hasn't done recently, surface it as a suggested practice before their next call with that client.",
+    "A simple v2 binding: after a practice session, if performance was weak, suggest the agent flag any real client in Case Management with the same objectionType for extra follow-up attention."
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "industry": "manager",
+  "cases": [
+    {
+      "id": "manager-01",
+      "tags": {
+        "objectionType": "low_confidence",
+        "difficulty": 1,
+        "archetype": "nervous_new_agent"
+      },
+      "en": {
+        "name": "New Agent Jake, 26",
+        "bio": "Just joined your team · Enthusiastic but nervous\nAfraid of rejection · Does not know how to start",
+        "greeting": "Hello. I have my first client call scheduled for today and I am not sure how to begin. Could you give me some guidance?",
+        "tasks": "① Build his confidence\n② Teach him his first opening line\n③ Role-play his first client call with him",
+        "openers": [
+          "Jake, every strong agent started exactly where you are. Let me share the one thing that made the biggest difference.",
+          "Jake, set the script aside for now. Tell me — what concerns you most about making your first call?",
+          "Jake, I will play a difficult client. You practice responding to me. Are you ready?"
+        ]
+      },
+      "zh": {
+        "name": "新學員小湯，26歲",
+        "bio": "剛加入你的團隊 · 熱情但緊張\n害怕被拒絕 · 不知道如何開口",
+        "greeting": "你好，我今天排了第一通客戶電話，但我真的不知道該怎麼開口，你能幫幫我嗎？",
+        "tasks": "① 建立他的自信心\n② 教他第一句開場白\n③ 跟他角色扮演第一個客戶電話",
+        "openers": [
+          "小湯，每個優秀的業務員都曾經是你現在的樣子。讓我分享改變一切的那一件事。",
+          "小湯，先忘記話術。告訴我——你對打第一個電話最害怕什麼？",
+          "小湯，我來扮演一個難搞的客戶，你來練習。準備好了嗎？"
+        ]
+      }
+    },
+    {
+      "id": "manager-02",
+      "tags": {
+        "objectionType": "performance_decline_defensive",
+        "difficulty": 2,
+        "archetype": "defensive_veteran"
+      },
+      "en": {
+        "name": "Rachel Adams, 34",
+        "bio": "Experienced agent · Performance has slipped this quarter\nDefensive about feedback\nSays: \"I've been doing this for years. I know what I'm doing.\"",
+        "greeting": "Hey. I know my numbers are down this quarter, but I've been doing this for years. I don't think I need a review.",
+        "tasks": "① Open the conversation without triggering defensiveness\n② Uncover what has actually changed for her\n③ Agree on one specific, concrete improvement",
+        "openers": [
+          "Rachel, I am not questioning your experience. I would like to understand what has changed for you this quarter — can we talk?",
+          "Rachel, your results have been strong before. What is different right now compared to then?",
+          "Rachel, let us pick just one thing to work on together this week. What would be most useful to you?"
+        ]
+      },
+      "zh": {
+        "name": "陳姐，34歲",
+        "bio": "資深業務員 · 這一季業績下滑\n對回饋有防衛心\n她說：「我做這行很多年了，我知道自己在幹嘛。」",
+        "greeting": "欸，我知道這季業績不太好，但我做這行很多年了，應該不需要什麼檢討吧。",
+        "tasks": "① 開場不要引發她的防衛心\n② 找出這一季實際發生了什麼變化\n③ 一起訂出一個具體、可執行的改善點",
+        "openers": [
+          "陳姐，我不是在質疑妳的經驗。我只是想了解這一季發生了什麼變化，方便聊聊嗎？",
+          "陳姐，妳之前的成績一直都很好，現在跟那時候比，有什麼不一樣的地方嗎？",
+          "陳姐，我們這禮拜先挑一件事一起練習就好，對妳來說什麼最有幫助？"
+        ]
+      }
+    },
+    {
+      "id": "manager-03",
+      "tags": {
+        "objectionType": "overconfidence_resistant_to_feedback",
+        "difficulty": 2,
+        "archetype": "overconfident_rookie"
+      },
+      "en": {
+        "name": "Kevin Park, 24",
+        "bio": "New agent · Overconfident, skips the script\nDoes not listen well to feedback\nSays: \"I don't need a script. I'll just wing it.\"",
+        "greeting": "Hi! I don't really need the script — I've got a good feel for this. I'll just wing it and see how it goes.",
+        "tasks": "① Redirect his confidence without deflating it\n② Show him why the framework helps, not restricts\n③ Get him to practice one structured call",
+        "openers": [
+          "Kevin, I like your confidence. Can I show you one small tweak that could make your calls even stronger?",
+          "Kevin, let us test something — try the framework once, then decide for yourself if it helps.",
+          "Kevin, what happened on your last call that did not go the way you expected?"
+        ]
+      },
+      "zh": {
+        "name": "小凱，24歲",
+        "bio": "新進業務員 · 過度自信、不照話術走\n不太聽得進回饋\n他說：「我不需要照稿子念，我自己來就好。」",
+        "greeting": "嗨！我其實不太需要稿子，我自己抓得到感覺，我就照自己的方式來就好。",
+        "tasks": "① 引導他的自信，而不是打擊它\n② 讓他理解框架是幫助、不是限制\n③ 讓他實際練習一次有結構的通話",
+        "openers": [
+          "小凱，我很欣賞你的自信。要不要我教你一個小技巧，可以讓你的通話更有說服力？",
+          "小凱，我們來試試看——先照著框架走一次，之後你再自己判斷有沒有幫助。",
+          "小凱，上一通電話有沒有哪裡跟你預期的不太一樣？"
+        ]
+      }
+    },
+    {
+      "id": "manager-04",
+      "tags": {
+        "objectionType": "burnout_motivation_loss",
+        "difficulty": 3,
+        "archetype": "burnt_out_considering_quitting"
+      },
+      "en": {
+        "name": "Maria Gonzalez, 29",
+        "bio": "Solid performer until recently · Feeling burnt out\nQuietly considering leaving the industry\nSays: \"I don't know if I want to keep doing this anymore.\"",
+        "greeting": "Hey... honestly, I don't know if I want to keep doing this anymore. I'm just tired.",
+        "tasks": "① Create a safe space for her to be honest\n② Understand whether this is burnout or a deeper issue\n③ Find one small thing that could restore her energy",
+        "openers": [
+          "Maria, thank you for being honest with me. What has felt the most draining lately?",
+          "Maria, before we talk about quitting, can we talk about what a good week would even look like for you right now?",
+          "Maria, is this about the work itself, or something else going on? I want to actually understand."
+        ]
+      },
+      "zh": {
+        "name": "瑪莉亞，29歲",
+        "bio": "原本表現穩定 · 最近感到職業倦怠\n私下在考慮要不要離開這個行業\n她說：「我不知道我還想不想繼續做這行。」",
+        "greeting": "欸……老實說，我不知道我還想不想繼續做這行。我真的很累。",
+        "tasks": "① 創造一個讓她能誠實表達的安全空間\n② 了解這是單純倦怠、還是更深層的問題\n③ 找出一件能重新找回她能量的小事",
+        "openers": [
+          "瑪莉亞，謝謝妳願意跟我說實話。最近什麼事讓妳覺得最累？",
+          "瑪莉亞，在談離職之前，我們可以先聊聊，對妳來說，理想的一週會是什麼樣子嗎？",
+          "瑪莉亞，這是工作本身的問題，還是有其他事情？我是真的想了解。"
+        ]
+      }
+    },
+    {
+      "id": "manager-05",
+      "tags": {
+        "objectionType": "closing_hesitation",
+        "difficulty": 2,
+        "archetype": "afraid_to_close"
+      },
+      "en": {
+        "name": "Tommy Nguyen, 31",
+        "bio": "Great at building rapport · Freezes when it's time to ask for the close\nAvoids the final ask out of fear of rejection\nSays: \"I always feel like I'm bothering them when I try to close.\"",
+        "greeting": "Hey. I'm good at talking with clients, but when it comes time to actually ask for the close, I just freeze up. I feel like I'm bothering them.",
+        "tasks": "① Normalize the discomfort around asking for the close\n② Give him one simple, low-pressure closing line\n③ Practice the exact moment of the ask, not the whole call",
+        "openers": [
+          "Tommy, that feeling is more common than you think. What goes through your mind right at that moment?",
+          "Tommy, let us practice just that one sentence — the ask itself — a few times until it feels natural.",
+          "Tommy, asking for the close is not bothering them — it is respecting their time. Can we reframe it together?"
+        ]
+      },
+      "zh": {
+        "name": "阿東，31歲",
+        "bio": "很擅長跟客戶建立關係 · 但到了要收單的時候就會愣住\n因為害怕被拒絕而不敢開口要求成交\n他說：「每次要收單，我都覺得好像在打擾他們。」",
+        "greeting": "欸，我跟客戶聊天都沒問題，但每次要開口收單的時候我就會愣住，感覺好像在打擾他們。",
+        "tasks": "① 讓他知道這種不自在很常見\n② 給他一句簡單、沒有壓力的收單話術\n③ 只練習「開口收單」那個瞬間，不用練整通電話",
+        "openers": [
+          "阿東，這種感覺比你想像的還常見。那個瞬間，你腦中在想什麼？",
+          "阿東，我們就只練這一句話——開口收單那句——多練幾次，直到自然為止。",
+          "阿東，開口收單不是打擾他們，而是尊重他們的時間。我們可以一起重新看待這件事嗎？"
+        ]
+      }
+    },
+    {
+      "id": "manager-06",
+      "tags": {
+        "objectionType": "poor_listening",
+        "difficulty": 2,
+        "archetype": "talks_over_clients"
+      },
+      "en": {
+        "name": "Ashley Kim, 26",
+        "bio": "Talks a lot, interrupts clients\nDoes not fully listen before responding\nSays: \"I just want to make sure they have all the information.\"",
+        "greeting": "Hi! I feel like I explain everything really clearly to clients. I just want to make sure they have all the information.",
+        "tasks": "① Help her notice her own talking-to-listening ratio\n② Practice pausing and asking a follow-up question\n③ Show how listening builds trust faster than explaining",
+        "openers": [
+          "Ashley, I can tell you care about being thorough. On your last call, what did the client actually say, in their own words?",
+          "Ashley, let us try something — in this next practice, only ask questions for the first two minutes.",
+          "Ashley, sometimes the fastest way to close is to talk less and listen more. Want to try that together?"
+        ]
+      },
+      "zh": {
+        "name": "艾希莉，26歲",
+        "bio": "話很多，容易打斷客戶\n還沒聽完就急著回應\n她說：「我只是想確保他們得到所有資訊。」",
+        "greeting": "嗨！我覺得我把每件事都跟客戶解釋得很清楚，我只是想確保他們得到所有資訊。",
+        "tasks": "① 幫她注意到自己「講」跟「聽」的比例\n② 練習停頓、追問\n③ 示範傾聽比解釋更快建立信任",
+        "openers": [
+          "艾希莉，看得出來妳很想把事情講清楚。上一通電話，客戶自己說了什麼？用他自己的話說說看。",
+          "艾希莉，我們來試試看——這次練習的前兩分鐘，只能問問題，不能解釋。",
+          "艾希莉，有時候最快成交的方法，是少講多聽。要不要一起試試看？"
+        ]
+      }
+    },
+    {
+      "id": "manager-07",
+      "tags": {
+        "objectionType": "resistance_to_change",
+        "difficulty": 3,
+        "archetype": "resistant_to_new_tools"
+      },
+      "en": {
+        "name": "Brian O'Connor, 38",
+        "bio": "Experienced agent · Skeptical of the new AI training platform\nPrefers doing things the old way\nSays: \"I've closed deals for years without an app telling me what to say.\"",
+        "greeting": "Look, no offense, but I've closed deals for years without an app telling me what to say. I'm not sure I need this.",
+        "tasks": "① Respect his experience, don't oversell the tool\n② Frame this as sharpening a skill, not replacing his instincts\n③ Get him to try just one small feature, not the whole system",
+        "openers": [
+          "Brian, your experience is exactly why your feedback on this would be valuable. Can I show you just one small thing?",
+          "Brian, this isn't meant to replace how you work — think of it more like a extra set of reps before the real call.",
+          "Brian, what would actually be useful to you, if anything, from a tool like this?"
+        ]
+      },
+      "zh": {
+        "name": "布萊恩，38歲",
+        "bio": "資深業務員 · 對新的 AI 訓練平台有疑慮\n偏好用舊方法做事\n他說：「我做這行這麼多年，靠自己就能成交，不需要一個 App 告訴我該說什麼。」",
+        "greeting": "我直說，沒有冒犯的意思，但我做這行這麼多年都靠自己成交，不需要一個 App 告訴我該說什麼。",
+        "tasks": "① 尊重他的經驗，不要過度推銷這個工具\n② 把這件事定位成磨練技巧，而不是取代他的直覺\n③ 讓他先試一個小功能，而不是整個系統",
+        "openers": [
+          "布萊恩，正因為你有這麼多經驗，你對這個工具的回饋會很有價值。我可以先給你看一個小東西嗎？",
+          "布萊恩，這不是要取代你原本的做法，比較像是正式上場前多練幾次。",
+          "布萊恩，如果真的有什麼是這種工具能幫到你的，會是什麼？"
+        ]
+      }
+    },
+    {
+      "id": "manager-08",
+      "tags": {
+        "objectionType": "followup_inconsistency",
+        "difficulty": 2,
+        "archetype": "disorganized_but_talented"
+      },
+      "en": {
+        "name": "Diana Park, 33",
+        "bio": "Excellent one-on-one with clients · Struggles with consistent follow-up\nLoses track of pending clients\nSays: \"I mean to follow up, I just lose track of who needs what.\"",
+        "greeting": "Hi. Honestly, I'm good in the room with clients, but I always mean to follow up and then just lose track of who needs what.",
+        "tasks": "① Acknowledge her strength before addressing the gap\n② Identify a simple system she'll actually use\n③ Practice one follow-up message right now",
+        "openers": [
+          "Diana, your client conversations are genuinely strong — this is just about capturing that momentum afterward. What do you use to track it today?",
+          "Diana, let's pick the three clients you're most worried about losing right now, and follow up with them together.",
+          "Diana, what would the simplest possible tracking system look like for you — one you'd actually keep using?"
+        ]
+      },
+      "zh": {
+        "name": "黛安娜，33歲",
+        "bio": "跟客戶面對面談得很好 · 但後續追蹤常常不穩定\n容易搞不清楚誰還在等回覆\n她說：「我是有想要追蹤，只是常常搞不清楚誰需要什麼。」",
+        "greeting": "你好，老實說，我跟客戶面對面聊都沒問題，但我常常想著要追蹤，結果就搞不清楚誰還在等什麼。",
+        "tasks": "① 先肯定她的優勢，再處理缺口\n② 找出一套她真的會願意用的簡單系統\n③ 現在就一起練習寫一則追蹤訊息",
+        "openers": [
+          "黛安娜，妳跟客戶談話的能力真的很強——現在只是需要把這個氣勢延續到後續追蹤。妳現在都怎麼追蹤的？",
+          "黛安娜，我們先挑出妳現在最擔心會漏掉的三個客戶，一起來追蹤看看。",
+          "黛安娜，對妳來說，最簡單、妳真的會持續用下去的追蹤方式，會長什麼樣子？"
+        ]
+      }
+    },
+    {
+      "id": "manager-09",
+      "tags": {
+        "objectionType": "low_resilience",
+        "difficulty": 1,
+        "archetype": "discouraged_by_rejection"
+      },
+      "en": {
+        "name": "Chris Alvarado, 27",
+        "bio": "Talented but takes rejection personally\nOne 'no' can discourage him for the rest of the day\nSays: \"After that last rejection, I just don't want to make another call today.\"",
+        "greeting": "Hey. After that last rejection, I honestly don't really want to make another call today.",
+        "tasks": "① Validate the feeling without letting it stall his day\n② Help him separate the rejection from his own worth\n③ Get him to make just one more small, low-stakes call",
+        "openers": [
+          "Chris, that sting is real. What did that last call actually tell you about the client, versus about you?",
+          "Chris, one 'no' is just one data point, not a verdict. Would it help to make one easy call to reset?",
+          "Chris, what usually helps you bounce back after a tough call? Let's do that right now, together."
+        ]
+      },
+      "zh": {
+        "name": "克里斯，27歲",
+        "bio": "很有天分，但很容易把被拒絕當成針對自己\n一次「不要」就可能讓他整天提不起勁\n他說：「剛剛被拒絕之後，我今天真的不想再打電話了。」",
+        "greeting": "欸，剛剛被拒絕之後，我今天真的不太想再打電話了。",
+        "tasks": "① 認同他的感受，但不讓這種情緒拖垮一整天\n② 幫他把「被拒絕」跟「自己的價值」分開來看\n③ 讓他再打一通壓力較小的電話",
+        "openers": [
+          "克里斯，那種刺痛感是真實的。剛剛那通電話，真正說明的是客戶的狀況，還是你自己？",
+          "克里斯，一次「不要」只是一個數據點，不是最終結論。要不要先打一通比較輕鬆的電話重新開始？",
+          "克里斯，你平常都是怎麼從一通不順的電話中重新振作的？我們現在就一起做一次。"
+        ]
+      }
+    },
+    {
+      "id": "manager-10",
+      "tags": {
+        "objectionType": "complacency",
+        "difficulty": 3,
+        "archetype": "coasting_veteran"
+      },
+      "en": {
+        "name": "Grace Liu, 45",
+        "bio": "Strong performer for years · Has become comfortable and stopped pushing herself\nHitting targets but not growing\nSays: \"I'm hitting my numbers. Why fix what isn't broken?\"",
+        "greeting": "Hey, I'm still hitting my numbers every month. Why would we fix something that isn't broken?",
+        "tasks": "① Respect her track record while raising the bar gently\n② Reconnect her to a bigger goal beyond current targets\n③ Identify one new skill or challenge worth pursuing",
+        "openers": [
+          "Grace, your numbers are genuinely strong. What would it look like to go from good to exceptional this year?",
+          "Grace, I'm not questioning your results — I'm curious what would excite you again about the work.",
+          "Grace, if targets weren't the measure at all, what would you want to get better at next?"
+        ]
+      },
+      "zh": {
+        "name": "葛瑞絲，45歲",
+        "bio": "多年來表現穩定 · 但已經進入舒適圈、不再挑戰自己\n達標但沒有成長\n她說：「我每個月都有達標啊，沒壞為什麼要修？」",
+        "greeting": "欸，我每個月業績都有達標，沒壞的東西幹嘛要修？",
+        "tasks": "① 尊重她的過往成績，同時溫和地拉高標準\n② 重新連結她跟一個超越現有目標的更大目標\n③ 找出一個值得挑戰的新技能或方向",
+        "openers": [
+          "葛瑞絲，妳的業績真的很穩定。如果今年要從「好」變成「頂尖」，會是什麼樣子？",
+          "葛瑞絲，我不是在質疑妳的成績——我是好奇，什麼會讓妳對這份工作重新感到興奮？",
+          "葛瑞絲，如果完全不看業績目標，妳接下來會想磨練什麼能力？"
+        ]
+      }
+    }
+  ]
+}

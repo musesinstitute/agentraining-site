@@ -1,0 +1,305 @@
+{
+  "industry": "realestate",
+  "cases": [
+    {
+      "id": "realestate-01",
+      "tags": {
+        "objectionType": "risk_aversion",
+        "difficulty": 2,
+        "archetype": "cautious_investor"
+      },
+      "en": {
+        "name": "Mr. David Johnson, 48",
+        "bio": "Business owner · Looking to invest\nWants high returns, price-sensitive\nSays: \"The market is too risky right now.\"",
+        "greeting": "Hello. I understand you have a property to discuss. I have to say, the market feels very risky to me right now.",
+        "tasks": "① Understand his investment goals\n② Address his risk concerns\n③ Present one specific property",
+        "openers": [
+          "Mr. Johnson, I understand the market feels uncertain. What level of return would make an investment feel worthwhile to you?",
+          "Mr. Johnson, I found a property that matches the criteria you mentioned. Do you have five minutes to review it?",
+          "Mr. Johnson, many experienced investors find opportunity in uncertain markets. May I show you one example?"
+        ]
+      },
+      "zh": {
+        "name": "陳先生，48歲",
+        "bio": "企業主 · 想投資\n追求高回報，對價格敏感\n他說：「現在市場太不穩定了。」",
+        "greeting": "你好，我了解你想跟我談一個物件。老實說，現在的市場感覺風險很高。",
+        "tasks": "① 了解他的投資目標\n② 解決他的風險顧慮\n③ 介紹一個具體的房產",
+        "openers": [
+          "陳先生，我完全理解市場讓人感覺不確定。請問什麼樣的回報會讓您覺得值得投資？",
+          "陳先生，我追蹤到一個房產，跟您上次說的條件完全吻合。您有5分鐘嗎？",
+          "陳先生，我合作過的成功投資者，其實最喜歡市場不穩定的時候。我可以告訴您為什麼嗎？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-02",
+      "tags": {
+        "objectionType": "overwhelmed_by_options",
+        "difficulty": 1,
+        "archetype": "first_time_buyer"
+      },
+      "en": {
+        "name": "Ms. Emily Zhao, 33",
+        "bio": "First-time homebuyer · Budget-conscious\nOverwhelmed by the process\nSays: \"This all feels so confusing. I don't know where to start.\"",
+        "greeting": "Hi, thanks for meeting with me. Honestly, this whole process feels overwhelming. I don't even know where to start.",
+        "tasks": "① Simplify the buying process for her\n② Understand her real budget and priorities\n③ Set a clear next step",
+        "openers": [
+          "Ms. Zhao, that is completely normal for a first purchase. Can we start with just your budget and must-haves?",
+          "Ms. Zhao, let me walk you through the process in three simple steps so it feels less overwhelming.",
+          "Ms. Zhao, what is the one thing that worries you most about buying your first home?"
+        ]
+      },
+      "zh": {
+        "name": "趙小姐，33歲",
+        "bio": "首次購屋 · 預算有限\n對整個流程感到不知所措\n她說：「這一切太複雜了，我不知道從哪裡開始。」",
+        "greeting": "你好，謝謝你抽空見我。老實說，整個流程讓我覺得很有壓力，我完全不知道該從哪裡開始。",
+        "tasks": "① 幫她簡化購屋流程\n② 了解她真正的預算與優先順序\n③ 訂出清楚的下一步",
+        "openers": [
+          "趙小姐，第一次購屋會這樣很正常。我們可以先從您的預算跟必要條件開始嗎？",
+          "趙小姐，讓我用三個簡單的步驟帶您走過整個流程，會比較不會覺得有壓力。",
+          "趙小姐，關於買下第一間房子，您現在最擔心的是哪一件事？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-03",
+      "tags": {
+        "objectionType": "emotional_attachment",
+        "difficulty": 2,
+        "archetype": "empty_nester_seller"
+      },
+      "en": {
+        "name": "Mr. Thomas Lee, 55",
+        "bio": "Empty-nester · Selling the family home\nEmotionally attached to the property\nSays: \"I'm not sure I'm ready to let go of this house.\"",
+        "greeting": "Hello. My children think I should sell this house, but... I'm not sure I'm ready to let go of it.",
+        "tasks": "① Acknowledge the emotional side of selling\n② Understand his real motivations\n③ Suggest a low-pressure next step",
+        "openers": [
+          "Mr. Lee, a family home holds a lot of memories. What would make this next chapter feel right for you?",
+          "Mr. Lee, there is no rush here. Would it help to just explore what the home could sell for, with no obligation?",
+          "Mr. Lee, many of my clients felt the same way at first. May I ask what is on your mind about the decision?"
+        ]
+      },
+      "zh": {
+        "name": "李先生，55歲",
+        "bio": "子女已離家 · 正在考慮賣掉老家\n對這間房子有很深的感情\n他說：「我還沒準備好要放手這間房子。」",
+        "greeting": "你好，我的孩子覺得我應該把這間房子賣掉，但……我還沒準備好要放手這間房子。",
+        "tasks": "① 理解並回應他對這間房子的情感\n② 了解他真正的考量\n③ 提出一個沒有壓力的下一步",
+        "openers": [
+          "李先生，一間住了很久的房子承載很多回憶。怎麼樣的安排會讓您覺得這個新階段比較安心？",
+          "李先生，不用急，我們可以先了解一下房子現在的行情，完全沒有任何壓力，好嗎？",
+          "李先生，很多客戶一開始也有一樣的感覺。可以請教您，這個決定讓您在意的是什麼嗎？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-04",
+      "tags": {
+        "objectionType": "time_constrained",
+        "difficulty": 2,
+        "archetype": "relocating_fast"
+      },
+      "en": {
+        "name": "Mrs. Karen Wu, 42",
+        "bio": "Relocating for a new job · Needs to move quickly\nAnxious about rushing such a big decision\nSays: \"I don't have much time, but I also don't want to rush this.\"",
+        "greeting": "Hi. I need to relocate for work soon, so I'm short on time — but I also don't want to rush into the wrong decision.",
+        "tasks": "① Balance urgency with care in the process\n② Narrow down her real priorities quickly\n③ Create a clear timeline she can trust",
+        "openers": [
+          "Mrs. Wu, I understand the pressure. Let's narrow this to your top three priorities so we move fast without rushing.",
+          "Mrs. Wu, what is your ideal move-in date? I will build the search timeline around that.",
+          "Mrs. Wu, speed and care are not opposites — a clear process actually saves time. Can I show you how?"
+        ]
+      },
+      "zh": {
+        "name": "吳太太，42歲",
+        "bio": "因為工作要搬遷 · 時間很趕\n擔心自己因為趕時間而做出錯誤決定\n她說：「我時間真的不多，但我也不想倉促決定。」",
+        "greeting": "你好，我因為工作快要搬遷了，時間很趕——但我也不想因為趕時間而做錯決定。",
+        "tasks": "① 在急迫感與謹慎之間取得平衡\n② 快速釐清她真正的優先順序\n③ 訂出她能信任的明確時間表",
+        "openers": [
+          "吳太太，我理解這個壓力。我們先鎖定您最重要的三個條件，這樣可以又快又不倉促。",
+          "吳太太，您理想的搬入時間是什麼時候？我會依照這個來安排整個搜尋時程。",
+          "吳太太，快跟謹慎並不衝突——清楚的流程反而能省時間，我可以讓您看看怎麼做嗎？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-05",
+      "tags": {
+        "objectionType": "price_sensitive",
+        "difficulty": 3,
+        "archetype": "landlord_tax_worried"
+      },
+      "en": {
+        "name": "Mr. Anthony Russo, 50",
+        "bio": "Landlord selling a rental property · Worried about tax implications\nFocused heavily on the financial details\nSays: \"I don't want to sell if the taxes eat up all my profit.\"",
+        "greeting": "Hi. Before we talk about selling, I need to understand the tax side. I don't want to sell if the taxes just eat up all my profit.",
+        "tasks": "① Take his financial concern seriously, not dismiss it\n② Clarify what he actually knows vs assumes about taxes\n③ Recommend a next step involving the right expert",
+        "openers": [
+          "Mr. Russo, that is a very fair concern. What have you already looked into regarding the tax impact?",
+          "Mr. Russo, I am not a tax advisor, but I can walk you through the sale numbers and we can loop in your accountant together.",
+          "Mr. Russo, many landlords have the same worry — often the real number is smaller than they fear. Would it help to run the actual estimate?"
+        ]
+      },
+      "zh": {
+        "name": "羅先生，50歲",
+        "bio": "出租房東 · 想賣掉出租物件\n很擔心稅務問題\n非常在意財務細節\n他說：「如果稅金把利潤都吃掉，我就不想賣了。」",
+        "greeting": "你好，在談賣房子之前，我需要先搞清楚稅務的部分。如果稅金把我的利潤都吃掉，那我就不想賣了。",
+        "tasks": "① 認真看待他的財務顧慮，不要輕描淡寫\n② 釐清他對稅務的認知哪些是事實、哪些是假設\n③ 建議一個有專業人士參與的下一步",
+        "openers": [
+          "羅先生，這個顧慮很合理。您目前對稅務的影響已經了解到什麼程度了？",
+          "羅先生，我不是稅務顧問，但我可以帶您看一次實際的出售數字，也可以一起找您的會計師確認。",
+          "羅先生，很多房東都有一樣的擔心——通常實際數字會比想像中小。要不要我們實際算一次看看？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-06",
+      "tags": {
+        "objectionType": "needs_third_party_approval",
+        "difficulty": 2,
+        "archetype": "indecisive_couple"
+      },
+      "en": {
+        "name": "Ms. Priya Patel, 29",
+        "bio": "Buying with her partner · They disagree on what to look for\nFeels stuck between two different visions\nSays: \"My partner and I can't agree on what we actually want.\"",
+        "greeting": "Hi. Honestly, my partner and I can't fully agree on what we're even looking for. It's making this whole process harder.",
+        "tasks": "① Help her clarify shared vs individual priorities\n② Avoid taking sides between the couple\n③ Suggest a joint next step involving both partners",
+        "openers": [
+          "Ms. Patel, that is very common. Would it help to list what you both agree on first, then work through the differences?",
+          "Ms. Patel, could we set up a short call with both of you together, so I can hear each perspective directly?",
+          "Ms. Patel, what matters most to you personally in this decision, regardless of the disagreement?"
+        ]
+      },
+      "zh": {
+        "name": "潘小姐，29歲",
+        "bio": "跟伴侶一起購屋 · 兩人對想要的房子看法不同\n卡在兩種不同的想像之間\n她說：「我跟我另一半對想要什麼一直談不攏。」",
+        "greeting": "你好，老實說，我跟我另一半對我們到底想要什麼一直談不攏，這讓整個過程變得更難。",
+        "tasks": "① 幫她釐清兩人共同在意的與各自在意的\n② 不要在兩人之間選邊站\n③ 提議一個雙方都參與的下一步",
+        "openers": [
+          "潘小姐，這其實很常見。要不要先列出你們兩人都同意的部分，再一起處理有分歧的地方？",
+          "潘小姐，我們可以安排一次兩位都在的簡短通話嗎？這樣我能直接聽到雙方的想法。",
+          "潘小姐，撇開意見不合的部分，對您個人來說，這個決定最重要的是什麼？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-07",
+      "tags": {
+        "objectionType": "distrust_of_salesperson",
+        "difficulty": 3,
+        "archetype": "burned_by_past_agent"
+      },
+      "en": {
+        "name": "Mr. Walter Simmons, 67",
+        "bio": "Retired · Downsizing to a smaller home\nHad a bad experience with an agent years ago\nSays: \"The last agent I used only cared about the commission.\"",
+        "greeting": "Look, I'll be honest with you. The last agent I worked with only seemed to care about the commission. I'm cautious this time.",
+        "tasks": "① Rebuild trust through actions, not promises\n② Show him you are focused on his outcome, not just the sale\n③ Move at his pace, not yours",
+        "openers": [
+          "Mr. Simmons, I am sorry you had that experience. What would have made you feel better looked after back then?",
+          "Mr. Simmons, I would rather earn your trust slowly than rush you. What is most important to you in this move?",
+          "Mr. Simmons, take whatever time you need. I am here to answer questions, not to push a decision."
+        ]
+      },
+      "zh": {
+        "name": "石先生，67歲",
+        "bio": "退休人士 · 想搬到更小的房子\n多年前跟一個仲介合作有不好的經驗\n他說：「上次那個仲介好像只在乎佣金。」",
+        "greeting": "我老實跟你說，上次跟我合作的那個仲介，感覺只在乎他的佣金。這次我比較謹慎。",
+        "tasks": "① 用實際行動、而不是承諾重建信任\n② 讓他感覺到你重視的是他的結果，而不只是成交\n③ 用他的步調，而不是自己的步調前進",
+        "openers": [
+          "石先生，很遺憾您有這樣的經驗。當時怎麼樣會讓您覺得被好好照顧？",
+          "石先生，我寧願慢慢贏得您的信任，也不想催促您。這次搬家，您最在意的是什麼？",
+          "石先生，您需要多少時間都沒關係。我在這裡是回答問題，不是要推您做決定。"
+        ]
+      }
+    },
+    {
+      "id": "realestate-08",
+      "tags": {
+        "objectionType": "risk_aversion",
+        "difficulty": 2,
+        "archetype": "fears_overpaying"
+      },
+      "en": {
+        "name": "Ms. Natalie Brooks, 36",
+        "bio": "Buying in a competitive market · Scared of bidding wars\nAfraid of overpaying under pressure\nSays: \"I don't want to get caught up in a bidding war and pay too much.\"",
+        "greeting": "Hi. I've heard so many stories about bidding wars right now. I really don't want to get caught up in one and overpay.",
+        "tasks": "① Address her fear directly and honestly\n② Set clear boundaries she feels in control of\n③ Prepare a specific strategy for competitive offers",
+        "openers": [
+          "Ms. Brooks, that fear is valid. What is the maximum you would be comfortable offering, no matter what happens?",
+          "Ms. Brooks, let's set your limits in advance, together, so you feel in control even in a competitive situation.",
+          "Ms. Brooks, I can build you a strategy specifically for competitive offers. Would that ease your concern?"
+        ]
+      },
+      "zh": {
+        "name": "布小姐，36歲",
+        "bio": "在競爭激烈的市場買房 · 怕捲入搶價戰\n擔心在壓力下出價過高\n她說：「我不想被捲進搶價戰、付太多錢。」",
+        "greeting": "你好，我聽過太多搶價戰的故事了。我真的不想被捲進去、然後付太多錢。",
+        "tasks": "① 直接且誠實地回應她的恐懼\n② 訂出她能掌控的明確底線\n③ 準備一套應對競爭出價的具體策略",
+        "openers": [
+          "布小姐，這個擔心很合理。不論發生什麼狀況，您能接受的最高出價是多少？",
+          "布小姐，我們先一起把底線訂好，這樣即使在競爭激烈的狀況下，您也會覺得掌握得住。",
+          "布小姐，我可以幫您準備一套專門應對競爭出價的策略，這樣會不會讓您比較安心？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-09",
+      "tags": {
+        "objectionType": "overwhelmed_by_options",
+        "difficulty": 3,
+        "archetype": "analytical_investor"
+      },
+      "en": {
+        "name": "Mr. Samuel Osei, 45",
+        "bio": "Investor seeking multiple properties · Extremely detail-oriented\nWants data on every comparable before deciding\nSays: \"Send me the comps on every property before we talk.\"",
+        "greeting": "Hi. Before we even talk, I'd like the full comps on every property you're proposing. I don't move without the data.",
+        "tasks": "① Match his need for data without losing momentum\n② Help him prioritize which data actually drives decisions\n③ Move him from analysis to a shortlist",
+        "openers": [
+          "Mr. Osei, understood — I can provide full comps. Out of everything in the data, what usually decides it for you?",
+          "Mr. Osei, let's agree on the top three metrics that matter most, so the comparison stays focused.",
+          "Mr. Osei, I will send the data today. Once you've reviewed it, what would move you from reviewing to shortlisting?"
+        ]
+      },
+      "zh": {
+        "name": "歐先生，45歲",
+        "bio": "想買多個投資物件 · 非常注重細節\n決定前想看每個物件的完整比較數據\n他說：「先把每個物件的比較數據都給我，我們再談。」",
+        "greeting": "你好，在我們談之前，我想先看每個物件的完整比較數據。沒有數據我不會行動。",
+        "tasks": "① 滿足他對數據的需求，同時保持進度\n② 幫他篩出真正影響決定的數據\n③ 帶他從分析階段走到候選名單",
+        "openers": [
+          "歐先生，了解——我可以提供完整比較數據。在這些數據裡，通常是哪一項會決定您的選擇？",
+          "歐先生，我們先一起訂出對您最重要的三個指標，這樣比較才會聚焦。",
+          "歐先生，我今天就把數據給您。等您看過之後，什麼會讓您從「看資料」進到「列候選名單」？"
+        ]
+      }
+    },
+    {
+      "id": "realestate-10",
+      "tags": {
+        "objectionType": "no_urgency",
+        "difficulty": 1,
+        "archetype": "rent_vs_buy_undecided"
+      },
+      "en": {
+        "name": "Mrs. Diane Foster, 58",
+        "bio": "Considering renting vs. buying · Uncertain if now is the right time\nLeaning toward waiting\nSays: \"Maybe I should just keep renting for now.\"",
+        "greeting": "Hi. I've been going back and forth, but honestly, maybe I should just keep renting for now instead of buying.",
+        "tasks": "① Understand what's really behind her hesitation\n② Lay out rent vs. buy in concrete terms for her situation\n③ Help her decide with facts, not just wait indefinitely",
+        "openers": [
+          "Mrs. Foster, that's a fair option too. What would need to be true for buying to feel like the right move to you?",
+          "Mrs. Foster, let's compare what renting versus buying would actually look like for your specific numbers.",
+          "Mrs. Foster, there's no pressure either way — what is making you lean toward waiting right now?"
+        ]
+      },
+      "zh": {
+        "name": "方太太，58歲",
+        "bio": "在租房與買房之間猶豫 · 不確定現在是不是好時機\n傾向再等等看\n她說：「也許我現在還是先繼續租房子就好。」",
+        "greeting": "你好，我一直在猶豫，但老實說，也許我現在應該先繼續租房子，而不是買。",
+        "tasks": "① 了解她猶豫背後真正的原因\n② 用她的實際情況具體比較租房跟買房\n③ 幫她根據事實做決定，而不是無限期等下去",
+        "openers": [
+          "方太太，這也是個合理的選擇。要讓買房對您來說感覺是對的決定，需要具備什麼條件？",
+          "方太太，我們來實際比較一下，用您的數字，租房跟買房分別會是什麼樣子。",
+          "方太太，不管哪個決定都沒有壓力——是什麼讓您現在比較傾向再等等？"
+        ]
+      }
+    }
+  ]
+}
