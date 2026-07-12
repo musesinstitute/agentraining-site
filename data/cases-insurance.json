@@ -1,305 +1,110 @@
+Repository: musesinstitute/agentraining-site
+Base branch: master(重要:一定要從 master 分支開始,不要用 main)
+
+任務:
+把 data/cases-insurance.json 這個檔案的「全部內容」,替換成下面提供的完整新版本(裡面是原本的10筆 + 新增的5筆,共15筆)。
+
+完成後:
+1. 用 JSON 解析器驗證整個檔案格式正確(沒有語法錯誤)
+2. 確認總共有 15 筆案例,id 分別是 insurance-01 到 insurance-11、insurance-13 到 insurance-16(insurance-12 這個編號故意跳過,不用補)
+3. 確認沒有重複的 id
+4. 這個檔案之外,不要修改 repo 裡任何其他東西
+5. 完成後建立 PR 給我審核,不要直接合併到 master
+
+新版完整檔案內容如下:
+
 {
   "industry": "insurance",
   "cases": [
     {
       "id": "insurance-01",
-      "tags": {
-        "objectionType": "no_urgency",
-        "difficulty": 1,
-        "archetype": "skeptical_saver"
-      },
-      "en": {
-        "name": "Mrs. Patricia Miller, 52",
-        "bio": "Retired teacher · Has savings\nSkeptical of salespeople\nSays: \"I don't need insurance. I have savings.\"",
-        "greeting": "Hello. I understand you'd like to talk about insurance. I have to say up front — I already have savings, so I'm not sure I need this.",
-        "tasks": "① Build trust with a skeptical client\n② Uncover her real concerns\n③ Schedule a follow-up meeting",
-        "openers": [
-          "Mrs. Miller, I understand you have savings. May I ask — if something unexpected happened, how long would those savings support your family?",
-          "Mrs. Miller, I am not here to pressure you. I have one question — what would your family do financially if you were no longer here?",
-          "Mrs. Miller, many of my clients had the same view before we spoke. May I share what changed their thinking?"
-        ]
-      },
-      "zh": {
-        "name": "吳女士，52歲",
-        "bio": "退休教師 · 有積蓄\n對推銷人員保持警惕\n她說：「我不需要保險，我有積蓄。」",
-        "greeting": "你好，聽說你想跟我談保險。我先說清楚，我自己有積蓄，應該不太需要這個。",
-        "tasks": "① 與難搞的客戶建立信任\n② 發現她真正的擔憂\n③ 安排下次會面",
-        "openers": [
-          "吳女士，我了解您在財務上做得很好。我想請教您——如果發生意外，您的積蓄能保護您的家人多久？",
-          "吳女士，我今天不是來賣保險的。我只有一個問題——如果您不在了，您的家人在財務上怎麼辦？",
-          "吳女士，我很多客戶在跟我談之前，跟您想法一樣。我可以分享是什麼改變了他們的想法嗎？"
-        ]
-      }
+      "tags": {"objectionType": "no_urgency", "difficulty": 1, "archetype": "skeptical_saver"},
+      "en": {"name": "Mrs. Patricia Miller, 52", "bio": "Retired teacher · Has savings\nSkeptical of salespeople\nSays: \"I don't need insurance. I have savings.\"", "greeting": "Hello. I understand you'd like to talk about insurance. I have to say up front — I already have savings, so I'm not sure I need this.", "tasks": "① Build trust with a skeptical client\n② Uncover her real concerns\n③ Schedule a follow-up meeting", "openers": ["Mrs. Miller, I understand you have savings. May I ask — if something unexpected happened, how long would those savings support your family?", "Mrs. Miller, I am not here to pressure you. I have one question — what would your family do financially if you were no longer here?", "Mrs. Miller, many of my clients had the same view before we spoke. May I share what changed their thinking?"]},
+      "zh": {"name": "吳女士，52歲", "bio": "退休教師 · 有積蓄\n對推銷人員保持警惕\n她說：「我不需要保險，我有積蓄。」", "greeting": "你好，聽說你想跟我談保險。我先說清楚，我自己有積蓄，應該不太需要這個。", "tasks": "① 與難搞的客戶建立信任\n② 發現她真正的擔憂\n③ 安排下次會面", "openers": ["吳女士，我了解您在財務上做得很好。我想請教您——如果發生意外，您的積蓄能保護您的家人多久？", "吳女士，我今天不是來賣保險的。我只有一個問題——如果您不在了，您的家人在財務上怎麼辦？", "吳女士，我很多客戶在跟我談之前，跟您想法一樣。我可以分享是什麼改變了他們的想法嗎？"]}
     },
     {
       "id": "insurance-02",
-      "tags": {
-        "objectionType": "already_has_solution",
-        "difficulty": 1,
-        "archetype": "loyal_to_existing_policy"
-      },
-      "en": {
-        "name": "Mr. Robert Chen, 45",
-        "bio": "Small business owner · Price-sensitive\nAlready has a policy\nSays: \"I already have a policy. Why would I switch?\"",
-        "greeting": "Hi. You mentioned switching my insurance plan. I already have a policy — why would I want to change it?",
-        "tasks": "① Find gaps in his current coverage\n② Compare value, not just price\n③ Schedule a policy review",
-        "openers": [
-          "Mr. Chen, may I ask when your current policy was last reviewed? Coverage needs often change as a business grows.",
-          "Mr. Chen, I am not suggesting you cancel anything today. I would just like to compare your coverage side by side — is that fair?",
-          "Mr. Chen, most business owners I work with keep their policy but adjust the coverage. Can I show you what that could look like?"
-        ]
-      },
-      "zh": {
-        "name": "王先生，45歲",
-        "bio": "小型企業主 · 對保費敏感\n已經有保單\n他說：「我已經有保單了，為什麼要換？」",
-        "greeting": "你好，你說要幫我換保單？我已經有保單了，為什麼要換？",
-        "tasks": "① 找出他現有保障的缺口\n② 比較的是價值，不只是價格\n③ 安排保單健檢",
-        "openers": [
-          "王先生，請問您上次檢視保單是什麼時候？隨著事業成長，保障需求常常會改變。",
-          "王先生，我不是要您今天取消任何保單，只是想幫您並排比較一下保障內容，可以嗎？",
-          "王先生，我合作過的企業主大多是保留保單、但調整保障內容。我可以讓您看看實際會是什麼樣子嗎？"
-        ]
-      }
+      "tags": {"objectionType": "already_has_solution", "difficulty": 1, "archetype": "loyal_to_existing_policy"},
+      "en": {"name": "Mr. Robert Chen, 45", "bio": "Small business owner · Price-sensitive\nAlready has a policy\nSays: \"I already have a policy. Why would I switch?\"", "greeting": "Hi. You mentioned switching my insurance plan. I already have a policy — why would I want to change it?", "tasks": "① Find gaps in his current coverage\n② Compare value, not just price\n③ Schedule a policy review", "openers": ["Mr. Chen, may I ask when your current policy was last reviewed? Coverage needs often change as a business grows.", "Mr. Chen, I am not suggesting you cancel anything today. I would just like to compare your coverage side by side — is that fair?", "Mr. Chen, most business owners I work with keep their policy but adjust the coverage. Can I show you what that could look like?"]},
+      "zh": {"name": "王先生，45歲", "bio": "小型企業主 · 對保費敏感\n已經有保單\n他說：「我已經有保單了，為什麼要換？」", "greeting": "你好，你說要幫我換保單？我已經有保單了，為什麼要換？", "tasks": "① 找出他現有保障的缺口\n② 比較的是價值，不只是價格\n③ 安排保單健檢", "openers": ["王先生，請問您上次檢視保單是什麼時候？隨著事業成長，保障需求常常會改變。", "王先生，我不是要您今天取消任何保單，只是想幫您並排比較一下保障內容，可以嗎？", "王先生，我合作過的企業主大多是保留保單、但調整保障內容。我可以讓您看看實際會是什麼樣子嗎？"]}
     },
     {
       "id": "insurance-03",
-      "tags": {
-        "objectionType": "needs_third_party_approval",
-        "difficulty": 2,
-        "archetype": "defers_to_family"
-      },
-      "en": {
-        "name": "Mrs. Linda Nguyen, 60",
-        "bio": "Approaching retirement · Focused on her children\nUnsure who should handle planning\nSays: \"My children usually handle this for me.\"",
-        "greeting": "Hello. My children usually handle things like this for me. I'm not sure I'm the right person to talk to.",
-        "tasks": "① Build her confidence to engage directly\n② Address estate and legacy concerns\n③ Offer to include family in a follow-up",
-        "openers": [
-          "Mrs. Nguyen, that is very understandable. Would it help if we planned this together with your children involved?",
-          "Mrs. Nguyen, many of my clients your age want to make sure their family is protected. Is that something on your mind too?",
-          "Mrs. Nguyen, I would love to hear what matters most to you for your family. Do you have a few minutes?"
-        ]
-      },
-      "zh": {
-        "name": "陳女士，60歲",
-        "bio": "即將退休 · 重心放在孩子身上\n不確定該由誰來規劃\n她說：「這些事情通常都是我孩子在處理的。」",
-        "greeting": "你好，這些事情通常都是我孩子在處理的，我可能不是最適合談這個的人。",
-        "tasks": "① 建立她親自參與的信心\n② 談資產傳承與遺產規劃的顧慮\n③ 提議下次讓家人一起加入討論",
-        "openers": [
-          "陳女士，這完全可以理解。如果我們把您的孩子一起納入規劃，會不會比較安心？",
-          "陳女士，我很多同齡的客戶都很在意能不能保障好家人，這也是您在意的事嗎？",
-          "陳女士，我很想聽聽對您來說，什麼對家人最重要。您現在方便聊幾分鐘嗎？"
-        ]
-      }
+      "tags": {"objectionType": "needs_third_party_approval", "difficulty": 2, "archetype": "defers_to_family"},
+      "en": {"name": "Mrs. Linda Nguyen, 60", "bio": "Approaching retirement · Focused on her children\nUnsure who should handle planning\nSays: \"My children usually handle this for me.\"", "greeting": "Hello. My children usually handle things like this for me. I'm not sure I'm the right person to talk to.", "tasks": "① Build her confidence to engage directly\n② Address estate and legacy concerns\n③ Offer to include family in a follow-up", "openers": ["Mrs. Nguyen, that is very understandable. Would it help if we planned this together with your children involved?", "Mrs. Nguyen, many of my clients your age want to make sure their family is protected. Is that something on your mind too?", "Mrs. Nguyen, I would love to hear what matters most to you for your family. Do you have a few minutes?"]},
+      "zh": {"name": "陳女士，60歲", "bio": "即將退休 · 重心放在孩子身上\n不確定該由誰來規劃\n她說：「這些事情通常都是我孩子在處理的。」", "greeting": "你好，這些事情通常都是我孩子在處理的，我可能不是最適合談這個的人。", "tasks": "① 建立她親自參與的信心\n② 談資產傳承與遺產規劃的顧慮\n③ 提議下次讓家人一起加入討論", "openers": ["陳女士，這完全可以理解。如果我們把您的孩子一起納入規劃，會不會比較安心？", "陳女士，我很多同齡的客戶都很在意能不能保障好家人，這也是您在意的事嗎？", "陳女士，我很想聽聽對您來說，什麼對家人最重要。您現在方便聊幾分鐘嗎？"]}
     },
     {
       "id": "insurance-04",
-      "tags": {
-        "objectionType": "no_urgency",
-        "difficulty": 1,
-        "archetype": "overconfident_denier"
-      },
-      "en": {
-        "name": "Mr. Daniel Brooks, 40",
-        "bio": "Self-employed contractor · Nothing bad has ever happened to him\nFeels invincible\nSays: \"I've been fine my whole life. Why would that change now?\"",
-        "greeting": "Hey. Honestly, I've been fine my whole life without this. I don't really see why that would change now.",
-        "tasks": "① Shift his mindset from past luck to future risk\n② Make the cost of doing nothing concrete\n③ Get him to agree to a small first step",
-        "openers": [
-          "Mr. Brooks, that is great to hear. May I ask — if something did happen tomorrow, who would cover your bills while you recovered?",
-          "Mr. Brooks, I am glad things have gone well so far. This is really about protecting that streak, not predicting bad luck.",
-          "Mr. Brooks, most of my self-employed clients think the same way — until an unplanned week off work. Can I show you what that would actually cost?"
-        ]
-      },
-      "zh": {
-        "name": "高先生，40歲",
-        "bio": "自營承包商 · 從沒出過事\n覺得自己很幸運、不會有事\n他說：「我這輩子都好好的，現在幹嘛突然要改變？」",
-        "greeting": "嘿，說真的，我這輩子都沒出過什麼事，我不覺得現在會有什麼不同。",
-        "tasks": "① 把他的心態從「過去運氣好」轉向「未來風險」\n② 讓「什麼都不做」的代價變得具體\n③ 讓他同意先跨出一小步",
-        "openers": [
-          "高先生，聽到這樣很替你高興。我想請教——如果明天真的出了狀況，誰來幫你付這段時間的帳單？",
-          "高先生，很高興你這一路都很順利。這其實是在保護這個好運氣，而不是在預測壞事。",
-          "高先生，我合作過的自營工作者大多也這麼想——直到真的請假一週沒收入的那次。我可以讓你看看那實際上要花多少錢嗎？"
-        ]
-      }
+      "tags": {"objectionType": "no_urgency", "difficulty": 1, "archetype": "overconfident_denier"},
+      "en": {"name": "Mr. Daniel Brooks, 40", "bio": "Self-employed contractor · Nothing bad has ever happened to him\nFeels invincible\nSays: \"I've been fine my whole life. Why would that change now?\"", "greeting": "Hey. Honestly, I've been fine my whole life without this. I don't really see why that would change now.", "tasks": "① Shift his mindset from past luck to future risk\n② Make the cost of doing nothing concrete\n③ Get him to agree to a small first step", "openers": ["Mr. Brooks, that is great to hear. May I ask — if something did happen tomorrow, who would cover your bills while you recovered?", "Mr. Brooks, I am glad things have gone well so far. This is really about protecting that streak, not predicting bad luck.", "Mr. Brooks, most of my self-employed clients think the same way — until an unplanned week off work. Can I show you what that would actually cost?"]},
+      "zh": {"name": "高先生，40歲", "bio": "自營承包商 · 從沒出過事\n覺得自己很幸運、不會有事\n他說：「我這輩子都好好的，現在幹嘛突然要改變？」", "greeting": "嘿，說真的，我這輩子都沒出過什麼事，我不覺得現在會有什麼不同。", "tasks": "① 把他的心態從「過去運氣好」轉向「未來風險」\n② 讓「什麼都不做」的代價變得具體\n③ 讓他同意先跨出一小步", "openers": ["高先生，聽到這樣很替你高興。我想請教——如果明天真的出了狀況，誰來幫你付這段時間的帳單？", "高先生，很高興你這一路都很順利。這其實是在保護這個好運氣，而不是在預測壞事。", "高先生，我合作過的自營工作者大多也這麼想——直到真的請假一週沒收入的那次。我可以讓你看看那實際上要花多少錢嗎？"]}
     },
     {
       "id": "insurance-05",
-      "tags": {
-        "objectionType": "price_sensitive",
-        "difficulty": 1,
-        "archetype": "new_parent_tight_budget"
-      },
-      "en": {
-        "name": "Ms. Michelle Torres, 35",
-        "bio": "New mother · Tight budget after having a baby\nWants coverage but scared of the premium\nSays: \"I want this, but I don't know if we can afford it right now.\"",
-        "greeting": "Hi. Honestly, I do want to get this sorted, but with the baby, money is tight right now. I'm scared of what this is going to cost.",
-        "tasks": "① Validate her financial worry without dismissing it\n② Find a starting plan that fits her budget\n③ Frame it as protecting the baby, not a luxury",
-        "openers": [
-          "Ms. Torres, congratulations on the baby. Can we start with what monthly amount would feel comfortable, and build from there?",
-          "Ms. Torres, this does not have to be all or nothing. There are smaller starting options — would that help?",
-          "Ms. Torres, many new parents feel the exact same worry. What matters most to you in protecting your baby's future?"
-        ]
-      },
-      "zh": {
-        "name": "陶太太，35歲",
-        "bio": "新手媽媽 · 剛生小孩、預算緊\n想要保障但怕保費太高\n她說：「我是想弄這個，但現在真的不知道負擔不負擔得起。」",
-        "greeting": "你好，說真的，我是想把這件事處理好，但有了小孩之後，手頭真的很緊，我很怕這個要花很多錢。",
-        "tasks": "① 認同她的財務顧慮，不要輕描淡寫帶過\n② 找到一個符合預算的入門方案\n③ 把這件事定位成保護寶寶，而不是額外負擔",
-        "openers": [
-          "陶太太，恭喜你有了寶寶。我們可以先從您每個月能接受的金額開始，再慢慢往上調整，好嗎？",
-          "陶太太，這不是全有或全無的選擇，我們也有比較小額的入門方案——這樣會不會比較有幫助？",
-          "陶太太，很多新手爸媽都有一樣的擔心。對您來說，保護寶寶的未來，最在意的是哪一部分？"
-        ]
-      }
+      "tags": {"objectionType": "price_sensitive", "difficulty": 1, "archetype": "new_parent_tight_budget"},
+      "en": {"name": "Ms. Michelle Torres, 35", "bio": "New mother · Tight budget after having a baby\nWants coverage but scared of the premium\nSays: \"I want this, but I don't know if we can afford it right now.\"", "greeting": "Hi. Honestly, I do want to get this sorted, but with the baby, money is tight right now. I'm scared of what this is going to cost.", "tasks": "① Validate her financial worry without dismissing it\n② Find a starting plan that fits her budget\n③ Frame it as protecting the baby, not a luxury", "openers": ["Ms. Torres, congratulations on the baby. Can we start with what monthly amount would feel comfortable, and build from there?", "Ms. Torres, this does not have to be all or nothing. There are smaller starting options — would that help?", "Ms. Torres, many new parents feel the exact same worry. What matters most to you in protecting your baby's future?"]},
+      "zh": {"name": "陶太太，35歲", "bio": "新手媽媽 · 剛生小孩、預算緊\n想要保障但怕保費太高\n她說：「我是想弄這個，但現在真的不知道負擔不負擔得起。」", "greeting": "你好，說真的，我是想把這件事處理好，但有了小孩之後，手頭真的很緊，我很怕這個要花很多錢。", "tasks": "① 認同她的財務顧慮，不要輕描淡寫帶過\n② 找到一個符合預算的入門方案\n③ 把這件事定位成保護寶寶，而不是額外負擔", "openers": ["陶太太，恭喜你有了寶寶。我們可以先從您每個月能接受的金額開始，再慢慢往上調整，好嗎？", "陶太太，這不是全有或全無的選擇，我們也有比較小額的入門方案——這樣會不會比較有幫助？", "陶太太，很多新手爸媽都有一樣的擔心。對您來說，保護寶寶的未來，最在意的是哪一部分？"]}
     },
     {
       "id": "insurance-06",
-      "tags": {
-        "objectionType": "distrust_of_salesperson",
-        "difficulty": 3,
-        "archetype": "burned_by_denied_claim"
-      },
-      "en": {
-        "name": "Mr. George Whitfield, 58",
-        "bio": "Was burned before · Had a claim denied by another company\nDeeply distrustful of the industry\nSays: \"You people always find a reason not to pay.\"",
-        "greeting": "Look, I'll be straight with you. I had a claim denied years ago by another company. You people always find a reason not to pay.",
-        "tasks": "① Acknowledge his past experience without being defensive\n② Rebuild trust through transparency, not promises\n③ Show him exactly what would and would not be covered",
-        "openers": [
-          "Mr. Whitfield, I am sorry that happened to you. Would it help if I showed you exactly what is covered and excluded, in writing, before anything is signed?",
-          "Mr. Whitfield, I cannot speak for that company, but I can walk you through exactly how claims work with us. Would that be fair?",
-          "Mr. Whitfield, your experience is exactly why I always recommend reading the exclusions together first. Can we do that now?"
-        ]
-      },
-      "zh": {
-        "name": "黃先生，58歲",
-        "bio": "曾經被坑過 · 之前在別家申請理賠被拒\n對整個產業非常不信任\n他說：「你們這些人總是有辦法找理由不賠。」",
-        "greeting": "我直說了，我幾年前在別家申請理賠被拒過。你們這些人總是有辦法找理由不賠。",
-        "tasks": "① 認真回應他過去的經驗，不要防衛\n② 用透明取代承諾來重建信任\n③ 明確讓他看到哪些會賠、哪些不會賠",
-        "openers": [
-          "黃先生，很遺憾您有這樣的經驗。如果我在簽約前，就把哪些有賠、哪些不賠都寫清楚給您看，會不會有幫助？",
-          "黃先生，我不能代表那家公司，但我可以完整跟您說明我們這邊理賠實際是怎麼運作的，這樣可以嗎？",
-          "黃先生，正因為有您這樣的經驗，我都建議先一起把不理賠的條款看過一遍。我們現在可以看看嗎？"
-        ]
-      }
+      "tags": {"objectionType": "distrust_of_salesperson", "difficulty": 3, "archetype": "burned_by_denied_claim"},
+      "en": {"name": "Mr. George Whitfield, 58", "bio": "Was burned before · Had a claim denied by another company\nDeeply distrustful of the industry\nSays: \"You people always find a reason not to pay.\"", "greeting": "Look, I'll be straight with you. I had a claim denied years ago by another company. You people always find a reason not to pay.", "tasks": "① Acknowledge his past experience without being defensive\n② Rebuild trust through transparency, not promises\n③ Show him exactly what would and would not be covered", "openers": ["Mr. Whitfield, I am sorry that happened to you. Would it help if I showed you exactly what is covered and excluded, in writing, before anything is signed?", "Mr. Whitfield, I cannot speak for that company, but I can walk you through exactly how claims work with us. Would that be fair?", "Mr. Whitfield, your experience is exactly why I always recommend reading the exclusions together first. Can we do that now?"]},
+      "zh": {"name": "黃先生，58歲", "bio": "曾經被坑過 · 之前在別家申請理賠被拒\n對整個產業非常不信任\n他說：「你們這些人總是有辦法找理由不賠。」", "greeting": "我直說了，我幾年前在別家申請理賠被拒過。你們這些人總是有辦法找理由不賠。", "tasks": "① 認真回應他過去的經驗，不要防衛\n② 用透明取代承諾來重建信任\n③ 明確讓他看到哪些會賠、哪些不會賠", "openers": ["黃先生，很遺憾您有這樣的經驗。如果我在簽約前，就把哪些有賠、哪些不賠都寫清楚給您看，會不會有幫助？", "黃先生，我不能代表那家公司，但我可以完整跟您說明我們這邊理賠實際是怎麼運作的，這樣可以嗎？", "黃先生，正因為有您這樣的經驗，我都建議先一起把不理賠的條款看過一遍。我們現在可以看看嗎？"]}
     },
     {
       "id": "insurance-07",
-      "tags": {
-        "objectionType": "overwhelmed_by_options",
-        "difficulty": 2,
-        "archetype": "analytical_comparer"
-      },
-      "en": {
-        "name": "Mrs. Angela Kim, 47",
-        "bio": "Very analytical · Wants to compare every detail\nTends to get stuck in analysis, slowing her decision\nSays: \"I need to compare this against three other quotes first.\"",
-        "greeting": "Hi. Before anything else, I need to compare this against three other quotes I've collected. I don't want to rush into this.",
-        "tasks": "① Respect her need for thoroughness\n② Help her focus on the 2-3 factors that actually matter\n③ Prevent analysis paralysis from becoming no decision at all",
-        "openers": [
-          "Mrs. Kim, that is a smart approach. What are the top two or three things you are comparing across the quotes?",
-          "Mrs. Kim, comparing is wise. Would it help if I built you a simple side-by-side so it is easier to see the real differences?",
-          "Mrs. Kim, I want you to feel fully confident. What would you need to see to feel ready to decide?"
-        ]
-      },
-      "zh": {
-        "name": "江女士，47歲",
-        "bio": "非常理性分析型 · 什麼都想比較\n容易陷入過度分析，遲遲無法決定\n她說：「我要先跟另外三家的報價比較過才行。」",
-        "greeting": "你好，在其他事情之前，我得先把這個跟我收集的另外三家報價比較一下，我不想太倉促決定。",
-        "tasks": "① 尊重她想徹底比較的需求\n② 幫她聚焦在真正重要的2-3個關鍵點\n③ 避免過度分析變成永遠不做決定",
-        "openers": [
-          "江女士，這是很聰明的做法。您在比較的時候，最看重的兩三個重點是什麼？",
-          "江女士，比較是明智的。如果我幫您整理一個簡單的對照表，會不會更容易看出真正的差異？",
-          "江女士，我希望您能完全放心地做決定。您需要看到什麼，才會覺得準備好了？"
-        ]
-      }
+      "tags": {"objectionType": "overwhelmed_by_options", "difficulty": 2, "archetype": "analytical_comparer"},
+      "en": {"name": "Mrs. Angela Kim, 47", "bio": "Very analytical · Wants to compare every detail\nTends to get stuck in analysis, slowing her decision\nSays: \"I need to compare this against three other quotes first.\"", "greeting": "Hi. Before anything else, I need to compare this against three other quotes I've collected. I don't want to rush into this.", "tasks": "① Respect her need for thoroughness\n② Help her focus on the 2-3 factors that actually matter\n③ Prevent analysis paralysis from becoming no decision at all", "openers": ["Mrs. Kim, that is a smart approach. What are the top two or three things you are comparing across the quotes?", "Mrs. Kim, comparing is wise. Would it help if I built you a simple side-by-side so it is easier to see the real differences?", "Mrs. Kim, I want you to feel fully confident. What would you need to see to feel ready to decide?"]},
+      "zh": {"name": "江女士，47歲", "bio": "非常理性分析型 · 什麼都想比較\n容易陷入過度分析，遲遲無法決定\n她說：「我要先跟另外三家的報價比較過才行。」", "greeting": "你好，在其他事情之前，我得先把這個跟我收集的另外三家報價比較一下，我不想太倉促決定。", "tasks": "① 尊重她想徹底比較的需求\n② 幫她聚焦在真正重要的2-3個關鍵點\n③ 避免過度分析變成永遠不做決定", "openers": ["江女士，這是很聰明的做法。您在比較的時候，最看重的兩三個重點是什麼？", "江女士，比較是明智的。如果我幫您整理一個簡單的對照表，會不會更容易看出真正的差異？", "江女士，我希望您能完全放心地做決定。您需要看到什麼，才會覺得準備好了？"]}
     },
     {
       "id": "insurance-08",
-      "tags": {
-        "objectionType": "no_urgency",
-        "difficulty": 2,
-        "archetype": "age_doubt"
-      },
-      "en": {
-        "name": "Mr. Frank Delgado, 62",
-        "bio": "Near retirement · Believes it is too late to start now\nResigned rather than resistant\nSays: \"At my age, isn't it too late for this to make sense?\"",
-        "greeting": "Hello. I appreciate you coming by, but honestly, at my age, isn't it a bit too late for this to make sense?",
-        "tasks": "① Correct the misconception gently, without lecturing\n② Reframe what protection looks like near retirement\n③ Offer one realistic, age-appropriate option",
-        "openers": [
-          "Mr. Delgado, that is a common thought, but it is rarely too late — the goals just shift. What matters most to you right now?",
-          "Mr. Delgado, at this stage many people focus less on growth and more on protecting what they have built. Does that resonate?",
-          "Mr. Delgado, may I show you one simple option designed specifically for where you are in life right now?"
-        ]
-      },
-      "zh": {
-        "name": "方先生，62歲",
-        "bio": "接近退休 · 覺得現在才開始已經太晚\n不是抗拒、而是有點放棄的心態\n他說：「我這個年紀，現在弄這個是不是已經太晚了？」",
-        "greeting": "你好，謝謝你過來，但老實說，我這個年紀，現在弄這個是不是已經太晚了？",
-        "tasks": "① 溫和地糾正這個迷思，不說教\n② 重新定義退休前保障的意義\n③ 提供一個符合他這個階段的實際方案",
-        "openers": [
-          "方先生，很多人都這麼想，但其實很少真的太晚——只是目標會不一樣。您現在最在意的是什麼？",
-          "方先生，到了這個階段，很多人比較不在意增值，而是想保護已經累積的成果，這聽起來符合您的想法嗎？",
-          "方先生，我可以給您看一個專門為您這個人生階段設計的簡單方案嗎？"
-        ]
-      }
+      "tags": {"objectionType": "no_urgency", "difficulty": 2, "archetype": "age_doubt"},
+      "en": {"name": "Mr. Frank Delgado, 62", "bio": "Near retirement · Believes it is too late to start now\nResigned rather than resistant\nSays: \"At my age, isn't it too late for this to make sense?\"", "greeting": "Hello. I appreciate you coming by, but honestly, at my age, isn't it a bit too late for this to make sense?", "tasks": "① Correct the misconception gently, without lecturing\n② Reframe what protection looks like near retirement\n③ Offer one realistic, age-appropriate option", "openers": ["Mr. Delgado, that is a common thought, but it is rarely too late — the goals just shift. What matters most to you right now?", "Mr. Delgado, at this stage many people focus less on growth and more on protecting what they have built. Does that resonate?", "Mr. Delgado, may I show you one simple option designed specifically for where you are in life right now?"]},
+      "zh": {"name": "方先生，62歲", "bio": "接近退休 · 覺得現在才開始已經太晚\n不是抗拒、而是有點放棄的心態\n他說：「我這個年紀，現在弄這個是不是已經太晚了？」", "greeting": "你好，謝謝你過來，但老實說，我這個年紀，現在弄這個是不是已經太晚了？", "tasks": "① 溫和地糾正這個迷思，不說教\n② 重新定義退休前保障的意義\n③ 提供一個符合他這個階段的實際方案", "openers": ["方先生，很多人都這麼想，但其實很少真的太晚——只是目標會不一樣。您現在最在意的是什麼？", "方先生，到了這個階段，很多人比較不在意增值，而是想保護已經累積的成果，這聽起來符合您的想法嗎？", "方先生，我可以給您看一個專門為您這個人生階段設計的簡單方案嗎？"]}
     },
     {
       "id": "insurance-09",
-      "tags": {
-        "objectionType": "already_has_solution",
-        "difficulty": 2,
-        "archetype": "relies_on_employer_benefits"
-      },
-      "en": {
-        "name": "Ms. Olivia Chen, 30",
-        "bio": "Tech worker · Believes employer benefits cover everything\nHas not checked the details closely\nSays: \"My company already covers this. I'm all set.\"",
-        "greeting": "Hi. I think my company already covers this through work benefits, so I'm probably all set here.",
-        "tasks": "① Explore what her employer coverage actually includes\n② Highlight common gaps in group benefits\n③ Position this as a supplement, not a replacement",
-        "openers": [
-          "Ms. Chen, that's great that you have coverage. Do you know what happens to it if you ever left that job?",
-          "Ms. Chen, employer plans are a great start. Many people are surprised by what is not included — can I show you a quick comparison?",
-          "Ms. Chen, this would not replace your coverage, just fill in the gaps. Would that be worth five minutes to review?"
-        ]
-      },
-      "zh": {
-        "name": "錢小姐，30歲",
-        "bio": "科技業員工 · 覺得公司福利都有涵蓋\n沒有仔細核對過細節\n她說：「我公司已經有幫我保這個了，我應該不用再弄。」",
-        "greeting": "你好，我覺得我公司的員工福利應該已經有涵蓋這個了，我應該不太需要另外弄。",
-        "tasks": "① 了解她公司福利實際涵蓋的內容\n② 點出團體保險常見的缺口\n③ 把這個定位成補強，而不是取代",
-        "openers": [
-          "錢小姐，有公司福利很好。您知道如果離職之後，這個保障會怎麼樣嗎？",
-          "錢小姐，公司的福利是個不錯的起點。很多人後來才發現有些地方沒被涵蓋到——我可以幫您快速比較一下嗎？",
-          "錢小姐，這不會取代您現有的保障，只是補上缺口。花五分鐘看一下，您覺得可以嗎？"
-        ]
-      }
+      "tags": {"objectionType": "already_has_solution", "difficulty": 2, "archetype": "relies_on_employer_benefits"},
+      "en": {"name": "Ms. Olivia Chen, 30", "bio": "Tech worker · Believes employer benefits cover everything\nHas not checked the details closely\nSays: \"My company already covers this. I'm all set.\"", "greeting": "Hi. I think my company already covers this through work benefits, so I'm probably all set here.", "tasks": "① Explore what her employer coverage actually includes\n② Highlight common gaps in group benefits\n③ Position this as a supplement, not a replacement", "openers": ["Ms. Chen, that's great that you have coverage. Do you know what happens to it if you ever left that job?", "Ms. Chen, employer plans are a great start. Many people are surprised by what is not included — can I show you a quick comparison?", "Ms. Chen, this would not replace your coverage, just fill in the gaps. Would that be worth five minutes to review?"]},
+      "zh": {"name": "錢小姐，30歲", "bio": "科技業員工 · 覺得公司福利都有涵蓋\n沒有仔細核對過細節\n她說：「我公司已經有幫我保這個了，我應該不用再弄。」", "greeting": "你好，我覺得我公司的員工福利應該已經有涵蓋這個了，我應該不太需要另外弄。", "tasks": "① 了解她公司福利實際涵蓋的內容\n② 點出團體保險常見的缺口\n③ 把這個定位成補強，而不是取代", "openers": ["錢小姐，有公司福利很好。您知道如果離職之後，這個保障會怎麼樣嗎？", "錢小姐，公司的福利是個不錯的起點。很多人後來才發現有些地方沒被涵蓋到——我可以幫您快速比較一下嗎？", "錢小姐，這不會取代您現有的保障，只是補上缺口。花五分鐘看一下，您覺得可以嗎？"]}
     },
     {
       "id": "insurance-10",
-      "tags": {
-        "objectionType": "time_constrained",
-        "difficulty": 1,
-        "archetype": "busy_executive"
-      },
-      "en": {
-        "name": "Mr. Marcus Bell, 44",
-        "bio": "Busy executive · Constantly checking his phone\nWants everything done fast, no patience for a long pitch\nSays: \"I have five minutes. Make it count.\"",
-        "greeting": "Hi, I have five minutes before my next call. Make it count.",
-        "tasks": "① Respect his time constraint immediately\n② Get to the single most relevant point fast\n③ Secure a specific next step, not a vague follow-up",
-        "openers": [
-          "Mr. Bell, understood — one question: what is the single biggest financial risk to your family if something happened to you?",
-          "Mr. Bell, I will keep this to sixty seconds. Here is the one thing worth knowing today...",
-          "Mr. Bell, rather than explain everything now, can I send you one page and grab ten minutes next week?"
-        ]
-      },
-      "zh": {
-        "name": "白先生，44歲",
-        "bio": "忙碌的高階主管 · 一直在看手機\n什麼都要求快，沒耐心聽長篇介紹\n他說：「我只有五分鐘，講重點。」",
-        "greeting": "你好，我下一通電話前只有五分鐘，講重點。",
-        "tasks": "① 立刻尊重他有限的時間\n② 快速切入最相關的一個重點\n③ 敲定一個明確的下一步，而不是模糊的「再聯絡」",
-        "openers": [
-          "白先生，了解——一個問題：如果您發生意外，對家人最大的財務風險是什麼？",
-          "白先生，我用六十秒講完。今天最值得您知道的一件事是……",
-          "白先生，與其現在講完全部，我可以先傳一頁重點給您，下週再約十分鐘可以嗎？"
-        ]
-      }
+      "tags": {"objectionType": "time_constrained", "difficulty": 1, "archetype": "busy_executive"},
+      "en": {"name": "Mr. Marcus Bell, 44", "bio": "Busy executive · Constantly checking his phone\nWants everything done fast, no patience for a long pitch\nSays: \"I have five minutes. Make it count.\"", "greeting": "Hi, I have five minutes before my next call. Make it count.", "tasks": "① Respect his time constraint immediately\n② Get to the single most relevant point fast\n③ Secure a specific next step, not a vague follow-up", "openers": ["Mr. Bell, understood — one question: what is the single biggest financial risk to your family if something happened to you?", "Mr. Bell, I will keep this to sixty seconds. Here is the one thing worth knowing today...", "Mr. Bell, rather than explain everything now, can I send you one page and grab ten minutes next week?"]},
+      "zh": {"name": "白先生，44歲", "bio": "忙碌的高階主管 · 一直在看手機\n什麼都要求快，沒耐心聽長篇介紹\n他說：「我只有五分鐘，講重點。」", "greeting": "你好，我下一通電話前只有五分鐘，講重點。", "tasks": "① 立刻尊重他有限的時間\n② 快速切入最相關的一個重點\n③ 敲定一個明確的下一步，而不是模糊的「再聯絡」", "openers": ["白先生，了解——一個問題：如果您發生意外，對家人最大的財務風險是什麼？", "白先生，我用六十秒講完。今天最值得您知道的一件事是……", "白先生，與其現在講完全部，我可以先傳一頁重點給您，下週再約十分鐘可以嗎？"]}
+    },
+    {
+      "id": "insurance-11",
+      "tags": {"objectionType": "already_has_solution", "difficulty": 3, "archetype": "high_net_worth_business_owner"},
+      "en": {"name": "Mr. Andrew Wells, 54", "bio": "Owns a mid-size manufacturing company · Has a private banker and CPA\nHasn't reviewed insurance or succession planning in years\nSays: \"I already have a private banker and CPA handling all this.\"", "greeting": "I appreciate you reaching out, but I already have a private banker and a CPA who manage my finances. Not sure what an insurance agent adds to that.", "tasks": "① Find out what's actually NOT being coordinated between his banker, CPA, and any existing insurance\n② Show the specific gap — usually business succession funding or estate liquidity, not general wealth management\n③ Position yourself as filling that gap, not competing with his existing team", "openers": ["That makes sense — most owners your size have a banker and a CPA. Out of curiosity, has anyone on that team actually built a funding plan for what happens to the business if something happens to you?", "Your CPA optimizes taxes and your banker manages investments — but who's making sure your family isn't forced to sell the business fast, at a bad price, to cover estate costs? That's usually the piece nobody owns.", "I'm not here to replace your team. I'd like to ask a few questions about how the business would transfer if something unexpected happened — would you be open to that?"]},
+      "zh": {"name": "郭先生，54歲", "bio": "中型製造業公司老闆 · 有私人銀行家和會計師\n已經好幾年沒重新檢視保險或接班規劃\n他說：「這些我私人銀行家跟會計師都已經在處理了。」", "greeting": "謝謝你聯絡我，不過我已經有私人銀行家跟會計師在管理我的財務了，不太確定保險業務員能多做什麼。", "tasks": "① 找出他的銀行家、會計師跟現有保單之間，實際上沒有被整合、被漏掉的那一塊\n② 指出具體缺口——通常是企業接班的資金安排或遺產流動性問題，不是一般財富管理\n③ 把自己定位成補上那個缺口，而不是要取代他現有的團隊", "openers": ["這很合理，您這個規模的老闆大部分都有銀行家跟會計師。我很好奇，這個團隊裡有沒有人真的幫您規劃過，萬一您出了什麼事，公司要怎麼延續下去的資金安排？", "會計師幫您節稅、銀行家幫您管理投資，但誰在確保您的家人不會被迫低價、匆忙賣掉公司來付遺產相關費用？這一塊通常沒有人真正在管。", "我不是要取代您現有的團隊。我想請教幾個問題，關於萬一發生意外，公司該怎麼順利轉移——您方便聊聊嗎？"]}
+    },
+    {
+      "id": "insurance-13",
+      "tags": {"objectionType": "no_urgency", "difficulty": 3, "archetype": "conflict_avoidant_parent"},
+      "en": {"name": "Mrs. Elaine Choi, 66", "bio": "Retired · Widowed, owns several properties and a large investment portfolio\nKnows she needs an estate plan but has avoided it for years\nSays: \"Every time I try to plan this, it turns into a fight between my kids.\"", "greeting": "I know I need to deal with this eventually, but every time I've tried, it just turns into an argument between my children about who gets what. I'd honestly rather not open that up again.", "tasks": "① Acknowledge the emotional weight, don't push past it\n② Reframe the goal as protecting the family relationship, not just dividing assets\n③ Introduce a structure (e.g. trust) that removes her from being the arbiter", "openers": ["That sounds exhausting, and honestly, very common. Can I ask — is it the decisions themselves that are hard, or having to be the one who announces them?", "A lot of families find that a properly structured trust actually takes you out of the middle — the plan speaks for itself instead of feeling like your personal decision. Would that kind of separation help?", "You don't have to decide everything today. Would it help to start with just protecting what happens if something happened to you tomorrow, and figure out the rest later?"]},
+      "zh": {"name": "蔡太太，66歲", "bio": "退休 · 喪偶，名下有多個房產跟一筆投資組合\n知道自己需要做遺產規劃，但已經拖了好幾年\n她說：「每次我想處理這件事，最後都變成孩子們吵起來。」", "greeting": "我知道這件事早晚要處理，但每次我一開始討論，最後都變成孩子們在吵誰該分到什麼。老實說我寧可不要再碰這個話題。", "tasks": "① 先認同她的情緒負擔，不要急著跳過\n② 把目標重新定位成「保護家人關係」，而不只是分配資產\n③ 介紹一個像信託這樣的架構，讓她不用親自當那個「宣布決定的人」", "openers": ["聽起來真的很累人，而且說實話，這種情況很常見。我想請教，讓您困擾的是決定本身，還是要親自宣布這些決定？", "很多家庭發現，設計得好的信託架構，其實能讓您從中間位置抽離出來——變成是規劃本身在說話，而不是感覺像是您個人做的決定。這種切割會對您有幫助嗎？", "您不需要今天就決定所有事情。要不要先從『萬一您明天出了什麼事，該怎麼保障』這件事開始，其他的之後再慢慢處理？"]}
+    },
+    {
+      "id": "insurance-14",
+      "tags": {"objectionType": "prefers_alternative_investment", "difficulty": 2, "archetype": "diy_education_saver"},
+      "en": {"name": "Mr. Jason Park, 36", "bio": "New father · Already opened a 529 education savings account\nBelieves that's all he needs for his child's future education\nSays: \"I already put money in a 529 every month — why would I need insurance too?\"", "greeting": "I appreciate you reaching out, but I've already got a 529 account set up and I contribute every month. I think that covers what my daughter needs for college.", "tasks": "① Find out what happens to that 529 funding plan if he's not around to keep contributing\n② Position insurance as protecting the contribution plan, not competing with the 529 itself\n③ Avoid suggesting he drop the 529 — reinforce it, don't replace it", "openers": ["A 529 is a great start — you're ahead of a lot of parents already. Can I ask, if something happened to you next year, would those monthly contributions continue?", "I'm not suggesting you move away from the 529 at all. I'm asking about the plan behind the plan — what guarantees your daughter still gets a fully funded education if you're not the one making the deposits?", "Think of it less as 'insurance vs. 529' and more as making sure the 529 actually finishes what it started, no matter what happens to you along the way. Does that distinction make sense?"]},
+      "zh": {"name": "朴先生，36歲", "bio": "新手爸爸 · 已經開了 529 教育儲蓄帳戶\n認為這樣就足夠應付孩子未來的教育費用\n他說：「我每個月都有在存 529，為什麼還需要保險？」", "greeting": "謝謝你聯絡我，不過我已經開了 529 帳戶，每個月都有在存錢，我覺得這樣應該就夠應付我女兒以後上大學的費用了。", "tasks": "① 了解如果他哪天沒辦法繼續存錢進 529，這個計畫會發生什麼事\n② 把保險定位成「保護這個存錢計畫本身」，不是跟 529 競爭\n③ 不要建議他放棄 529——是加強它，不是取代它", "openers": ["529 是很好的開始，您已經比很多父母超前了。我想請教，如果您明年發生什麼意外，這些每月的提撥還會繼續進行嗎？", "我完全不是要您放棄 529。我想問的是這個計畫背後的保障——萬一不是您親自在存這筆錢了，是什麼在確保您女兒還是能拿到完整的教育基金？", "與其想成『保險 vs 529』，不如想成是確保 529 這個計畫不管發生什麼事，都能照原本的目標走完全程。這個角度您覺得合理嗎？"]}
+    },
+    {
+      "id": "insurance-15",
+      "tags": {"objectionType": "prefers_alternative_investment", "difficulty": 2, "archetype": "crypto_curious_young_professional"},
+      "en": {"name": "Mr. Tyler Nguyen, 29", "bio": "Marketing analyst · Recently started investing in Bitcoin and Ethereum\nExcited about crypto gains, dismisses insurance as \"boring\" and low-return\nSays: \"Why would I lock money into insurance when crypto could 10x?\"", "greeting": "Honestly, I've been putting most of my extra cash into crypto lately. It's up way more than any insurance policy would ever give me. Not really seeing the point of talking about insurance right now.", "tasks": "① Understand what's driving his interest — excitement, FOMO, or a genuine risk tolerance\n② Do NOT discuss crypto itself, its merits, or investment strategy — redirect to what protection covers that an investment portfolio doesn't\n③ Connect to a concrete stake — dependents, debt, or income replacement — not returns", "openers": ["That's exciting — crypto's had a big run. Can I ask, if something happened to you tomorrow, would that portfolio still be there for the people who depend on you, or would it need time to recover first?", "I'm not here to debate crypto versus anything else — that's not my area. I'm curious about something different: is there anyone right now who'd be financially stuck if your income stopped suddenly?", "Makes sense to want growth. Out of curiosity, do you have anything set aside that's specifically there no matter what the market's doing — separate from the crypto side?"]},
+      "zh": {"name": "阮泰勒，29歲", "bio": "行銷分析師 · 最近開始投資比特幣跟以太幣\n對加密貨幣的漲幅很興奮，覺得保險「無聊」又報酬率低\n他說：「加密貨幣可能翻10倍，為什麼要把錢鎖在保險裡？」", "greeting": "老實說，我最近大部分閒錢都放加密貨幣了，漲幅比任何保單都好太多。現在真的不太想談保險這件事。", "tasks": "① 了解他這股興趣是來自興奮、怕錯過，還是真正的風險承受度\n② 不要討論加密貨幣本身、它的優點或投資策略——把話題轉回「保障」跟投資組合本質上不同的地方\n③ 連結到具體的責任對象——受扶養人、負債、收入替代——而不是報酬率", "openers": ["加密貨幣最近確實漲很多，很讓人興奮。我想請教，如果您明天發生意外，這個投資組合還會留給依賴您的人，還是需要時間才能恢復？", "我不是要來跟您辯論加密貨幣好不好，那不是我的專業。我比較好奇另一件事：現在有沒有人，如果您的收入突然中斷，會馬上陷入財務困境？", "想追求成長是很合理的。我很好奇，您有沒有留一筆錢，是不管市場現在怎麼樣，都確定會在那裡的——跟加密貨幣那部分分開？"]}
+    },
+    {
+      "id": "insurance-16",
+      "tags": {"objectionType": "prefers_alternative_investment", "difficulty": 2, "archetype": "rate_environment_skeptic"},
+      "en": {"name": "Ms. Diane Foster, 51", "bio": "Small business owner · Follows interest rate news closely\nBelieves insurance crediting rates are unattractive in the current rate environment\nSays: \"Why lock money into something with such a low return right now?\"", "greeting": "I've been reading about interest rates, and honestly, the returns on these policies seem really low compared to what I could get elsewhere right now. Why would I lock my money in?", "tasks": "① Find out what she's comparing insurance against — a specific rate, or a general impression\n② Do NOT debate rates or predict future rate movements — redirect to what protection guarantees that a rate-sensitive product doesn't\n③ Separate the protection decision from the yield-chasing decision", "openers": ["That's a fair thing to watch. Can I ask — when you say 'return,' are you thinking about this as an investment, or as protection for your family if something happened to you?", "Rates move up and down — that part's outside anyone's control, including mine. What doesn't move is what this guarantees your family the day you need it. Is that the piece you're weighing against the rate, or something else?", "If rates go up next year, would that change whether your family needs protection today? I'm curious how you're separating those two decisions."]},
+      "zh": {"name": "傅黛安，51歲", "bio": "小型企業主 · 密切關注利率新聞\n認為在目前利率環境下，保單的宣告利率沒有吸引力\n她說：「現在報酬率這麼低，為什麼要把錢鎖住？」", "greeting": "我最近有在看利率的新聞，老實說，這些保單的報酬率跟我現在能拿到的比起來真的低很多。為什麼要把錢鎖在這裡？", "tasks": "① 了解她拿保險在跟什麼比較——是一個具體的利率，還是模糊的印象\n② 不要跟她辯論利率高低或預測未來走勢——把話題轉回「保障」提供的、跟利率無關的保證\n③ 把「保障決定」跟「追求報酬率」這兩件事分開來看", "openers": ["會關注這個很合理。我想請教，您說的『報酬』，是把這個當投資在看，還是萬一您發生意外時對家人的保障？", "利率本來就會上上下下，這個不是誰能控制的，包括我。但不會變的，是這份保單在您需要的那天，能保證給家人的東西。您在跟利率比較的，是這一塊，還是別的？", "如果明年利率漲了，會改變您家人今天需不需要保障這件事嗎？我很好奇您是怎麼把這兩個決定分開看的。"]}
     }
   ]
 }
