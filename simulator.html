@@ -178,6 +178,8 @@
       font-family: inherit; transition: all 0.15s;
     }
     .level-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .mode-toggle { display: flex; gap: 6px; padding: 10px 16px 0; }
+    .mode-toggle .level-btn { flex: 1; text-align: center; }
     .panel-search {
       padding: 12px 16px; border-bottom: 1px solid var(--border);
     }
@@ -751,6 +753,10 @@
   <div class="panel-left" id="panel-left">
   <button class="mobile-close-btn" onclick="toggleMobilePanel()" id="mobile-close-btn">✕ 關閉 / Close</button>
     <div class="panel-header" id="scenarios-label">Scenarios</div>
+    <div class="mode-toggle" id="mode-toggle">
+      <button class="level-btn active" id="mode-btn-curriculum" onclick="setPanelMode('curriculum')">Curriculum</button>
+      <button class="level-btn" id="mode-btn-all" onclick="setPanelMode('all')">All Scenarios</button>
+    </div>
     <div class="panel-search">
       <input type="text" id="search-input" placeholder="Search scenarios..." oninput="filterScenarios()" />
     </div>
@@ -1468,7 +1474,13 @@ const strings = {
     empathy: 'Empathy & Rapport', accuracy: 'Product Accuracy', closing: 'Closing Technique',
     strengths: '✅ Strengths', tips: '💡 Tips to Improve', resetConfirm: 'Reset this conversation?',
     catFinance: 'Finance & Insurance', catRealestate: 'Real Estate', catHealth: 'Health & Wellness', catFree: 'Free Practice',
-    sessionEnded: '— End of Session — Click Reset to practice again —'
+    sessionEnded: '— End of Session — Click Reset to practice again —',
+    curriculumTab: 'Curriculum', allScenariosTab: 'All Scenarios',
+    foundationAcademy: 'Foundation Academy', existingLibrary: 'Existing Scenario Library',
+    browseLibraryLink: '→ Browse Insurance, Real Estate, Health & Wellness (switch to All Scenarios)',
+    curriculumLoading: 'Loading curriculum…',
+    curriculumFailed: 'Curriculum could not be loaded — switch to "All Scenarios" to view the existing library.',
+    completedLabel: 'completed', scoreShortLabel: 'Score'
   },
   zh: {
     scenariosLabel: '練習情境', feedbackLabel: 'AI 教練回饋',
@@ -1486,7 +1498,13 @@ const strings = {
     empathy: '同理心與信任建立', accuracy: '產品準確度', closing: '成交技巧',
     strengths: '✅ 做得好的地方', tips: '💡 改進建議', resetConfirm: '重置此對話？',
     catFinance: '金融與保險', catRealestate: '房地產', catHealth: '健康與保健', catFree: '自由練習',
-    sessionEnded: '— 練習結束 — 點擊重置再次練習 —'
+    sessionEnded: '— 練習結束 — 點擊重置再次練習 —',
+    curriculumTab: '課程', allScenariosTab: '全部情境',
+    foundationAcademy: 'Foundation Academy 基礎學院', existingLibrary: '完整情境庫',
+    browseLibraryLink: '→ 查看保險、房地產、健康與保健的完整情境（切換到「全部情境」）',
+    curriculumLoading: '課程載入中…',
+    curriculumFailed: '課程資料無法載入，請切換到「全部情境」查看現有情境。',
+    completedLabel: '已完成', scoreShortLabel: '分數'
   }
 };
 
@@ -1517,6 +1535,167 @@ const scenarioMeta = {
 };
 
 let collapsedSections = { realestate: true, health: true };
+
+// ── CURRICULUM (Practice Studio — Foundation Academy) ──
+let currentPanelMode = 'curriculum';
+let curriculumData = null; // null = not yet loaded, [] = load failed
+const CURRICULUM_PROGRESS_KEY = 'agenttraining_curriculum_progress';
+
+function loadCurriculumData() {
+  fetch('data/curriculum/foundation.json')
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(json => {
+      curriculumData = Array.isArray(json) ? json : [];
+      renderCurrentPanel(document.getElementById('search-input') ? document.getElementById('search-input').value : '');
+    })
+    .catch(err => {
+      console.error('[Curriculum] Failed to load data/curriculum/foundation.json — falling back to existing scenario library.', err);
+      curriculumData = [];
+      currentPanelMode = 'all';
+      updateModeToggleUI();
+      renderCurrentPanel('');
+    });
+}
+
+function updateModeToggleUI() {
+  const curBtn = document.getElementById('mode-btn-curriculum');
+  const allBtn = document.getElementById('mode-btn-all');
+  if (curBtn) curBtn.classList.toggle('active', currentPanelMode === 'curriculum');
+  if (allBtn) allBtn.classList.toggle('active', currentPanelMode === 'all');
+}
+
+function setPanelMode(mode) {
+  currentPanelMode = mode;
+  updateModeToggleUI();
+  const levelFilter = document.getElementById('level-filter');
+  if (levelFilter) levelFilter.style.display = (mode === 'curriculum') ? 'none' : '';
+  renderCurrentPanel(document.getElementById('search-input').value);
+}
+
+function renderCurrentPanel(filter = '') {
+  if (currentPanelMode === 'curriculum') {
+    renderCurriculum(filter);
+  } else {
+    renderScenarios(filter);
+  }
+}
+
+function getCurriculumProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(CURRICULUM_PROGRESS_KEY)) || {};
+  } catch (e) { return {}; }
+}
+
+function saveCurriculumProgress(lessonId, score) {
+  try {
+    const progress = getCurriculumProgress();
+    progress[lessonId] = { completed: true, score: score, date: new Date().toISOString().slice(0, 10) };
+    localStorage.setItem(CURRICULUM_PROGRESS_KEY, JSON.stringify(progress));
+  } catch (e) { console.error('[Curriculum] Could not save progress to localStorage:', e); }
+}
+
+function renderCurriculum(filter = '') {
+  const s = strings[currentLang];
+  const list = document.getElementById('scenario-list');
+  list.innerHTML = '';
+
+  if (curriculumData === null) {
+    list.innerHTML = `<div style="padding:16px;font-size:12px;color:var(--ink-muted);">${s.curriculumLoading}</div>`;
+    return;
+  }
+  if (curriculumData.length === 0) {
+    list.innerHTML = `<div style="padding:16px;font-size:12px;color:var(--ink-muted);">${s.curriculumFailed}</div>`;
+    return;
+  }
+
+  const f = filter.toLowerCase();
+  const filtered = curriculumData.filter(lesson => {
+    if (!f) return true;
+    const title = (lesson.title?.[currentLang] || '').toLowerCase();
+    const titleEn = (lesson.title?.en || '').toLowerCase();
+    const moduleTxt = (lesson.module || '').toLowerCase();
+    const skillsTxt = (lesson.skills || []).join(' ').toLowerCase();
+    const industryTxt = (lesson.industry || '').toLowerCase();
+    return title.includes(f) || titleEn.includes(f) || moduleTxt.includes(f) || skillsTxt.includes(f) || industryTxt.includes(f);
+  });
+
+  const academyHeader = document.createElement('div');
+  academyHeader.style.cssText = 'padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted);';
+  academyHeader.textContent = s.foundationAcademy;
+  list.appendChild(academyHeader);
+
+  const progress = getCurriculumProgress();
+
+  const modules = {};
+  filtered.forEach(lesson => {
+    const key = String(lesson.moduleOrder) + '::' + lesson.module;
+    if (!modules[key]) modules[key] = [];
+    modules[key].push(lesson);
+  });
+
+  Object.keys(modules).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)).forEach(key => {
+    const lessons = modules[key].slice().sort((a, b) => a.lessonOrder - b.lessonOrder);
+    const moduleName = lessons[0].module;
+    const moduleOrder = lessons[0].moduleOrder;
+    const fullModuleLessons = curriculumData.filter(l => l.moduleOrder === moduleOrder);
+    const completedCount = fullModuleLessons.filter(l => progress[l.id]?.completed).length;
+
+    const modHeader = document.createElement('div');
+    modHeader.style.cssText = 'padding:10px 14px 2px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;';
+    modHeader.innerHTML = `
+      <span style="font-size:12px;font-weight:700;color:var(--ink);">Module ${moduleOrder}: ${moduleName}</span>
+      <span style="font-size:10px;color:var(--ink-muted);font-weight:600;white-space:nowrap;">${completedCount} / ${fullModuleLessons.length} ${s.completedLabel}</span>
+    `;
+    list.appendChild(modHeader);
+
+    lessons.forEach(lesson => {
+      const entry = progress[lesson.id];
+      const el = document.createElement('div');
+      el.className = 'scenario-item' + (currentScenario?.id === lesson.id ? ' active' : '');
+      el.onclick = () => selectCurriculumLesson(lesson);
+      el.innerHTML = `
+        <div style="font-size:10px;color:var(--ink-muted);font-weight:600;margin-bottom:2px;">${currentLang === 'zh' ? `第 ${lesson.lessonOrder} 課，共 ${fullModuleLessons.length} 課` : `Lesson ${lesson.lessonOrder} of ${fullModuleLessons.length}`}</div>
+        <div class="scenario-name">${entry?.completed ? '✅ ' : ''}${lesson.title[currentLang]}</div>
+        <div class="scenario-preview">${lesson.preview[currentLang]}</div>
+        <span class="scenario-lv">${lesson.difficulty}</span>
+        <span class="scenario-lv">⏱ ${lesson.duration} min</span>
+        ${entry?.completed ? `<span class="scenario-lv" style="background:rgba(16,163,74,.12);color:var(--green);">${s.scoreShortLabel} ${entry.score}</span>` : ''}
+      `;
+      list.appendChild(el);
+    });
+  });
+
+  const libHeader = document.createElement('div');
+  libHeader.style.cssText = 'padding:14px 14px 6px;border-top:1px solid var(--border);margin-top:8px;';
+  libHeader.innerHTML = `<span style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted);">${s.existingLibrary}</span>`;
+  list.appendChild(libHeader);
+
+  const libLink = document.createElement('div');
+  libLink.className = 'scenario-item';
+  libLink.style.cssText = 'color:var(--accent);font-size:12px;font-weight:600;';
+  libLink.textContent = s.browseLibraryLink;
+  libLink.onclick = () => setPanelMode('all');
+  list.appendChild(libLink);
+}
+
+function selectCurriculumLesson(lesson) {
+  const mapped = {
+    id: lesson.id,
+    cat: 'curriculum',
+    industry: lesson.industry,
+    name: lesson.title,
+    preview: lesson.preview,
+    level: lesson.difficulty,
+    clientName: lesson.clientName,
+    systemPrompt: lesson.systemPrompt,
+    greeting: lesson.greeting,
+    isCurriculum: true
+  };
+  selectScenario(mapped);
+}
 
 function renderScenarios(filter = '') {
   const s = strings[currentLang];
@@ -1658,7 +1837,7 @@ function selectScenario(sc) {
   turnCount = 0;
 
   // Update UI
-  renderScenarios(document.getElementById('search-input').value);
+  renderCurrentPanel(document.getElementById('search-input').value);
   document.getElementById('client-name').textContent = sc.clientName;
   document.getElementById('client-status').textContent = strings[currentLang].aiVirtualClient + ' · ' + sc.industry;
   document.getElementById('client-avatar').textContent = sc.clientName.split(' ').map(w=>w[0]).join('');
@@ -1700,9 +1879,12 @@ function selectScenario(sc) {
     6: { en: "I really love this neighborhood, but with rates at 7%, my monthly payment would be brutal. I'm thinking of waiting another year or two.", zh: "我真的很喜歡這個社區，但7%的利率，我的月付會很艱難。我在考慮再等一兩年。" }
   };
 
-  const opening = openingMap[sc.id][currentLang];
-  conversationHistory.push({ role: 'assistant', content: opening });
-  appendMessage('client', sc.clientName, opening);
+  if (sc.id !== 0) {
+    const openingSource = sc.greeting || openingMap[sc.id];
+    const opening = openingSource ? openingSource[currentLang] : (currentLang === 'zh' ? '你好，我們開始吧。' : "Hello, let's get started.");
+    conversationHistory.push({ role: 'assistant', content: opening });
+    appendMessage('client', sc.clientName, opening);
+  }
 }
 
 // ── CHAT ──
@@ -2559,6 +2741,9 @@ function toggleMic() {
 
 // ── RENDER FEEDBACK ──
 function renderFeedback(data, isFinal) {
+  if (currentScenario && currentScenario.isCurriculum) {
+    saveCurriculumProgress(currentScenario.id, data.overallScore || 0);
+  }
   // Show session summary modal on final feedback
   if (isFinal) {
     setTimeout(() => showSummary(data), 800);
@@ -2639,15 +2824,15 @@ function setLevelFilter(level) {
 }
 
 function filterScenarios() {
-  renderScenarios(document.getElementById('search-input').value);
+  renderCurrentPanel(document.getElementById('search-input').value);
   // Update filter button labels
-  const isZh = lang === 'zh';
+  const isZh = currentLang === 'zh';
   const allBtn = document.getElementById('filter-all');
   if (allBtn) allBtn.textContent = isZh ? '全部' : 'All';
-  document.getElementById('search-input').placeholder = strings[lang].searchPlaceholder;
+  document.getElementById('search-input').placeholder = strings[currentLang].searchPlaceholder;
   const mobileBtn = document.getElementById('mobile-scenario-btn');
   if (mobileBtn && !mobileBtn.textContent.includes('✕')) {
-    mobileBtn.textContent = lang === 'zh' ? '📋 選擇情境' : '📋 Choose Scenario';
+    mobileBtn.textContent = currentLang === 'zh' ? '📋 選擇情境' : '📋 Choose Scenario';
   }
 }
 
@@ -2669,12 +2854,17 @@ function setLang(lang) {
     document.getElementById('client-name').textContent = s.selectScenario;
     document.getElementById('chat-input').placeholder = s.inputPlaceholder;
   }
-  renderScenarios(document.getElementById('search-input').value);
+  const curBtn = document.getElementById('mode-btn-curriculum');
+  const allBtn = document.getElementById('mode-btn-all');
+  if (curBtn) curBtn.textContent = s.curriculumTab;
+  if (allBtn) allBtn.textContent = s.allScenariosTab;
+  renderCurrentPanel(document.getElementById('search-input').value);
 }
 
 // ── INIT ──
 if (checkAccess()) {
-  renderScenarios();
+  setPanelMode('curriculum');
+  loadCurriculumData();
   showLangPicker();
   setupTextSelectionMenu();
 }
