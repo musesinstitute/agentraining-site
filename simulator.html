@@ -729,6 +729,9 @@
       <div class="copy-success" id="copy-success">✓ Copied! Paste into WeChat, email, or your team group.</div>
       <button class="btn-close-summary" onclick="closeSummary()" id="btn-close-sum">Close</button>
     </div>
+    <div class="referral-note-box">
+      <p id="referral-note-text"></p>
+    </div>
   </div>
 </div>
 
@@ -793,7 +796,7 @@
           placeholder="Type your response to the client..." disabled
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Voice input">🎤</button>
-        <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled id="send-label">Send</button>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>Send</button>
       </div>
       <p class="input-hint" id="input-hint">Press Enter to send · Shift+Enter for new line</p>
     </div>
@@ -2741,9 +2744,18 @@ function toggleMic() {
 
 // ── RENDER FEEDBACK ──
 function renderFeedback(data, isFinal) {
-  if (currentScenario && currentScenario.isCurriculum) {
+  // A curriculum lesson is completed only after the full session
+  // has ended and a final evaluation has been returned.
+  if (isFinal && currentScenario && currentScenario.isCurriculum) {
     saveCurriculumProgress(currentScenario.id, data.overallScore || 0);
+
+    // Refresh the Curriculum panel immediately so the completed
+    // check mark, final score, and module progress appear.
+    if (currentPanelMode === 'curriculum') {
+      renderCurriculum(document.getElementById('search-input')?.value || '');
+    }
   }
+
   // Show session summary modal on final feedback
   if (isFinal) {
     setTimeout(() => showSummary(data), 800);
