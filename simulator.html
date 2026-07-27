@@ -326,6 +326,19 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
     .feedback-body { padding: 16px; flex: 1; }
+    .coach-stage-card {
+      margin: 16px 16px 0; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--canvas);
+    }
+    .coach-stage-label {
+      font-size: 10px; font-weight: 700; color: var(--ink-muted);
+      letter-spacing: .8px; text-transform: uppercase; margin-bottom: 3px;
+    }
+    .coach-stage-value {
+      font-size: 13px; font-weight: 600; color: var(--ink);
+      overflow-wrap: break-word;
+    }
     /* TEAM LEADER MODE */
     .team-leader-badge {
       display: none; position: fixed; top: 70px; left: 50%;
@@ -796,6 +809,10 @@
   <!-- RIGHT: Feedback -->
   <div class="panel-right">
     <div class="panel-header" id="feedback-label">AI Coach Feedback</div>
+    <div class="coach-stage-card">
+      <div class="coach-stage-label">Current Stage</div>
+      <div id="current-stage-text" class="coach-stage-value">General Practice</div>
+    </div>
     <div class="feedback-body" id="feedback-body">
       <div class="empty-feedback">
         <div class="empty-icon">🎯</div>
@@ -814,6 +831,7 @@ const scenarios = [
   // ══════════════════════════════════════
   {
     id: 0, cat: 'free', industry: 'All Industries',
+    stage: 'Opening',
     name: { en: '🎯 Free Practice — Tell Me Your Story', zh: '🎯 自由練習——說說你的故事' },
     preview: { en: 'No script. Practice your real situation right now.', zh: '無固定情境——把你真實遇到的客戶說給我聽' },
     keywords: ['free', 'chat', 'custom', 'my situation', 'real', '自由', '聊天', '真實'],
@@ -905,6 +923,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ══════════════════════════════════════
   {
     id: 1, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"Premium is too high\"", zh: '「保費太貴了」' },
     preview: { en: 'Client objects to monthly cost', zh: '客戶對月繳金額有疑慮' },
     keywords: ['premium', 'price', 'cost', 'expensive', 'monthly', 'life insurance', '保費', '月費', '壽險'],
@@ -917,6 +936,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 2, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"ETF beats insurance\"", zh: '「買ETF比保險快」' },
     preview: { en: 'Client prefers stock market returns', zh: '客戶偏好股市報酬' },
     keywords: ['ETF', 'stocks', 'investment', 'returns', 'market', 'invest', '投資', '股票', '報酬'],
@@ -929,6 +949,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 3, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Commitment & Follow-up',
     name: { en: '"I\\\\\\\'ll think about it"', zh: '「我再考慮看看」' },
     preview: { en: 'Client stalls and delays decision', zh: '客戶拖延決定' },
     keywords: ['think', 'stall', 'delay', 'maybe', 'decide', 'spouse', '考慮', '拖延', '猶豫'],
@@ -941,6 +962,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 4, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: '"I\\\\\\\'m young and healthy"', zh: '「我還年輕又健康」' },
     preview: { en: 'Client sees no need for coverage now', zh: '客戶認為現在不需要保障' },
     keywords: ['young', 'healthy', 'age', 'no need', 'later', '年輕', '健康', '不需要'],
@@ -953,6 +975,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 7, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Solution Discussion',
     name: { en: "\"What is IUL anyway?\"", zh: '「IUL 到底是什麼？」' },
     preview: { en: 'Client confused about indexed universal life', zh: '客戶對指數型萬能壽險不了解' },
     keywords: ['IUL', 'indexed', 'universal life', 'cash value', 'flexible', '指數', '萬能壽險', '現金價值'],
@@ -965,6 +988,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 8, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Solution Discussion',
     name: { en: "\"Annuity seems too complicated\"", zh: '「年金太複雜了」' },
     preview: { en: 'Retirement client hesitant about annuity', zh: '準退休客戶對年金猶豫' },
     keywords: ['annuity', 'retirement', 'pension', 'surrender', 'income', '年金', '退休', '退休金'],
@@ -977,6 +1001,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 9, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"I already have group insurance\"", zh: '「公司已有團體保險」' },
     preview: { en: 'Client relies on employer coverage', zh: '客戶依賴雇主保險' },
     keywords: ['group', 'employer', 'company', 'HR', 'benefits', 'work', '團體', '公司', '雇主'],
@@ -989,6 +1014,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 10, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Commitment & Follow-up',
     name: { en: "\"Need to ask my spouse first\"", zh: '「我要先問我太太／先生」' },
     preview: { en: 'Third-party objection — spouse not present', zh: '第三方異議——配偶不在場' },
     keywords: ['spouse', 'wife', 'husband', 'family', 'partner', 'third party', '配偶', '太太', '先生', '家人'],
@@ -1001,6 +1027,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 16, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"I had a bad experience before\"", zh: '「我以前買保險被坑過」' },
     preview: { en: 'Client burned by previous agent', zh: '客戶曾被業務員誤導' },
     keywords: ['trust', 'bad experience', 'scam', 'mislead', 'burned', '信任', '被坑', '詐騙', '欺騙'],
@@ -1013,6 +1040,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 17, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"My friend said insurance is a scam\"", zh: '「我朋友說保險都是騙人的」' },
     preview: { en: 'Social influence objection', zh: '社交影響力異議' },
     keywords: ['friend', 'opinion', 'commission', 'bias', 'social', '朋友', '傭金', '偏見'],
@@ -1025,6 +1053,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 18, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: '"I\\\\\\\'ll just save money myself"', zh: '「我自己存錢就好了」' },
     preview: { en: 'Client prefers self-insurance', zh: '客戶偏好自我保障' },
     keywords: ['savings', 'self-insure', 'emergency fund', 'save', '存錢', '儲蓄', '緊急基金'],
@@ -1037,6 +1066,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 19, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Solution Discussion',
     name: { en: "\"Whole life vs Term — which is better?\"", zh: '「定期壽險還是終身壽險比較好？」' },
     preview: { en: 'Client comparing products, needs guidance', zh: '客戶比較產品，需要引導' },
     keywords: ['whole life', 'term', 'compare', 'difference', 'BTID', '定期', '終身', '比較'],
@@ -1049,6 +1079,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 20, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     name: { en: "\"Not the right time financially\"", zh: '「現在財務上不是好時機」' },
     preview: { en: 'Client in temporary financial difficulty', zh: '客戶暫時財務困難' },
     keywords: ['timing', 'financial', 'budget', 'afford', 'later', '時機', '財務', '預算'],
@@ -1061,6 +1092,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 21, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
     name: { en: "\"What about critical illness?\"", zh: '「重疾險值得買嗎？」' },
     preview: { en: 'Client curious about CI coverage', zh: '客戶詢問重大疾病保障' },
     keywords: ['critical illness', 'cancer', 'CI', 'hospital', 'medical', '重疾', '癌症', '重大疾病'],
@@ -1073,6 +1105,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 22, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
     name: { en: "\"I need to protect my business\"", zh: '「我需要保障我的生意」' },
     preview: { en: 'Business owner needs key-man insurance', zh: '企業主需要關鍵人壽險' },
     keywords: ['business', 'keyman', 'key man', 'succession', 'owner', 'enterprise', '企業', '生意', '接班'],
@@ -1089,6 +1122,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ══════════════════════════════════════
   {
     id: 11, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     name: { en: "\"Does this actually work?\"", zh: '「這個真的有效嗎？」' },
     preview: { en: 'Skeptical client burned before', zh: '曾被坑過的懷疑客戶' },
     keywords: ['health product', 'supplement', 'wellness', 'effective', 'work', '健康', '保健品', '補充品'],
@@ -1101,6 +1135,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 12, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     name: { en: '"It\\\\\\\'s too expensive"', zh: '「太貴了」（真正問題是信任）' },
     preview: { en: 'Price masks hidden trust issue', zh: '價格背後是信任危機' },
     keywords: ['too expensive', 'price', 'cost', 'trust', 'value', '太貴', '價格', '信任'],
@@ -1113,6 +1148,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 13, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Commitment & Follow-up',
     name: { en: "\"Let me check with my doctor\"", zh: '「我要先問醫生」' },
     preview: { en: 'Client defers to medical authority', zh: '客戶需要醫療權威認可' },
     keywords: ['doctor', 'medical', 'medication', 'drug', 'health', '醫生', '藥物', '醫療'],
@@ -1125,6 +1161,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 23, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     name: { en: "\"I can buy this cheaper online\"", zh: '「網上可以買到更便宜的」' },
     preview: { en: 'Client compares to online alternatives', zh: '客戶和網路替代品比較' },
     keywords: ['online', 'Amazon', 'cheaper', 'same', 'price match', '網上', '便宜', '網購'],
@@ -1137,6 +1174,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 24, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     name: { en: '"My family thinks it\\\\\\\'s a scam"', zh: '「我家人說這是詐騙」' },
     preview: { en: 'Family pressure against purchase', zh: '家人反對購買' },
     keywords: ['family', 'MLM', 'pyramid', 'scam', 'children', '家人', '直銷', '金字塔'],
@@ -1149,6 +1187,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 25, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     name: { en: '"I\\\\\\\'ll just eat healthy instead"', zh: '「我自己吃得健康就好了」' },
     preview: { en: 'Client prefers lifestyle over supplements', zh: '客戶偏好生活方式而非補充品' },
     keywords: ['diet', 'food', 'natural', 'organic', 'lifestyle', '飲食', '自然', '有機'],
@@ -1161,6 +1200,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 26, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
     name: { en: "\"Tell me about the business opportunity\"", zh: '「說說這個生意機會吧」' },
     preview: { en: 'Client interested in joining as distributor', zh: '客戶有興趣成為分銷商' },
     keywords: ['MLM', 'business opportunity', 'commission', 'downline', 'income', '生意機會', '下線', '傭金'],
@@ -1173,6 +1213,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 27, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Commitment & Follow-up',
     name: { en: "\"I want to try before I commit\"", zh: '「我想先試用再決定」' },
     preview: { en: 'Client wants trial before purchase', zh: '客戶希望試用後再購買' },
     keywords: ['trial', 'sample', 'try', 'test', 'commitment', '試用', '樣品', '試試'],
@@ -1189,6 +1230,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ══════════════════════════════════════
   {
     id: 5, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Objection Handling',
     name: { en: "\"The price is too high\"", zh: '「房價太高了」' },
     preview: { en: 'Buyer pushes for price reduction', zh: '買方要求降價' },
     keywords: ['price', 'negotiation', 'offer', 'market value', 'comparable', '房價', '議價', '出價'],
@@ -1201,6 +1243,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 6, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Objection Handling',
     name: { en: "\"Interest rates are too high\"", zh: '「現在利率太高了」' },
     preview: { en: 'Buyer wants to wait for rates to drop', zh: '買方想等利率下降' },
     keywords: ['interest rate', 'mortgage', 'loan', 'wait', 'rate', '利率', '房貸', '等待'],
@@ -1213,6 +1256,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 14, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Discovery',
     name: { en: "\"I want to see more houses\"", zh: '「我想再看看其他房子」' },
     preview: { en: 'Buyer afraid of making wrong decision', zh: '買方害怕做出錯誤決定' },
     keywords: ['more options', 'compare', 'hesitate', 'first time buyer', 'decide', '看更多', '比較', '猶豫', '首次'],
@@ -1225,6 +1269,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 15, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Needs Analysis',
     name: { en: '"I\\\\\\\'m worried about the neighborhood"', zh: '「我擔心這個社區環境」' },
     preview: { en: 'Buyer has location concerns', zh: '買方對地段有疑慮' },
     keywords: ['neighborhood', 'school', 'safety', 'location', 'crime', '社區', '學校', '安全', '地段'],
@@ -1237,6 +1282,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 28, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Objection Handling',
     name: { en: '"I\\\\\\\'m not sure I can get a mortgage"', zh: '「我不確定我能申請到貸款」' },
     preview: { en: 'Buyer worried about loan approval', zh: '買方擔心貸款批准' },
     keywords: ['self-employed', 'mortgage approval', 'income', 'loan', 'freelance', '自僱', '貸款', '收入'],
@@ -1249,6 +1295,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 29, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Needs Analysis',
     name: { en: "\"Should I rent or buy?\"", zh: '「我應該租房還是買房？」' },
     preview: { en: 'Client undecided on rent vs buy', zh: '客戶對租買猶豫不決' },
     keywords: ['rent vs buy', 'renting', 'landlord', 'invest', 'property', '租房', '買房', '租', '買'],
@@ -1261,6 +1308,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 30, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Objection Handling',
     name: { en: "\"The house needs too much work\"", zh: '「這棟房子需要太多翻修」' },
     preview: { en: 'Buyer deterred by renovation needs', zh: '買方被翻修需求嚇退' },
     keywords: ['renovation', 'repair', 'fix', 'update', 'fixer upper', '翻修', '裝修', '修繕'],
@@ -1274,6 +1322,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ── NEW FINANCE SCENARIOS ──
   {
     id: 31, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Discovery',
     keywords: ['medicare', 'senior', 'elderly', 'supplement', 'part B', '老年', '醫療保險', '長者'],
     name: { en: "\"Medicare is confusing me\"", zh: '「Medicare 讓我搞不清楚」' },
     preview: { en: 'Senior client overwhelmed by Medicare options', zh: '長者客戶對Medicare選項感到困惑' },
@@ -1286,6 +1335,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 32, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     keywords: ['disability', 'income protection', 'sick', 'injured', 'work', '殘扶', '失能', '收入保障'],
     name: { en: '"I won\\\\\\\'t become disabled"', zh: '「我不會變成殘疾的」' },
     preview: { en: 'Client dismisses disability risk', zh: '客戶忽視殘疾風險' },
@@ -1298,6 +1348,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 33, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
     keywords: ['estate planning', 'inheritance', 'trust', 'legacy', 'wealth transfer', '遺產', '信託', '傳承'],
     name: { en: "\"I want to leave something for my kids\"", zh: '「我想留些東西給孩子」' },
     preview: { en: 'Client interested in legacy planning', zh: '客戶有意傳承規劃' },
@@ -1310,6 +1361,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 34, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
     keywords: ['children', 'child plan', 'education', 'college', 'savings', '子女', '教育', '兒童保單', '大學'],
     name: { en: "\"Should I buy insurance for my child?\"", zh: '「我應該幫孩子買保險嗎？」' },
     preview: { en: 'Parent considering child education policy', zh: '家長考慮子女教育保單' },
@@ -1322,6 +1374,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 35, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
     keywords: ['long term care', 'nursing home', 'elderly care', 'LTC', 'caregiver', '長期護理', '養老院', '護理'],
     name: { en: "\"Long-term care seems far away\"", zh: '「長期護理好像很遙遠的事」' },
     preview: { en: 'Client delays LTC planning', zh: '客戶延遲長期護理規劃' },
@@ -1336,6 +1389,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ── NEW HEALTH SCENARIOS ──
   {
     id: 36, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
     keywords: ['weight loss', 'diet', 'slim', 'fat', 'metabolism', '減肥', '瘦身', '體重', '代謝'],
     name: { en: "\"I want to lose weight\"", zh: '「我想減肥」' },
     preview: { en: 'Client seeking weight management solution', zh: '客戶尋求體重管理方案' },
@@ -1348,6 +1402,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 37, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
     keywords: ['energy', 'tired', 'fatigue', 'sleep', 'burnout', '精力', '疲勞', '睡眠', '倦怠'],
     name: { en: '"I\'m always exhausted"', zh: '「我總是很疲憊」' },
     preview: { en: 'Client struggling with chronic fatigue', zh: '客戶有慢性疲勞問題' },
@@ -1360,6 +1415,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 38, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
     keywords: ['skincare', 'beauty', 'anti-aging', 'collagen', 'skin', '護膚', '美容', '抗老', '膠原蛋白'],
     name: { en: "\"I already have a skincare routine\"", zh: '「我已經有護膚程序了」' },
     preview: { en: 'Client satisfied with existing skincare', zh: '客戶對現有護膚方案滿意' },
@@ -1374,6 +1430,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   // ── NEW REAL ESTATE SCENARIOS ──
   {
     id: 39, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Needs Analysis',
     keywords: ['investment property', 'rental', 'passive income', 'ROI', 'tenant', '投資房', '租金', '被動收入'],
     name: { en: "\"Is this a good investment property?\"", zh: '「這個投資房合適嗎？」' },
     preview: { en: 'Investor evaluating rental property', zh: '投資者評估出租物業' },
@@ -1386,6 +1443,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
   },
   {
     id: 40, cat: 'realestate', industry: 'Real Estate',
+    stage: 'Discovery',
     keywords: ['downsize', 'empty nest', 'retirement', 'smaller home', 'sell', '縮小', '空巢', '退休', '賣房'],
     name: { en: "\"Should I downsize now?\"", zh: '「我現在應該換小房子嗎？」' },
     preview: { en: 'Empty nester considering downsizing', zh: '空巢期業主考慮換小房' },
@@ -1664,6 +1722,11 @@ function selectScenario(sc) {
   document.getElementById('client-avatar').textContent = sc.clientName.split(' ').map(w=>w[0]).join('');
   document.getElementById('chat-input').disabled = false;
   document.getElementById('send-btn').disabled = false;
+
+  const stageText = document.getElementById('current-stage-text');
+  if (stageText) {
+    stageText.textContent = sc?.stage || 'General Practice';
+  }
 
   // Auto-trigger welcome for free practice (id=0)
   if (sc.id === 0) {
