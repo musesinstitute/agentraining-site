@@ -3,6 +3,7 @@
   "cases": [
     {
       "id": "realestate-01",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "risk_aversion",
         "difficulty": 2,
@@ -33,6 +34,7 @@
     },
     {
       "id": "realestate-02",
+      "stage": "Solution Discussion",
       "tags": {
         "objectionType": "overwhelmed_by_options",
         "difficulty": 1,
@@ -63,6 +65,7 @@
     },
     {
       "id": "realestate-03",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "emotional_attachment",
         "difficulty": 2,
@@ -93,6 +96,7 @@
     },
     {
       "id": "realestate-04",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "time_constrained",
         "difficulty": 2,
@@ -123,6 +127,7 @@
     },
     {
       "id": "realestate-05",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "price_sensitive",
         "difficulty": 3,
@@ -153,6 +158,7 @@
     },
     {
       "id": "realestate-06",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "needs_third_party_approval",
         "difficulty": 2,
@@ -183,6 +189,7 @@
     },
     {
       "id": "realestate-07",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "distrust_of_salesperson",
         "difficulty": 3,
@@ -213,6 +220,7 @@
     },
     {
       "id": "realestate-08",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "risk_aversion",
         "difficulty": 2,
@@ -243,6 +251,7 @@
     },
     {
       "id": "realestate-09",
+      "stage": "Solution Discussion",
       "tags": {
         "objectionType": "overwhelmed_by_options",
         "difficulty": 3,
@@ -273,6 +282,7 @@
     },
     {
       "id": "realestate-10",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 1,

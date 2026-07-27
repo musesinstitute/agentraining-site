@@ -3,6 +3,7 @@
     "id": "INS-FD-001",
     "academy": "Foundation Academy",
     "module": "Building Rapport",
+    "stage": "Rapport Building",
     "moduleOrder": 1,
     "lessonOrder": 1,
     "title": {
@@ -50,6 +51,7 @@
     "id": "INS-FD-002",
     "academy": "Foundation Academy",
     "module": "Building Rapport",
+    "stage": "Rapport Building",
     "moduleOrder": 1,
     "lessonOrder": 2,
     "title": {
@@ -97,6 +99,7 @@
     "id": "INS-FD-003",
     "academy": "Foundation Academy",
     "module": "Building Rapport",
+    "stage": "Rapport Building",
     "moduleOrder": 1,
     "lessonOrder": 3,
     "title": {
@@ -144,6 +147,7 @@
     "id": "INS-FD-004",
     "academy": "Foundation Academy",
     "module": "Building Rapport",
+    "stage": "Rapport Building",
     "moduleOrder": 1,
     "lessonOrder": 4,
     "title": {
@@ -191,6 +195,7 @@
     "id": "INS-FD-005",
     "academy": "Foundation Academy",
     "module": "Building Rapport",
+    "stage": "Rapport Building",
     "moduleOrder": 1,
     "lessonOrder": 5,
     "title": {

@@ -3,6 +3,7 @@
   "cases": [
     {
       "id": "health-01",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "time_constrained",
         "difficulty": 1,
@@ -33,6 +34,7 @@
     },
     {
       "id": "health-02",
+      "stage": "Solution Discussion",
       "tags": {
         "objectionType": "overwhelmed_by_options",
         "difficulty": 2,
@@ -63,6 +65,7 @@
     },
     {
       "id": "health-03",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 1,
@@ -93,6 +96,7 @@
     },
     {
       "id": "health-04",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "distrust_of_salesperson",
         "difficulty": 3,
@@ -123,6 +127,7 @@
     },
     {
       "id": "health-05",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "price_sensitive",
         "difficulty": 2,
@@ -153,6 +158,7 @@
     },
     {
       "id": "health-06",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "distrust_of_salesperson",
         "difficulty": 3,
@@ -183,6 +189,7 @@
     },
     {
       "id": "health-07",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 2,
@@ -213,6 +220,7 @@
     },
     {
       "id": "health-08",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "distrust_of_salesperson",
         "difficulty": 3,
@@ -243,6 +251,7 @@
     },
     {
       "id": "health-09",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "time_constrained",
         "difficulty": 2,
@@ -273,6 +282,7 @@
     },
     {
       "id": "health-10",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "price_sensitive",
         "difficulty": 1,

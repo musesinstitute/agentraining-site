@@ -3,6 +3,7 @@
   "cases": [
     {
       "id": "manager-01",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "low_confidence",
         "difficulty": 1,
@@ -33,6 +34,7 @@
     },
     {
       "id": "manager-02",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "performance_decline_defensive",
         "difficulty": 2,
@@ -63,6 +65,7 @@
     },
     {
       "id": "manager-03",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "overconfidence_resistant_to_feedback",
         "difficulty": 2,
@@ -93,6 +96,7 @@
     },
     {
       "id": "manager-04",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "burnout_motivation_loss",
         "difficulty": 3,
@@ -123,6 +127,7 @@
     },
     {
       "id": "manager-05",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "closing_hesitation",
         "difficulty": 2,
@@ -153,6 +158,7 @@
     },
     {
       "id": "manager-06",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "poor_listening",
         "difficulty": 2,
@@ -183,6 +189,7 @@
     },
     {
       "id": "manager-07",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "resistance_to_change",
         "difficulty": 3,
@@ -213,6 +220,7 @@
     },
     {
       "id": "manager-08",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "followup_inconsistency",
         "difficulty": 2,
@@ -243,6 +251,7 @@
     },
     {
       "id": "manager-09",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "low_resilience",
         "difficulty": 1,
@@ -273,6 +282,7 @@
     },
     {
       "id": "manager-10",
+      "stage": "General Practice",
       "tags": {
         "objectionType": "complacency",
         "difficulty": 3,

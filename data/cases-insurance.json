@@ -3,6 +3,7 @@
   "cases": [
     {
       "id": "insurance-01",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 1,
@@ -33,6 +34,7 @@
     },
     {
       "id": "insurance-02",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "already_has_solution",
         "difficulty": 1,
@@ -63,6 +65,7 @@
     },
     {
       "id": "insurance-03",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "needs_third_party_approval",
         "difficulty": 2,
@@ -93,6 +96,7 @@
     },
     {
       "id": "insurance-04",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 1,
@@ -123,6 +127,7 @@
     },
     {
       "id": "insurance-05",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "price_sensitive",
         "difficulty": 1,
@@ -153,6 +158,7 @@
     },
     {
       "id": "insurance-06",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "distrust_of_salesperson",
         "difficulty": 3,
@@ -183,6 +189,7 @@
     },
     {
       "id": "insurance-07",
+      "stage": "Solution Discussion",
       "tags": {
         "objectionType": "overwhelmed_by_options",
         "difficulty": 2,
@@ -213,6 +220,7 @@
     },
     {
       "id": "insurance-08",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 2,
@@ -243,6 +251,7 @@
     },
     {
       "id": "insurance-09",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "already_has_solution",
         "difficulty": 2,
@@ -273,6 +282,7 @@
     },
     {
       "id": "insurance-10",
+      "stage": "Commitment & Follow-up",
       "tags": {
         "objectionType": "time_constrained",
         "difficulty": 1,
@@ -303,6 +313,7 @@
     },
     {
       "id": "insurance-11",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "already_has_solution",
         "difficulty": 3,
@@ -333,6 +344,7 @@
     },
     {
       "id": "insurance-13",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "no_urgency",
         "difficulty": 3,
@@ -363,6 +375,7 @@
     },
     {
       "id": "insurance-14",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "prefers_alternative_investment",
         "difficulty": 2,
@@ -393,6 +406,7 @@
     },
     {
       "id": "insurance-15",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "prefers_alternative_investment",
         "difficulty": 2,
@@ -423,6 +437,7 @@
     },
     {
       "id": "insurance-16",
+      "stage": "Objection Handling",
       "tags": {
         "objectionType": "prefers_alternative_investment",
         "difficulty": 2,
