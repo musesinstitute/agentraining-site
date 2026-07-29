@@ -424,6 +424,15 @@
     .referral-note-box p { font-size: 12px; color: #15803d; line-height: 1.6; }
     .referral-note-box strong { font-weight: 700; }
 
+    .coach-meta { padding: 16px 16px 0; }
+    .coach-meta:empty { padding: 0; }
+    .coach-meta-item { margin-bottom: 14px; }
+    .coach-meta-label {
+      font-size: 11px; font-weight: 700; color: var(--ink-muted);
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px;
+    }
+    .coach-meta-value { font-size: 15px; font-weight: 700; color: var(--ink); }
+
     .score-card {
       background: var(--canvas); border-radius: var(--radius-md);
       padding: 20px; margin-bottom: 16px; text-align: center;
@@ -796,6 +805,7 @@
   <!-- RIGHT: Feedback -->
   <div class="panel-right">
     <div class="panel-header" id="feedback-label">AI Coach Feedback</div>
+    <div class="coach-meta" id="coach-meta"></div>
     <div class="feedback-body" id="feedback-body">
       <div class="empty-feedback">
         <div class="empty-icon">🎯</div>
@@ -807,6 +817,39 @@
 </div>
 
 <script>
+// ── INDUSTRY REGISTRY V1 ──
+// Centralized, extensible list of industries supported by the platform.
+// To add a future industry: add an entry here, then add its scenarios/curriculum/case data.
+// This registry does not drive AI prompts or scoring — display only.
+const INDUSTRY_REGISTRY = [
+  { id: 'insurance',          name: 'Insurance',                   nameZh: '保險',           status: 'active',  priority: 1 },
+  { id: 'real_estate',        name: 'Real Estate',                 nameZh: '房地產',         status: 'active',  priority: 1 },
+  { id: 'health_wellness',    name: 'Health & Wellness',           nameZh: '健康與保健',     status: 'active',  priority: 1 },
+  { id: 'banking',            name: 'Banking & Wealth Management', nameZh: '銀行與財富管理', status: 'planned', priority: 2 },
+  { id: 'financial_services', name: 'Financial Services',          nameZh: '金融服務',       status: 'planned', priority: 2 },
+  { id: 'technology',         name: 'Technology / SaaS',           nameZh: '科技／SaaS',     status: 'planned', priority: 2 },
+  { id: 'healthcare',         name: 'Healthcare / Medical',        nameZh: '醫療保健',       status: 'planned', priority: 2 },
+  { id: 'manufacturing',      name: 'Manufacturing',               nameZh: '製造業',         status: 'planned', priority: 2 },
+  { id: 'education',          name: 'Education & Training',        nameZh: '教育與培訓',     status: 'planned', priority: 2 },
+  { id: 'cybersecurity',      name: 'Cybersecurity',               nameZh: '網路安全',       status: 'planned', priority: 2 }
+];
+
+// Existing scenario.industry values are free text (used as-is in AI prompts and
+// session uploads — left untouched). This maps those values to registry entries
+// for the Current Industry display only.
+const INDUSTRY_ALIASES = {
+  'Finance & Insurance': 'insurance',
+  'Insurance': 'insurance',
+  'Real Estate': 'real_estate',
+  'Health & Wellness': 'health_wellness'
+};
+
+function getIndustryDisplayName(rawIndustry) {
+  const entry = INDUSTRY_REGISTRY.find(i => i.id === INDUSTRY_ALIASES[rawIndustry]);
+  if (!entry) return rawIndustry || '';
+  return currentLang === 'zh' && entry.nameZh ? entry.nameZh : entry.name;
+}
+
 // ── DATA ──
 const scenarios = [
   // ══════════════════════════════════════
@@ -1464,6 +1507,7 @@ const strings = {
     aiVirtualClient: 'AI Virtual Client',
     thinking: 'AI client is thinking...',
     yourResponse: 'You', clientLabel: 'AI Client',
+    currentIndustryLabel: 'Current Industry',
     scoreLabel: 'Overall Score', outOf: '/ 100',
     empathy: 'Empathy & Rapport', accuracy: 'Product Accuracy', closing: 'Closing Technique',
     strengths: '✅ Strengths', tips: '💡 Tips to Improve', resetConfirm: 'Reset this conversation?',
@@ -1482,6 +1526,7 @@ const strings = {
     aiVirtualClient: 'AI 虛擬客戶',
     thinking: 'AI 客戶思考中...',
     yourResponse: '你', clientLabel: 'AI 客戶',
+    currentIndustryLabel: '目前行業',
     scoreLabel: '總體評分', outOf: '/ 100',
     empathy: '同理心與信任建立', accuracy: '產品準確度', closing: '成交技巧',
     strengths: '✅ 做得好的地方', tips: '💡 改進建議', resetConfirm: '重置此對話？',
@@ -1664,6 +1709,7 @@ function selectScenario(sc) {
   document.getElementById('client-avatar').textContent = sc.clientName.split(' ').map(w=>w[0]).join('');
   document.getElementById('chat-input').disabled = false;
   document.getElementById('send-btn').disabled = false;
+  renderCoachMeta(sc);
 
   // Auto-trigger welcome for free practice (id=0)
   if (sc.id === 0) {
@@ -2614,6 +2660,20 @@ function renderFeedback(data, isFinal) {
   `;
 }
 
+// ── RENDER COACH META (Current Industry) ──
+function renderCoachMeta(sc) {
+  const el = document.getElementById('coach-meta');
+  if (!el) return;
+  if (!sc) { el.innerHTML = ''; return; }
+  const industryName = getIndustryDisplayName(sc.industry);
+  if (!industryName) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <div class="coach-meta-item">
+      <div class="coach-meta-label">${strings[currentLang].currentIndustryLabel}</div>
+      <div class="coach-meta-value">${industryName}</div>
+    </div>`;
+}
+
 function resetFeedback() {
   const s = strings[currentLang];
   document.getElementById('feedback-body').innerHTML = `
@@ -2678,6 +2738,7 @@ function setLang(lang) {
     document.getElementById('client-name').textContent = s.selectScenario;
     document.getElementById('chat-input').placeholder = s.inputPlaceholder;
   }
+  renderCoachMeta(currentScenario);
   renderScenarios(document.getElementById('search-input').value);
 }
 
