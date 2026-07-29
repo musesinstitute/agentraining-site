@@ -819,6 +819,10 @@
   <div class="panel-right">
     <div class="panel-header" id="feedback-label">AI Coach Feedback</div>
     <div class="coach-stage-card">
+      <div class="coach-stage-label">Current Industry</div>
+      <div id="current-industry-text" class="coach-stage-value">All Industries</div>
+    </div>
+    <div class="coach-stage-card">
       <div class="coach-stage-label">Current Stage</div>
       <div id="current-stage-text" class="coach-stage-value">General Practice</div>
     </div>
@@ -833,6 +837,42 @@
 </div>
 
 <script>
+// ── INDUSTRY REGISTRY V1 ──
+// Centralized, extensible list of industries supported by the platform.
+// To add a future industry: add an entry here, then add its scenarios/curriculum/case data.
+// Display only — does not drive AI prompts, scoring, or conversation logic.
+const INDUSTRY_REGISTRY = [
+  { id: 'insurance',          name: 'Insurance',                   status: 'active',  priority: 1 },
+  { id: 'real_estate',        name: 'Real Estate',                 status: 'active',  priority: 1 },
+  { id: 'health_wellness',    name: 'Health & Wellness',           status: 'active',  priority: 1 },
+  { id: 'banking',            name: 'Banking & Wealth Management', status: 'planned', priority: 2 },
+  { id: 'financial_services', name: 'Financial Services',          status: 'planned', priority: 2 },
+  { id: 'technology',         name: 'Technology / SaaS',           status: 'planned', priority: 2 },
+  { id: 'healthcare',         name: 'Healthcare / Medical',        status: 'planned', priority: 2 },
+  { id: 'manufacturing',      name: 'Manufacturing',               status: 'planned', priority: 2 },
+  { id: 'education',          name: 'Education & Training',        status: 'planned', priority: 2 },
+  { id: 'cybersecurity',      name: 'Cybersecurity',               status: 'planned', priority: 2 }
+];
+
+// The existing `industry` values already on scenarios / curriculum lessons / cases
+// are free text and vary by source (e.g. 'Finance & Insurance' in the inline scenarios
+// array, 'insurance' in data/cases-*.json, 'Insurance' in data/curriculum/*.json).
+// Those values are left untouched — this only maps them to a registry entry for display.
+const INDUSTRY_ALIASES = {
+  'Finance & Insurance': 'insurance',
+  'Insurance': 'insurance',
+  'insurance': 'insurance',
+  'Real Estate': 'real_estate',
+  'realestate': 'real_estate',
+  'Health & Wellness': 'health_wellness',
+  'health': 'health_wellness'
+};
+
+function getIndustryDisplayName(rawIndustry) {
+  const entry = INDUSTRY_REGISTRY.find(i => i.id === INDUSTRY_ALIASES[rawIndustry]);
+  return entry ? entry.name : (rawIndustry || '');
+}
+
 // ── DATA ──
 const scenarios = [
   // ══════════════════════════════════════
@@ -1893,6 +1933,13 @@ function updateCurrentStage(stage) {
   }
 }
 
+function updateCurrentIndustry(industry) {
+  const industryText = document.getElementById('current-industry-text');
+  if (industryText) {
+    industryText.textContent = getIndustryDisplayName(industry) || 'All Industries';
+  }
+}
+
 function selectScenario(sc) {
   // Close mobile panel if open
   const panel = document.getElementById('panel-left');
@@ -1913,6 +1960,7 @@ function selectScenario(sc) {
   document.getElementById('chat-input').disabled = false;
   document.getElementById('send-btn').disabled = false;
   updateCurrentStage(sc?.stage);
+  updateCurrentIndustry(sc?.industry);
 
   // Auto-trigger welcome for free practice (id=0)
   if (sc.id === 0) {
@@ -2414,10 +2462,12 @@ function obStartWithOpener(index) {
     const systemPrompt = buildMissionPrompt(obLang, obIndustry, obRole, clientData);
     const originalPrompt = freeScenario.systemPrompt;
     const originalStage = freeScenario.stage;
+    const originalIndustry = freeScenario.industry;
     freeScenario.systemPrompt = { en: systemPrompt, zh: systemPrompt };
     freeScenario.stage = clientData._stage || 'General Practice';
+    freeScenario.industry = getIndustryDisplayName(obIndustry) || originalIndustry;
     selectScenario(freeScenario);
-    setTimeout(() => { freeScenario.systemPrompt = originalPrompt; freeScenario.stage = originalStage; }, 500);
+    setTimeout(() => { freeScenario.systemPrompt = originalPrompt; freeScenario.stage = originalStage; freeScenario.industry = originalIndustry; }, 500);
 
     // If opener selected, auto-send it
     if (opener) {
