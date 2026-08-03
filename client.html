@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Client Studio — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
+    --canvas: #F7F8FC; --white: #FFFFFF;
+    --accent: #1A56DB; --accent-lt: #EEF3FF;
+    --green: #059669; --green-lt: #ECFDF5;
+    --red: #DC2626; --red-lt: #FEF2F2;
+    --gold: #F59E0B; --gold-lt: #FFF7ED;
+    --purple: #7C3AED; --purple-lt: #F3EEFF;
+    --border: #E4E7F0;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px;
+    --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  button{cursor:pointer;font-family:var(--font-body);border:none;}
+  nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:var(--font-display);font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .nav-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo-mark svg{width:16px;height:16px;}
+  .nav-back{font-size:13px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;}
+  .nav-back:hover{color:var(--ink);}
+  .lang-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+  .lang-btn{background:var(--white);color:var(--ink-muted);font-size:12px;font-weight:700;padding:6px 12px;}
+  .lang-btn.active{background:var(--accent);color:#fff;}
+
+  .breadcrumb{max-width:1000px;margin:0 auto;padding:16px 24px 0;font-size:12px;color:var(--ink-muted);display:flex;gap:8px;flex-wrap:wrap;}
+  .breadcrumb a{color:var(--accent);font-weight:600;}
+  .page-head{max-width:1000px;margin:0 auto;padding:20px 24px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .page-title{font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:8px;}
+  .page-sub{font-size:14px;color:var(--ink-muted);max-width:560px;line-height:1.6;}
+  .btn{padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{opacity:.9;}
+  .btn-ghost{background:var(--white);color:var(--ink);border:1.5px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-danger{background:var(--white);color:var(--red);border:1.5px solid var(--red-lt);}
+  .btn-danger:hover{background:var(--red-lt);}
+  .btn-sm{padding:7px 12px;font-size:12px;}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:8px 24px 60px;}
+
+  .case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:16px;}
+  .case-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;cursor:pointer;transition:.15s;}
+  .case-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+  .case-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;}
+  .case-name{font-weight:800;font-size:15px;}
+  .status-badge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;}
+  .status-New{background:var(--accent-lt);color:var(--accent);}
+  .status-Active{background:var(--green-lt);color:var(--green);}
+  .status-Follow-up{background:var(--gold-lt);color:#92400E;}
+  .status-Won{background:var(--green-lt);color:var(--green);}
+  .status-Closed{background:#F1F2F6;color:var(--ink-muted);}
+  .case-industry{font-size:11px;color:var(--ink-muted);margin-bottom:10px;}
+  .case-objection{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;min-height:36px;}
+  .case-next-action{background:var(--purple-lt);color:var(--purple);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;line-height:1.4;}
+  .case-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted);margin-top:10px;}
+
+  .empty-state{background:var(--white);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:40px;text-align:center;color:var(--ink-muted);font-size:13.5px;margin-top:16px;}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(13,15,20,.55);z-index:500;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;}
+  .modal-overlay.open{display:flex;}
+  .modal-card{background:var(--white);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:28px;box-shadow:0 30px 60px rgba(0,0,0,.3);}
+  .modal-title{font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;}
+  .field input, .field select, .field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13.5px;font-family:var(--font-body);color:var(--ink);background:var(--white);}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--accent);}
+  .field textarea{resize:vertical;min-height:60px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+
+  .confirm-card{max-width:380px;}
+  .confirm-text{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px;}
+
+  /* Detail modal */
+  .detail-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:4px;}
+  .detail-tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+  .detail-field-label{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--ink-muted);margin-bottom:3px;}
+  .detail-field-value{font-size:13.5px;color:var(--ink);line-height:1.5;}
+  .next-action-box{background:var(--purple-lt);border-left:3px solid var(--purple);border-radius:8px;padding:12px 14px;margin-bottom:18px;}
+  .next-action-box strong{display:block;font-size:11px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;padding-top:16px;border-top:1px solid var(--border);}
+  .detail-footer{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
+
+  @media (max-width:640px){
+    .field-row, .detail-grid{grid-template-columns:1fr;}
+    .page-head{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="studios.html" class="nav-back" id="back-label">← Four Studios</a>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+    </div>
+    AgentTraining<span style="color:var(--accent)">AI</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="agtSetLang('en')">EN</button>
+    <button class="lang-btn" id="lang-zh" onclick="agtSetLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> / <a href="studios.html">Four Studios</a> / <span id="crumb-current">Client Studio</span>
+</div>
+
+<div class="page-head">
+  <div>
+    <div class="page-title" id="page-title">💼 Client Studio</div>
+    <div class="page-sub" id="page-sub">Track real client conversations and next actions — objections, follow-ups, and where each case stands.</div>
+  </div>
+  <button class="btn btn-primary" id="new-case-btn" onclick="openNewCaseForm()">+ New Client Case</button>
+</div>
+
+<div class="wrap">
+  <div id="case-list-container"></div>
+</div>
+
+<!-- Case form modal (create / edit) -->
+<div class="modal-overlay" id="form-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="form-title">New Client Case</div>
+    <div class="field">
+      <label id="lbl-name">Client Name / Alias</label>
+      <input type="text" id="f-name" placeholder="e.g. Mrs. Torres or Client #204" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label id="lbl-industry">Industry</label>
+        <select id="f-industry">
+          <option value="Insurance">Insurance</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="Health & Wellness">Health &amp; Wellness</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="lbl-status">Case Status</label>
+        <select id="f-status">
+          <option value="New">New</option>
+          <option value="Active">Active</option>
+          <option value="Follow-up">Follow-up</option>
+          <option value="Won">Won</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label id="lbl-objection">Current Objection</label>
+      <textarea id="f-objection" placeholder="What is the client's current objection or concern?"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label id="lbl-last-contact">Last Contact</label>
+        <input type="date" id="f-last-contact" />
+      </div>
+      <div class="field">
+        <label id="lbl-followup">Follow-up Date</label>
+        <input type="date" id="f-followup" />
+      </div>
+    </div>
+    <div class="field">
+      <label id="lbl-next-step">Next Step</label>
+      <input type="text" id="f-next-step" placeholder="e.g. Send comparison quote, call to confirm decision" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeFormModal()" id="btn-cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCaseForm()" id="btn-save">Save Case</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal-card" style="max-width:600px;">
+    <div id="detail-body"></div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-card confirm-card">
+    <div class="modal-title" id="confirm-title">Delete this case?</div>
+    <div class="confirm-text" id="confirm-text">This will permanently remove this client case. This cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeConfirmModal()" id="btn-confirm-cancel">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()" id="btn-confirm-delete">Delete Case</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'agentraining_client_cases';
+const STATUSES = ['New','Active','Follow-up','Won','Closed'];
+
+const OBJECTION_TOPICS = {
+  price:  { knowledgeKey: 'price',  practiceId: 1,  label: { en: 'Price Objection', zh: '價格異議' } },
+  spouse: { knowledgeKey: 'spouse', practiceId: 10, label: { en: 'Spouse / Third-party Approval', zh: '需要另一半／第三方同意' } }
+};
+
+const STR = {
+  en: {
+    backLabel: '← Four Studios', crumbCurrent: 'Client Studio',
+    pageTitle: '💼 Client Studio', pageSub: "Track real client conversations and next actions — objections, follow-ups, and where each case stands.",
+    newCase: '+ New Client Case', emptyState: 'No client cases yet. Create your first one to start tracking real conversations.',
+    formTitleNew: 'New Client Case', formTitleEdit: 'Edit Client Case',
+    lblName: 'Client Name / Alias', lblIndustry: 'Industry', lblStatus: 'Case Status',
+    lblObjection: 'Current Objection', lblLastContact: 'Last Contact', lblFollowup: 'Follow-up Date',
+    lblNextStep: 'Next Step', cancel: 'Cancel', saveCase: 'Save Case',
+    deleteTitle: 'Delete this case?', deleteText: 'This will permanently remove this client case. This cannot be undone.',
+    deleteCase: 'Delete Case',
+    nextAction: 'Next Action', studyKnowledge: '📚 Study Relevant Knowledge', practiceObjection: '🎯 Practice This Objection',
+    scheduleFollowup: '📅 Schedule Follow-up', editCase: 'Edit', deleteBtn: 'Delete',
+    lastContactLbl: 'Last Contact', followupLbl: 'Follow-up Date', nextStepLbl: 'Next Step',
+    noDate: '—', close: 'Close'
+  },
+  zh: {
+    backLabel: '← 四大工作室', crumbCurrent: '客戶工作室',
+    pageTitle: '💼 客戶工作室', pageSub: '追蹤真實客戶對話與下一步——異議、追蹤進度、目前案例狀態。',
+    newCase: '+ 新增客戶案例', emptyState: '目前還沒有客戶案例。建立第一筆，開始追蹤真實對話。',
+    formTitleNew: '新增客戶案例', formTitleEdit: '編輯客戶案例',
+    lblName: '客戶姓名／代號', lblIndustry: '行業', lblStatus: '案例狀態',
+    lblObjection: '目前異議', lblLastContact: '最後聯絡時間', lblFollowup: 'Follow-up 日期',
+    lblNextStep: '下一步', cancel: '取消', saveCase: '儲存案例',
+    deleteTitle: '確定要刪除這筆案例嗎？', deleteText: '刪除後將永久移除此客戶案例，無法復原。',
+    deleteCase: '刪除案例',
+    nextAction: '下一步行動', studyKnowledge: '📚 查看相關知識', practiceObjection: '🎯 練習這個異議',
+    scheduleFollowup: '📅 安排 Follow-up', editCase: '編輯', deleteBtn: '刪除',
+    lastContactLbl: '最後聯絡', followupLbl: 'Follow-up 日期', nextStepLbl: '下一步',
+    noDate: '—', close: '關閉'
+  }
+};
+
+function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
+function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); renderAll(); }
+function agtRef(){ return sessionStorage.getItem('agentraining_ref') || 'demo'; }
+function simUrl(practiceId){ return 'simulator.html?ref=' + encodeURIComponent(agtRef()) + (practiceId != null ? '&practice=' + practiceId : ''); }
+
+function loadCases() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { console.error('[Client Studio] Failed to parse cases:', e); }
+  const seeded = seedCases();
+  saveCases(seeded);
+  return seeded;
+}
+
+function saveCases(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function todayStr(offsetDays) {
+  const d = new Date();
+  if (offsetDays) d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().slice(0, 10);
+}
+
+function seedCases() {
+  return [
+    {
+      id: 'case-seed-price',
+      clientName: 'Ms. Michelle Torres',
+      industry: 'Insurance',
+      objection: 'Client feels the premium is too expensive — worried about affordability after having a new baby.',
+      objectionTopic: 'price',
+      lastContact: todayStr(-2),
+      nextStep: 'Present a smaller starting plan sized to her monthly budget.',
+      followUpDate: todayStr(3),
+      status: 'Follow-up',
+      practiceScenarioId: 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    },
+    {
+      id: 'case-seed-spouse',
+      clientName: 'Mrs. Linda Nguyen',
+      industry: 'Insurance',
+      objection: 'Client needs to talk to her husband before making any decision — defers major decisions to family.',
+      objectionTopic: 'spouse',
+      lastContact: todayStr(-1),
+      nextStep: 'Offer to schedule a joint call including her husband.',
+      followUpDate: todayStr(5),
+      status: 'Active',
+      practiceScenarioId: 10,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+  ];
+}
+
+let editingCaseId = null;
+let pendingDeleteId = null;
+
+function computeNextAction(c, lang) {
+  if (c.nextStep && c.nextStep.trim()) return c.nextStep;
+  if (c.status === 'Follow-up') return lang === 'zh' ? '安排 follow-up 聯絡' : 'Schedule a follow-up contact';
+  if (c.status === 'New') return lang === 'zh' ? '進行第一次聯絡' : 'Make first contact';
+  return lang === 'zh' ? '確認案例狀態' : 'Review case status';
+}
+
+function renderAll() {
+  const lang = agtLang();
+  const s = STR[lang];
+  document.getElementById('back-label').textContent = s.backLabel;
+  document.getElementById('crumb-current').textContent = s.crumbCurrent;
+  document.getElementById('page-title').textContent = s.pageTitle;
+  document.getElementById('page-sub').textContent = s.pageSub;
+  document.getElementById('new-case-btn').textContent = s.newCase;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+
+  document.getElementById('form-title').textContent = editingCaseId ? s.formTitleEdit : s.formTitleNew;
+  document.getElementById('lbl-name').textContent = s.lblName;
+  document.getElementById('lbl-industry').textContent = s.lblIndustry;
+  document.getElementById('lbl-status').textContent = s.lblStatus;
+  document.getElementById('lbl-objection').textContent = s.lblObjection;
+  document.getElementById('lbl-last-contact').textContent = s.lblLastContact;
+  document.getElementById('lbl-followup').textContent = s.lblFollowup;
+  document.getElementById('lbl-next-step').textContent = s.lblNextStep;
+  document.getElementById('btn-cancel').textContent = s.cancel;
+  document.getElementById('btn-save').textContent = s.saveCase;
+  document.getElementById('confirm-title').textContent = s.deleteTitle;
+  document.getElementById('confirm-text').textContent = s.deleteText;
+  document.getElementById('btn-confirm-cancel').textContent = s.cancel;
+  document.getElementById('btn-confirm-delete').textContent = s.deleteCase;
+
+  renderCaseList();
+}
+
+function renderCaseList() {
+  const lang = agtLang();
+  const s = STR[lang];
+  const cases = loadCases().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const container = document.getElementById('case-list-container');
+
+  if (cases.length === 0) {
+    container.innerHTML = `<div class="empty-state">${s.emptyState}</div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="case-grid">${cases.map(c => `
+    <div class="case-card" onclick="openDetail('${c.id}')">
+      <div class="case-card-top">
+        <div class="case-name">${escapeHtml(c.clientName)}</div>
+        <span class="status-badge status-${c.status.replace(' ', '-')}">${c.status}</span>
+      </div>
+      <div class="case-industry">${escapeHtml(c.industry)}</div>
+      <div class="case-objection">${escapeHtml(c.objection || '—')}</div>
+      <div class="case-next-action">→ ${escapeHtml(computeNextAction(c, lang))}</div>
+      <div class="case-meta">
+        <span>${s.followupLbl}: ${c.followUpDate || s.noDate}</span>
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function openNewCaseForm() {
+  editingCaseId = null;
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-industry').value = 'Insurance';
+  document.getElementById('f-status').value = 'New';
+  document.getElementById('f-objection').value = '';
+  document.getElementById('f-last-contact').value = todayStr(0);
+  document.getElementById('f-followup').value = '';
+  document.getElementById('f-next-step').value = '';
+
+  const params = new URLSearchParams(window.location.search);
+  const topicKey = params.get('objectionTopic');
+  if (topicKey && OBJECTION_TOPICS[topicKey]) {
+    const lang = agtLang();
+    document.getElementById('f-objection').value = OBJECTION_TOPICS[topicKey].label[lang];
+    document.getElementById('f-followup').value = todayStr(3);
+  }
+
+  document.getElementById('form-title').textContent = STR[agtLang()].formTitleNew;
+  document.getElementById('form-modal').classList.add('open');
+}
+
+function openEditForm(id) {
+  const c = loadCases().find(x => x.id === id);
+  if (!c) return;
+  editingCaseId = id;
+  document.getElementById('f-name').value = c.clientName;
+  document.getElementById('f-industry').value = c.industry;
+  document.getElementById('f-status').value = c.status;
+  document.getElementById('f-objection').value = c.objection || '';
+  document.getElementById('f-last-contact').value = c.lastContact || '';
+  document.getElementById('f-followup').value = c.followUpDate || '';
+  document.getElementById('f-next-step').value = c.nextStep || '';
+  document.getElementById('form-title').textContent = STR[agtLang()].formTitleEdit;
+  closeDetailModal();
+  document.getElementById('form-modal').classList.add('open');
+}
+
+function closeFormModal() {
+  document.getElementById('form-modal').classList.remove('open');
+  editingCaseId = null;
+  history.replaceState(null, '', 'client.html');
+}
+
+function saveCaseForm() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { document.getElementById('f-name').focus(); return; }
+
+  const cases = loadCases();
+  const now = new Date().toISOString();
+
+  if (editingCaseId) {
+    const idx = cases.findIndex(c => c.id === editingCaseId);
+    if (idx > -1) {
+      cases[idx] = {
+        ...cases[idx],
+        clientName: name,
+        industry: document.getElementById('f-industry').value,
+        status: document.getElementById('f-status').value,
+        objection: document.getElementById('f-objection').value.trim(),
+        lastContact: document.getElementById('f-last-contact').value,
+        followUpDate: document.getElementById('f-followup').value,
+        nextStep: document.getElementById('f-next-step').value.trim(),
+        updatedAt: now
+      };
+    }
+  } else {
+    cases.push({
+      id: 'case-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      clientName: name,
+      industry: document.getElementById('f-industry').value,
+      status: document.getElementById('f-status').value,
+      objection: document.getElementById('f-objection').value.trim(),
+      objectionTopic: '',
+      lastContact: document.getElementById('f-last-contact').value,
+      followUpDate: document.getElementById('f-followup').value,
+      nextStep: document.getElementById('f-next-step').value.trim(),
+      practiceScenarioId: null,
+      createdAt: now,
+      updatedAt: now
+    });
+  }
+
+  saveCases(cases);
+  closeFormModal();
+  renderCaseList();
+}
+
+function openDetail(id) {
+  const lang = agtLang();
+  const s = STR[lang];
+  const c = loadCases().find(x => x.id === id);
+  if (!c) return;
+
+  const topic = c.objectionTopic && OBJECTION_TOPICS[c.objectionTopic] ? OBJECTION_TOPICS[c.objectionTopic] : null;
+  const practiceId = topic ? topic.practiceId : c.practiceScenarioId;
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-title">${escapeHtml(c.clientName)}</div>
+    <div class="detail-tag">
+      <span class="status-badge status-${c.status.replace(' ', '-')}">${c.status}</span>
+      <span style="font-size:12px;color:var(--ink-muted);">${escapeHtml(c.industry)}</span>
+    </div>
+    <div class="detail-grid">
+      <div><div class="detail-field-label">${s.lastContactLbl}</div><div class="detail-field-value">${c.lastContact || s.noDate}</div></div>
+      <div><div class="detail-field-label">${s.followupLbl}</div><div class="detail-field-value">${c.followUpDate || s.noDate}</div></div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div class="detail-field-label">${s.lblObjection}</div>
+      <div class="detail-field-value">${escapeHtml(c.objection || '—')}</div>
+    </div>
+    <div class="next-action-box">
+      <strong>${s.nextAction}</strong>
+      ${escapeHtml(computeNextAction(c, lang))}
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="knowledge.html${topic ? '?topic=' + topic.knowledgeKey : ''}">${s.studyKnowledge}</a>
+      <a class="btn btn-ghost" href="${simUrl(practiceId)}">${s.practiceObjection}</a>
+      <button class="btn btn-ghost" onclick="focusFollowup('${c.id}')">${s.scheduleFollowup}</button>
+    </div>
+    <div class="detail-footer">
+      <button class="btn btn-ghost btn-sm" onclick="openEditForm('${c.id}')">✏️ ${s.editCase}</button>
+      <button class="btn btn-danger btn-sm" onclick="requestDelete('${c.id}')">🗑 ${s.deleteBtn}</button>
+    </div>
+  `;
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function focusFollowup(id) {
+  closeDetailModal();
+  openEditForm(id);
+  setTimeout(() => document.getElementById('f-followup').focus(), 50);
+}
+
+function closeDetailModal() {
+  document.getElementById('detail-modal').classList.remove('open');
+}
+
+function requestDelete(id) {
+  pendingDeleteId = id;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeConfirmModal() {
+  pendingDeleteId = null;
+  document.getElementById('confirm-modal').classList.remove('open');
+}
+
+function confirmDelete() {
+  if (!pendingDeleteId) return;
+  const cases = loadCases().filter(c => c.id !== pendingDeleteId);
+  saveCases(cases);
+  closeConfirmModal();
+  closeDetailModal();
+  renderCaseList();
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+      if (overlay.id === 'form-modal') editingCaseId = null;
+      if (overlay.id === 'confirm-modal') pendingDeleteId = null;
+    }
+  });
+});
+
+renderAll();
+
+const initParams = new URLSearchParams(window.location.search);
+if (initParams.get('new') === '1') {
+  openNewCaseForm();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leadership Studio — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
+    --canvas: #F7F8FC; --white: #FFFFFF;
+    --accent: #1A56DB; --accent-lt: #EEF3FF;
+    --green: #059669; --green-lt: #ECFDF5;
+    --red: #DC2626; --red-lt: #FEF2F2;
+    --gold: #F59E0B; --gold-lt: #FFF7ED;
+    --border: #E4E7F0;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px;
+    --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  button{cursor:pointer;font-family:var(--font-body);border:none;}
+  nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:var(--font-display);font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .nav-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo-mark svg{width:16px;height:16px;}
+  .nav-back{font-size:13px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;}
+  .nav-back:hover{color:var(--ink);}
+  .lang-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+  .lang-btn{background:var(--white);color:var(--ink-muted);font-size:12px;font-weight:700;padding:6px 12px;}
+  .lang-btn.active{background:var(--accent);color:#fff;}
+
+  .breadcrumb{max-width:1080px;margin:0 auto;padding:16px 24px 0;font-size:12px;color:var(--ink-muted);display:flex;gap:8px;flex-wrap:wrap;}
+  .breadcrumb a{color:var(--accent);font-weight:600;}
+  .page-head{max-width:1080px;margin:0 auto;padding:20px 24px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .page-title{font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:8px;}
+  .page-sub{font-size:14px;color:var(--ink-muted);max-width:600px;line-height:1.6;}
+  .btn{padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{opacity:.9;}
+  .btn-ghost{background:var(--white);color:var(--ink);border:1.5px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-sm{padding:7px 12px;font-size:12px;}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:8px 24px 60px;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0 24px;}
+  .kpi-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;}
+  .kpi-num{font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--accent);}
+  .kpi-label{font-size:11.5px;color:var(--ink-muted);font-weight:600;margin-top:2px;}
+
+  .section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px;}
+  .section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+  .section-title{font-family:var(--font-display);font-size:16px;font-weight:800;}
+
+  .team-list{display:flex;flex-direction:column;gap:8px;}
+  .team-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--canvas);border-radius:10px;font-size:13px;}
+  .team-row-name{font-weight:700;}
+  .team-row-stats{font-size:12px;color:var(--ink-muted);}
+
+  .assign-list{display:flex;flex-direction:column;gap:8px;}
+  .assign-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--canvas);border-radius:10px;gap:10px;flex-wrap:wrap;}
+  .assign-info{font-size:13px;}
+  .assign-info strong{display:block;font-size:13.5px;margin-bottom:2px;}
+  .assign-meta{font-size:11.5px;color:var(--ink-muted);}
+  .status-pill{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;}
+  .status-Pending{background:var(--gold-lt);color:#92400E;}
+  .status-Completed{background:var(--green-lt);color:var(--green);}
+  .status-Overdue{background:var(--red-lt);color:var(--red);}
+  .progress-track{width:80px;height:6px;background:var(--border);border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--green);}
+
+  .followup-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--gold-lt);border-radius:10px;font-size:12.5px;margin-bottom:8px;}
+  .activity-row{font-size:12.5px;color:var(--ink-soft);padding:8px 0;border-bottom:1px solid var(--border);}
+  .activity-row:last-child{border-bottom:none;}
+
+  .empty-state{color:var(--ink-muted);font-size:13px;padding:16px 0;}
+
+  .assign-note{background:var(--green-lt);color:var(--green);border-radius:10px;padding:12px 14px;font-size:13px;margin-top:12px;display:none;}
+  .assign-note.show{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(13,15,20,.55);z-index:500;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;}
+  .modal-overlay.open{display:flex;}
+  .modal-card{background:var(--white);border-radius:var(--radius-lg);max-width:480px;width:100%;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.3);}
+  .modal-title{font-family:var(--font-display);font-size:19px;font-weight:800;margin-bottom:16px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;}
+  .field input, .field select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13.5px;font-family:var(--font-body);}
+  .field input:focus, .field select:focus{outline:none;border-color:var(--accent);}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+
+  @media (max-width:640px){
+    .page-head{flex-direction:column;}
+    .assign-row{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="studios.html" class="nav-back" id="back-label">← Four Studios</a>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+    </div>
+    AgentTraining<span style="color:var(--accent)">AI</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="agtSetLang('en')">EN</button>
+    <button class="lang-btn" id="lang-zh" onclick="agtSetLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> / <a href="studios.html">Four Studios</a> / <span id="crumb-current">Leadership Studio</span>
+</div>
+
+<div class="page-head">
+  <div>
+    <div class="page-title" id="page-title">🧭 Leadership Studio</div>
+    <div class="page-sub" id="page-sub">Assign practice, review your team's progress, and coach where it matters most.</div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="openAssignModal()" id="assign-btn">+ Assign New Practice</button>
+    <a class="btn btn-ghost" href="simulator.html" id="return-practice-btn">↩ Return to Practice Studio</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="section-title" id="team-title">👥 Team Overview</div></div>
+    <div class="team-list" id="team-list"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head">
+      <div class="section-title" id="assigned-title">📋 Assigned Practice</div>
+      <button class="btn btn-ghost btn-sm" onclick="openAssignModal()" id="assign-btn-2">+ Assign New Practice</button>
+    </div>
+    <div class="assign-note" id="assign-note"></div>
+    <div class="assign-list" id="assign-list"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="section-title" id="followup-title">⏰ Outstanding Follow-ups</div></div>
+    <div id="followup-list"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head"><div class="section-title" id="activity-title">🕒 Recent Activity</div></div>
+    <div id="activity-list"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="assign-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="assign-modal-title">Assign New Practice</div>
+    <div class="field">
+      <label id="lbl-member">Team Member</label>
+      <select id="a-member"></select>
+    </div>
+    <div class="field">
+      <label id="lbl-scenario">Scenario</label>
+      <select id="a-scenario"></select>
+    </div>
+    <div class="field">
+      <label id="lbl-due">Due Date</label>
+      <input type="date" id="a-due" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeAssignModal()" id="btn-a-cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAssignment()" id="btn-a-save">Assign Practice</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROSTER_KEY = 'agentraining_team_roster';
+const ASSIGN_KEY = 'agentraining_assignments';
+const SESSION_LOG_KEY = 'agenttraining_session_log';
+const CLIENT_CASES_KEY = 'agentraining_client_cases';
+
+const SCENARIOS = [
+  { id: 1,  industry: 'Insurance', name: 'Premium is too high' },
+  { id: 10, industry: 'Insurance', name: 'Need to ask my spouse first' },
+  { id: 2,  industry: 'Insurance', name: 'ETF beats insurance' },
+  { id: 3,  industry: 'Insurance', name: 'I’ll think about it' },
+  { id: 4,  industry: 'Insurance', name: 'I’m young and healthy' },
+  { id: 9,  industry: 'Insurance', name: 'I already have group insurance' },
+  { id: 16, industry: 'Insurance', name: 'I had a bad experience before' },
+  { id: 20, industry: 'Insurance', name: 'Not the right time financially' },
+  { id: 5,  industry: 'Real Estate', name: 'The price is too high' },
+  { id: 6,  industry: 'Real Estate', name: 'Interest rates are too high' },
+  { id: 11, industry: 'Health & Wellness', name: 'Does this actually work?' },
+  { id: 12, industry: 'Health & Wellness', name: 'It’s too expensive' }
+];
+
+const STR = {
+  en: {
+    backLabel: '← Four Studios', crumbCurrent: 'Leadership Studio',
+    pageTitle: '🧭 Leadership Studio', pageSub: "Assign practice, review your team's progress, and coach where it matters most.",
+    assignBtn: '+ Assign New Practice', returnBtn: '↩ Return to Practice Studio',
+    teamTitle: '👥 Team Overview', assignedTitle: '📋 Assigned Practice',
+    followupTitle: '⏰ Outstanding Follow-ups', activityTitle: '🕒 Recent Activity',
+    kpiTeam: 'Team Members', kpiAssigned: 'Assigned Practice', kpiCompleted: 'Completed Sessions',
+    kpiAvg: 'Average Score', kpiFollowups: 'Outstanding Follow-ups',
+    assignModalTitle: 'Assign New Practice', lblMember: 'Team Member', lblScenario: 'Scenario', lblDue: 'Due Date',
+    cancel: 'Cancel', assignAction: 'Assign Practice',
+    noAssignments: 'No practice assigned yet. Click "Assign New Practice" to give your team their first task.',
+    noFollowups: 'Nothing needs follow-up right now.',
+    noActivity: 'No activity yet — activity will appear as your team completes practice sessions.',
+    assignedTo: 'Assigned to', due: 'Due', completedOn: 'Completed',
+    assignSuccessPrefix: '✅ Assigned to', assignSuccessSuffix: '. ', openInPractice: '🎯 Open in Practice Studio',
+    completedSessionsLbl: 'completed', avgScoreLbl: 'avg score', noSessionsYet: 'no sessions yet',
+    followupFor: 'Follow-up for', by: 'by'
+  },
+  zh: {
+    backLabel: '← 四大工作室', crumbCurrent: '領導工作室',
+    pageTitle: '🧭 領導工作室', pageSub: '布置練習任務、檢視團隊進度，把教練資源用在最需要的地方。',
+    assignBtn: '+ 布置新練習', returnBtn: '↩ 回到練習工作室',
+    teamTitle: '👥 團隊總覽', assignedTitle: '📋 已布置練習',
+    followupTitle: '⏰ 待處理的 Follow-up', activityTitle: '🕒 最近活動',
+    kpiTeam: '團隊成員', kpiAssigned: '已布置練習', kpiCompleted: '已完成場次',
+    kpiAvg: '平均分數', kpiFollowups: '待處理 Follow-up',
+    assignModalTitle: '布置新練習', lblMember: '團隊成員', lblScenario: '情境', lblDue: '截止日期',
+    cancel: '取消', assignAction: '布置練習',
+    noAssignments: '目前還沒有布置任何練習。點擊「布置新練習」給團隊第一個任務。',
+    noFollowups: '目前沒有需要跟進的事項。',
+    noActivity: '目前還沒有活動紀錄——當團隊完成練習後會顯示在這裡。',
+    assignedTo: '指派給', due: '截止', completedOn: '完成於',
+    assignSuccessPrefix: '✅ 已指派給', assignSuccessSuffix: '。', openInPractice: '🎯 在練習工作室開啟',
+    completedSessionsLbl: '已完成', avgScoreLbl: '平均分數', noSessionsYet: '尚無練習紀錄',
+    followupFor: 'Follow-up 對象', by: '負責人'
+  }
+};
+
+function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
+function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); renderAll(); }
+function agtRef(){ return sessionStorage.getItem('agentraining_ref') || 'demo'; }
+function simUrl(practiceId){ return 'simulator.html?ref=' + encodeURIComponent(agtRef()) + (practiceId != null ? '&practice=' + practiceId : ''); }
+
+function loadJSON(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) { return fallback; }
+}
+function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+function loadRoster() {
+  let roster = loadJSON(ROSTER_KEY, null);
+  if (!roster) {
+    roster = [
+      { id: 'member-1', name: 'Alex Chen' },
+      { id: 'member-2', name: 'Maria Lopez' },
+      { id: 'member-3', name: 'Sam Patel' }
+    ];
+    saveJSON(ROSTER_KEY, roster);
+  }
+  return roster;
+}
+
+function loadAssignments() { return loadJSON(ASSIGN_KEY, []); }
+function saveAssignments(list) { saveJSON(ASSIGN_KEY, list); }
+function loadSessionLog() { return loadJSON(SESSION_LOG_KEY, []); }
+function loadClientCases() { return loadJSON(CLIENT_CASES_KEY, []); }
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function isAssignmentCompleted(assignment, sessionLog) {
+  return sessionLog.some(s =>
+    String(s.scenarioId) === String(assignment.scenarioId) &&
+    (s.trainee || '').toLowerCase() === (assignment.memberName || '').toLowerCase() &&
+    new Date(s.date) >= new Date(assignment.assignedAt)
+  );
+}
+
+function renderAll() {
+  const lang = agtLang();
+  const s = STR[lang];
+  document.getElementById('back-label').textContent = s.backLabel;
+  document.getElementById('crumb-current').textContent = s.crumbCurrent;
+  document.getElementById('page-title').textContent = s.pageTitle;
+  document.getElementById('page-sub').textContent = s.pageSub;
+  document.getElementById('assign-btn').textContent = s.assignBtn;
+  document.getElementById('assign-btn-2').textContent = s.assignBtn;
+  document.getElementById('return-practice-btn').textContent = s.returnBtn;
+  document.getElementById('team-title').textContent = s.teamTitle;
+  document.getElementById('assigned-title').textContent = s.assignedTitle;
+  document.getElementById('followup-title').textContent = s.followupTitle;
+  document.getElementById('activity-title').textContent = s.activityTitle;
+  document.getElementById('assign-modal-title').textContent = s.assignModalTitle;
+  document.getElementById('lbl-member').textContent = s.lblMember;
+  document.getElementById('lbl-scenario').textContent = s.lblScenario;
+  document.getElementById('lbl-due').textContent = s.lblDue;
+  document.getElementById('btn-a-cancel').textContent = s.cancel;
+  document.getElementById('btn-a-save').textContent = s.assignAction;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+
+  const roster = loadRoster();
+  const assignments = loadAssignments();
+  const sessionLog = loadSessionLog();
+  const clientCases = loadClientCases();
+
+  assignments.forEach(a => {
+    if (a.status !== 'Completed' && isAssignmentCompleted(a, sessionLog)) {
+      a.status = 'Completed';
+      a.completedAt = new Date().toISOString();
+    }
+  });
+  saveAssignments(assignments);
+
+  const completedSessions = sessionLog.length;
+  const avgScore = completedSessions ? Math.round(sessionLog.reduce((sum, x) => sum + (x.score || 0), 0) / completedSessions) : 0;
+  const outstandingFollowups = clientCases.filter(c => c.status === 'Follow-up' || (c.followUpDate && c.followUpDate <= todayStr(0) && c.status !== 'Won' && c.status !== 'Closed'));
+
+  document.getElementById('kpi-grid').innerHTML = `
+    <div class="kpi-card"><div class="kpi-num">${roster.length}</div><div class="kpi-label">${s.kpiTeam}</div></div>
+    <div class="kpi-card"><div class="kpi-num">${assignments.length}</div><div class="kpi-label">${s.kpiAssigned}</div></div>
+    <div class="kpi-card"><div class="kpi-num">${completedSessions}</div><div class="kpi-label">${s.kpiCompleted}</div></div>
+    <div class="kpi-card"><div class="kpi-num">${avgScore || '—'}</div><div class="kpi-label">${s.kpiAvg}</div></div>
+    <div class="kpi-card"><div class="kpi-num">${outstandingFollowups.length}</div><div class="kpi-label">${s.kpiFollowups}</div></div>
+  `;
+
+  document.getElementById('team-list').innerHTML = roster.map(m => {
+    const mine = sessionLog.filter(x => (x.trainee || '').toLowerCase() === m.name.toLowerCase());
+    const mAvg = mine.length ? Math.round(mine.reduce((sum, x) => sum + (x.score || 0), 0) / mine.length) : null;
+    const statLine = mine.length
+      ? `${mine.length} ${s.completedSessionsLbl} · ${mAvg} ${s.avgScoreLbl}`
+      : s.noSessionsYet;
+    return `<div class="team-row"><span class="team-row-name">${escapeHtml(m.name)}</span><span class="team-row-stats">${statLine}</span></div>`;
+  }).join('');
+
+  const assignList = document.getElementById('assign-list');
+  if (assignments.length === 0) {
+    assignList.innerHTML = `<div class="empty-state">${s.noAssignments}</div>`;
+  } else {
+    assignList.innerHTML = assignments.slice().reverse().map(a => {
+      const pct = a.status === 'Completed' ? 100 : 0;
+      return `<div class="assign-row">
+        <div class="assign-info">
+          <strong>${escapeHtml(a.scenarioName)}</strong>
+          <span class="assign-meta">${s.assignedTo}: ${escapeHtml(a.memberName)} · ${s.due}: ${a.dueDate || '—'}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <span class="status-pill status-${a.status}">${a.status}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const followupList = document.getElementById('followup-list');
+  if (outstandingFollowups.length === 0) {
+    followupList.innerHTML = `<div class="empty-state">${s.noFollowups}</div>`;
+  } else {
+    followupList.innerHTML = outstandingFollowups.map(c => `
+      <div class="followup-row">
+        <span>${s.followupFor}: <strong>${escapeHtml(c.clientName)}</strong> — ${escapeHtml(c.nextStep || c.objection || '')}</span>
+        <span>${c.followUpDate || ''}</span>
+      </div>
+    `).join('');
+  }
+
+  const activityList = document.getElementById('activity-list');
+  const recent = sessionLog.slice().reverse().slice(0, 8);
+  if (recent.length === 0) {
+    activityList.innerHTML = `<div class="empty-state">${s.noActivity}</div>`;
+  } else {
+    activityList.innerHTML = recent.map(x => `
+      <div class="activity-row">${escapeHtml(x.trainee)} ${s.by ? '' : ''}completed <strong>${escapeHtml(x.scenarioName)}</strong> — ${x.score}/100 · ${new Date(x.date).toLocaleDateString(lang === 'zh' ? 'zh-TW' : 'en-US')}</div>
+    `).join('');
+  }
+}
+
+function todayStr(offsetDays) {
+  const d = new Date();
+  if (offsetDays) d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().slice(0, 10);
+}
+
+function openAssignModal() {
+  const roster = loadRoster();
+  const memberSel = document.getElementById('a-member');
+  memberSel.innerHTML = roster.map(m => `<option value="${m.id}">${escapeHtml(m.name)}</option>`).join('');
+
+  const scenarioSel = document.getElementById('a-scenario');
+  scenarioSel.innerHTML = SCENARIOS.map(sc => `<option value="${sc.id}">${escapeHtml(sc.name)} (${sc.industry})</option>`).join('');
+
+  document.getElementById('a-due').value = todayStr(7);
+  document.getElementById('assign-note').classList.remove('show');
+  document.getElementById('assign-modal').classList.add('open');
+}
+
+function closeAssignModal() {
+  document.getElementById('assign-modal').classList.remove('open');
+}
+
+function saveAssignment() {
+  const lang = agtLang();
+  const s = STR[lang];
+  const roster = loadRoster();
+  const memberId = document.getElementById('a-member').value;
+  const member = roster.find(m => m.id === memberId);
+  const scenarioId = parseInt(document.getElementById('a-scenario').value, 10);
+  const scenario = SCENARIOS.find(sc => sc.id === scenarioId);
+  const dueDate = document.getElementById('a-due').value;
+  if (!member || !scenario) return;
+
+  const assignments = loadAssignments();
+  assignments.push({
+    id: 'assign-' + Date.now(),
+    memberId: member.id,
+    memberName: member.name,
+    scenarioId: scenario.id,
+    scenarioName: scenario.name,
+    dueDate,
+    status: 'Pending',
+    assignedAt: new Date().toISOString(),
+    completedAt: null
+  });
+  saveAssignments(assignments);
+  closeAssignModal();
+  renderAll();
+
+  const note = document.getElementById('assign-note');
+  note.innerHTML = `<span>${s.assignSuccessPrefix} ${escapeHtml(member.name)}${s.assignSuccessSuffix}</span><a class="btn btn-primary btn-sm" href="${simUrl(scenario.id)}">${s.openInPractice}</a>`;
+  note.classList.add('show');
+}
+
+document.getElementById('assign-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'assign-modal') closeAssignModal();
+});
+
+renderAll();
+</script>
+</body>
+</html>

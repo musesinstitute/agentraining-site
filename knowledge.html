@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Knowledge Studio — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
+    --canvas: #F7F8FC; --white: #FFFFFF;
+    --accent: #1A56DB; --accent-lt: #EEF3FF;
+    --green: #059669; --green-lt: #ECFDF5;
+    --red: #DC2626; --red-lt: #FEF2F2;
+    --gold: #F59E0B; --gold-lt: #FFF7ED;
+    --border: #E4E7F0;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px;
+    --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  button{cursor:pointer;font-family:var(--font-body);border:none;}
+  nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:var(--font-display);font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .nav-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo-mark svg{width:16px;height:16px;}
+  .nav-back{font-size:13px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;transition:color .15s;}
+  .nav-back:hover{color:var(--ink);}
+  .lang-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+  .lang-btn{background:var(--white);color:var(--ink-muted);font-size:12px;font-weight:700;padding:6px 12px;}
+  .lang-btn.active{background:var(--accent);color:#fff;}
+
+  .page-head{max-width:920px;margin:0 auto;padding:36px 24px 8px;}
+  .page-title{font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:8px;}
+  .page-sub{font-size:14px;color:var(--ink-muted);max-width:640px;line-height:1.6;}
+  .breadcrumb{max-width:920px;margin:0 auto;padding:16px 24px 0;font-size:12px;color:var(--ink-muted);display:flex;gap:8px;flex-wrap:wrap;}
+  .breadcrumb a{color:var(--accent);font-weight:600;}
+
+  .studio-wrap{max-width:920px;margin:0 auto;padding:24px;}
+  .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+  .topic-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;cursor:pointer;transition:.15s;}
+  .topic-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+  .topic-card.active{border-color:var(--accent);background:var(--accent-lt);}
+  .topic-eyebrow{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;}
+  .topic-title{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:6px;}
+  .topic-desc{font-size:13px;color:var(--ink-muted);line-height:1.5;}
+
+  .detail-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);}
+  .detail-title{font-family:var(--font-display);font-size:22px;font-weight:800;margin-bottom:4px;}
+  .detail-scenario-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ink-muted);background:var(--canvas);border:1px solid var(--border);border-radius:20px;padding:4px 10px;margin-bottom:18px;}
+  .section{margin-bottom:20px;}
+  .section-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .section-body{font-size:14px;line-height:1.7;color:var(--ink);}
+  .q-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .q-list li{background:var(--accent-lt);border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:13.5px;line-height:1.5;}
+  .compliance-box{background:var(--gold-lt);border-left:3px solid var(--gold);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.6;}
+  .compliance-box strong{display:block;margin-bottom:4px;color:#92400E;}
+
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+  .btn{padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{opacity:.9;}
+  .btn-ghost{background:var(--white);color:var(--ink);border:1.5px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  .empty-state{background:var(--white);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:40px;text-align:center;color:var(--ink-muted);font-size:13.5px;}
+
+  @media (max-width:640px){
+    .topic-grid{grid-template-columns:1fr;}
+    .detail-card{padding:20px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="studios.html" class="nav-back" id="back-label">← Four Studios</a>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+    </div>
+    AgentTraining<span style="color:var(--accent)">AI</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="agtSetLang('en')">EN</button>
+    <button class="lang-btn" id="lang-zh" onclick="agtSetLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> / <a href="studios.html">Four Studios</a> / <span id="crumb-current">Knowledge Studio</span>
+</div>
+
+<div class="page-head">
+  <div class="page-title" id="page-title">📚 Knowledge Studio</div>
+  <div class="page-sub" id="page-sub">The Objection Playbook — real insurance sales knowledge behind the words. Learn why a client says what they say, and what to say back.</div>
+</div>
+
+<div class="studio-wrap">
+  <div class="topic-grid" id="topic-grid"></div>
+  <div id="detail-container"></div>
+</div>
+
+<script>
+const TOPICS = {
+  price: {
+    practiceId: 1,
+    eyebrow: { en: 'Objection Playbook', zh: '異議應對手冊' },
+    title: { en: '"The premium is too expensive."', zh: '「保費太貴了」' },
+    desc: { en: 'Insurance Sales Knowledge — price objections', zh: '保險銷售知識——價格異議' },
+    concern: {
+      label: { en: "Client's Real Concern", zh: '客戶真正的疑慮' },
+      body: {
+        en: 'Most of the time this isn\'t a rejection of insurance itself — it\'s a cash-flow worry, or the client hasn\'t yet connected the cost to something they personally value. "Too expensive" is often shorthand for "I don\'t yet see why this matters to me."',
+        zh: '大多數時候，這不是在拒絕保險本身——而是現金流的顧慮，或客戶還沒把「花費」跟「對自己重要的事」連結起來。「太貴了」常常是「我還沒感覺到這跟我有什麼關係」的另一種說法。'
+      }
+    },
+    questions: {
+      label: { en: 'Suggested Exploring Questions', zh: '建議探索問題' },
+      items: {
+        en: [
+          'What monthly amount would feel comfortable to start with?',
+          'Is it the total cost, or the coverage amount, that feels like a stretch?',
+          'What would this protect that matters most to you right now?'
+        ],
+        zh: [
+          '您每個月能接受的金額大概是多少？',
+          '讓您猶豫的是總花費，還是保障金額太高？',
+          '對您來說，這份保障最想保護的是什麼？'
+        ]
+      }
+    },
+    response: {
+      label: { en: 'Recommended Response Direction', zh: '建議回應方向' },
+      body: {
+        en: 'Do not argue the price down immediately. Acknowledge the concern first, then reframe the conversation from "cost" to "value protected." Offer a smaller starting option instead of presenting it as all-or-nothing.',
+        zh: '不要急著降價說服。先認同客戶的顧慮，再把對話從「花費」轉向「保護的價值」。提供一個較小的入門方案，而不是把它變成全有或全無的選擇。'
+      }
+    },
+    compliance: {
+      label: { en: 'Compliance Reminder', zh: '合規提醒' },
+      body: {
+        en: 'Never guarantee investment returns or promise a payout amount beyond what the policy actually states. Present premiums and figures accurately — never understate cost just to close faster.',
+        zh: '絕不可保證投資報酬率，或承諾超出保單條款範圍的給付金額。保費與數字必須如實呈現——不得為了盡快成交而低估費用。'
+      }
+    }
+  },
+  spouse: {
+    practiceId: 10,
+    eyebrow: { en: 'Objection Playbook', zh: '異議應對手冊' },
+    title: { en: '"I need to talk to my wife / husband first."', zh: '「我要先問我太太／先生」' },
+    desc: { en: 'Insurance Sales Knowledge — third-party approval objections', zh: '保險銷售知識——需要第三方同意的異議' },
+    concern: {
+      label: { en: 'Real Objection vs. Stall — How to Tell', zh: '如何判斷是真正異議還是拖延' },
+      body: {
+        en: 'Real: the client asks clarifying questions about what exactly to discuss with their spouse, and is willing to set a concrete joint follow-up. Stall: the answer is vague, no next step gets set, and the client changes the subject when you offer to include the spouse directly.',
+        zh: '真正異議：客戶會問清楚該跟太太／先生討論哪些細節，並願意約定具體的下次時間。拖延：回答很模糊、不願意約下一步，而且當你提議直接讓另一半一起加入討論時，客戶會轉移話題。'
+      }
+    },
+    questions: {
+      label: { en: 'Suggested Exploring Questions', zh: '建議探索問題' },
+      items: {
+        en: [
+          'What part of this would be most useful to talk through together?',
+          'Would it help if we scheduled a short call with both of you?',
+          'What matters most to your family in a decision like this?'
+        ],
+        zh: [
+          '您覺得這件事哪個部分最需要跟另一半一起討論？',
+          '如果我們安排一次兩位都能參加的簡短通話，會不會比較有幫助？',
+          '對您的家人來說，做這類決定時最在意的是什麼？'
+        ]
+      }
+    },
+    response: {
+      label: { en: 'Recommended Response', zh: '建議回應' },
+      body: {
+        en: 'Respect the need to involve their spouse — this is a sign of a healthy decision process, not a rejection. Offer to schedule a joint follow-up call or meeting rather than pushing for a same-day decision. Offer to send a short, shareable summary they can bring home.',
+        zh: '尊重客戶需要跟另一半討論——這是健康的決策過程，不是拒絕。提議安排一次雙方都能參加的後續通話或會面，而不是硬要當天做決定。可以提供一份簡短摘要，方便客戶帶回去分享。'
+      }
+    },
+    followup: {
+      label: { en: 'Follow-up Method', zh: 'Follow-up 方法' },
+      body: {
+        en: 'Before ending the conversation, set a concrete date and time for the follow-up — do not leave it open-ended ("I\'ll call you sometime"). Log it immediately as a Client Studio follow-up so it never gets missed.',
+        zh: '結束對話前，務必約定具體的日期與時間——不要留下「之後再聯絡」這種模糊的結尾。立刻在 Client Studio 記錄這個 follow-up，避免遺漏。'
+      }
+    },
+    compliance: {
+      label: { en: 'Must Not Apply Undue Pressure', zh: '不得施加不當壓力' },
+      body: {
+        en: 'Never guilt-trip, rush, or imply that a price or offer will disappear to force a same-day yes. Respect the family\'s decision-making process. Do not introduce investment framing or comparisons to sweeten the deal — that is outside a general insurance license.',
+        zh: '絕不可用愧疚感施壓、催促，或暗示「今天不簽優惠就沒了」來逼客戶當場答應。尊重家庭的決策過程。也不得用投資話術或比較來加碼促成——那已超出一般保險執照的範圍。'
+      }
+    }
+  }
+};
+
+const STR = {
+  en: {
+    backLabel: '← Four Studios', crumbCurrent: 'Knowledge Studio',
+    pageTitle: '📚 Knowledge Studio', pageSub: 'The Objection Playbook — real insurance sales knowledge behind the words. Learn why a client says what they say, and what to say back.',
+    practiceAgain: '🎯 Practice Again', applyToCase: '📁 Apply to Client Case', studyPrice: 'Study →'
+  },
+  zh: {
+    backLabel: '← 四大工作室', crumbCurrent: '知識工作室',
+    pageTitle: '📚 知識工作室', pageSub: '異議應對手冊——話術背後真正的保險銷售知識。理解客戶為什麼這麼說，以及該怎麼回應。',
+    practiceAgain: '🎯 重新練習', applyToCase: '📁 套用到客戶案例', studyPrice: '查看 →'
+  }
+};
+
+function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
+function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); render(); }
+function agtRef(){ return sessionStorage.getItem('agentraining_ref') || 'demo'; }
+function simUrl(practiceId){ return 'simulator.html?ref=' + encodeURIComponent(agtRef()) + (practiceId != null ? '&practice=' + practiceId : ''); }
+
+function render() {
+  const lang = agtLang();
+  const s = STR[lang];
+  document.getElementById('back-label').textContent = s.backLabel;
+  document.getElementById('crumb-current').textContent = s.crumbCurrent;
+  document.getElementById('page-title').textContent = s.pageTitle;
+  document.getElementById('page-sub').textContent = s.pageSub;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+
+  const grid = document.getElementById('topic-grid');
+  grid.innerHTML = Object.keys(TOPICS).map(key => {
+    const t = TOPICS[key];
+    return `<div class="topic-card" id="card-${key}" onclick="openTopic('${key}')">
+      <div class="topic-eyebrow">${t.eyebrow[lang]}</div>
+      <div class="topic-title">${t.title[lang]}</div>
+      <div class="topic-desc">${t.desc[lang]}</div>
+    </div>`;
+  }).join('');
+
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('topic');
+  openTopic(requested && TOPICS[requested] ? requested : 'price');
+}
+
+function openTopic(key) {
+  const lang = agtLang();
+  const s = STR[lang];
+  const t = TOPICS[key];
+  if (!t) return;
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById('card-' + key);
+  if (card) card.classList.add('active');
+
+  const extraSection = t.followup
+    ? `<div class="section"><div class="section-label">🔁 ${t.followup.label[lang]}</div><div class="section-body">${t.followup.body[lang]}</div></div>`
+    : '';
+
+  document.getElementById('detail-container').innerHTML = `
+    <div class="detail-card">
+      <div class="detail-title">${t.title[lang]}</div>
+      <div class="detail-scenario-tag">${t.desc[lang]}</div>
+
+      <div class="section">
+        <div class="section-label">💭 ${t.concern.label[lang]}</div>
+        <div class="section-body">${t.concern.body[lang]}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">❓ ${t.questions.label[lang]}</div>
+        <ul class="q-list">${t.questions.items[lang].map(q => `<li>${q}</li>`).join('')}</ul>
+      </div>
+
+      <div class="section">
+        <div class="section-label">💡 ${t.response.label[lang]}</div>
+        <div class="section-body">${t.response.body[lang]}</div>
+      </div>
+
+      ${extraSection}
+
+      <div class="section">
+        <div class="compliance-box"><strong>⚠️ ${t.compliance.label[lang]}</strong>${t.compliance.body[lang]}</div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="${simUrl(t.practiceId)}">${s.practiceAgain}</a>
+        <a class="btn btn-ghost" href="client.html?new=1&objectionTopic=${key}">${s.applyToCase}</a>
+      </div>
+    </div>
+  `;
+}
+
+render();
+</script>
+</body>
+</html>
