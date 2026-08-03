@@ -185,11 +185,20 @@
       background: var(--canvas); border-radius: var(--radius-sm); border: 1px solid var(--border);
     }
     .dash-open-studio-link { display: inline-block; font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 4px; }
+    .dash-competencies-card { margin-bottom: 20px; }
+    .dash-comp-list { display: flex; flex-direction: column; gap: 10px; }
+    .dash-comp-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .dash-comp-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .dash-comp-bar { display: flex; gap: 3px; flex-shrink: 0; }
+    .dash-comp-seg { width: 16px; height: 8px; border-radius: 3px; background: var(--border); }
+    .dash-comp-seg.filled { background: var(--accent); }
+    .dash-comp-note { font-size: 11px; color: var(--ink-muted); margin-top: 14px; line-height: 1.5; font-style: italic; }
     @media (max-width: 600px) {
       .dash-shell { padding: 20px; margin: 8px auto; }
       .dash-mgr-grid { grid-template-columns: 1fr; }
       .dash-secondary-row { flex-direction: column; }
       .dash-secondary-btn { min-width: 0; }
+      .dash-comp-seg { width: 12px; }
     }
 
     /* MARKDOWN IN CHAT */
@@ -794,6 +803,14 @@
         <button class="dash-secondary-btn" onclick="dashBrowseCurriculum()" id="ld-browse-curriculum">📚 Browse Curriculum</button>
         <button class="dash-secondary-btn" onclick="dashBrowseAllScenarios()" id="ld-browse-all">🗂 Browse All Scenarios</button>
         <button class="dash-secondary-btn" onclick="dashFreePractice()" id="ld-free-practice">🎯 Free Practice</button>
+      </div>
+
+      <!-- E-412A: My Competencies card — placeholder-only, non-authoritative. No scoring
+           logic; see AGENTS.md / E-412A for scope. -->
+      <div class="dash-card dash-competencies-card" id="ld-competencies-card">
+        <div class="dash-card-label" id="ld-competencies-label">My Competencies</div>
+        <div class="dash-comp-list" id="ld-competencies-list"></div>
+        <div class="dash-comp-note" id="ld-competencies-note">Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.</div>
       </div>
 
       <div class="dash-ai-card" id="ld-ai-card">
@@ -1753,7 +1770,9 @@ const strings = {
     dashAssignNote: "Assignment creation isn't wired up yet — this is an MVP placeholder, not connected to any assignment system.",
     dashAiInsightLabel: '🤖 AI Coaching Insight',
     dashAiInsightPlaceholder: 'Insights will appear after your team completes practice sessions.',
-    dashOpenStudio: 'Open Practice Studio →'
+    dashOpenStudio: 'Open Practice Studio →',
+    dashCompetenciesLabel: 'My Competencies',
+    dashCompetenciesNote: 'Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.'
   },
   zh: {
     scenariosLabel: '練習情境', feedbackLabel: 'AI 教練回饋',
@@ -1793,7 +1812,9 @@ const strings = {
     dashAssignNote: '指派功能尚未啟用——這是 MVP 的介面預留位置，尚未串接任何指派系統。',
     dashAiInsightLabel: '🤖 AI 教練洞察',
     dashAiInsightPlaceholder: '當團隊完成練習後，洞察內容將顯示於此。',
-    dashOpenStudio: '開啟練習工作室 →'
+    dashOpenStudio: '開啟練習工作室 →',
+    dashCompetenciesLabel: '我的職能',
+    dashCompetenciesNote: '此 MVP 版本中的職能等級僅為示意，未來版本將依實際完成的練習紀錄計算。'
   }
 };
 
@@ -3244,6 +3265,9 @@ function refreshDashboardStrings() {
   set('ld-free-practice', s.dashFreePracticeBtn);
   set('ld-ai-label', s.dashAiCoachLabel);
   set('ld-ai-body', s.dashAiCoachPlaceholder);
+  set('ld-competencies-label', s.dashCompetenciesLabel);
+  set('ld-competencies-note', s.dashCompetenciesNote);
+  renderCompetencies();
   set('md-team-label', s.dashTeamLabel);
   set('md-team-empty', s.dashTeamEmpty);
   set('md-assignments-label', s.dashAssignmentsLabel);
@@ -3304,6 +3328,29 @@ function updateLearnerDashboardCard() {
   fillEl.style.width = pct + '%';
   pctEl.textContent = pct + '%';
   timeEl.textContent = allDone ? '' : s.dashEstTime + (next.duration || '—') + ' min';
+}
+
+// E-412A: My Competencies card — fixed placeholder levels only (out of 5).
+// Not derived from session data, not a real assessment. UI-only MVP; see AGENTS.md / E-412A.
+const COMPETENCY_MVP = [
+  { level: 3, en: 'Rapport Building', zh: '建立信任關係' },
+  { level: 2, en: 'Discovery', zh: '探詢需求' },
+  { level: 3, en: 'Needs Analysis', zh: '需求分析' },
+  { level: 4, en: 'Product Recommendation', zh: '產品建議' },
+  { level: 2, en: 'Objection Handling', zh: '異議處理' },
+  { level: 2, en: 'Closing', zh: '成交技巧' },
+  { level: 3, en: 'Follow-up', zh: '後續跟進' },
+  { level: 4, en: 'Professionalism', zh: '專業度' }
+];
+
+function renderCompetencies() {
+  const list = document.getElementById('ld-competencies-list');
+  if (!list) return;
+  list.innerHTML = COMPETENCY_MVP.map(c => {
+    const segs = Array.from({ length: 5 }, (_, i) => `<span class="dash-comp-seg${i < c.level ? ' filled' : ''}"></span>`).join('');
+    const name = currentLang === 'zh' ? c.zh : c.en;
+    return `<div class="dash-comp-row"><span class="dash-comp-name">${name}</span><span class="dash-comp-bar">${segs}</span></div>`;
+  }).join('');
 }
 
 function dashContinueLearning() {
