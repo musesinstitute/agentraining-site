@@ -2939,8 +2939,6 @@ function showSummary(data) {
   const OBJECTION_TOPIC_BY_SCENARIO = { 1: 'price', 10: 'spouse' };
   const topicKey = currentScenario ? OBJECTION_TOPIC_BY_SCENARIO[currentScenario.id] : null;
   document.getElementById('next-steps-label').textContent = isZh ? '下一步' : "What's next?";
-  document.getElementById('ns-client').textContent = isZh ? '📁 新增客戶案例' : '📁 Add Client Case';
-  document.getElementById('ns-client').href = 'client.html?new=1' + (topicKey ? '&objectionTopic=' + topicKey : '');
   document.getElementById('ns-knowledge').textContent = isZh ? '📚 學習相關知識' : '📚 Study Knowledge';
   document.getElementById('ns-knowledge').href = 'knowledge.html' + (topicKey ? '?topic=' + topicKey : '');
   document.getElementById('ns-return').textContent = isZh ? '🔁 回到練習' : '🔁 Return to Practice';
@@ -2959,6 +2957,46 @@ function showSummary(data) {
     if (log.length > 300) log.shift();
     localStorage.setItem('agenttraining_session_log', JSON.stringify(log));
   } catch (e) { console.warn('[Session Log] Could not save locally:', e.message); }
+
+  // If this session was launched from a Client Studio case ("Start Practice"),
+  // write the score/feedback back onto that client's record instead of
+  // offering to create a brand-new case.
+  let activeClientCaseId = null;
+  try { activeClientCaseId = sessionStorage.getItem('agentraining_active_client_case'); } catch (e) {}
+  let savedToClientName = '';
+  if (activeClientCaseId) {
+    try {
+      const cases = JSON.parse(localStorage.getItem('agentraining_client_cases') || '[]');
+      const idx = cases.findIndex(c => c.id === activeClientCaseId);
+      if (idx > -1) {
+        if (!Array.isArray(cases[idx].practiceHistory)) cases[idx].practiceHistory = [];
+        cases[idx].practiceHistory.push({
+          date: now.toISOString(),
+          scenarioName: scenario,
+          score: score,
+          empathy: data.empathy || 0,
+          accuracy: data.accuracy || 0,
+          closing: data.closing || 0,
+          strengths: data.strengths || [],
+          tips: data.tips || [],
+          summary: data.summary || ''
+        });
+        cases[idx].lastContact = now.toISOString().slice(0, 10);
+        cases[idx].updatedAt = now.toISOString();
+        savedToClientName = cases[idx].clientName || '';
+        localStorage.setItem('agentraining_client_cases', JSON.stringify(cases));
+      }
+    } catch (e) { console.warn('[Client Studio] Could not save practice result to client case:', e.message); }
+    try { sessionStorage.removeItem('agentraining_active_client_case'); } catch (e) {}
+  }
+
+  if (savedToClientName) {
+    document.getElementById('ns-client').textContent = isZh ? `📁 查看 ${savedToClientName} 的案例` : `📁 View ${savedToClientName}'s Case`;
+    document.getElementById('ns-client').href = 'client.html?openCase=' + encodeURIComponent(activeClientCaseId);
+  } else {
+    document.getElementById('ns-client').textContent = isZh ? '📁 新增客戶案例' : '📁 Add Client Case';
+    document.getElementById('ns-client').href = 'client.html?new=1' + (topicKey ? '&objectionTopic=' + topicKey : '');
+  }
 
   document.getElementById('summary-modal').style.display = 'flex';
 }
@@ -3441,6 +3479,28 @@ function tryDeepLinkPractice() {
   forceHideOnboarding();
   setLang(sessionStorage.getItem('agentraining_lang') || currentLang || 'en');
   selectScenario(sc);
+
+  // Client Studio hand-off: this session's score/feedback gets written back to
+  // the client's record when it finishes (see showSummary()).
+  const clientCaseId = params.get('clientCase');
+  const clientName = params.get('clientName');
+  const clientBackground = params.get('clientBackground');
+  if (clientCaseId) {
+    try { sessionStorage.setItem('agentraining_active_client_case', clientCaseId); } catch (e) {}
+    if (clientName) {
+      const nameEl = document.getElementById('client-name');
+      const avatarEl = document.getElementById('client-avatar');
+      if (nameEl) nameEl.textContent = clientName;
+      if (avatarEl) avatarEl.textContent = clientName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+    const bannerName = clientName || (currentLang === 'zh' ? '這位客戶' : 'this client');
+    const banner = currentLang === 'zh'
+      ? `📁 正在為客戶「${bannerName}」練習${clientBackground ? '　—　' + clientBackground : ''}`
+      : `📁 Practicing for client: ${bannerName}${clientBackground ? ' — ' + clientBackground : ''}`;
+    appendMessage('system', '', banner);
+  } else {
+    try { sessionStorage.removeItem('agentraining_active_client_case'); } catch (e) {}
+  }
   return true;
 }
 

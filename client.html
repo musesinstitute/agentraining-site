@@ -58,12 +58,13 @@
   .case-name{font-weight:800;font-size:15px;}
   .status-badge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;}
   .status-New{background:var(--accent-lt);color:var(--accent);}
-  .status-Active{background:var(--green-lt);color:var(--green);}
   .status-Follow-up{background:var(--gold-lt);color:#92400E;}
+  .status-Proposal{background:var(--purple-lt);color:var(--purple);}
   .status-Won{background:var(--green-lt);color:var(--green);}
-  .status-Closed{background:#F1F2F6;color:var(--ink-muted);}
-  .case-industry{font-size:11px;color:var(--ink-muted);margin-bottom:10px;}
-  .case-objection{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;min-height:36px;}
+  .status-Lost{background:#F1F2F6;color:var(--ink-muted);}
+  .case-industry{font-size:11px;color:var(--ink-muted);margin-bottom:8px;}
+  .case-need{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:6px;}
+  .case-objection{font-size:12px;color:var(--ink-muted);line-height:1.5;margin-bottom:10px;font-style:italic;}
   .case-next-action{background:var(--purple-lt);color:var(--purple);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;line-height:1.4;}
   .case-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted);margin-top:10px;}
 
@@ -95,6 +96,18 @@
   .next-action-box strong{display:block;font-size:11px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
   .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;padding-top:16px;border-top:1px solid var(--border);}
   .detail-footer{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
+
+  .detail-section{margin-bottom:18px;}
+  .detail-section-title{font-size:12px;font-weight:800;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+  .log-list{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;}
+  .log-item{background:var(--canvas);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.5;}
+  .log-item-top{display:flex;justify-content:space-between;gap:8px;font-weight:700;margin-bottom:3px;}
+  .log-item-score{font-weight:800;}
+  .log-item-score.good{color:var(--green);}
+  .log-item-score.mid{color:#d97706;}
+  .log-item-score.low{color:var(--red);}
+  .log-empty{font-size:12px;color:var(--ink-muted);padding:8px 0;}
+  .followup-type-badge{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--accent);background:var(--accent-lt);padding:2px 7px;border-radius:10px;margin-right:6px;}
 
   @media (max-width:640px){
     .field-row, .detail-grid{grid-template-columns:1fr;}
@@ -155,15 +168,19 @@
         <label id="lbl-status">Case Status</label>
         <select id="f-status">
           <option value="New">New</option>
-          <option value="Active">Active</option>
           <option value="Follow-up">Follow-up</option>
+          <option value="Proposal">Proposal</option>
           <option value="Won">Won</option>
-          <option value="Closed">Closed</option>
+          <option value="Lost">Lost</option>
         </select>
       </div>
     </div>
     <div class="field">
-      <label id="lbl-objection">Current Objection</label>
+      <label id="lbl-need">Client Need</label>
+      <textarea id="f-need" placeholder="What is this client looking for?"></textarea>
+    </div>
+    <div class="field">
+      <label id="lbl-objection">Main Objection</label>
       <textarea id="f-objection" placeholder="What is the client's current objection or concern?"></textarea>
     </div>
     <div class="field-row">
@@ -187,9 +204,52 @@
   </div>
 </div>
 
+<!-- Add Follow-up modal -->
+<div class="modal-overlay" id="followup-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="followup-title">Add Follow-up</div>
+    <div class="field">
+      <label id="lbl-fu-type">Type</label>
+      <select id="fu-type">
+        <option value="phone">Phone</option>
+        <option value="sms">SMS</option>
+        <option value="email">Email</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="lbl-fu-content">What happened</label>
+      <textarea id="fu-content" placeholder="What was discussed?"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label id="lbl-fu-date">Date</label>
+        <input type="date" id="fu-date" />
+      </div>
+      <div class="field">
+        <label id="lbl-fu-status">Update Status</label>
+        <select id="fu-status">
+          <option value="New">New</option>
+          <option value="Follow-up">Follow-up</option>
+          <option value="Proposal">Proposal</option>
+          <option value="Won">Won</option>
+          <option value="Lost">Lost</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label id="lbl-fu-next">Next Action</label>
+      <input type="text" id="fu-next" placeholder="e.g. Call back Thursday with a revised quote" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeFollowupModal()" id="btn-fu-cancel">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFollowup()" id="btn-fu-save">Save Follow-up</button>
+    </div>
+  </div>
+</div>
+
 <!-- Detail modal -->
 <div class="modal-overlay" id="detail-modal">
-  <div class="modal-card" style="max-width:600px;">
+  <div class="modal-card" style="max-width:620px;">
     <div id="detail-body"></div>
   </div>
 </div>
@@ -208,11 +268,20 @@
 
 <script>
 const STORAGE_KEY = 'agentraining_client_cases';
-const STATUSES = ['New','Active','Follow-up','Won','Closed'];
+const STATUSES = ['New', 'Follow-up', 'Proposal', 'Won', 'Lost'];
+// Cases saved by an earlier version of Client Studio may still carry the old
+// status names — normalize them on load so nothing crashes or renders blank.
+const STATUS_MIGRATION = { 'Active': 'Follow-up', 'Closed': 'Lost' };
 
 const OBJECTION_TOPICS = {
   price:  { knowledgeKey: 'price',  practiceId: 1,  label: { en: 'Price Objection', zh: '價格異議' } },
   spouse: { knowledgeKey: 'spouse', practiceId: 10, label: { en: 'Spouse / Third-party Approval', zh: '需要另一半／第三方同意' } }
+};
+
+const FOLLOWUP_TYPE_LABEL = {
+  phone: { en: 'Phone', zh: '電話' },
+  sms:   { en: 'SMS', zh: '簡訊' },
+  email: { en: 'Email', zh: 'Email' }
 };
 
 const STR = {
@@ -221,46 +290,85 @@ const STR = {
     pageTitle: '💼 Client Studio', pageSub: "Track real client conversations and next actions — objections, follow-ups, and where each case stands.",
     newCase: '+ New Client Case', emptyState: 'No client cases yet. Create your first one to start tracking real conversations.',
     formTitleNew: 'New Client Case', formTitleEdit: 'Edit Client Case',
-    lblName: 'Client Name / Alias', lblIndustry: 'Industry', lblStatus: 'Case Status',
-    lblObjection: 'Current Objection', lblLastContact: 'Last Contact', lblFollowup: 'Follow-up Date',
+    lblName: 'Client Name / Alias', lblIndustry: 'Industry', lblStatus: 'Case Status', lblNeed: 'Client Need',
+    lblObjection: 'Main Objection', lblLastContact: 'Last Contact', lblFollowup: 'Follow-up Date',
     lblNextStep: 'Next Step', cancel: 'Cancel', saveCase: 'Save Case',
     deleteTitle: 'Delete this case?', deleteText: 'This will permanently remove this client case. This cannot be undone.',
     deleteCase: 'Delete Case',
-    nextAction: 'Next Action', studyKnowledge: '📚 Study Relevant Knowledge', practiceObjection: '🎯 Practice This Objection',
-    scheduleFollowup: '📅 Schedule Follow-up', editCase: 'Edit', deleteBtn: 'Delete',
+    nextAction: 'Next Action', studyKnowledge: '📚 Study Relevant Knowledge', startPractice: '🎯 Start Practice',
+    addFollowup: '📅 Add Follow-up', editCase: 'Edit', deleteBtn: 'Delete',
     lastContactLbl: 'Last Contact', followupLbl: 'Follow-up Date', nextStepLbl: 'Next Step',
-    noDate: '—', close: 'Close'
+    noDate: '—', close: 'Close', needLbl: 'Need',
+    followupModalTitle: 'Add Follow-up', lblFuType: 'Type', lblFuContent: 'What happened',
+    lblFuDate: 'Date', lblFuStatus: 'Update Status', lblFuNext: 'Next Action', saveFollowup: 'Save Follow-up',
+    practiceHistoryTitle: '🎯 Practice History', followupLogTitle: '📞 Follow-up Log',
+    noPracticeYet: 'No practice sessions recorded for this client yet.',
+    noFollowupYet: 'No follow-ups logged yet.',
+    savedFromPractice: 'from practice session'
   },
   zh: {
     backLabel: '← 四大工作室', crumbCurrent: '客戶工作室',
     pageTitle: '💼 客戶工作室', pageSub: '追蹤真實客戶對話與下一步——異議、追蹤進度、目前案例狀態。',
     newCase: '+ 新增客戶案例', emptyState: '目前還沒有客戶案例。建立第一筆，開始追蹤真實對話。',
     formTitleNew: '新增客戶案例', formTitleEdit: '編輯客戶案例',
-    lblName: '客戶姓名／代號', lblIndustry: '行業', lblStatus: '案例狀態',
-    lblObjection: '目前異議', lblLastContact: '最後聯絡時間', lblFollowup: 'Follow-up 日期',
+    lblName: '客戶姓名／代號', lblIndustry: '行業', lblStatus: '案例狀態', lblNeed: '客戶需求',
+    lblObjection: '主要異議', lblLastContact: '最後聯絡時間', lblFollowup: 'Follow-up 日期',
     lblNextStep: '下一步', cancel: '取消', saveCase: '儲存案例',
     deleteTitle: '確定要刪除這筆案例嗎？', deleteText: '刪除後將永久移除此客戶案例，無法復原。',
     deleteCase: '刪除案例',
-    nextAction: '下一步行動', studyKnowledge: '📚 查看相關知識', practiceObjection: '🎯 練習這個異議',
-    scheduleFollowup: '📅 安排 Follow-up', editCase: '編輯', deleteBtn: '刪除',
+    nextAction: '下一步行動', studyKnowledge: '📚 查看相關知識', startPractice: '🎯 開始練習',
+    addFollowup: '📅 新增 Follow-up', editCase: '編輯', deleteBtn: '刪除',
     lastContactLbl: '最後聯絡', followupLbl: 'Follow-up 日期', nextStepLbl: '下一步',
-    noDate: '—', close: '關閉'
+    noDate: '—', close: '關閉', needLbl: '需求',
+    followupModalTitle: '新增 Follow-up', lblFuType: '類型', lblFuContent: '溝通內容',
+    lblFuDate: '日期', lblFuStatus: '更新狀態', lblFuNext: '下一步行動', saveFollowup: '儲存 Follow-up',
+    practiceHistoryTitle: '🎯 練習紀錄', followupLogTitle: '📞 Follow-up 紀錄',
+    noPracticeYet: '這位客戶目前還沒有練習紀錄。',
+    noFollowupYet: '目前還沒有 follow-up 紀錄。',
+    savedFromPractice: '來自練習場次'
   }
 };
 
 function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
 function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); renderAll(); }
 function agtRef(){ return sessionStorage.getItem('agentraining_ref') || 'demo'; }
-function simUrl(practiceId){ return 'simulator.html?ref=' + encodeURIComponent(agtRef()) + (practiceId != null ? '&practice=' + practiceId : ''); }
+
+// Builds a link into Practice Studio. When a client case is passed, the
+// session is tagged so the score/feedback is written back onto that case.
+function simUrl(practiceId, client) {
+  let url = 'simulator.html?ref=' + encodeURIComponent(agtRef());
+  if (practiceId != null) url += '&practice=' + practiceId;
+  if (client) {
+    url += '&clientCase=' + encodeURIComponent(client.id);
+    url += '&clientName=' + encodeURIComponent(client.clientName || '');
+    const background = (client.need || client.objection || '').slice(0, 160);
+    if (background) url += '&clientBackground=' + encodeURIComponent(background);
+  }
+  return url;
+}
 
 function loadCases() {
+  let cases;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) { console.error('[Client Studio] Failed to parse cases:', e); }
-  const seeded = seedCases();
-  saveCases(seeded);
-  return seeded;
+    cases = raw ? JSON.parse(raw) : null;
+  } catch (e) { console.error('[Client Studio] Failed to parse cases:', e); cases = null; }
+  if (!cases) {
+    cases = seedCases();
+    saveCases(cases);
+    return cases;
+  }
+  // Normalize records from older versions of Client Studio: migrate status
+  // names, and make sure new array fields always exist.
+  let changed = false;
+  cases.forEach(c => {
+    if (STATUS_MIGRATION[c.status]) { c.status = STATUS_MIGRATION[c.status]; changed = true; }
+    if (!Array.isArray(c.followUps)) { c.followUps = []; changed = true; }
+    if (!Array.isArray(c.practiceHistory)) { c.practiceHistory = []; changed = true; }
+    if (typeof c.need !== 'string') { c.need = ''; changed = true; }
+  });
+  if (changed) saveCases(cases);
+  return cases;
 }
 
 function saveCases(list) {
@@ -279,6 +387,7 @@ function seedCases() {
       id: 'case-seed-price',
       clientName: 'Ms. Michelle Torres',
       industry: 'Insurance',
+      need: 'Wants life insurance coverage now that she has a new baby.',
       objection: 'Client feels the premium is too expensive — worried about affordability after having a new baby.',
       objectionTopic: 'price',
       lastContact: todayStr(-2),
@@ -286,6 +395,8 @@ function seedCases() {
       followUpDate: todayStr(3),
       status: 'Follow-up',
       practiceScenarioId: 1,
+      followUps: [],
+      practiceHistory: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -293,13 +404,16 @@ function seedCases() {
       id: 'case-seed-spouse',
       clientName: 'Mrs. Linda Nguyen',
       industry: 'Insurance',
+      need: 'Interested in estate/legacy planning for her family before retirement.',
       objection: 'Client needs to talk to her husband before making any decision — defers major decisions to family.',
       objectionTopic: 'spouse',
       lastContact: todayStr(-1),
       nextStep: 'Offer to schedule a joint call including her husband.',
       followUpDate: todayStr(5),
-      status: 'Active',
+      status: 'Proposal',
       practiceScenarioId: 10,
+      followUps: [],
+      practiceHistory: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -308,12 +422,15 @@ function seedCases() {
 
 let editingCaseId = null;
 let pendingDeleteId = null;
+let followupCaseId = null;
 
 function computeNextAction(c, lang) {
   if (c.nextStep && c.nextStep.trim()) return c.nextStep;
+  if (c.status === 'Won') return lang === 'zh' ? '案件已成交' : 'Case won — no action needed';
+  if (c.status === 'Lost') return lang === 'zh' ? '檢視流失原因' : 'Review why this case was lost';
+  if (c.status === 'Proposal') return lang === 'zh' ? '追蹤提案進度' : 'Follow up on the proposal';
   if (c.status === 'Follow-up') return lang === 'zh' ? '安排 follow-up 聯絡' : 'Schedule a follow-up contact';
-  if (c.status === 'New') return lang === 'zh' ? '進行第一次聯絡' : 'Make first contact';
-  return lang === 'zh' ? '確認案例狀態' : 'Review case status';
+  return lang === 'zh' ? '進行第一次聯絡' : 'Make first contact';
 }
 
 function renderAll() {
@@ -332,6 +449,7 @@ function renderAll() {
   document.getElementById('lbl-name').textContent = s.lblName;
   document.getElementById('lbl-industry').textContent = s.lblIndustry;
   document.getElementById('lbl-status').textContent = s.lblStatus;
+  document.getElementById('lbl-need').textContent = s.lblNeed;
   document.getElementById('lbl-objection').textContent = s.lblObjection;
   document.getElementById('lbl-last-contact').textContent = s.lblLastContact;
   document.getElementById('lbl-followup').textContent = s.lblFollowup;
@@ -342,6 +460,15 @@ function renderAll() {
   document.getElementById('confirm-text').textContent = s.deleteText;
   document.getElementById('btn-confirm-cancel').textContent = s.cancel;
   document.getElementById('btn-confirm-delete').textContent = s.deleteCase;
+
+  document.getElementById('followup-title').textContent = s.followupModalTitle;
+  document.getElementById('lbl-fu-type').textContent = s.lblFuType;
+  document.getElementById('lbl-fu-content').textContent = s.lblFuContent;
+  document.getElementById('lbl-fu-date').textContent = s.lblFuDate;
+  document.getElementById('lbl-fu-status').textContent = s.lblFuStatus;
+  document.getElementById('lbl-fu-next').textContent = s.lblFuNext;
+  document.getElementById('btn-fu-cancel').textContent = s.cancel;
+  document.getElementById('btn-fu-save').textContent = s.saveFollowup;
 
   renderCaseList();
 }
@@ -364,6 +491,7 @@ function renderCaseList() {
         <span class="status-badge status-${c.status.replace(' ', '-')}">${c.status}</span>
       </div>
       <div class="case-industry">${escapeHtml(c.industry)}</div>
+      ${c.need ? `<div class="case-need">${escapeHtml(c.need)}</div>` : ''}
       <div class="case-objection">${escapeHtml(c.objection || '—')}</div>
       <div class="case-next-action">→ ${escapeHtml(computeNextAction(c, lang))}</div>
       <div class="case-meta">
@@ -384,6 +512,7 @@ function openNewCaseForm() {
   document.getElementById('f-name').value = '';
   document.getElementById('f-industry').value = 'Insurance';
   document.getElementById('f-status').value = 'New';
+  document.getElementById('f-need').value = '';
   document.getElementById('f-objection').value = '';
   document.getElementById('f-last-contact').value = todayStr(0);
   document.getElementById('f-followup').value = '';
@@ -408,6 +537,7 @@ function openEditForm(id) {
   document.getElementById('f-name').value = c.clientName;
   document.getElementById('f-industry').value = c.industry;
   document.getElementById('f-status').value = c.status;
+  document.getElementById('f-need').value = c.need || '';
   document.getElementById('f-objection').value = c.objection || '';
   document.getElementById('f-last-contact').value = c.lastContact || '';
   document.getElementById('f-followup').value = c.followUpDate || '';
@@ -438,6 +568,7 @@ function saveCaseForm() {
         clientName: name,
         industry: document.getElementById('f-industry').value,
         status: document.getElementById('f-status').value,
+        need: document.getElementById('f-need').value.trim(),
         objection: document.getElementById('f-objection').value.trim(),
         lastContact: document.getElementById('f-last-contact').value,
         followUpDate: document.getElementById('f-followup').value,
@@ -451,12 +582,15 @@ function saveCaseForm() {
       clientName: name,
       industry: document.getElementById('f-industry').value,
       status: document.getElementById('f-status').value,
+      need: document.getElementById('f-need').value.trim(),
       objection: document.getElementById('f-objection').value.trim(),
       objectionTopic: '',
       lastContact: document.getElementById('f-last-contact').value,
       followUpDate: document.getElementById('f-followup').value,
       nextStep: document.getElementById('f-next-step').value.trim(),
       practiceScenarioId: null,
+      followUps: [],
+      practiceHistory: [],
       createdAt: now,
       updatedAt: now
     });
@@ -467,6 +601,12 @@ function saveCaseForm() {
   renderCaseList();
 }
 
+function scoreClass(score) {
+  if (score >= 80) return 'good';
+  if (score >= 65) return 'mid';
+  return 'low';
+}
+
 function openDetail(id) {
   const lang = agtLang();
   const s = STR[lang];
@@ -474,7 +614,37 @@ function openDetail(id) {
   if (!c) return;
 
   const topic = c.objectionTopic && OBJECTION_TOPICS[c.objectionTopic] ? OBJECTION_TOPICS[c.objectionTopic] : null;
-  const practiceId = topic ? topic.practiceId : c.practiceScenarioId;
+  // Every client can start a practice session — clients without a mapped
+  // objection fall back to Free Practice (scenario id 0) so the button
+  // always works, not just for the two seeded objection types.
+  const practiceId = topic ? topic.practiceId : (c.practiceScenarioId != null ? c.practiceScenarioId : 0);
+
+  const practiceHistory = (c.practiceHistory || []).slice().reverse();
+  const practiceHtml = practiceHistory.length
+    ? `<div class="log-list">${practiceHistory.map(p => `
+        <div class="log-item">
+          <div class="log-item-top">
+            <span>${escapeHtml(p.scenarioName || '')}</span>
+            <span class="log-item-score ${scoreClass(p.score || 0)}">${p.score || 0}/100</span>
+          </div>
+          <div>${new Date(p.date).toLocaleString(lang === 'zh' ? 'zh-TW' : 'en-US')}</div>
+          ${p.tips && p.tips.length ? `<div style="margin-top:4px;color:var(--ink-muted);">💡 ${escapeHtml(p.tips[0])}</div>` : ''}
+        </div>
+      `).join('')}</div>`
+    : `<div class="log-empty">${s.noPracticeYet}</div>`;
+
+  const followUps = (c.followUps || []).slice().reverse();
+  const followUpHtml = followUps.length
+    ? `<div class="log-list">${followUps.map(f => `
+        <div class="log-item">
+          <div class="log-item-top">
+            <span><span class="followup-type-badge">${(FOLLOWUP_TYPE_LABEL[f.type] || FOLLOWUP_TYPE_LABEL.phone)[lang]}</span>${f.date || ''}</span>
+          </div>
+          <div>${escapeHtml(f.content || '')}</div>
+          ${f.nextAction ? `<div style="margin-top:4px;color:var(--purple);">→ ${escapeHtml(f.nextAction)}</div>` : ''}
+        </div>
+      `).join('')}</div>`
+    : `<div class="log-empty">${s.noFollowupYet}</div>`;
 
   document.getElementById('detail-body').innerHTML = `
     <div class="detail-title">${escapeHtml(c.clientName)}</div>
@@ -486,6 +656,10 @@ function openDetail(id) {
       <div><div class="detail-field-label">${s.lastContactLbl}</div><div class="detail-field-value">${c.lastContact || s.noDate}</div></div>
       <div><div class="detail-field-label">${s.followupLbl}</div><div class="detail-field-value">${c.followUpDate || s.noDate}</div></div>
     </div>
+    ${c.need ? `<div style="margin-bottom:16px;">
+      <div class="detail-field-label">${s.needLbl}</div>
+      <div class="detail-field-value">${escapeHtml(c.need)}</div>
+    </div>` : ''}
     <div style="margin-bottom:16px;">
       <div class="detail-field-label">${s.lblObjection}</div>
       <div class="detail-field-value">${escapeHtml(c.objection || '—')}</div>
@@ -494,10 +668,20 @@ function openDetail(id) {
       <strong>${s.nextAction}</strong>
       ${escapeHtml(computeNextAction(c, lang))}
     </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">${s.practiceHistoryTitle}</div>
+      ${practiceHtml}
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">${s.followupLogTitle}</div>
+      ${followUpHtml}
+    </div>
+
     <div class="cta-row">
-      <a class="btn btn-primary" href="knowledge.html${topic ? '?topic=' + topic.knowledgeKey : ''}">${s.studyKnowledge}</a>
-      <a class="btn btn-ghost" href="${simUrl(practiceId)}">${s.practiceObjection}</a>
-      <button class="btn btn-ghost" onclick="focusFollowup('${c.id}')">${s.scheduleFollowup}</button>
+      <a class="btn btn-primary" href="${simUrl(practiceId, c)}">${s.startPractice}</a>
+      <a class="btn btn-ghost" href="knowledge.html${topic ? '?topic=' + topic.knowledgeKey : ''}">${s.studyKnowledge}</a>
+      <button class="btn btn-ghost" onclick="openFollowupModal('${c.id}')">${s.addFollowup}</button>
     </div>
     <div class="detail-footer">
       <button class="btn btn-ghost btn-sm" onclick="openEditForm('${c.id}')">✏️ ${s.editCase}</button>
@@ -507,14 +691,56 @@ function openDetail(id) {
   document.getElementById('detail-modal').classList.add('open');
 }
 
-function focusFollowup(id) {
-  closeDetailModal();
-  openEditForm(id);
-  setTimeout(() => document.getElementById('f-followup').focus(), 50);
-}
-
 function closeDetailModal() {
   document.getElementById('detail-modal').classList.remove('open');
+}
+
+function openFollowupModal(caseId) {
+  followupCaseId = caseId;
+  const c = loadCases().find(x => x.id === caseId);
+  document.getElementById('fu-type').value = 'phone';
+  document.getElementById('fu-content').value = '';
+  document.getElementById('fu-date').value = todayStr(0);
+  document.getElementById('fu-status').value = c ? c.status : 'Follow-up';
+  document.getElementById('fu-next').value = '';
+  closeDetailModal();
+  document.getElementById('followup-modal').classList.add('open');
+}
+
+function closeFollowupModal() {
+  document.getElementById('followup-modal').classList.remove('open');
+  followupCaseId = null;
+}
+
+function saveFollowup() {
+  if (!followupCaseId) return;
+  const cases = loadCases();
+  const idx = cases.findIndex(c => c.id === followupCaseId);
+  if (idx === -1) return;
+
+  const now = new Date().toISOString();
+  const content = document.getElementById('fu-content').value.trim();
+  const date = document.getElementById('fu-date').value || todayStr(0);
+  const nextAction = document.getElementById('fu-next').value.trim();
+
+  if (!Array.isArray(cases[idx].followUps)) cases[idx].followUps = [];
+  cases[idx].followUps.push({
+    id: 'fu-' + Date.now(),
+    type: document.getElementById('fu-type').value,
+    content,
+    date,
+    nextAction,
+    createdAt: now
+  });
+  cases[idx].status = document.getElementById('fu-status').value;
+  cases[idx].lastContact = date;
+  if (nextAction) cases[idx].nextStep = nextAction;
+  cases[idx].updatedAt = now;
+
+  saveCases(cases);
+  closeFollowupModal();
+  openDetail(followupCaseId || cases[idx].id);
+  renderCaseList();
 }
 
 function requestDelete(id) {
@@ -542,6 +768,7 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.classList.remove('open');
       if (overlay.id === 'form-modal') editingCaseId = null;
       if (overlay.id === 'confirm-modal') pendingDeleteId = null;
+      if (overlay.id === 'followup-modal') followupCaseId = null;
     }
   });
 });
@@ -551,6 +778,9 @@ renderAll();
 const initParams = new URLSearchParams(window.location.search);
 if (initParams.get('new') === '1') {
   openNewCaseForm();
+} else {
+  const openCaseId = initParams.get('openCase');
+  if (openCaseId) openDetail(openCaseId);
 }
 </script>
 </body>

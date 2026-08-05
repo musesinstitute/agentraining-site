@@ -325,7 +325,7 @@ function renderAll() {
 
   const completedSessions = sessionLog.length;
   const avgScore = completedSessions ? Math.round(sessionLog.reduce((sum, x) => sum + (x.score || 0), 0) / completedSessions) : 0;
-  const outstandingFollowups = clientCases.filter(c => c.status === 'Follow-up' || (c.followUpDate && c.followUpDate <= todayStr(0) && c.status !== 'Won' && c.status !== 'Closed'));
+  const outstandingFollowups = clientCases.filter(c => c.status === 'Follow-up' || (c.followUpDate && c.followUpDate <= todayStr(0) && c.status !== 'Won' && c.status !== 'Lost'));
 
   document.getElementById('kpi-grid').innerHTML = `
     <div class="kpi-card"><div class="kpi-num">${roster.length}</div><div class="kpi-label">${s.kpiTeam}</div></div>
