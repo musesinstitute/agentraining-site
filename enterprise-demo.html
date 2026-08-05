@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Enterprise Demo — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
+    --canvas: #F7F8FC; --white: #FFFFFF;
+    --accent: #1A56DB; --accent-lt: #EEF3FF;
+    --green: #059669; --green-lt: #ECFDF5;
+    --red: #DC2626; --red-lt: #FEF2F2;
+    --gold: #F59E0B; --gold-lt: #FFF7ED;
+    --border: #E4E7F0;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px;
+    --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  button{cursor:pointer;font-family:var(--font-body);border:none;}
+  nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:var(--font-display);font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .nav-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo-mark svg{width:16px;height:16px;}
+  .nav-back{font-size:13px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;}
+  .nav-back:hover{color:var(--ink);}
+  .lang-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+  .lang-btn{background:var(--white);color:var(--ink-muted);font-size:12px;font-weight:700;padding:6px 12px;}
+  .lang-btn.active{background:var(--accent);color:#fff;}
+
+  .wrap{max-width:720px;margin:0 auto;padding:32px 24px 60px;}
+  .page-title{font-family:var(--font-display);font-size:26px;font-weight:800;margin-bottom:6px;text-align:center;}
+  .page-sub{font-size:13.5px;color:var(--ink-muted);text-align:center;margin-bottom:28px;}
+
+  .stepper{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px;}
+  .step-dot{width:30px;height:30px;border-radius:50%;background:var(--white);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;color:var(--ink-muted);}
+  .step-dot.active{border-color:var(--accent);background:var(--accent);color:#fff;}
+  .step-dot.done{border-color:var(--green);background:var(--green);color:#fff;}
+  .step-line{width:36px;height:2px;background:var(--border);}
+
+  .step-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md);}
+  .step-eyebrow{font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;}
+  .step-title{font-family:var(--font-display);font-size:20px;font-weight:800;margin-bottom:16px;}
+
+  .obj-choice{display:block;width:100%;text-align:left;padding:16px 18px;border:2px solid var(--border);border-radius:12px;margin-bottom:12px;font-size:14.5px;font-weight:600;background:var(--white);transition:.15s;}
+  .obj-choice:hover{border-color:var(--accent);background:var(--accent-lt);}
+  .obj-choice.selected{border-color:var(--accent);background:var(--accent-lt);color:var(--accent);}
+  .obj-choice .quote-mark{color:var(--ink-muted);font-weight:400;}
+
+  .analysis-section{margin-bottom:16px;}
+  .analysis-label{font-size:11.5px;font-weight:800;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .analysis-body{font-size:13.5px;line-height:1.65;color:var(--ink);}
+  .dont-box{background:var(--red-lt);border-left:3px solid var(--red);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.55;}
+  .q-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .q-list li{background:var(--accent-lt);border-left:3px solid var(--accent);border-radius:8px;padding:9px 12px;font-size:13px;}
+
+  .outcome-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .outcome-item{display:flex;align-items:center;gap:10px;font-size:14px;background:var(--green-lt);border-radius:10px;padding:12px 14px;color:#065F46;font-weight:600;}
+  .outcome-check{width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+
+  .nav-row{display:flex;justify-content:space-between;margin-top:22px;}
+  .btn{padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:6px;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{opacity:.9;}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+  .btn-ghost{background:var(--white);color:var(--ink);border:1.5px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  .cta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;}
+  .cta-grid .btn{justify-content:center;width:100%;}
+
+  @media (max-width:600px){
+    .cta-grid{grid-template-columns:1fr;}
+    .step-card{padding:20px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="studios.html" class="nav-back" id="back-label">← Four Studios</a>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+    </div>
+    AgentTraining<span style="color:var(--accent)">AI</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="agtSetLang('en')">EN</button>
+    <button class="lang-btn" id="lang-zh" onclick="agtSetLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-title" id="page-title">Interactive Enterprise Demo</div>
+  <div class="page-sub" id="page-sub">See the full training loop in under 5 minutes.</div>
+
+  <div class="stepper">
+    <div class="step-dot" id="dot-1">1</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="dot-3">3</div>
+  </div>
+
+  <div class="step-card" id="step-container"></div>
+</div>
+
+<script>
+const OBJECTIONS = {
+  price: {
+    quote: { en: '"The premium is too expensive."', zh: '「保費太貴了。」' },
+    practiceId: 1, knowledgeKey: 'price',
+    concern: { en: "This isn't a rejection of insurance — it's a cash-flow worry, or the client hasn't yet connected the cost to something they personally value.", zh: '這不是在拒絕保險——而是現金流的顧慮，或客戶還沒把花費跟自己在乎的事連結起來。' },
+    dont: { en: "Don't immediately discount the price or argue the numbers.", zh: '不要立刻降價或跟客戶爭論數字。' },
+    questions: {
+      en: ['What monthly amount would feel comfortable to start with?', 'Is it the total cost, or the coverage amount, that feels like a stretch?'],
+      zh: ['您每個月能接受的金額大概是多少？', '讓您猶豫的是總花費，還是保障金額太高？']
+    },
+    response: { en: 'Acknowledge the concern, then reframe from "cost" to "value protected." Offer a smaller starting plan instead of all-or-nothing.', zh: '先認同顧慮，再把對話從「花費」轉向「保護的價值」，並提供較小的入門方案。' },
+    nextStep: { en: 'Log this as a Client Studio case with a follow-up date, and study the Price Objection knowledge topic before the next call.', zh: '在客戶工作室記錄這個案例並設定 follow-up 日期，下次通話前先複習價格異議的知識主題。' }
+  },
+  spouse: {
+    quote: { en: '"I need to talk to my wife first."', zh: '「我需要先問我太太。」' },
+    practiceId: 10, knowledgeKey: 'spouse',
+    concern: { en: 'This is often a healthy decision process, not a rejection — but it can also be a stall if no concrete next step gets set.', zh: '這通常是健康的決策過程，不是拒絕——但如果沒有約定具體下一步，也可能只是拖延。' },
+    dont: { en: "Don't pressure for a same-day decision or imply the offer will disappear.", zh: '不要施壓要求當天決定，也不要暗示優惠會消失。' },
+    questions: {
+      en: ['What part of this would be most useful to talk through together?', 'Would it help if we scheduled a short call with both of you?'],
+      zh: ['您覺得哪個部分最需要跟另一半一起討論？', '安排一次兩位都能參加的簡短通話會有幫助嗎？']
+    },
+    response: { en: 'Respect the need to involve the spouse. Offer a joint follow-up call and a short summary the client can bring home.', zh: '尊重客戶需要跟另一半討論，主動提議安排雙方都能參加的通話，並提供簡短摘要方便帶回家討論。' },
+    nextStep: { en: 'Set a concrete follow-up date before ending the call, and log it immediately in Client Studio so it never gets missed.', zh: '結束通話前約定具體的 follow-up 日期，並立刻記錄在客戶工作室，避免遺漏。' }
+  }
+};
+
+const STR = {
+  en: {
+    backLabel: '← Four Studios', pageTitle: 'Interactive Enterprise Demo', pageSub: 'See the full training loop in under 5 minutes.',
+    step1Eyebrow: 'Step 1 of 3', step1Title: 'Customer Objection', step1Sub: 'Pick a real objection your advisors hear every week:',
+    step2Eyebrow: 'Step 2 of 3', step2Title: 'AI Coach Analysis',
+    lblConcern: "Client's Likely Real Concern", lblDont: 'What the Advisor Should NOT Do Immediately',
+    lblQuestions: 'Suggested Exploring Questions', lblResponse: 'Suggested Response Direction', lblNext: 'Recommended Next Step',
+    step3Eyebrow: 'Step 3 of 3', step3Title: 'Training Outcome',
+    outcome1: 'Advisor learned what to say', outcome2: 'Advisor received feedback',
+    outcome3: 'Advisor created a follow-up action', outcome4: 'Manager can review progress',
+    ctaStart: '🎯 Start Practice', ctaCase: '📁 Create Client Case', ctaBook: '📅 Book an Enterprise Demo',
+    back: '← Back', next: 'Next →', restart: '↺ Try Another Objection'
+  },
+  zh: {
+    backLabel: '← 四大工作室', pageTitle: '互動式企業 Demo', pageSub: '5 分鐘內體驗完整訓練循環。',
+    step1Eyebrow: '步驟 1 / 3', step1Title: '客戶異議', step1Sub: '選擇一個業務員每週都會遇到的真實異議：',
+    step2Eyebrow: '步驟 2 / 3', step2Title: 'AI 教練分析',
+    lblConcern: '客戶可能真正的疑慮', lblDont: '業務員不應該立即做的事',
+    lblQuestions: '建議探索問題', lblResponse: '建議回應方向', lblNext: '建議下一步',
+    step3Eyebrow: '步驟 3 / 3', step3Title: '訓練成果',
+    outcome1: '業務員學會該怎麼說', outcome2: '業務員收到了回饋',
+    outcome3: '業務員建立了 follow-up 行動', outcome4: '主管可以檢視進度',
+    ctaStart: '🎯 開始練習', ctaCase: '📁 建立客戶案例', ctaBook: '📅 預約企業 Demo',
+    back: '← 上一步', next: '下一步 →', restart: '↺ 試試另一個異議'
+  }
+};
+
+let currentStep = 1;
+let selectedObjection = null;
+
+function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
+function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); renderStep(); }
+function agtRef(){ return sessionStorage.getItem('agentraining_ref') || 'demo'; }
+function simUrl(practiceId){ return 'simulator.html?ref=' + encodeURIComponent(agtRef()) + (practiceId != null ? '&practice=' + practiceId : ''); }
+
+function updateStepper() {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < currentStep) dot.classList.add('done');
+    else if (i === currentStep) dot.classList.add('active');
+  }
+}
+
+function selectObjection(key) {
+  selectedObjection = key;
+  renderStep();
+}
+
+function goStep(n) {
+  if (n === 2 && !selectedObjection) return;
+  currentStep = n;
+  renderStep();
+}
+
+function renderStep() {
+  const lang = agtLang();
+  const s = STR[lang];
+  document.getElementById('back-label').textContent = s.backLabel;
+  document.getElementById('page-title').textContent = s.pageTitle;
+  document.getElementById('page-sub').textContent = s.pageSub;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+  updateStepper();
+
+  const container = document.getElementById('step-container');
+
+  if (currentStep === 1) {
+    container.innerHTML = `
+      <div class="step-eyebrow">${s.step1Eyebrow}</div>
+      <div class="step-title">${s.step1Title}</div>
+      <div style="font-size:13.5px;color:var(--ink-muted);margin-bottom:16px;">${s.step1Sub}</div>
+      ${Object.keys(OBJECTIONS).map(key => `
+        <button class="obj-choice ${selectedObjection === key ? 'selected' : ''}" onclick="selectObjection('${key}')">
+          ${OBJECTIONS[key].quote[lang]}
+        </button>
+      `).join('')}
+      <div class="nav-row">
+        <span></span>
+        <button class="btn btn-primary" ${!selectedObjection ? 'disabled' : ''} onclick="goStep(2)">${s.next}</button>
+      </div>
+    `;
+    return;
+  }
+
+  if (currentStep === 2) {
+    const o = OBJECTIONS[selectedObjection];
+    container.innerHTML = `
+      <div class="step-eyebrow">${s.step2Eyebrow}</div>
+      <div class="step-title">${s.step2Title}</div>
+      <div class="analysis-section">
+        <div class="analysis-label">💭 ${s.lblConcern}</div>
+        <div class="analysis-body">${o.concern[lang]}</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">🚫 ${s.lblDont}</div>
+        <div class="dont-box">${o.dont[lang]}</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">❓ ${s.lblQuestions}</div>
+        <ul class="q-list">${o.questions[lang].map(q => `<li>${q}</li>`).join('')}</ul>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">💡 ${s.lblResponse}</div>
+        <div class="analysis-body">${o.response[lang]}</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-label">➡️ ${s.lblNext}</div>
+        <div class="analysis-body">${o.nextStep[lang]}</div>
+      </div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="goStep(1)">${s.back}</button>
+        <button class="btn btn-primary" onclick="goStep(3)">${s.next}</button>
+      </div>
+    `;
+    return;
+  }
+
+  const o = OBJECTIONS[selectedObjection];
+  container.innerHTML = `
+    <div class="step-eyebrow">${s.step3Eyebrow}</div>
+    <div class="step-title">${s.step3Title}</div>
+    <div class="outcome-list">
+      <div class="outcome-item"><span class="outcome-check">✓</span>${s.outcome1}</div>
+      <div class="outcome-item"><span class="outcome-check">✓</span>${s.outcome2}</div>
+      <div class="outcome-item"><span class="outcome-check">✓</span>${s.outcome3}</div>
+      <div class="outcome-item"><span class="outcome-check">✓</span>${s.outcome4}</div>
+    </div>
+    <div class="cta-grid">
+      <a class="btn btn-primary" href="${simUrl(o.practiceId)}">${s.ctaStart}</a>
+      <a class="btn btn-ghost" href="client.html?new=1&objectionTopic=${o.knowledgeKey}">${s.ctaCase}</a>
+      <a class="btn btn-ghost" href="mailto:contact@agentraining.ai?subject=Enterprise%20Demo%20Request">${s.ctaBook}</a>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(2)">${s.back}</button>
+      <button class="btn btn-ghost" onclick="restartDemo()">${s.restart}</button>
+    </div>
+  `;
+}
+
+function restartDemo() {
+  selectedObjection = null;
+  currentStep = 1;
+  renderStep();
+}
+
+renderStep();
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Four Studios — AgentTraining AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
+    --canvas: #F7F8FC; --white: #FFFFFF;
+    --accent: #1A56DB; --accent-lt: #EEF3FF;
+    --green: #059669; --green-lt: #ECFDF5;
+    --gold: #F59E0B; --gold-lt: #FFF7ED;
+    --purple: #7C3AED; --purple-lt: #F3EEFF;
+    --border: #E4E7F0;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 22px;
+    --shadow-md: 0 4px 20px rgba(13,15,20,.10);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font-body);background:var(--canvas);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  button{cursor:pointer;font-family:var(--font-body);border:none;}
+  nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:var(--font-display);font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .nav-logo-mark{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;}
+  .nav-logo-mark svg{width:16px;height:16px;}
+  .nav-back{font-size:13px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;}
+  .nav-back:hover{color:var(--ink);}
+  .lang-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+  .lang-btn{background:var(--white);color:var(--ink-muted);font-size:12px;font-weight:700;padding:6px 12px;}
+  .lang-btn.active{background:var(--accent);color:#fff;}
+
+  .hero{max-width:920px;margin:0 auto;padding:56px 24px 8px;text-align:center;}
+  .hero-title{font-family:var(--font-display);font-size:34px;font-weight:800;margin-bottom:12px;line-height:1.15;}
+  .hero-sub{font-size:15px;color:var(--ink-muted);max-width:600px;margin:0 auto;line-height:1.6;}
+
+  .studio-grid{max-width:920px;margin:36px auto 60px;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .studio-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;display:flex;flex-direction:column;gap:10px;transition:.15s;}
+  .studio-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-3px);}
+  .studio-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:6px;}
+  .studio-card.practice .studio-icon{background:var(--accent-lt);}
+  .studio-card.client .studio-icon{background:var(--purple-lt);}
+  .studio-card.knowledge .studio-icon{background:var(--gold-lt);}
+  .studio-card.leadership .studio-icon{background:var(--green-lt);}
+  .studio-name{font-family:var(--font-display);font-size:19px;font-weight:800;}
+  .studio-desc{font-size:13.5px;color:var(--ink-muted);line-height:1.55;flex:1;}
+  .studio-cta{font-size:13px;font-weight:700;color:var(--accent);margin-top:4px;}
+
+  .demo-band{max-width:920px;margin:0 auto 60px;padding:0 24px;}
+  .demo-card{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1A56DB 100%);border-radius:var(--radius-lg);padding:32px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .demo-text-title{font-family:var(--font-display);font-size:19px;font-weight:800;margin-bottom:6px;}
+  .demo-text-sub{font-size:13.5px;color:#C7D6FA;max-width:420px;line-height:1.5;}
+  .demo-btn{background:#fff;color:var(--accent);padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:800;white-space:nowrap;}
+
+  @media (max-width:680px){
+    .studio-grid{grid-template-columns:1fr;}
+    .demo-card{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back" id="back-label">← Home</a>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="4" r="2" fill="#93C5FD"/></svg>
+    </div>
+    AgentTraining<span style="color:var(--accent)">AI</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="agtSetLang('en')">EN</button>
+    <button class="lang-btn" id="lang-zh" onclick="agtSetLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-title" id="hero-title">Four Studios. One Training Loop.</div>
+  <div class="hero-sub" id="hero-sub">Practice → Client → Knowledge → Leadership → back to Practice. A complete performance system, not a single chatbot screen.</div>
+</div>
+
+<div class="studio-grid">
+  <a class="studio-card practice" href="simulator.html?ref=demo" id="card-practice">
+    <div class="studio-icon">🎯</div>
+    <div class="studio-name" id="name-practice">Practice Studio</div>
+    <div class="studio-desc" id="desc-practice">Practice real conversations and improve your performance.</div>
+    <div class="studio-cta" id="cta-practice">Start practicing →</div>
+  </a>
+  <a class="studio-card client" href="client.html" id="card-client">
+    <div class="studio-icon">💼</div>
+    <div class="studio-name" id="name-client">Client Studio</div>
+    <div class="studio-desc" id="desc-client">Track real client conversations and next actions.</div>
+    <div class="studio-cta" id="cta-client">Open client cases →</div>
+  </a>
+  <a class="studio-card knowledge" href="knowledge.html" id="card-knowledge">
+    <div class="studio-icon">📚</div>
+    <div class="studio-name" id="name-knowledge">Knowledge Studio</div>
+    <div class="studio-desc" id="desc-knowledge">Learn the knowledge and language behind successful conversations.</div>
+    <div class="studio-cta" id="cta-knowledge">Study the playbook →</div>
+  </a>
+  <a class="studio-card leadership" href="manager.html" id="card-leadership">
+    <div class="studio-icon">🧭</div>
+    <div class="studio-name" id="name-leadership">Leadership Studio</div>
+    <div class="studio-desc" id="desc-leadership">Assign practice, review progress, and coach your team.</div>
+    <div class="studio-cta" id="cta-leadership">Open dashboard →</div>
+  </a>
+</div>
+
+<div class="demo-band">
+  <div class="demo-card">
+    <div>
+      <div class="demo-text-title" id="demo-title">See it end-to-end in 5 minutes</div>
+      <div class="demo-text-sub" id="demo-sub">Walk through a real client objection — from AI coaching to training outcome — in the Interactive Enterprise Demo.</div>
+    </div>
+    <a class="demo-btn" href="enterprise-demo.html" id="demo-btn">▶ Enterprise Demo</a>
+  </div>
+</div>
+
+<script>
+const STR = {
+  en: {
+    backLabel: '← Home',
+    heroTitle: 'Four Studios. One Training Loop.',
+    heroSub: 'Practice → Client → Knowledge → Leadership → back to Practice. A complete performance system, not a single chatbot screen.',
+    namePractice: 'Practice Studio', descPractice: 'Practice real conversations and improve your performance.', ctaPractice: 'Start practicing →',
+    nameClient: 'Client Studio', descClient: 'Track real client conversations and next actions.', ctaClient: 'Open client cases →',
+    nameKnowledge: 'Knowledge Studio', descKnowledge: 'Learn the knowledge and language behind successful conversations.', ctaKnowledge: 'Study the playbook →',
+    nameLeadership: 'Leadership Studio', descLeadership: 'Assign practice, review progress, and coach your team.', ctaLeadership: 'Open dashboard →',
+    demoTitle: 'See it end-to-end in 5 minutes', demoSub: 'Walk through a real client objection — from AI coaching to training outcome — in the Interactive Enterprise Demo.',
+    demoBtn: '▶ Enterprise Demo'
+  },
+  zh: {
+    backLabel: '← 首頁',
+    heroTitle: '四大工作室，一個完整訓練循環。',
+    heroSub: '練習 → 客戶 → 知識 → 領導 → 回到練習。這是一套完整的績效訓練系統，不只是一個聊天畫面。',
+    namePractice: '練習工作室', descPractice: '練習真實對話情境，提升你的表現。', ctaPractice: '開始練習 →',
+    nameClient: '客戶工作室', descClient: '追蹤真實客戶對話與下一步行動。', ctaClient: '開啟客戶案例 →',
+    nameKnowledge: '知識工作室', descKnowledge: '學習成功對話背後的知識與話術。', ctaKnowledge: '查看知識手冊 →',
+    nameLeadership: '領導工作室', descLeadership: '布置練習、檢視進度、指導團隊。', ctaLeadership: '開啟儀表板 →',
+    demoTitle: '5 分鐘走完完整流程', demoSub: '透過互動式企業 Demo，體驗從 AI 教練分析到訓練成果的完整流程。',
+    demoBtn: '▶ 企業 Demo'
+  }
+};
+
+function agtLang(){ return sessionStorage.getItem('agentraining_lang') === 'zh' ? 'zh' : 'en'; }
+function agtSetLang(l){ sessionStorage.setItem('agentraining_lang', l); render(); }
+
+function render() {
+  const lang = agtLang();
+  const s = STR[lang];
+  document.getElementById('back-label').textContent = s.backLabel;
+  document.getElementById('hero-title').textContent = s.heroTitle;
+  document.getElementById('hero-sub').textContent = s.heroSub;
+  document.getElementById('name-practice').textContent = s.namePractice;
+  document.getElementById('desc-practice').textContent = s.descPractice;
+  document.getElementById('cta-practice').textContent = s.ctaPractice;
+  document.getElementById('name-client').textContent = s.nameClient;
+  document.getElementById('desc-client').textContent = s.descClient;
+  document.getElementById('cta-client').textContent = s.ctaClient;
+  document.getElementById('name-knowledge').textContent = s.nameKnowledge;
+  document.getElementById('desc-knowledge').textContent = s.descKnowledge;
+  document.getElementById('cta-knowledge').textContent = s.ctaKnowledge;
+  document.getElementById('name-leadership').textContent = s.nameLeadership;
+  document.getElementById('desc-leadership').textContent = s.descLeadership;
+  document.getElementById('cta-leadership').textContent = s.ctaLeadership;
+  document.getElementById('demo-title').textContent = s.demoTitle;
+  document.getElementById('demo-sub').textContent = s.demoSub;
+  document.getElementById('demo-btn').textContent = s.demoBtn;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+}
+
+render();
+</script>
+</body>
+</html>

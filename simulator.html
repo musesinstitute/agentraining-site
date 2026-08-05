@@ -876,6 +876,7 @@
     AgentTraining<span style="color:var(--accent)">AI</span>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <a id="studios-nav-btn" href="studios.html" title="Four Studios" style="text-decoration:none;background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🏛 Four Studios</a>
     <button id="dashboard-nav-btn" onclick="showDashboard()" title="Practice Studio Dashboard" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">📋 Dashboard</button>
     <button id="voice-toggle-btn" onclick="toggleVoice()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🔇 Voice OFF</button>
     <div class="lang-toggle">
@@ -914,6 +915,13 @@
       <button class="btn-copy-summary" id="btn-copy" onclick="copySummaryText()">📋 Copy Summary for Manager</button>
       <div class="copy-success" id="copy-success">✓ Copied! Paste into WeChat, email, or your team group.</div>
       <button class="btn-close-summary" onclick="closeSummary()" id="btn-close-sum">Close</button>
+    </div>
+    <hr class="summary-divider"/>
+    <div class="summary-share-label" id="next-steps-label">What's next?</div>
+    <div id="next-steps-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      <a class="btn-copy-summary" id="ns-client" href="#" style="background:var(--purple,#7C3AED);flex:1;text-align:center;">📁 Add Client Case</a>
+      <a class="btn-copy-summary" id="ns-knowledge" href="#" style="background:var(--gold);flex:1;text-align:center;">📚 Study Knowledge</a>
+      <button class="btn-close-summary" id="ns-return" onclick="closeSummary()" style="flex:1;">🔁 Return to Practice</button>
     </div>
     <div class="referral-note-box">
       <p id="referral-note-text"></p>
@@ -2927,6 +2935,69 @@ function showSummary(data) {
   document.getElementById('btn-copy').textContent = isZh ? '📋 複製摘要給主管' : '📋 Copy Summary for Manager';
   document.getElementById('btn-close-sum').textContent = isZh ? '關閉' : 'Close';
 
+  // Next steps: deep-link into Client Studio and Knowledge Studio, carrying the objection topic when known.
+  const OBJECTION_TOPIC_BY_SCENARIO = { 1: 'price', 10: 'spouse' };
+  const topicKey = currentScenario ? OBJECTION_TOPIC_BY_SCENARIO[currentScenario.id] : null;
+  document.getElementById('next-steps-label').textContent = isZh ? '下一步' : "What's next?";
+  document.getElementById('ns-knowledge').textContent = isZh ? '📚 學習相關知識' : '📚 Study Knowledge';
+  document.getElementById('ns-knowledge').href = 'knowledge.html' + (topicKey ? '?topic=' + topicKey : '');
+  document.getElementById('ns-return').textContent = isZh ? '🔁 回到練習' : '🔁 Return to Practice';
+
+  // Log this session locally so Client Studio / Leadership Studio can reflect real activity.
+  try {
+    const log = JSON.parse(localStorage.getItem('agenttraining_session_log') || '[]');
+    log.push({
+      date: now.toISOString(),
+      scenarioId: currentScenario ? currentScenario.id : null,
+      scenarioName: scenario,
+      industry: industry,
+      score: score,
+      trainee: name
+    });
+    if (log.length > 300) log.shift();
+    localStorage.setItem('agenttraining_session_log', JSON.stringify(log));
+  } catch (e) { console.warn('[Session Log] Could not save locally:', e.message); }
+
+  // If this session was launched from a Client Studio case ("Start Practice"),
+  // write the score/feedback back onto that client's record instead of
+  // offering to create a brand-new case.
+  let activeClientCaseId = null;
+  try { activeClientCaseId = sessionStorage.getItem('agentraining_active_client_case'); } catch (e) {}
+  let savedToClientName = '';
+  if (activeClientCaseId) {
+    try {
+      const cases = JSON.parse(localStorage.getItem('agentraining_client_cases') || '[]');
+      const idx = cases.findIndex(c => c.id === activeClientCaseId);
+      if (idx > -1) {
+        if (!Array.isArray(cases[idx].practiceHistory)) cases[idx].practiceHistory = [];
+        cases[idx].practiceHistory.push({
+          date: now.toISOString(),
+          scenarioName: scenario,
+          score: score,
+          empathy: data.empathy || 0,
+          accuracy: data.accuracy || 0,
+          closing: data.closing || 0,
+          strengths: data.strengths || [],
+          tips: data.tips || [],
+          summary: data.summary || ''
+        });
+        cases[idx].lastContact = now.toISOString().slice(0, 10);
+        cases[idx].updatedAt = now.toISOString();
+        savedToClientName = cases[idx].clientName || '';
+        localStorage.setItem('agentraining_client_cases', JSON.stringify(cases));
+      }
+    } catch (e) { console.warn('[Client Studio] Could not save practice result to client case:', e.message); }
+    try { sessionStorage.removeItem('agentraining_active_client_case'); } catch (e) {}
+  }
+
+  if (savedToClientName) {
+    document.getElementById('ns-client').textContent = isZh ? `📁 查看 ${savedToClientName} 的案例` : `📁 View ${savedToClientName}'s Case`;
+    document.getElementById('ns-client').href = 'client.html?openCase=' + encodeURIComponent(activeClientCaseId);
+  } else {
+    document.getElementById('ns-client').textContent = isZh ? '📁 新增客戶案例' : '📁 Add Client Case';
+    document.getElementById('ns-client').href = 'client.html?new=1' + (topicKey ? '&objectionTopic=' + topicKey : '');
+  }
+
   document.getElementById('summary-modal').style.display = 'flex';
 }
 
@@ -3395,13 +3466,53 @@ function dashAssignPractice() {
   note.style.display = 'block';
 }
 
+// Deep-link support: ?practice=<scenarioId> jumps straight into a scenario,
+// bypassing onboarding — used by Client Studio / Knowledge Studio / Leadership
+// Studio / Enterprise Demo "Practice This" links.
+function tryDeepLinkPractice() {
+  const params = new URLSearchParams(window.location.search);
+  const practiceId = params.get('practice');
+  if (practiceId === null) return false;
+  const sc = scenarios.find(s => String(s.id) === String(practiceId));
+  if (!sc) return false;
+  hideDashboard();
+  forceHideOnboarding();
+  setLang(sessionStorage.getItem('agentraining_lang') || currentLang || 'en');
+  selectScenario(sc);
+
+  // Client Studio hand-off: this session's score/feedback gets written back to
+  // the client's record when it finishes (see showSummary()).
+  const clientCaseId = params.get('clientCase');
+  const clientName = params.get('clientName');
+  const clientBackground = params.get('clientBackground');
+  if (clientCaseId) {
+    try { sessionStorage.setItem('agentraining_active_client_case', clientCaseId); } catch (e) {}
+    if (clientName) {
+      const nameEl = document.getElementById('client-name');
+      const avatarEl = document.getElementById('client-avatar');
+      if (nameEl) nameEl.textContent = clientName;
+      if (avatarEl) avatarEl.textContent = clientName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+    const bannerName = clientName || (currentLang === 'zh' ? '這位客戶' : 'this client');
+    const banner = currentLang === 'zh'
+      ? `📁 正在為客戶「${bannerName}」練習${clientBackground ? '　—　' + clientBackground : ''}`
+      : `📁 Practicing for client: ${bannerName}${clientBackground ? ' — ' + clientBackground : ''}`;
+    appendMessage('system', '', banner);
+  } else {
+    try { sessionStorage.removeItem('agentraining_active_client_case'); } catch (e) {}
+  }
+  return true;
+}
+
 // ── INIT ──
 if (checkAccess()) {
   setPanelMode('curriculum');
   loadCurriculumData();
-  showLangPicker();
-  setupTextSelectionMenu();
   renderDashboard();
+  if (!tryDeepLinkPractice()) {
+    showLangPicker();
+  }
+  setupTextSelectionMenu();
 }
 </script>
 <script>
