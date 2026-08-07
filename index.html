@@ -1,12 +1,1160 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agent Training Site</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgentTraining AI — AI-Powered Sales Training Simulator</title>
+<meta name="description" content="AI-powered sales training simulator for insurance, real estate, and technology professionals. Practice real conversations, get instant feedback, close more deals."/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#1a56db"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="AgentTraining AI"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AgentTraining AI",
+  "url": "https://agentraining.ai/",
+  "description": "AI-powered sales training simulator for insurance, real estate, and technology professionals. Practice realistic conversations, get instant feedback, and close more deals.",
+  "knowsAbout": [
+    "AI Sales Training",
+    "Insurance Sales Training",
+    "Real Estate Sales Training",
+    "Sales Role-Play Simulation",
+    "Objection Handling",
+    "AI-Powered Coaching"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "AI Sales Training Plans",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "SoftwareApplication",
+          "name": "AgentTraining AI Simulator",
+          "applicationCategory": "BusinessApplication",
+          "description": "AI role-play simulator for insurance, real estate, and technology sales professionals. Practice objection handling and closing techniques with instant AI feedback.",
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Starter",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "5 free AI practice sessions, no credit card needed"
+            },
+            {
+              "@type": "Offer",
+              "name": "Professional",
+              "price": "39",
+              "priceCurrency": "USD",
+              "billingIncrement": "month",
+              "description": "80 sessions/month, all 41 scenarios, bilingual support, up to 3 people"
+            },
+            {
+              "@type": "Offer",
+              "name": "Team",
+              "price": "99",
+              "priceCurrency": "USD",
+              "billingIncrement": "month",
+              "description": "200 sessions/month, up to 10 team seats, manager dashboard"
+            },
+            {
+              "@type": "Offer",
+              "name": "Enterprise S",
+              "price": "249",
+              "priceCurrency": "USD",
+              "billingIncrement": "month",
+              "description": "500 sessions/month, teams of 21-50, compliance reports"
+            },
+            {
+              "@type": "Offer",
+              "name": "Enterprise M",
+              "price": "499",
+              "priceCurrency": "USD",
+              "billingIncrement": "month",
+              "description": "1,200 sessions/month, teams of 51-100, SSO, advanced analytics"
+            },
+            {
+              "@type": "Offer",
+              "name": "Enterprise L",
+              "price": "899",
+              "priceCurrency": "USD",
+              "billingIncrement": "month",
+              "description": "2,500 sessions/month, teams of 101-200, custom AI fine-tuning, API access"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+</script>
+<style>
+  :root {
+    --brand: #1a56db;
+    --brand-dark: #1241a8;
+    --accent: #f59e0b;
+    --ink: #111827;
+    --ink-muted: #6b7280;
+    --surface: #f9fafb;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--white); z-index: 100;
+  }
+  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--brand); }
+  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
+  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .btn-nav {
+    background: var(--accent); color: #111827;
+    padding: 8px 20px; border-radius: 8px; text-decoration: none;
+    font-size: 14px; font-weight: 700; border: none;
+  }
+  .btn-nav:hover { background: #e08800; color: #111827; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: #dbeafe; color: var(--brand);
+    padding: 4px 14px; border-radius: 99px;
+    font-size: 13px; font-weight: 600; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
+  .hero h1 span { color: var(--brand); }
+  .hero p { font-size: 18px; color: var(--ink-muted); max-width: 600px; margin: 0 auto 36px; line-height: 1.6; }
+  .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--brand); color: var(--white);
+    padding: 14px 32px; border-radius: 10px; text-decoration: none;
+    font-size: 16px; font-weight: 700; transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--brand-dark); }
+  .btn-secondary {
+    background: var(--white); color: var(--brand);
+    padding: 14px 32px; border-radius: 10px; text-decoration: none;
+    font-size: 16px; font-weight: 600; border: 2px solid var(--brand);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: #eff6ff; }
+  .hero-sub { margin-top: 24px; font-size: 13px; color: var(--ink-muted); }
+
+  /* STATS */
+  .stats { display: flex; justify-content: center; gap: 48px; padding: 40px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+  .stat { text-align: center; }
+  .stat-num { font-size: 36px; font-weight: 800; color: var(--brand); }
+  .stat-label { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* SECTION */
+  section { padding: 72px 20px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--brand); margin-bottom: 12px; }
+  h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
+  .section-sub { font-size: 16px; color: var(--ink-muted); max-width: 560px; line-height: 1.6; margin-bottom: 48px; }
+
+  /* FEATURES GRID */
+  .features { background: var(--surface); }
+  .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  @media (max-width: 720px) { .features-grid { grid-template-columns: 1fr; } }
+  .feature-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+    transition: box-shadow 0.2s;
+  }
+  .feature-card:hover { box-shadow: var(--shadow); }
+  .feature-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .feature-icon-wrap {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .icon-blue { background: #dbeafe; }
+  .icon-purple { background: #ede9fe; }
+  .icon-green { background: #dcfce7; }
+  .icon-orange { background: #ffedd5; }
+  .feature-card h3 { font-size: 18px; font-weight: 700; color: var(--ink); }
+  .feature-card p { font-size: 14px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 14px; }
+  .feature-bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .feature-bullets li { font-size: 13px; color: #4b5563; display: flex; align-items: flex-start; gap: 8px; }
+  .feature-bullets li::before { content: "•"; color: var(--brand); font-weight: 700; flex-shrink: 0; }
+
+  /* METHOD - SIGNATURE DIFFERENTIATOR */
+  .method-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+  @media (max-width: 640px) { .method-compare { grid-template-columns: 1fr; } }
+  .method-compare-col { border-radius: var(--radius); overflow: hidden; }
+  .method-compare-header { padding: 12px 20px; font-size: 13px; font-weight: 700; text-align: center; }
+  .method-compare-header.bad { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .method-compare-header.good { background: rgba(168,85,247,0.25); color: #d8b4fe; }
+  .method-compare-list { list-style: none; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.03); }
+  .method-compare-list li { font-size: 13px; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+  .bad-list li { color: #94a3b8; }
+  .bad-list li::before { content: "✗"; color: #f87171; flex-shrink: 0; font-weight: 700; }
+  .good-list li { color: #e2e8f0; }
+  .good-list li::before { content: "✓"; color: #a78bfa; flex-shrink: 0; font-weight: 700; }
+
+  /* REFERRAL PROGRAM */
+  .referral {
+    background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+    border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
+  }
+  .referral-inner { max-width: 1100px; margin: 0 auto; padding: 64px 20px; }
+  .referral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 720px) { .referral-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .referral-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #dcfce7; color: #15803d;
+    padding: 6px 14px; border-radius: 99px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .referral h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; margin-bottom: 14px; }
+  .referral-sub { font-size: 16px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 10px; }
+  .referral-zh { font-size: 15px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 28px; }
+  .referral-steps { display: flex; flex-direction: column; gap: 16px; }
+  .referral-step { display: flex; align-items: flex-start; gap: 14px; }
+  .referral-step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--brand); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0;
+  }
+  .referral-step-text { font-size: 14px; color: var(--ink); line-height: 1.6; padding-top: 5px; }
+  .referral-step-text strong { color: var(--ink); font-weight: 700; }
+  .referral-card {
+    background: var(--white); border: 2px solid #16a34a;
+    border-radius: 16px; padding: 32px; text-align: center;
+    box-shadow: 0 8px 32px rgba(22,163,74,0.12);
+  }
+  .referral-reward-icon { font-size: 48px; margin-bottom: 16px; }
+  .referral-reward-title { font-size: 20px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .referral-reward-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 20px; }
+  .referral-reward-both {
+    background: #f0fdf4; border-radius: 10px; padding: 16px;
+    font-size: 13px; color: #15803d; font-weight: 600; margin-bottom: 20px;
+  }
+  .btn-referral {
+    display: inline-block; background: #16a34a; color: white;
+    padding: 12px 28px; border-radius: 10px; text-decoration: none;
+    font-size: 15px; font-weight: 700; transition: opacity 0.2s;
+  }
+  .btn-referral:hover { opacity: 0.88; }
+  .referral-note { font-size: 12px; color: var(--ink-muted); margin-top: 12px; }
+
+  /* UNIVERSAL BLOG */
+  .universal-blog { background: var(--surface); }
+  .universal-blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .universal-blog-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    text-decoration: none; color: inherit; display: block;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .universal-blog-card:hover { box-shadow: var(--shadow); border-color: var(--brand); }
+  .universal-blog-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--brand); margin-bottom: 10px; }
+  .universal-blog-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
+  .universal-blog-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 16px; }
+  .universal-blog-read { font-size: 13px; font-weight: 600; color: var(--brand); }
+  .method {
+    background: linear-gradient(135deg, #1a1530 0%, #2d1b4e 100%);
+    color: var(--white); position: relative; overflow: hidden;
+  }
+  .method::before {
+    content: ""; position: absolute; top: -50%; right: -10%;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
+  }
+  .method .section-inner { position: relative; z-index: 1; }
+  .method-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+    color: #d8b4fe; padding: 6px 16px; border-radius: 99px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .method h2 { color: var(--white); font-size: clamp(28px, 4.5vw, 44px); }
+  .method-sub { font-size: 17px; color: #c4b5fd; max-width: 640px; line-height: 1.65; margin-bottom: 16px; }
+  .method-warning {
+    font-size: 15px; color: #fbbf24; max-width: 640px; line-height: 1.6;
+    margin-bottom: 44px; font-weight: 500;
+  }
+  .method-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .method-grid { grid-template-columns: 1fr; } }
+  .method-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius); padding: 28px;
+  }
+  .method-card-num {
+    font-family: var(--font-display, inherit); font-size: 13px; font-weight: 800;
+    color: #a855f7; margin-bottom: 10px; letter-spacing: 1px;
+  }
+  .method-card h3 { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+  .method-card p { font-size: 14px; color: #c4b5fd; line-height: 1.65; }
+  .method-footer-note {
+    margin-top: 36px; padding: 20px 24px;
+    background: rgba(255,255,255,0.06); border-radius: var(--radius);
+    font-size: 14px; color: #e9d5ff; line-height: 1.6;
+    border-left: 3px solid #a855f7;
+  }
+
+  /* AI TECHNOLOGY */
+  .ai-tech { background: #0f172a; color: var(--white); }
+  .ai-tech .section-tag { color: #60a5fa; }
+  .ai-tech h2 { color: var(--white); }
+  .ai-tech .section-sub { color: #94a3b8; }
+  .ai-tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  @media (max-width: 720px) { .ai-tech-grid { grid-template-columns: 1fr; } }
+  .ai-tech-card {
+    background: #1e293b; border: 1px solid #334155;
+    border-radius: var(--radius); padding: 32px;
+    transition: border-color 0.2s;
+  }
+  .ai-tech-card:hover { border-color: #60a5fa; }
+  .ai-tech-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .ai-tech-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .icon-dark-blue { background: #1d4ed8; }
+  .icon-dark-purple { background: #7c3aed; }
+  .icon-dark-teal { background: #0d9488; }
+  .icon-dark-amber { background: #d97706; }
+  .ai-tech-card h3 { font-size: 19px; font-weight: 700; color: var(--white); }
+  .ai-tech-card p { font-size: 14px; color: #94a3b8; line-height: 1.65; margin-bottom: 16px; }
+  .ai-tech-bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .ai-tech-bullets li { font-size: 13px; color: #cbd5e1; display: flex; align-items: flex-start; gap: 8px; }
+  .ai-tech-bullets li::before { content: "•"; color: #60a5fa; font-weight: 700; flex-shrink: 0; }
+
+  /* HOW IT WORKS */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+  .step { text-align: center; }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--brand); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; margin: 0 auto 16px;
+  }
+  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
+
+  /* INDUSTRIES */
+  .industries { background: var(--surface); }
+  .industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .industry-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+  }
+  .industry-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .industry-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+  .industry-tag {
+    display: inline-block; margin-top: 12px;
+    background: #eff6ff; color: var(--brand);
+    font-size: 11px; font-weight: 700; padding: 2px 10px;
+    border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* INDUSTRY BLOG LINKS */
+  .industry-blog-links { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .industry-blog-links p { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 8px; }
+  .industry-blog-link { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--brand); text-decoration: none; line-height: 1.4; margin-bottom: 5px; }
+  .industry-blog-link:hover { text-decoration: underline; }
+  .industry-blog-link::before { content: "→"; flex-shrink: 0; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .testimonial {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 28px; border: 1px solid var(--border);
+  }
+  .testimonial-text { font-size: 15px; line-height: 1.65; color: var(--ink); margin-bottom: 20px; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--brand); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+  }
+  .author-info strong { display: block; font-size: 14px; }
+  .author-info span { font-size: 12px; color: var(--ink-muted); }
+  .stars { color: var(--accent); font-size: 14px; margin-bottom: 12px; }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .pricing-card {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 32px; text-align: center;
+    transition: box-shadow 0.2s;
+  }
+  .pricing-card:hover { box-shadow: var(--shadow); }
+  .pricing-card.featured { border-color: var(--brand); position: relative; }
+  .featured-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--brand); color: var(--white);
+    font-size: 11px; font-weight: 700; padding: 4px 16px;
+    border-radius: 99px; white-space: nowrap;
+  }
+  .plan-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); margin-bottom: 8px; }
+  .plan-price { font-size: 42px; font-weight: 800; color: var(--ink); }
+  .plan-price span { font-size: 16px; font-weight: 400; color: var(--ink-muted); }
+  .plan-desc { font-size: 13px; color: var(--ink-muted); margin: 12px 0 24px; line-height: 1.5; }
+  .plan-features { list-style: none; text-align: left; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .plan-features li { font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .plan-features li::before { content: "✓"; color: #16a34a; font-weight: 700; flex-shrink: 0; }
+  .btn-plan {
+    display: block; width: 100%;
+    padding: 12px; border-radius: 8px;
+    font-size: 15px; font-weight: 700;
+    text-decoration: none; text-align: center; transition: all 0.2s;
+  }
+  .btn-plan-outline {
+    border: 2px solid var(--brand); color: var(--brand);
+    background: transparent;
+  }
+  .btn-plan-outline:hover { background: #eff6ff; }
+  .btn-plan-fill {
+    background: var(--brand); color: var(--white); border: 2px solid var(--brand);
+  }
+  .btn-plan-fill:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
+  .faq-item {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px 28px;
+  }
+  .faq-q { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .faq-a { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
+
+  /* BILINGUAL NOTE */
+  .bilingual { text-align: center; padding: 48px 20px; background: #fffbeb; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
+  .bilingual p { font-size: 15px; color: #92400e; }
+
+  /* BANNER CTA */
+  .banner {
+    background: var(--brand); color: var(--white);
+    text-align: center; padding: 72px 20px;
+  }
+  .banner h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
+  .banner p { font-size: 17px; opacity: 0.85; margin-bottom: 36px; }
+  .btn-banner {
+    background: var(--accent); color: #1c1917;
+    padding: 15px 36px; border-radius: 10px; text-decoration: none;
+    font-size: 17px; font-weight: 700; display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-banner:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: #9ca3af;
+    padding: 40px 20px; text-align: center;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  footer a { color: #9ca3af; text-decoration: none; margin: 0 12px; font-size: 14px; }
+  footer a:hover { color: var(--white); }
+  footer p { font-size: 13px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    nav { padding: 14px 20px; }
+    .nav-links { gap: 16px; }
+    .stats { gap: 28px; }
+  }
+</style>
 </head>
 <body>
-  <h1>Agent Training Site</h1>
-  <p><a href="simulator.html">前往模擬器</a></p>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#enterprise" style="color:var(--brand);font-weight:700;">Enterprise</a>
+    <a href="#industries">Industries</a>
+    <div class="nav-lang">
+      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchIndexLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchIndexLang('zh')">中文</button>
+    </div>
+    <a class="btn-nav" href="simulator.html">Try Free Demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🏆 AI Sales Performance Platform</div>
+  <h1>Turn Every Agent into<br/><span>a Top Performer.</span></h1>
+  <p>Train smarter. Close more. Grow faster.<br/>AI-powered sales simulation built for insurance, real estate, and wellness teams.</p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="simulator.html">Try Free — No Credit Card →</a>
+    <a class="btn-secondary" href="#enterprise">Enterprise Solutions</a>
+  </div>
+  <p class="hero-sub">Trusted by teams across the US, Hong Kong &amp; Singapore &nbsp;·&nbsp; English + 繁體中文</p>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Faster new agent onboarding</div></div>
+  <div class="stat"><div class="stat-num">3×</div><div class="stat-label">More practice per week vs traditional coaching</div></div>
+  <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Agents report higher confidence</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available — no scheduling needed</div></div>
+</div>
+
+<!-- METHOD - SIGNATURE DIFFERENTIATOR -->
+<section class="method">
+  <div class="section-inner">
+    <div class="method-badge">⚔️ Our Exclusive Method</div>
+    <h2>Practicing Alone With AI Won't Make You Better.<br/>Training Here Will.</h2>
+    <p class="method-sub">You can open ChatGPT right now and roleplay a sales call. It will tell you "great job." It has no idea what good actually looks like in your industry — and it has no consistent standard to measure you against.</p>
+    <p class="method-warning">⚠️ That's not training. That's rehearsing in the dark. The difference is what happens after you respond.</p>
+
+    <div class="method-compare">
+      <div class="method-compare-col">
+        <div class="method-compare-header bad">Any Generic AI Chatbot</div>
+        <ul class="method-compare-list bad-list">
+          <li>Improvises — no consistent standard</li>
+          <li>Tells you "great job" regardless</li>
+          <li>Can't evaluate if you actually understood the client</li>
+          <li>No industry-specific objection knowledge</li>
+          <li>Session 1 and session 100 scored the same way: not at all</li>
+        </ul>
+      </div>
+      <div class="method-compare-col">
+        <div class="method-compare-header good">AgentTraining AI</div>
+        <ul class="method-compare-list good-list">
+          <li>Same scoring framework every session</li>
+          <li>Scores whether you understood before you persuaded</li>
+          <li>Flags when you assumed instead of listened</li>
+          <li>Built on real insurance, real estate &amp; wellness objections</li>
+          <li>Catches the habits no one else is correcting anymore</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="method-grid" style="margin-top:32px;">
+      <div class="method-card">
+        <div class="method-card-num">EASTERN STRATEGY</div>
+        <h3>知己知彼 — Understand Before You Persuade</h3>
+        <p>Sun Tzu: victory comes from understanding your counterpart first. Our AI coach scores whether you understood the client's real concern before you tried to move them — not just whether you sounded confident.</p>
+      </div>
+      <div class="method-card">
+        <div class="method-card-num">WESTERN INFLUENCE</div>
+        <h3>Dale Carnegie — Let Them Arrive at "Yes"</h3>
+        <p>Real influence comes from genuine interest, not pressure. Our scoring rewards agents who guide clients to their own conclusion — not agents who argue their way to a close.</p>
+      </div>
+    </div>
+
+    <div class="method-footer-note">
+      <strong>This applies equally to a brand-new agent and a 15-year veteran.</strong> Experienced agents lose major deals not because they don't know enough — but because experience creates blind spots no one corrects anymore. Our scoring catches what self-assessment misses. Every time.
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="section-tag">Why AgentTraining AI</div>
+    <h2>Everything you need to train a top-performing sales team</h2>
+    <p class="section-sub">Built specifically for insurance, real estate, and technology sales — not generic role-play scripts.</p>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-card-header">
+          <div class="feature-icon-wrap icon-blue">🤖</div>
+          <h3>Realistic AI Prospects</h3>
+        </div>
+        <p>Our AI simulates skeptical, curious, or price-sensitive buyers. Every session feels like a real call, not a rehearsed script.</p>
+        <ul class="feature-bullets">
+          <li>Adapts to your responses in real time</li>
+          <li>Pushes back like a real client would</li>
+          <li>Multiple buyer personalities per scenario</li>
+          <li>No two sessions are exactly alike</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-header">
+          <div class="feature-icon-wrap icon-purple">⚡</div>
+          <h3>Instant AI Feedback</h3>
+        </div>
+        <p>After each conversation, receive a detailed scorecard — no waiting for a manager review.</p>
+        <ul class="feature-bullets">
+          <li>Objection handling score</li>
+          <li>Rapport and empathy rating</li>
+          <li>Closing technique analysis</li>
+          <li>Specific suggestions for next session</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-header">
+          <div class="feature-icon-wrap icon-green">🎯</div>
+          <h3>Industry-Specific Scenarios</h3>
+        </div>
+        <p>Practice the exact conversations your industry demands — built from real field experience, not generic scripts.</p>
+        <ul class="feature-bullets">
+          <li>Life, health, annuity &amp; IUL insurance</li>
+          <li>Real estate buyer &amp; seller conversations</li>
+          <li>SaaS and technology sales demos</li>
+          <li>New scenarios added regularly</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card-header">
+          <div class="feature-icon-wrap icon-orange">🌏</div>
+          <h3>Bilingual &amp; Team-Ready</h3>
+        </div>
+        <p>Train in English or Traditional Chinese. Scale across your entire agency with team tools built for managers.</p>
+        <ul class="feature-bullets">
+          <li>English + Traditional Chinese (繁體中文)</li>
+          <li>US, Hong Kong &amp; Singapore market scenarios</li>
+          <li>Team progress tracking for managers</li>
+          <li>Unlimited practice — no session caps</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AI TECHNOLOGY -->
+<section class="ai-tech">
+  <div class="section-inner">
+    <div class="section-tag">Powered by Advanced AI</div>
+    <h2>The technology behind every training session</h2>
+    <p class="section-sub">Four AI capabilities work together to make every practice session as close to a real sales call as possible.</p>
+    <div class="ai-tech-grid">
+
+      <div class="ai-tech-card">
+        <div class="ai-tech-card-header">
+          <div class="ai-tech-icon icon-dark-blue">💬</div>
+          <h3>Contextual AI Conversation</h3>
+        </div>
+        <p>Our AI understands the full context of your conversation — not just the last message. It responds the way a real prospect would, tracking what you've said and holding you accountable.</p>
+        <ul class="ai-tech-bullets">
+          <li>Remembers your earlier claims in the conversation</li>
+          <li>Catches vague or unsupported statements</li>
+          <li>Drives toward natural conversation flow</li>
+          <li>Multi-turn dialogue that evolves realistically</li>
+        </ul>
+      </div>
+
+      <div class="ai-tech-card">
+        <div class="ai-tech-card-header">
+          <div class="ai-tech-icon icon-dark-purple">🧠</div>
+          <h3>Behavioral Analysis</h3>
+        </div>
+        <p>After each session, AI evaluates the quality of your communication — not just what you said, but how effectively you built trust, handled pushback, and moved toward a close.</p>
+        <ul class="ai-tech-bullets">
+          <li>Objection handling effectiveness score</li>
+          <li>Empathy and rapport measurement</li>
+          <li>Question quality assessment</li>
+          <li>Closing confidence rating</li>
+        </ul>
+      </div>
+
+      <div class="ai-tech-card">
+        <div class="ai-tech-card-header">
+          <div class="ai-tech-icon icon-dark-teal">🎯</div>
+          <h3>Industry Intelligence</h3>
+        </div>
+        <p>The AI is trained with deep knowledge of insurance, real estate, and technology sales — including product specifics, compliance language, and the objections real buyers actually raise.</p>
+        <ul class="ai-tech-bullets">
+          <li>IUL, whole life, annuity product knowledge built in</li>
+          <li>Real estate negotiation dynamics</li>
+          <li>SaaS buying committee behavior</li>
+          <li>Compliance-aware conversation guardrails</li>
+        </ul>
+      </div>
+
+      <div class="ai-tech-card">
+        <div class="ai-tech-card-header">
+          <div class="ai-tech-icon icon-dark-amber">📈</div>
+          <h3>Adaptive Difficulty</h3>
+        </div>
+        <p>The AI adjusts scenario complexity based on how you perform. Beginners get foundational objections. Experienced agents face sophisticated, multi-layered resistance.</p>
+        <ul class="ai-tech-bullets">
+          <li>Beginner to advanced difficulty levels</li>
+          <li>Targeted scenario selection by weak area</li>
+          <li>Progress tracking across sessions</li>
+          <li>Personalized improvement suggestions</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-inner">
+    <div class="section-tag">How It Works</div>
+    <h2>From zero to confident in 3 steps</h2>
+    <p class="section-sub">No setup. No downloads. Start practicing in under 60 seconds.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Choose Your Scenario</h3>
+        <p>Pick an industry and situation — cold call, follow-up, objection handling, or closing. New scenarios added monthly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Talk to Your AI Prospect</h3>
+        <p>Have a real back-and-forth conversation. The AI adapts to what you say, just like a real client.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Review & Improve</h3>
+        <p>Read your instant scorecard, replay the conversation, and try again with a different approach.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries" id="industries">
+  <div class="section-inner">
+    <div class="section-tag">Industries</div>
+    <h2>Purpose-built for your sector</h2>
+    <p class="section-sub">Generic sales training misses the specific objections, regulations, and buyer psychology of your industry. We don't.</p>
+    <div class="industry-grid">
+
+      <div class="industry-card">
+        <h3>🏦 Insurance</h3>
+        <p>Practice the most complex conversations in financial sales — from product explanation to objection handling to closing.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Life Insurance (Whole Life, Term, IUL)
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Annuity &amp; Retirement Planning
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Health Insurance
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Medicare &amp; Senior Markets
+          </div>
+        </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="iul-vs-whole-life-en.html">IUL vs Whole Life: A Talking-Points Guide</a>
+          <a class="industry-blog-link" href="think-about-it-insurance-en.html">"I Need to Think About It" — What to Say Next</a>
+        </div>
+      </div>
+
+      <div class="industry-card">
+        <h3>🏠 Real Estate</h3>
+        <p>Buyer consultations, listing presentations, price reduction conversations. Train for competitive markets and difficult sellers.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Buyer Consultations
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Listing Presentations
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Objection Handling
+          </div>
+        </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="see-more-houses-en.html">"I Want to See More Houses First" — What to Say Next</a>
+        </div>
+      </div>
+
+      <div class="industry-card">
+        <h3>🌿 Health &amp; Wellness</h3>
+        <p>Build trust in a skeptical market. Practice handling effectiveness doubts, price resistance, and competing claims — without making promises you can't keep.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Trust &amp; Effectiveness Objections
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Value Conversations
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Nutritional &amp; Supplement Sales
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
+            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Wellness Service Consultations
+          </div>
+        </div>
+        <div class="industry-blog-links">
+          <p>Related Reading</p>
+          <a class="industry-blog-link" href="does-it-work-health-en.html">"Does This Actually Work?" — How to Handle the Trust Objection</a>
+        </div>
+      </div>
+
+      <div class="industry-card" style="opacity:0.7;">
+        <h3>💻 Technology</h3>
+        <p>SaaS demos, ROI justification, multi-stakeholder selling. Practice with skeptical IT directors and budget-conscious CFOs.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> SaaS Product Demos
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> ROI &amp; Budget Conversations
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
+            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Enterprise Multi-Stakeholder
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSAL BLOG - for all sales professionals -->
+<section class="universal-blog">
+  <div class="section-inner">
+    <div class="section-tag">For Every Sales Professional</div>
+    <h2>The reads that matter — regardless of your industry</h2>
+    <p class="section-sub">Whether you sell insurance, real estate, or wellness products, these two articles apply directly to you.</p>
+    <div class="universal-blog-grid">
+
+      <a class="universal-blog-card" href="why-platform-not-just-ai-en.html">
+        <div class="universal-blog-tag">📖 Must Read</div>
+        <h3>AI Sales Roleplay Won't Make You Better — Unless It Does This One Thing</h3>
+        <p>Why practicing alone with ChatGPT or any generic AI gives you a false sense of progress — and what structured, scored training actually changes.</p>
+        <span class="universal-blog-read">Read the article →</span>
+      </a>
+
+      <a class="universal-blog-card" href="veteran-blind-spots-en.html">
+        <div class="universal-blog-tag">⚠️ For Experienced Agents</div>
+        <h3>The Close You Were Sure You Had — And Lost Anyway</h3>
+        <p>Veteran agents don't lose big deals because they lack skill. They lose them because experience creates blind spots nobody corrects anymore. A direct read for anyone who's been selling for 5+ years.</p>
+        <span class="universal-blog-read">Read the article →</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-inner">
+    <div class="section-tag">Results</div>
+    <h2>What our trainees say</h2>
+    <p class="section-sub">From new agents to veteran producers — AgentTraining AI meets you where you are.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"I used to freeze up when clients said 'I need to talk to my spouse.' After two weeks of practice sessions, I have three different ways to respond confidently. My closing rate went up noticeably."</p>
+        <div class="testimonial-author">
+          <div class="avatar">M</div>
+          <div class="author-info"><strong>Michael T.</strong><span>Insurance Agent, California</span></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The bilingual feature is huge for our team. Half our agents work with Mandarin-speaking clients. Now they can practice those exact conversations before the real meeting."</p>
+        <div class="testimonial-author">
+          <div class="avatar">S</div>
+          <div class="author-info"><strong>Sarah L.</strong><span>Agency Manager, New York</span></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"I onboard new agents every month. AgentTraining AI cut my training time in half. New hires come to their first real client meeting far more prepared than before."</p>
+        <div class="testimonial-author">
+          <div class="avatar">J</div>
+          <div class="author-info"><strong>James K.</strong><span>Real Estate Broker, Texas</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BILINGUAL NOTE -->
+<div class="bilingual">
+  <p>🌏 &nbsp; AgentTraining AI supports <strong>English</strong> and <strong>Traditional Chinese (繁體中文)</strong> — built for US, Hong Kong, and Singapore markets.</p>
+</div>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner">
+    <div class="section-tag">Common Questions</div>
+    <h2>Before you ask, we'll answer</h2>
+    <p class="section-sub">Including the question every skeptical agent asks first.</p>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q">Why should I use your platform instead of just opening ChatGPT or Claude myself and practicing?</div>
+        <div class="faq-a">You can absolutely improvise a roleplay with any general AI chatbot — but improvising isn't the same as training. A generic chatbot doesn't know what "good" looks like in an insurance or real estate sales conversation, won't push back the way a real skeptical client does, and at the end it will just tell you "great job" without telling you why or what to fix. AgentTraining AI scores every response against a consistent framework built on Sun Tzu's strategic thinking and Dale Carnegie's principles of influence — the same standard every time, so your progress is actually measurable instead of just a feeling.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">I've been selling for 10 years. Isn't this just for new agents?</div>
+        <div class="faq-a">No. The scoring framework doesn't get easier or simpler based on experience — it's the same standard for everyone. Veteran agents often discover their blind spots are in places they stopped paying attention to years ago: jumping to persuasion before fully understanding an objection, or pushing toward a close instead of letting the client arrive there themselves. Practicing against a consistent standard is valuable precisely because experience can create bad habits that nobody is correcting anymore.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How is the AI client different from a real client?</div>
+        <div class="faq-a">It isn't trying to be identical — it's trying to be useful. The AI is built with industry-specific knowledge (life insurance, annuities, real estate negotiation) and responds the way real clients actually push back, not with generic objections. You can fail safely here, as many times as you need to, before that same conversation happens with a real client and real money on the line.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What if I don't like the feedback I get?</div>
+        <div class="faq-a">Then it's doing its job. The point of structured feedback isn't to make you feel good — it's to show you specifically where the conversation went off track, so you can fix it before it costs you a real deal. Every session includes both what you did well and what to improve.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ENTERPRISE SECTION -->
+<section id="enterprise" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:white;padding:80px 0;">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:20px;padding:6px 18px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;">For Teams &amp; Enterprises</div>
+      <h2 style="color:white;font-size:clamp(28px,4vw,44px);margin-bottom:16px;">The Problem Every Sales Manager Knows</h2>
+      <p style="color:rgba(255,255,255,0.7);font-size:18px;max-width:640px;margin:0 auto;line-height:1.6;">New agents take months to become productive. Managers spend hours coaching one-on-one. Best practices stay with your top performers instead of spreading to the whole team.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:48px;">
+      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
+        <div style="font-size:32px;margin-bottom:12px;">⚡</div>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Cut Onboarding Time by 40%</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">New agents practice 40+ real client scenarios before their first real meeting. They arrive prepared — not learning on the job.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
+        <div style="font-size:32px;margin-bottom:12px;">📊</div>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Scale Your Best Practices</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Your top performers' techniques become the standard for everyone — not just the agents lucky enough to shadow them.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
+        <div style="font-size:32px;margin-bottom:12px;">🎯</div>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Free Your Managers to Lead</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">AI handles the repetitive practice coaching. Your managers focus on strategy, motivation, and closing big deals — not drilling objection scripts.</p>
+      </div>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.06);border-radius:20px;padding:36px;border:1px solid rgba(255,255,255,0.15);text-align:center;max-width:640px;margin:0 auto;">
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:8px;">What we tell enterprise clients:</div>
+      <blockquote style="font-size:20px;font-weight:700;color:white;line-height:1.4;margin:0 0 24px;font-style:italic;">"We help your team reduce new agent onboarding time by 40% through AI simulation — without adding to your managers' workload."</blockquote>
+      <a href="mailto:sales@agentraining.ai" style="display:inline-block;background:white;color:#1e3a8a;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;">Talk to Enterprise Sales →</a>
+      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:12px;">Teams of 20+. Custom onboarding. Dedicated support.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-tag">Pricing</div>
+    <h2>Simple, transparent pricing</h2>
+    <p class="section-sub">Start free. Scale as your team grows. Most clients start on Team or Enterprise — that's where the real ROI is.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">Free</div>
+        <p class="plan-desc">Try the simulator. No credit card needed.</p>
+        <ul class="plan-features">
+          <li>5 AI practice sessions</li>
+          <li>All industry scenarios</li>
+          <li>Basic feedback scorecard</li>
+          <li>English + Traditional Chinese</li>
+        </ul>
+        <a class="btn-plan btn-plan-outline" href="simulator.html">Start Free</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">$39<span>/month</span></div>
+        <p class="plan-desc">For individual agents (up to 3 people). Great starting point.</p>
+        <ul class="plan-features">
+          <li>80 sessions/month</li>
+          <li>All 41 scenarios</li>
+          <li>Detailed scorecard + replay</li>
+          <li>English + Traditional Chinese</li>
+          <li>Progress tracking dashboard</li>
+          <li>Client value assessment</li>
+        </ul>
+        <a class="btn-plan btn-plan-fill" href="https://www.paypal.com/ncp/payment/FQWSVH3NR73EC" target="_blank">Subscribe Now — $39/mo</a>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">Team</div>
+        <div class="plan-price">$99<span>/month</span></div>
+        <p class="plan-desc">For small teams (4-20 people) and growing agencies.</p>
+        <ul class="plan-features">
+          <li>200 sessions/month</li>
+          <li>Up to 10 team seats</li>
+          <li>Manager performance dashboard</li>
+          <li>Team reports &amp; analytics</li>
+          <li>Custom scenarios</li>
+          <li>Priority email support</li>
+        </ul>
+        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Contact Sales</a>
+      </div>
+      <div class="pricing-card" style="border-color:#1e3a8a;position:relative;">
+        <div class="featured-badge" style="background:#1e3a8a;">Best for Teams</div>
+        <div class="plan-name">Enterprise S</div>
+        <div class="plan-price">$249<span>/month</span></div>
+        <p class="plan-desc" style="font-weight:600;color:#1e3a8a;">For teams of 21-50 people. Real ROI starts here.</p>
+        <ul class="plan-features">
+          <li>500 sessions/month</li>
+          <li>Manager dashboard</li>
+          <li>Compliance reports</li>
+          <li>Custom scenarios</li>
+          <li>Priority support</li>
+          <li>Onboarding included</li>
+        </ul>
+        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise M</div>
+        <div class="plan-price">$499<span>/month</span></div>
+        <p class="plan-desc">For teams of 51-100 people.</p>
+        <ul class="plan-features">
+          <li>1,200 sessions/month</li>
+          <li>Everything in Enterprise S</li>
+          <li>SSO authentication</li>
+          <li>Advanced analytics</li>
+          <li>Dedicated support</li>
+          <li>Custom integrations</li>
+        </ul>
+        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise L</div>
+        <div class="plan-price">$899<span>/month</span></div>
+        <p class="plan-desc">For teams of 101-200 people.</p>
+        <ul class="plan-features">
+          <li>2,500 sessions/month</li>
+          <li>Everything in Enterprise M</li>
+          <li>Custom AI fine-tuning</li>
+          <li>API access</li>
+          <li>Dedicated account manager</li>
+          <li>Custom onboarding program</li>
+        </ul>
+        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
+      </div>
+    </div>
+    <p style="text-align: center; margin-top: 32px; font-size: 14px; color: var(--ink-muted);">Enterprise XL (200+ people) — <a href="mailto:sales@agentraining.ai" style="color: var(--brand); text-decoration: none; font-weight: 600;">Contact us for custom annual pricing</a></p>
+  </div>
+</section>
+
+<!-- REFERRAL PROGRAM -->
+<section class="referral">
+  <div class="referral-inner">
+    <div class="referral-grid">
+
+      <div>
+        <div class="referral-badge">🎁 Referral Program</div>
+        <h2>Refer a Colleague.<br/>Both of You Train Free.</h2>
+        <p class="referral-sub">Know someone in insurance, real estate, or health &amp; wellness sales who could use this? Share your link. When they subscribe, you both get <strong>30% off your next month</strong> — automatically applied at renewal.</p>
+        <p class="referral-zh">介紹一位同事訂閱，雙方下一個月續費各享 <strong>七折優惠</strong>，自動扣抵，無需申請。</p>
+
+        <div class="referral-steps">
+          <div class="referral-step">
+            <div class="referral-step-num">1</div>
+            <div class="referral-step-text"><strong>Try the simulator</strong> — complete at least 3 sessions yourself first.</div>
+          </div>
+          <div class="referral-step">
+            <div class="referral-step-num">2</div>
+            <div class="referral-step-text"><strong>Share your link</strong> — email, WeChat, or any channel. Your contact gets instant free access to try it.</div>
+          </div>
+          <div class="referral-step">
+            <div class="referral-step-num">3</div>
+            <div class="referral-step-text"><strong>Both of you get rewarded</strong> — once they subscribe to any paid plan, you both get 30% off your next month's renewal. Applied automatically.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="referral-card">
+        <div class="referral-reward-icon">🎉</div>
+        <div class="referral-reward-title">The Referral Reward</div>
+        <div class="referral-reward-desc">For you and the colleague you refer:</div>
+        <div class="referral-reward-both">
+          ✓ <strong>30% off</strong> your next month — both of you<br/>
+          ✓ Applied automatically at renewal<br/>
+          ✓ No cap — refer multiple colleagues<br/>
+          ✓ Stackable: refer 3 people, save on 3 months
+        </div>
+        <a class="btn-referral" href="simulator.html">Start Practicing First →</a>
+        <div class="referral-note">To refer someone, email <a href="mailto:contact@agentraining.ai" style="color:#15803d">contact@agentraining.ai</a> with your name and your colleague's name.<br/>30% discount applied to your next renewal once they subscribe.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BANNER CTA -->
+<div class="banner">
+  <h2>Ready to build a team that closes?</h2>
+  <p>Join sales professionals already training smarter with AI. Your first 3 sessions are free.</p>
+  <a class="btn-banner" href="simulator.html">Launch AI Simulator →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="simulator.html">AI Simulator</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="mailto:contact@agentraining.ai">Contact</a>
+  </div>
+  <p>© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW failed:', err));
+  });
+}
+</script>
+<script>
+function switchIndexLang(lang) {
+  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
+  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
+  // Store preference for simulator
+  sessionStorage.setItem('agentraining_lang', lang);
+  // Update hero text
+  const h1 = document.querySelector('.hero h1');
+  const heroP = document.querySelector('.hero p');
+  const badge = document.querySelector('.hero-badge');
+  if (lang === 'zh') {
+    h1.innerHTML = '別讓真實客戶，<br/><span>成為你的練習對象。</span>';
+    heroP.textContent = '用 AI 先練好，每一通電話都更有把握——練得越多，成交越穩。陪你練習真實情境，隨時隨地，不怕說錯。';
+    badge.textContent = '🚀 AI 銷售訓練平台';
+  } else {
+    h1.innerHTML = "Your Next Sales Call<br/><span>Shouldn't Be Your</span> First Attempt.";
+    heroP.textContent = 'Stop practicing on real clients — train with AI instead. Practice real sales conversations, get instant feedback, and close more deals.';
+    badge.textContent = '🚀 AI-Powered Sales Training';
+  }
+}
+</script>
 </body>
 </html>

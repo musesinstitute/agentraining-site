@@ -212,6 +212,77 @@
       .dash-demo-btn { min-width: 0; }
     }
 
+    /* ── CLIENT STUDIO (MVP) ── */
+    .cs-shell { max-width: 640px; }
+    .cs-intro {
+      background: var(--accent-lt); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 16px 18px; margin-bottom: 16px;
+    }
+    .cs-intro-title { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 6px; font-family: var(--font-display); }
+    .cs-intro-body { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 8px; }
+    .cs-intro-note { font-size: 11px; color: var(--ink-muted); font-style: italic; }
+    .cs-case-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .cs-empty-state { font-size: 13px; color: var(--ink-muted); text-align: center; padding: 24px 0; }
+    .cs-case-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 14px 16px; cursor: pointer; transition: border-color .15s;
+    }
+    .cs-case-card:hover { border-color: var(--accent); }
+    .cs-case-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 4px; }
+    .cs-case-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .cs-case-industry { font-size: 11px; color: var(--ink-muted); margin-bottom: 6px; }
+    .cs-case-objection { font-size: 12px; color: var(--ink-soft); line-height: 1.4; margin-bottom: 8px; }
+    .cs-case-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .cs-status-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px; text-transform: uppercase; letter-spacing: .4px; }
+    .cs-status-New { background: rgba(26,86,219,.12); color: var(--accent); }
+    .cs-status-Follow-up { background: rgba(217,119,6,.12); color: var(--gold); }
+    .cs-status-Proposal { background: rgba(147,51,234,.12); color: #9333ea; }
+    .cs-status-Won { background: rgba(16,163,74,.12); color: var(--green); }
+    .cs-status-Lost { background: rgba(220,38,38,.12); color: var(--red); }
+    .cs-case-followup { font-size: 11px; color: var(--ink-muted); }
+    .cs-case-score { font-size: 11px; font-weight: 700; color: var(--accent); }
+    .cs-form-title, .cs-detail-title { font-size: 16px; font-weight: 800; color: var(--ink); margin: 8px 0 16px; font-family: var(--font-display); }
+    .cs-back-btn {
+      background: none; border: none; color: var(--accent); font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; padding: 0; margin-bottom: 4px;
+    }
+    .cs-field-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin: 14px 0 6px; }
+    .cs-input, .cs-textarea {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px;
+      font-size: 13px; font-family: inherit; color: var(--ink); background: var(--white);
+    }
+    .cs-textarea { resize: vertical; }
+    .cs-input:focus, .cs-textarea:focus { outline: none; border-color: var(--accent); }
+    .cs-radio-row { display: flex; gap: 16px; }
+    .cs-radio-opt { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink); cursor: pointer; }
+    .cs-match-preview { font-size: 11px; color: var(--ink-muted); margin-top: 6px; min-height: 14px; }
+    .cs-match-preview.matched { color: var(--green); font-weight: 600; }
+    .cs-form-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; align-items: center; }
+    .cs-delete-btn {
+      background: none; border: none; color: var(--red); font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; margin-left: auto; padding: 8px 4px;
+    }
+    .cs-detail-card {
+      background: var(--canvas); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 16px 18px; margin-bottom: 16px;
+    }
+    .cs-detail-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 5px 0; border-bottom: 1px dashed var(--border); }
+    .cs-detail-row:last-child { border-bottom: none; }
+    .cs-detail-row-label { color: var(--ink-muted); font-weight: 600; }
+    .cs-detail-row-value { color: var(--ink); text-align: right; }
+    .cs-result-card {
+      background: var(--white); border: 1.5px solid var(--accent); border-radius: var(--radius-md);
+      padding: 16px 18px; margin-bottom: 16px;
+    }
+    .cs-result-score { font-size: 32px; font-weight: 800; color: var(--accent); }
+    .cs-result-item { font-size: 12px; color: var(--ink-soft); padding: 3px 0; }
+    .cs-detail-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    @media (max-width: 600px) {
+      .cs-radio-row { gap: 10px; }
+      .cs-form-actions { flex-direction: column; align-items: stretch; }
+      .cs-delete-btn { margin-left: 0; text-align: center; border: 1px solid var(--red); border-radius: 10px; }
+    }
+
     /* MARKDOWN IN CHAT */
     .md-list-item {
       display: flex; gap: 10px; margin: 6px 0; align-items: flex-start;
@@ -338,6 +409,10 @@
     .client-info { flex: 1; }
     .client-name { font-size: 14px; font-weight: 600; color: var(--ink); }
     .client-status { font-size: 12px; color: var(--ink-muted); }
+    .linked-case-banner {
+      display: flex; align-items: center; gap: 8px; background: var(--accent-lt);
+      border-bottom: 1px solid var(--border); padding: 8px 16px; font-size: 12px; color: var(--accent);
+    }
     .reset-btn {
       padding: 7px 14px; border-radius: var(--radius-sm);
       border: 1px solid var(--border); background: var(--white);
@@ -814,6 +889,7 @@
         <button class="dash-secondary-btn" onclick="dashBrowseCurriculum()" id="ld-browse-curriculum">📚 Browse Curriculum</button>
         <button class="dash-secondary-btn" onclick="dashBrowseAllScenarios()" id="ld-browse-all">🗂 Browse All Scenarios</button>
         <button class="dash-secondary-btn" onclick="dashFreePractice()" id="ld-free-practice">🎯 Free Practice</button>
+        <button class="dash-secondary-btn" onclick="openClientStudio()" id="ld-client-studio">👥 Client Studio</button>
       </div>
 
       <!-- Live-demo quick access: opens the 3 priority Stage 1 objections directly,
@@ -875,6 +951,77 @@
   </div>
 </div>
 
+<!-- ═══ CLIENT STUDIO — MVP: connects completed practice to real client follow-up.
+     Storage is browser localStorage only — no backend, no cross-device/team sync. ═══ -->
+<div id="client-studio-overlay" style="display:none;">
+  <div class="dash-shell cs-shell">
+    <div class="dash-topbar">
+      <div class="dash-topbar-title" id="cs-topbar-title">Client Studio</div>
+      <button class="dash-secondary-btn" style="flex:none;padding:6px 16px;" onclick="closeClientStudio()" id="cs-close-btn">✕ Close</button>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div id="cs-view-list">
+      <div class="cs-intro">
+        <div class="cs-intro-title" id="cs-intro-title">Turn practice into real follow-up</div>
+        <div class="cs-intro-body" id="cs-intro-body">Create a case for a real prospect, launch practice matched to their objection, and track the result here — score, strengths, and your next follow-up.</div>
+        <div class="cs-intro-note" id="cs-intro-note">📱 Saved on this browser only. Cases do not sync across devices or team members yet.</div>
+      </div>
+
+      <button class="dash-cta-btn" id="cs-new-case-btn" onclick="openCaseForm()">+ New Client Case</button>
+
+      <div id="cs-case-list" class="cs-case-list"></div>
+      <div id="cs-case-empty" class="cs-empty-state" style="display:none;" id="cs-case-empty-text">No client cases yet. Create your first one above.</div>
+    </div>
+
+    <!-- FORM VIEW (create / edit) -->
+    <div id="cs-view-form" style="display:none;">
+      <button class="cs-back-btn" onclick="closeCaseForm()" id="cs-form-back">← Back to Client Studio</button>
+      <div class="cs-form-title" id="cs-form-title">New Client Case</div>
+
+      <label class="cs-field-label" id="cs-lbl-name">Client Name</label>
+      <input type="text" id="cs-f-name" class="cs-input" placeholder="e.g. Michael Tran" />
+
+      <label class="cs-field-label" id="cs-lbl-industry">Industry</label>
+      <div class="cs-radio-row">
+        <label class="cs-radio-opt"><input type="radio" name="cs-industry" value="Insurance" checked /> <span id="cs-opt-insurance">Insurance</span></label>
+        <label class="cs-radio-opt"><input type="radio" name="cs-industry" value="Health" /> <span id="cs-opt-health">Health</span></label>
+      </div>
+
+      <label class="cs-field-label" id="cs-lbl-need">Need / Situation</label>
+      <textarea id="cs-f-need" class="cs-textarea" rows="2" placeholder="e.g. New parent, wants affordable term coverage before the baby arrives"></textarea>
+
+      <label class="cs-field-label" id="cs-lbl-objection">Current Objection</label>
+      <input type="text" id="cs-f-objection" class="cs-input" placeholder="e.g. The premium feels too high for our budget" oninput="previewCaseMatch()" />
+      <div class="cs-match-preview" id="cs-match-preview"></div>
+
+      <label class="cs-field-label" id="cs-lbl-status">Status</label>
+      <select id="cs-f-status" class="cs-input">
+        <option value="New">New</option>
+        <option value="Follow-up">Follow-up</option>
+        <option value="Proposal">Proposal</option>
+        <option value="Won">Won</option>
+        <option value="Lost">Lost</option>
+      </select>
+
+      <label class="cs-field-label" id="cs-lbl-followup">Next Follow-up (date or note)</label>
+      <input type="text" id="cs-f-followup" class="cs-input" placeholder="e.g. 2026-08-14 or &quot;Call after he talks to his wife&quot;" />
+
+      <div class="cs-form-actions">
+        <button class="dash-cta-btn" id="cs-save-btn" onclick="saveCaseForm()">Save Case</button>
+        <button class="dash-secondary-btn" id="cs-cancel-btn" onclick="closeCaseForm()" style="flex:none;">Cancel</button>
+        <button class="cs-delete-btn" id="cs-delete-btn" onclick="deleteCaseFromForm()" style="display:none;">🗑 Delete Case</button>
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW (case + latest practice result) -->
+    <div id="cs-view-detail" style="display:none;">
+      <button class="cs-back-btn" onclick="closeCaseDetail()" id="cs-detail-back">← Back to Client Studio</button>
+      <div id="cs-detail-body"></div>
+    </div>
+  </div>
+</div>
+
 <!-- OLD LANG PICKER (hidden) -->
 <div class="lang-picker-overlay" id="lang-picker" style="display:none;"></div>
 
@@ -899,6 +1046,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <button id="dashboard-nav-btn" onclick="showDashboard()" title="Practice Studio Dashboard" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">📋 Dashboard</button>
+    <button id="client-studio-nav-btn" onclick="openClientStudio()" title="Client Studio" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">👥 Client Studio</button>
     <button id="voice-toggle-btn" onclick="toggleVoice()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🔇 Voice OFF</button>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -933,6 +1081,9 @@
     <div class="summary-section" id="sum-next-section" style="display:none;">
       <div class="summary-section-title" id="sum-next-label">➡️ Next Recommended Scenario</div>
       <button class="btn-next-scenario" id="btn-next-scenario" onclick="goToNextCurriculumScenario()" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
+    </div>
+    <div class="summary-section" id="sum-case-section" style="display:none;">
+      <button class="btn-next-scenario" id="btn-case-action" onclick="handleSummaryCaseAction()" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--accent);background:var(--white);color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
     </div>
     <hr class="summary-divider"/>
     <div class="summary-share-label" id="sum-share-label">Share with your manager</div>
@@ -995,6 +1146,7 @@
       </div>
       <button class="reset-btn" onclick="resetChat()" id="reset-label">↺ Reset</button>
     </div>
+    <div id="linked-case-banner" class="linked-case-banner" style="display:none;"></div>
     <div class="chat-messages" id="chat-messages">
       <div class="msg">
         <div class="msg-bubble system" id="welcome-msg">
@@ -1688,7 +1840,31 @@ const strings = {
     learningGoalLabel: 'Learning Goal',
     demoQuickStartLabel: '🎤 Live Demo Quick Start',
     nextScenarioLabel: '➡️ Next Recommended Scenario',
-    curriculumCompleteLabel: '🎉 You\'ve completed the full curriculum!'
+    curriculumCompleteLabel: '🎉 You\'ve completed the full curriculum!',
+    csTitle: 'Client Studio', csClose: 'Close',
+    csIntroTitle: 'Turn practice into real follow-up',
+    csIntroBody: 'Create a case for a real prospect, launch practice matched to their objection, and track the result here — score, strengths, and your next follow-up.',
+    csIntroNote: '📱 Saved on this browser only. Cases do not sync across devices or team members yet.',
+    csNewCase: 'New Client Case',
+    csEmptyState: 'No client cases yet. Create your first one above.',
+    csFormTitleNew: 'New Client Case', csFormTitleEdit: 'Edit Client Case',
+    csLblName: 'Client Name', csLblIndustry: 'Industry',
+    csOptInsurance: 'Insurance', csOptHealth: 'Health',
+    csLblNeed: 'Need / Situation', csLblObjection: 'Current Objection',
+    csLblStatus: 'Status', csLblFollowup: 'Next Follow-up (date or note)',
+    csSave: 'Save Case', csCancel: 'Cancel', csDelete: 'Delete Case',
+    csDeleteConfirm: 'Delete this client case? This cannot be undone.',
+    csRequiredName: 'Please enter the client\'s name.',
+    csMatchFound: 'Matches curriculum scenario: {scenario}',
+    csMatchNone: 'No exact curriculum match — practice will start as Free Practice with this client\'s context.',
+    csStatusNew: 'New', csStatusFollowup: 'Follow-up', csStatusProposal: 'Proposal', csStatusWon: 'Won', csStatusLost: 'Lost',
+    csBackToStudio: 'Back to Client Studio',
+    csStartPractice: 'Start Practice', csEdit: 'Edit',
+    csLatestResult: 'Latest Practice Result',
+    csNoResultYet: 'No practice session yet. Start practice to get your first result.',
+    csReturnToCase: 'Return to Client Case',
+    csCreateCaseFromScenario: 'Turn into a Client Case',
+    csPracticingFor: 'Practicing for real client'
   },
   zh: {
     scenariosLabel: '練習情境', feedbackLabel: 'AI 教練回饋',
@@ -1736,7 +1912,31 @@ const strings = {
     learningGoalLabel: '學習目標',
     demoQuickStartLabel: '🎤 現場示範快速入口',
     nextScenarioLabel: '➡️ 下一個推薦情境',
-    curriculumCompleteLabel: '🎉 你已完成整套課程！'
+    curriculumCompleteLabel: '🎉 你已完成整套課程！',
+    csTitle: '客戶工作室', csClose: '關閉',
+    csIntroTitle: '把練習變成真實的跟進',
+    csIntroBody: '為真實的潛在客戶建立案例，啟動符合其異議的練習，並在這裡追蹤結果——分數、優點，以及下一步的跟進。',
+    csIntroNote: '📱 僅儲存在此瀏覽器。案例目前不會跨裝置或跨團隊成員同步。',
+    csNewCase: '新增客戶案例',
+    csEmptyState: '尚無客戶案例。點擊上方按鈕建立第一筆。',
+    csFormTitleNew: '新增客戶案例', csFormTitleEdit: '編輯客戶案例',
+    csLblName: '客戶姓名', csLblIndustry: '行業',
+    csOptInsurance: '保險', csOptHealth: '健康',
+    csLblNeed: '需求 / 情況', csLblObjection: '目前的異議',
+    csLblStatus: '狀態', csLblFollowup: '下次跟進（日期或備註）',
+    csSave: '儲存案例', csCancel: '取消', csDelete: '刪除案例',
+    csDeleteConfirm: '確定要刪除這個客戶案例嗎？此操作無法復原。',
+    csRequiredName: '請輸入客戶姓名。',
+    csMatchFound: '已對應課程情境：{scenario}',
+    csMatchNone: '沒有完全對應的課程情境——練習將以「自由練習」模式開始，並帶入此客戶的背景。',
+    csStatusNew: '新案件', csStatusFollowup: '跟進中', csStatusProposal: '已提案', csStatusWon: '已成交', csStatusLost: '已流失',
+    csBackToStudio: '返回客戶工作室',
+    csStartPractice: '開始練習', csEdit: '編輯',
+    csLatestResult: '最新練習結果',
+    csNoResultYet: '尚未進行練習。開始練習以取得第一筆結果。',
+    csReturnToCase: '返回客戶案例',
+    csCreateCaseFromScenario: '轉換為客戶案例',
+    csPracticingFor: '正在為真實客戶練習'
   }
 };
 
@@ -2119,6 +2319,7 @@ function selectScenario(sc) {
   updateCurrentStage(sc?.stage);
   updateCurrentIndustry(sc?.industry);
   updateLearningGoal(sc);
+  updateLinkedCaseBanner(sc?.linkedCaseId ? getClientCases().find(c => c.id === sc.linkedCaseId) : null);
 
   // Auto-trigger welcome for free practice (id=0)
   if (sc.id === 0) {
@@ -2807,6 +3008,7 @@ const origSelectScenario = window.selectScenario;
 // ── SESSION SUMMARY ──
 let lastFinalData = null;
 let pendingNextLesson = null;
+let pendingCaseAction = null;
 
 function showSummary(data) {
   lastFinalData = data;
@@ -2889,6 +3091,29 @@ function showSummary(data) {
     }
   }
 
+  // Client Studio next action: return to the linked case, or offer to create
+  // one from this scenario if the session wasn't started from a case.
+  const caseSection = document.getElementById('sum-case-section');
+  const caseBtn = document.getElementById('btn-case-action');
+  pendingCaseAction = null;
+  if (caseSection && caseBtn) {
+    if (currentScenario?.linkedCaseId) {
+      pendingCaseAction = { type: 'return', caseId: currentScenario.linkedCaseId };
+      caseBtn.textContent = '📁 ' + strings[currentLang].csReturnToCase;
+      caseSection.style.display = 'block';
+    } else if (currentScenario) {
+      pendingCaseAction = {
+        type: 'create',
+        industry: currentScenario.industry === 'Health' ? 'Health' : 'Insurance',
+        objection: currentScenario.name?.[currentLang] || currentScenario.name?.en || ''
+      };
+      caseBtn.textContent = '📁 ' + strings[currentLang].csCreateCaseFromScenario;
+      caseSection.style.display = 'block';
+    } else {
+      caseSection.style.display = 'none';
+    }
+  }
+
   // Share label & button
   document.getElementById('sum-share-label').textContent = isZh ? '分享給你的主管' : 'Share with your manager';
 
@@ -2914,6 +3139,20 @@ function goToNextCurriculumScenario() {
   closeSummary();
   setPanelMode('curriculum');
   selectCurriculumLesson(next);
+}
+
+function handleSummaryCaseAction() {
+  if (!pendingCaseAction) { closeSummary(); return; }
+  const action = pendingCaseAction;
+  pendingCaseAction = null;
+  closeSummary();
+  if (action.type === 'return') {
+    openClientStudio();
+    openCaseDetail(action.caseId);
+  } else if (action.type === 'create') {
+    openClientStudio();
+    openCaseForm({ industry: action.industry, objection: action.objection });
+  }
 }
 
 function copySummaryText() {
@@ -3067,6 +3306,12 @@ function renderFeedback(data, isFinal) {
     }
   }
 
+  // Client Studio: write the result back onto the linked case (date, score,
+  // strengths/tips/summary) so the case card/detail view shows it.
+  if (isFinal && currentScenario && currentScenario.linkedCaseId) {
+    saveCasePracticeResult(currentScenario.linkedCaseId, data);
+  }
+
   // Show session summary modal on final feedback
   if (isFinal) {
     setTimeout(() => showSummary(data), 800);
@@ -3178,12 +3423,14 @@ function setLang(lang) {
     document.getElementById('chat-input').placeholder = s.inputPlaceholder;
   }
   updateLearningGoal(currentScenario);
+  updateLinkedCaseBanner(currentScenario?.linkedCaseId ? getClientCases().find(c => c.id === currentScenario.linkedCaseId) : null);
   const curBtn = document.getElementById('mode-btn-curriculum');
   const allBtn = document.getElementById('mode-btn-all');
   if (curBtn) curBtn.textContent = s.curriculumTab;
   if (allBtn) allBtn.textContent = s.allScenariosTab;
   renderCurrentPanel(document.getElementById('search-input').value);
   refreshDashboardStrings();
+  refreshClientStudioStrings();
 }
 
 // ── E-411A: ROLE-BASED PRACTICE DASHBOARD (MVP) ──
@@ -3411,6 +3658,416 @@ function dashAssignPractice() {
   if (!note) return;
   note.textContent = strings[currentLang].dashAssignNote;
   note.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── CLIENT STUDIO (MVP) ──
+// Connects the 25-scenario curriculum to real client follow-up:
+//   Practice Studio → Completed Result → Client Studio → Client Case
+//   → Next Follow-up → Practice (and back again).
+// Storage is browser localStorage only — no backend, no cross-device or
+// cross-team sync. Does not change the AI request/response contract; it
+// only supplies a real client name + context to the existing roleplay flow.
+// ══════════════════════════════════════════════════════════════════
+const CLIENT_CASES_KEY = 'agentraining_client_cases';
+let csEditingCaseId = null;  // set while the form is editing an existing case
+let csDetailCaseId = null;   // set while viewing a case detail
+
+function getClientCases() {
+  try { return JSON.parse(localStorage.getItem(CLIENT_CASES_KEY)) || []; } catch (e) { return []; }
+}
+function saveClientCasesList(cases) {
+  try { localStorage.setItem(CLIENT_CASES_KEY, JSON.stringify(cases)); }
+  catch (e) { console.error('[Client Studio] Could not save cases to localStorage:', e); }
+}
+function genCaseId() {
+  return 'case-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+}
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
+function openClientStudio() {
+  hideDashboard();
+  forceHideOnboarding();
+  refreshClientStudioStrings();
+  showCaseListView();
+  document.getElementById('client-studio-overlay').style.display = 'flex';
+}
+function closeClientStudio() {
+  document.getElementById('client-studio-overlay').style.display = 'none';
+}
+
+function showCaseListView() {
+  csEditingCaseId = null;
+  csDetailCaseId = null;
+  document.getElementById('cs-view-list').style.display = '';
+  document.getElementById('cs-view-form').style.display = 'none';
+  document.getElementById('cs-view-detail').style.display = 'none';
+  renderCaseList();
+}
+
+function renderCaseList() {
+  const s = strings[currentLang];
+  const list = document.getElementById('cs-case-list');
+  const empty = document.getElementById('cs-case-empty');
+  if (!list || !empty) return;
+  const cases = getClientCases().slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  list.innerHTML = '';
+  if (cases.length === 0) {
+    empty.style.display = 'block';
+    empty.textContent = s.csEmptyState;
+    return;
+  }
+  empty.style.display = 'none';
+  cases.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'cs-case-card';
+    el.onclick = () => openCaseDetail(c.id);
+    const industryLabel = c.industry === 'Health' ? s.csOptHealth : s.csOptInsurance;
+    const statusKey = 'csStatus' + String(c.status || 'New').replace('-', '');
+    const statusLabel = s[statusKey] || c.status;
+    const scoreHtml = c.lastPractice ? `<span class="cs-case-score">${s.scoreShortLabel} ${c.lastPractice.score}</span>` : '';
+    el.innerHTML = `
+      <div class="cs-case-card-top">
+        <span class="cs-case-name">${escapeHtml(c.clientName)}</span>
+        <span class="cs-status-badge cs-status-${c.status}">${statusLabel}</span>
+      </div>
+      <div class="cs-case-industry">${industryLabel}</div>
+      ${c.objection ? `<div class="cs-case-objection">"${escapeHtml(c.objection)}"</div>` : ''}
+      <div class="cs-case-meta-row">
+        <span class="cs-case-followup">${c.nextFollowUp ? '📅 ' + escapeHtml(c.nextFollowUp) : ''}</span>
+        ${scoreHtml}
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+// ── FORM (create / edit) ──
+function openCaseForm(prefill) {
+  csEditingCaseId = null;
+  document.getElementById('cs-view-list').style.display = 'none';
+  document.getElementById('cs-view-detail').style.display = 'none';
+  document.getElementById('cs-view-form').style.display = '';
+  document.getElementById('cs-form-title').textContent = strings[currentLang].csFormTitleNew;
+  document.getElementById('cs-f-name').value = '';
+  document.querySelector('input[name="cs-industry"][value="Insurance"]').checked = true;
+  document.getElementById('cs-f-need').value = '';
+  document.getElementById('cs-f-objection').value = '';
+  document.getElementById('cs-f-status').value = 'New';
+  document.getElementById('cs-f-followup').value = '';
+  document.getElementById('cs-delete-btn').style.display = 'none';
+  document.getElementById('cs-match-preview').textContent = '';
+  document.getElementById('cs-match-preview').className = 'cs-match-preview';
+  if (prefill) {
+    if (prefill.industry) {
+      const radio = document.querySelector(`input[name="cs-industry"][value="${prefill.industry}"]`);
+      if (radio) radio.checked = true;
+    }
+    if (prefill.objection) document.getElementById('cs-f-objection').value = prefill.objection;
+    if (prefill.need) document.getElementById('cs-f-need').value = prefill.need;
+    previewCaseMatch();
+  }
+  const nameInput = document.getElementById('cs-f-name');
+  if (nameInput) setTimeout(() => nameInput.focus(), 50);
+}
+
+function openCaseFormForEdit(caseId) {
+  const c = getClientCases().find(x => x.id === caseId);
+  if (!c) return;
+  csEditingCaseId = caseId;
+  document.getElementById('cs-view-list').style.display = 'none';
+  document.getElementById('cs-view-detail').style.display = 'none';
+  document.getElementById('cs-view-form').style.display = '';
+  document.getElementById('cs-form-title').textContent = strings[currentLang].csFormTitleEdit;
+  document.getElementById('cs-f-name').value = c.clientName || '';
+  const radio = document.querySelector(`input[name="cs-industry"][value="${c.industry}"]`);
+  if (radio) radio.checked = true;
+  document.getElementById('cs-f-need').value = c.need || '';
+  document.getElementById('cs-f-objection').value = c.objection || '';
+  document.getElementById('cs-f-status').value = c.status || 'New';
+  document.getElementById('cs-f-followup').value = c.nextFollowUp || '';
+  document.getElementById('cs-delete-btn').style.display = '';
+  previewCaseMatch();
+}
+
+function closeCaseForm() {
+  if (csEditingCaseId) {
+    openCaseDetail(csEditingCaseId);
+  } else {
+    showCaseListView();
+  }
+}
+
+function previewCaseMatch() {
+  const objectionEl = document.getElementById('cs-f-objection');
+  const el = document.getElementById('cs-match-preview');
+  if (!objectionEl || !el) return;
+  const objection = objectionEl.value;
+  const industryEl = document.querySelector('input[name="cs-industry"]:checked');
+  const industry = industryEl ? industryEl.value : 'Insurance';
+  const s = strings[currentLang];
+  if (!objection.trim()) { el.textContent = ''; el.className = 'cs-match-preview'; return; }
+  const match = matchScenarioForObjection(objection, industry);
+  if (match) {
+    el.textContent = '✓ ' + s.csMatchFound.replace('{scenario}', match.title[currentLang] || match.title.en);
+    el.className = 'cs-match-preview matched';
+  } else {
+    el.textContent = s.csMatchNone;
+    el.className = 'cs-match-preview';
+  }
+}
+
+function saveCaseForm() {
+  const name = document.getElementById('cs-f-name').value.trim();
+  if (!name) {
+    alert(strings[currentLang].csRequiredName);
+    return;
+  }
+  const industryEl = document.querySelector('input[name="cs-industry"]:checked');
+  const industry = industryEl ? industryEl.value : 'Insurance';
+  const need = document.getElementById('cs-f-need').value.trim();
+  const objection = document.getElementById('cs-f-objection').value.trim();
+  const status = document.getElementById('cs-f-status').value;
+  const nextFollowUp = document.getElementById('cs-f-followup').value.trim();
+  const now = new Date().toISOString();
+
+  const cases = getClientCases();
+  if (csEditingCaseId) {
+    const idx = cases.findIndex(c => c.id === csEditingCaseId);
+    if (idx !== -1) {
+      cases[idx] = Object.assign({}, cases[idx], { clientName: name, industry, need, objection, status, nextFollowUp, updatedAt: now });
+    }
+    saveClientCasesList(cases);
+    openCaseDetail(csEditingCaseId);
+  } else {
+    const newCase = {
+      id: genCaseId(), clientName: name, industry, need, objection, status, nextFollowUp,
+      createdAt: now, updatedAt: now, practiceHistory: [], lastPractice: null
+    };
+    cases.push(newCase);
+    saveClientCasesList(cases);
+    openCaseDetail(newCase.id);
+  }
+}
+
+function deleteCaseFromForm() {
+  if (!csEditingCaseId) return;
+  if (!confirm(strings[currentLang].csDeleteConfirm)) return;
+  const cases = getClientCases().filter(c => c.id !== csEditingCaseId);
+  saveClientCasesList(cases);
+  csEditingCaseId = null;
+  showCaseListView();
+}
+
+// ── DETAIL VIEW ──
+function openCaseDetail(caseId) {
+  const c = getClientCases().find(x => x.id === caseId);
+  if (!c) { showCaseListView(); return; }
+  csDetailCaseId = caseId;
+  document.getElementById('cs-view-list').style.display = 'none';
+  document.getElementById('cs-view-form').style.display = 'none';
+  document.getElementById('cs-view-detail').style.display = '';
+  renderCaseDetail(c);
+}
+function closeCaseDetail() {
+  showCaseListView();
+}
+
+function renderCaseDetail(c) {
+  const s = strings[currentLang];
+  const industryLabel = c.industry === 'Health' ? s.csOptHealth : s.csOptInsurance;
+  const statusKey = 'csStatus' + String(c.status || 'New').replace('-', '');
+  const statusLabel = s[statusKey] || c.status;
+  const body = document.getElementById('cs-detail-body');
+  if (!body) return;
+
+  let resultHtml;
+  if (c.lastPractice) {
+    const lp = c.lastPractice;
+    resultHtml = `
+      <div class="cs-result-card">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;">${s.csLatestResult}</div>
+        <div class="cs-result-score">${lp.score}<span style="font-size:14px;color:var(--ink-muted);"> / 100</span></div>
+        <div style="font-size:12px;color:var(--ink-muted);margin-bottom:10px;">${escapeHtml(lp.scenarioTitle)} · ${lp.date}</div>
+        ${(lp.strengths || []).map(x => `<div class="cs-result-item">✅ ${escapeHtml(x)}</div>`).join('')}
+        ${(lp.tips || []).map(x => `<div class="cs-result-item">💡 ${escapeHtml(x)}</div>`).join('')}
+        ${lp.summary ? `<div class="cs-result-item" style="font-style:italic;margin-top:6px;">"${escapeHtml(lp.summary)}"</div>` : ''}
+      </div>
+    `;
+  } else {
+    resultHtml = `<div class="cs-empty-state" style="padding:16px 0;">${s.csNoResultYet}</div>`;
+  }
+
+  body.innerHTML = `
+    <div class="cs-detail-title">${escapeHtml(c.clientName)}</div>
+    <div class="cs-detail-card">
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblIndustry}</span><span class="cs-detail-row-value">${industryLabel}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblStatus}</span><span class="cs-detail-row-value"><span class="cs-status-badge cs-status-${c.status}">${statusLabel}</span></span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblNeed}</span><span class="cs-detail-row-value">${escapeHtml(c.need) || '—'}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblObjection}</span><span class="cs-detail-row-value">${escapeHtml(c.objection) || '—'}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblFollowup}</span><span class="cs-detail-row-value">${escapeHtml(c.nextFollowUp) || '—'}</span></div>
+    </div>
+    ${resultHtml}
+    <div class="cs-detail-actions">
+      <button class="dash-cta-btn" onclick="startPracticeFromCase('${c.id}')">▶ ${s.csStartPractice}</button>
+      <button class="dash-secondary-btn" style="flex:none;" onclick="openCaseFormForEdit('${c.id}')">✏️ ${s.csEdit}</button>
+    </div>
+  `;
+}
+
+// ── OBJECTION → CURRICULUM SCENARIO MATCHING ──
+// Simple, transparent keyword match against each of the 25 scenarios'
+// matchKeywords (data/curriculum/foundation.json). Returns null if nothing
+// matches, so the caller can fall back to Free Practice.
+function matchScenarioForObjection(objectionText, industry) {
+  if (!Array.isArray(curriculumData) || !objectionText) return null;
+  const text = objectionText.toLowerCase();
+  // A scenario only qualifies if at least one of its keywords actually
+  // appears in the objection text — industry is a tiebreaker only, never
+  // a standalone reason to match (otherwise any text would "match" the
+  // first same-industry scenario).
+  const scored = curriculumData.map(lesson => {
+    const kws = lesson.matchKeywords || [];
+    let score = 0;
+    kws.forEach(kw => { if (text.includes(kw.toLowerCase())) score++; });
+    return { lesson, score };
+  }).filter(x => x.score > 0);
+  if (scored.length === 0) return null;
+  scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    const aSame = industry && a.lesson.industry === industry ? 1 : 0;
+    const bSame = industry && b.lesson.industry === industry ? 1 : 0;
+    return bSame - aSame;
+  });
+  return scored[0].lesson;
+}
+
+// Builds a client-roleplay system prompt from a case's real context, used
+// only for the Free Practice fallback when no curriculum scenario matches.
+function buildCaseFreePracticePrompt(c) {
+  const en = `You play ${c.clientName}, a real prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
+  const zh = `你扮演${c.clientName}，這位業務員正在跟進的真實潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
+  return { en, zh };
+}
+
+// ── LAUNCH PRACTICE FROM A CASE ──
+function startPracticeFromCase(caseId) {
+  const c = getClientCases().find(x => x.id === caseId);
+  if (!c) return;
+  closeClientStudio();
+  setPanelMode('curriculum');
+
+  const matched = matchScenarioForObjection(c.objection, c.industry);
+  let mapped;
+  if (matched) {
+    mapped = {
+      id: matched.id,
+      cat: 'curriculum',
+      industry: matched.industry,
+      name: matched.title,
+      preview: matched.preview,
+      level: matched.difficulty,
+      clientName: c.clientName,
+      systemPrompt: matched.systemPrompt,
+      greeting: matched.greeting,
+      isCurriculum: true,
+      stage: matched.stage?.[currentLang] || matched.stage?.en || '',
+      objective: matched.objective,
+      successCriteria: matched.successCriteria,
+      curriculumOrder: matched.curriculumOrder,
+      linkedCaseId: c.id
+    };
+  } else {
+    // Safe fallback: Free Practice, re-prompted with this client's real context.
+    const freeScenario = scenarios.find(sc => sc.id === 0);
+    mapped = Object.assign({}, freeScenario, {
+      clientName: c.clientName,
+      industry: c.industry,
+      systemPrompt: buildCaseFreePracticePrompt(c),
+      isCurriculum: false,
+      linkedCaseId: c.id
+    });
+  }
+  selectScenario(mapped);
+}
+
+function updateLinkedCaseBanner(caseObj) {
+  const banner = document.getElementById('linked-case-banner');
+  if (!banner) return;
+  if (!caseObj) { banner.style.display = 'none'; return; }
+  const s = strings[currentLang];
+  banner.style.display = 'flex';
+  banner.innerHTML = `<span>📁 ${s.csPracticingFor}: <strong>${escapeHtml(caseObj.clientName)}</strong>${caseObj.need ? ' — ' + escapeHtml(caseObj.need) : ''}</span>`;
+}
+
+// Writes the completed session's result back onto the linked case: last
+// practice date, latest score, and strengths/tips/summary. Also appends to
+// a running practiceHistory so nothing is lost across sessions.
+function saveCasePracticeResult(caseId, data) {
+  const cases = getClientCases();
+  const idx = cases.findIndex(c => c.id === caseId);
+  if (idx === -1) return;
+  const result = {
+    date: new Date().toISOString().slice(0, 10),
+    scenarioId: currentScenario?.id,
+    scenarioTitle: (currentScenario?.name && (currentScenario.name[currentLang] || currentScenario.name.en)) || '',
+    score: data.overallScore || 0,
+    strengths: data.strengths || [],
+    tips: data.tips || [],
+    summary: data.summary || ''
+  };
+  cases[idx].lastPractice = result;
+  cases[idx].practiceHistory = cases[idx].practiceHistory || [];
+  cases[idx].practiceHistory.push(result);
+  cases[idx].updatedAt = new Date().toISOString();
+  saveClientCasesList(cases);
+}
+
+function refreshClientStudioStrings() {
+  const s = strings[currentLang];
+  const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+  set('cs-topbar-title', s.csTitle);
+  set('cs-close-btn', '✕ ' + s.csClose);
+  set('cs-intro-title', s.csIntroTitle);
+  set('cs-intro-body', s.csIntroBody);
+  set('cs-intro-note', s.csIntroNote);
+  set('cs-new-case-btn', '+ ' + s.csNewCase);
+  set('cs-form-back', '← ' + s.csBackToStudio);
+  set('cs-detail-back', '← ' + s.csBackToStudio);
+  set('cs-lbl-name', s.csLblName);
+  set('cs-lbl-industry', s.csLblIndustry);
+  set('cs-opt-insurance', s.csOptInsurance);
+  set('cs-opt-health', s.csOptHealth);
+  set('cs-lbl-need', s.csLblNeed);
+  set('cs-lbl-objection', s.csLblObjection);
+  set('cs-lbl-status', s.csLblStatus);
+  set('cs-lbl-followup', s.csLblFollowup);
+  set('cs-save-btn', s.csSave);
+  set('cs-cancel-btn', s.csCancel);
+  set('cs-delete-btn', '🗑 ' + s.csDelete);
+  const navBtn = document.getElementById('client-studio-nav-btn');
+  if (navBtn) navBtn.textContent = '👥 ' + s.csTitle;
+  const dashBtn = document.getElementById('ld-client-studio');
+  if (dashBtn) dashBtn.textContent = '👥 ' + s.csTitle;
+  const statusSelect = document.getElementById('cs-f-status');
+  if (statusSelect) {
+    Array.from(statusSelect.options).forEach(opt => {
+      const key = 'csStatus' + opt.value.replace('-', '');
+      if (s[key]) opt.textContent = s[key];
+    });
+  }
+  // Re-render whichever view is currently active so labels + dynamic content refresh.
+  const listView = document.getElementById('cs-view-list');
+  if (listView && listView.style.display !== 'none') renderCaseList();
+  const detailView = document.getElementById('cs-view-detail');
+  if (csDetailCaseId && detailView && detailView.style.display !== 'none') {
+    const c = getClientCases().find(x => x.id === csDetailCaseId);
+    if (c) renderCaseDetail(c);
+  }
 }
 
 // ── INIT ──
