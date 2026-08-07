@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Client Studio — AgentTraining AI</title>
+<meta name="description" content="Track real client cases, launch practice matched to their objection, and see the result written back to the case."/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#1a56db"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
+    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
+    --white: #ffffff; --border: #e5e7eb; --radius: 12px; --green: #16a34a;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--white); z-index: 100;
+  }
+  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--brand); }
+  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
+  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .btn-nav { background: var(--accent); color: #111827; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; }
+  .btn-nav:hover { background: #e08800; }
+
+  .hero { text-align: center; padding: 72px 20px 48px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); }
+  .hero-badge { display: inline-block; background: #dbeafe; color: var(--brand); padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(28px, 4.5vw, 46px); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+  .hero h1 span { color: var(--brand); }
+  .hero p { font-size: 17px; color: var(--ink-muted); max-width: 620px; margin: 0 auto 30px; line-height: 1.6; }
+  .btn-primary { display: inline-block; background: var(--brand); color: var(--white); padding: 14px 32px; border-radius: 10px; text-decoration: none; font-size: 16px; font-weight: 700; }
+  .btn-primary:hover { background: var(--brand-dark); }
+  .hero-note { margin-top: 16px; font-size: 12px; color: var(--ink-muted); }
+
+  section { padding: 56px 20px; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
+  h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; margin-bottom: 28px; text-align: center; }
+
+  .flow-strip { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
+  .flow-step { background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .flow-step.active { background: var(--brand); color: var(--white); border-color: var(--brand); }
+  .flow-arrow { color: var(--ink-muted); font-size: 14px; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .feature-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .feature-icon { font-size: 26px; margin-bottom: 10px; }
+  .feature-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+  .feature-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.55; }
+
+  .field-list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-top: 32px; }
+  .field-list h3 { font-size: 14px; font-weight: 800; margin-bottom: 12px; }
+  .field-list ul { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 20px; }
+  .field-list li { font-size: 13px; color: var(--ink-soft, var(--ink)); padding-left: 18px; position: relative; }
+  .field-list li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+  .cta-band { text-align: center; padding: 56px 20px; background: var(--surface); }
+  .cta-band h2 { margin-bottom: 12px; }
+  .cta-band p { font-size: 15px; color: var(--ink-muted); margin-bottom: 24px; }
+  .limitation-note { max-width: 560px; margin: 20px auto 0; font-size: 12px; color: var(--ink-muted); font-style: italic; }
+
+  footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); }
+  footer div { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  footer a { color: var(--ink-muted); text-decoration: none; font-size: 13px; }
+  footer a:hover { color: var(--brand); }
+  footer p { font-size: 12px; color: var(--ink-muted); }
+
+  @media (max-width: 720px) {
+    nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
+    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .field-list ul { grid-template-columns: 1fr; }
+    section { padding: 40px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="studios.html">Studios</a>
+    <div class="nav-lang">
+      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
+    </div>
+    <a class="btn-nav" href="simulator.html" id="nav-cta">Try Free Demo</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge" id="hero-badge">👥 Studio 2 of 4</div>
+  <h1 id="hero-title">Client <span>Studio</span></h1>
+  <p id="hero-sub">Turn practice into real follow-up. Create a case for a real prospect, launch practice matched to their objection, and track the result — score, strengths, and your next follow-up — all in one place.</p>
+  <a class="btn-primary" href="simulator.html?studio=client" id="open-cta">Open Client Studio →</a>
+  <div class="hero-note" id="hero-note">📱 Client Studio lives inside Practice Studio and saves cases on this browser.</div>
+</div>
+
+<section>
+  <div class="section-inner">
+    <h2 id="flow-h2">Part of one continuous loop</h2>
+    <div class="flow-strip">
+      <span class="flow-step" id="f1">Practice Studio</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step" id="f2">Completed Result</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step active" id="f3">Client Studio</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step" id="f4">Client Case</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step" id="f5">Next Follow-up</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step" id="f6">Practice</span>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3 id="feat1-h">Real client cases</h3>
+        <p id="feat1-p">Save the client's name, industry, situation, and current objection — not a generic script.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3 id="feat2-h">Matched practice</h3>
+        <p id="feat2-p">The objection you enter is matched to one of the 25 Insurance &amp; Health scenarios automatically, with a safe fallback to Free Practice when nothing matches exactly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3 id="feat3-h">Results on the case</h3>
+        <p id="feat3-p">Every completed session writes its score, strengths, and tips back onto that client's case automatically.</p>
+      </div>
+    </div>
+
+    <div class="field-list">
+      <h3 id="fields-h">What you track per case</h3>
+      <ul id="fields-ul">
+        <li id="fl1">Client name</li>
+        <li id="fl2">Industry — Insurance or Health</li>
+        <li id="fl3">Need / situation</li>
+        <li id="fl4">Current objection</li>
+        <li id="fl5">Status — New, Follow-up, Proposal, Won, Lost</li>
+        <li id="fl6">Next follow-up date or note</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2 id="cta-h2">Ready to open your first case?</h2>
+  <p id="cta-p">Client Studio opens inside Practice Studio — no separate login.</p>
+  <a class="btn-primary" href="simulator.html?studio=client" id="cta-btn">Open Client Studio →</a>
+  <p class="limitation-note" id="limitation-note">Cases are saved in this browser only (localStorage). They do not sync across devices or team members yet.</p>
+</div>
+
+<footer>
+  <div>
+    <a href="index.html" id="f-home">Home</a>
+    <a href="studios.html" id="f-studios">Studios</a>
+    <a href="simulator.html" id="f-sim">AI Simulator</a>
+    <a href="terms.html" id="f-terms">Terms of Service</a>
+    <a href="privacy.html" id="f-privacy">Privacy Policy</a>
+    <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
+  </div>
+  <p id="f-copy">© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+}
+
+const STRINGS = {
+  en: {
+    navCta: 'Try Free Demo',
+    heroBadge: '👥 Studio 2 of 4', heroTitleHtml: 'Client <span>Studio</span>',
+    heroSub: "Turn practice into real follow-up. Create a case for a real prospect, launch practice matched to their objection, and track the result — score, strengths, and your next follow-up — all in one place.",
+    openCta: 'Open Client Studio →',
+    heroNote: '📱 Client Studio lives inside Practice Studio and saves cases on this browser.',
+    flowH2: 'Part of one continuous loop',
+    f1: 'Practice Studio', f2: 'Completed Result', f3: 'Client Studio', f4: 'Client Case', f5: 'Next Follow-up', f6: 'Practice',
+    feat1h: 'Real client cases', feat1p: "Save the client's name, industry, situation, and current objection — not a generic script.",
+    feat2h: 'Matched practice', feat2p: 'The objection you enter is matched to one of the 25 Insurance & Health scenarios automatically, with a safe fallback to Free Practice when nothing matches exactly.',
+    feat3h: 'Results on the case', feat3p: "Every completed session writes its score, strengths, and tips back onto that client's case automatically.",
+    fieldsH: 'What you track per case',
+    fl1: 'Client name', fl2: 'Industry — Insurance or Health', fl3: 'Need / situation', fl4: 'Current objection',
+    fl5: 'Status — New, Follow-up, Proposal, Won, Lost', fl6: 'Next follow-up date or note',
+    ctaH2: 'Ready to open your first case?', ctaP: 'Client Studio opens inside Practice Studio — no separate login.',
+    ctaBtn: 'Open Client Studio →',
+    limitationNote: 'Cases are saved in this browser only (localStorage). They do not sync across devices or team members yet.',
+    fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
+  },
+  zh: {
+    navCta: '免費試用',
+    heroBadge: '👥 工作室 2 / 4', heroTitleHtml: '客戶<span>工作室</span>',
+    heroSub: '把練習變成真實的跟進。為真實的潛在客戶建立案例，啟動符合其異議的練習，並在同一個地方追蹤結果——分數、優點，以及下一步的跟進。',
+    openCta: '開啟客戶工作室 →',
+    heroNote: '📱 客戶工作室位於練習工作室之內，案例儲存在此瀏覽器。',
+    flowH2: '一個連貫循環的一部分',
+    f1: '練習工作室', f2: '完成練習結果', f3: '客戶工作室', f4: '客戶案例', f5: '下次跟進', f6: '練習',
+    feat1h: '真實的客戶案例', feat1p: '儲存客戶的姓名、行業、情況與目前的異議——而不是制式腳本。',
+    feat2h: '對應的練習', feat2p: '你輸入的異議會自動對應到25個保險與健康情境之一，若沒有完全對應，會安全地退回自由練習模式。',
+    feat3h: '結果寫回案例', feat3p: '每次完成的練習，分數、優點與建議會自動寫回該客戶的案例。',
+    fieldsH: '每個案例追蹤的內容',
+    fl1: '客戶姓名', fl2: '行業——保險或健康', fl3: '需求 / 情況', fl4: '目前的異議',
+    fl5: '狀態——新案件、跟進中、已提案、已成交、已流失', fl6: '下次跟進日期或備註',
+    ctaH2: '準備好建立第一個案例了嗎？', ctaP: '客戶工作室在練習工作室內開啟——不需要另外登入。',
+    ctaBtn: '開啟客戶工作室 →',
+    limitationNote: '案例僅儲存在此瀏覽器（localStorage）。目前不會跨裝置或跨團隊成員同步。',
+    fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
+  }
+};
+
+function switchLang(lang) {
+  const s = STRINGS[lang];
+  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
+  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
+  sessionStorage.setItem('agentraining_lang', lang);
+  document.getElementById('nav-cta').textContent = s.navCta;
+  document.getElementById('hero-badge').textContent = s.heroBadge;
+  document.getElementById('hero-title').innerHTML = s.heroTitleHtml;
+  document.getElementById('hero-sub').textContent = s.heroSub;
+  document.getElementById('open-cta').textContent = s.openCta;
+  document.getElementById('hero-note').textContent = s.heroNote;
+  document.getElementById('flow-h2').textContent = s.flowH2;
+  document.getElementById('f1').textContent = s.f1;
+  document.getElementById('f2').textContent = s.f2;
+  document.getElementById('f3').textContent = s.f3;
+  document.getElementById('f4').textContent = s.f4;
+  document.getElementById('f5').textContent = s.f5;
+  document.getElementById('f6').textContent = s.f6;
+  document.getElementById('feat1-h').textContent = s.feat1h;
+  document.getElementById('feat1-p').textContent = s.feat1p;
+  document.getElementById('feat2-h').textContent = s.feat2h;
+  document.getElementById('feat2-p').textContent = s.feat2p;
+  document.getElementById('feat3-h').textContent = s.feat3h;
+  document.getElementById('feat3-p').textContent = s.feat3p;
+  document.getElementById('fields-h').textContent = s.fieldsH;
+  document.getElementById('fl1').textContent = s.fl1;
+  document.getElementById('fl2').textContent = s.fl2;
+  document.getElementById('fl3').textContent = s.fl3;
+  document.getElementById('fl4').textContent = s.fl4;
+  document.getElementById('fl5').textContent = s.fl5;
+  document.getElementById('fl6').textContent = s.fl6;
+  document.getElementById('cta-h2').textContent = s.ctaH2;
+  document.getElementById('cta-p').textContent = s.ctaP;
+  document.getElementById('cta-btn').textContent = s.ctaBtn;
+  document.getElementById('limitation-note').textContent = s.limitationNote;
+  document.getElementById('f-home').textContent = s.fHome;
+  document.getElementById('f-studios').textContent = s.fStudios;
+  document.getElementById('f-sim').textContent = s.fSim;
+  document.getElementById('f-terms').textContent = s.fTerms;
+  document.getElementById('f-privacy').textContent = s.fPrivacy;
+  document.getElementById('f-contact').textContent = s.fContact;
+}
+
+(function initLang() {
+  const saved = sessionStorage.getItem('agentraining_lang');
+  if (saved === 'zh') switchLang('zh');
+})();
+</script>
+</body>
+</html>
