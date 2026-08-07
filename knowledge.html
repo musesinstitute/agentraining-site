@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Knowledge Studio — AgentTraining AI</title>
+<meta name="description" content="The full 5-stage Insurance &amp; Health Foundation Curriculum map — every scenario's practice focus and success criteria in one place."/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#1a56db"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
+    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
+    --white: #ffffff; --border: #e5e7eb; --radius: 12px; --green: #16a34a;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--white); z-index: 100;
+  }
+  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--brand); }
+  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
+  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .btn-nav { background: var(--accent); color: #111827; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; }
+  .btn-nav:hover { background: #e08800; }
+
+  .hero { text-align: center; padding: 72px 20px 48px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); }
+  .hero-badge { display: inline-block; background: #dbeafe; color: var(--brand); padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(28px, 4.5vw, 46px); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+  .hero h1 span { color: var(--brand); }
+  .hero p { font-size: 17px; color: var(--ink-muted); max-width: 620px; margin: 0 auto 30px; line-height: 1.6; }
+  .btn-primary { display: inline-block; background: var(--brand); color: var(--white); padding: 14px 32px; border-radius: 10px; text-decoration: none; font-size: 16px; font-weight: 700; }
+  .btn-primary:hover { background: var(--brand-dark); }
+
+  section { padding: 56px 20px; }
+  .section-inner { max-width: 980px; margin: 0 auto; }
+
+  .stage-block { margin-bottom: 44px; }
+  .stage-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+  .stage-num { font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--white); background: var(--brand); border-radius: 99px; padding: 4px 12px; white-space: nowrap; }
+  .stage-name { font-size: 19px; font-weight: 800; }
+  .lesson-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .lesson-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .lesson-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .lesson-order { font-size: 11px; color: var(--ink-muted); font-weight: 700; }
+  .lesson-diff { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface); color: var(--ink-muted); border: 1px solid var(--border); white-space: nowrap; }
+  .lesson-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+  .lesson-focus { font-size: 13px; color: var(--ink-muted); line-height: 1.55; margin-bottom: 10px; }
+  .lesson-criteria { list-style: none; }
+  .lesson-criteria li { font-size: 12px; color: var(--ink); line-height: 1.6; padding-left: 16px; position: relative; }
+  .lesson-criteria li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .lesson-industry { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--brand); }
+
+  .loading-note, .error-note { text-align: center; color: var(--ink-muted); font-size: 14px; padding: 40px 0; }
+  .error-note { color: #dc2626; }
+
+  .cta-band { text-align: center; padding: 56px 20px; background: var(--surface); }
+  .cta-band h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; margin-bottom: 12px; }
+  .cta-band p { font-size: 15px; color: var(--ink-muted); margin-bottom: 24px; }
+
+  footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); }
+  footer div { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  footer a { color: var(--ink-muted); text-decoration: none; font-size: 13px; }
+  footer a:hover { color: var(--brand); }
+  footer p { font-size: 12px; color: var(--ink-muted); }
+
+  @media (max-width: 720px) {
+    nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
+    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .lesson-grid { grid-template-columns: 1fr; }
+    section { padding: 40px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="studios.html">Studios</a>
+    <div class="nav-lang">
+      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
+    </div>
+    <a class="btn-nav" href="simulator.html?ref=demo" id="nav-cta">Try Free Demo</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge" id="hero-badge">📚 Studio 3 of 4</div>
+  <h1 id="hero-title">Knowledge <span>Studio</span></h1>
+  <p id="hero-sub">The full Insurance &amp; Health Foundation Curriculum map — every scenario's practice focus and success criteria, pulled straight from the same 25-scenario curriculum Practice Studio uses, so you always know what to study next and why.</p>
+  <a class="btn-primary" href="simulator.html?ref=demo" id="open-cta">Open Practice Studio →</a>
+</div>
+
+<section>
+  <div class="section-inner" id="curriculum-map">
+    <div class="loading-note" id="loading-note">Loading curriculum…</div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2 id="cta-h2">Ready to practice one of these?</h2>
+  <p id="cta-p">Every scenario above is one click away in Practice Studio.</p>
+  <a class="btn-primary" href="simulator.html?ref=demo" id="cta-btn">Open Practice Studio →</a>
+</div>
+
+<footer>
+  <div>
+    <a href="index.html" id="f-home">Home</a>
+    <a href="studios.html" id="f-studios">Studios</a>
+    <a href="simulator.html?ref=demo" id="f-sim">AI Simulator</a>
+    <a href="terms.html" id="f-terms">Terms of Service</a>
+    <a href="privacy.html" id="f-privacy">Privacy Policy</a>
+    <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
+  </div>
+  <p id="f-copy">© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+}
+
+let currentLang = 'en';
+let curriculumData = null;
+
+const STRINGS = {
+  en: {
+    navCta: 'Try Free Demo',
+    heroBadge: '📚 Studio 3 of 4', heroTitleHtml: 'Knowledge <span>Studio</span>',
+    heroSub: "The full Insurance & Health Foundation Curriculum map — every scenario's practice focus and success criteria, pulled straight from the same 25-scenario curriculum Practice Studio uses, so you always know what to study next and why.",
+    openCta: 'Open Practice Studio →',
+    ctaH2: 'Ready to practice one of these?', ctaP: 'Every scenario above is one click away in Practice Studio.', ctaBtn: 'Open Practice Studio →',
+    loading: 'Loading curriculum…', error: 'Curriculum could not be loaded right now — please open Practice Studio directly.',
+    stageLabel: 'Stage', lessonLabel: 'Lesson', of: 'of',
+    fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
+  },
+  zh: {
+    navCta: '免費試用',
+    heroBadge: '📚 工作室 3 / 4', heroTitleHtml: '知識<span>工作室</span>',
+    heroSub: '完整的保險與健康基礎課程地圖——每個情境的練習重點與成功標準，直接取自練習工作室所使用的同一套25個情境課程，讓你隨時知道下一步該學什麼、為什麼學。',
+    openCta: '開啟練習工作室 →',
+    ctaH2: '準備好練習其中一個了嗎？', ctaP: '以上每個情境都能在練習工作室一鍵開始。', ctaBtn: '開啟練習工作室 →',
+    loading: '課程載入中…', error: '目前無法載入課程——請直接開啟練習工作室。',
+    stageLabel: '第', lessonLabel: '第', of: '課，共',
+    fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
+  }
+};
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
+function renderCurriculumMap() {
+  const s = STRINGS[currentLang];
+  const container = document.getElementById('curriculum-map');
+  if (!Array.isArray(curriculumData) || curriculumData.length === 0) {
+    container.innerHTML = `<div class="error-note">${s.error}</div>`;
+    return;
+  }
+
+  const stages = {};
+  curriculumData.forEach(lesson => {
+    const key = lesson.moduleOrder;
+    if (!stages[key]) stages[key] = [];
+    stages[key].push(lesson);
+  });
+
+  let html = '';
+  Object.keys(stages).sort((a, b) => a - b).forEach(key => {
+    const lessons = stages[key].slice().sort((a, b) => a.lessonOrder - b.lessonOrder);
+    const stageName = lessons[0].module?.[currentLang] || lessons[0].module?.en || '';
+    html += `
+      <div class="stage-block">
+        <div class="stage-header">
+          <span class="stage-num">${currentLang === 'zh' ? `第 ${key} 階段` : `Stage ${key}`}</span>
+          <span class="stage-name">${escapeHtml(stageName)}</span>
+        </div>
+        <div class="lesson-grid">
+          ${lessons.map(lesson => {
+            const title = lesson.title?.[currentLang] || lesson.title?.en || '';
+            const focus = lesson.objective?.[currentLang] || lesson.objective?.en || '';
+            const criteria = (lesson.successCriteria?.[currentLang] || lesson.successCriteria?.en || []).slice(0, 3);
+            const orderLabel = currentLang === 'zh'
+              ? `第 ${lesson.lessonOrder} 課，共 ${lessons.length} 課`
+              : `Lesson ${lesson.lessonOrder} of ${lessons.length}`;
+            return `
+              <div class="lesson-card">
+                <div class="lesson-top">
+                  <span class="lesson-order">${orderLabel}</span>
+                  <span class="lesson-diff">${escapeHtml(lesson.difficulty || '')}</span>
+                </div>
+                <div class="lesson-title">${escapeHtml(title)}</div>
+                <div class="lesson-focus">${escapeHtml(focus)}</div>
+                <ul class="lesson-criteria">
+                  ${criteria.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+                </ul>
+                <span class="lesson-industry">${escapeHtml(lesson.industry || '')}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function switchLang(lang) {
+  currentLang = lang;
+  const s = STRINGS[lang];
+  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
+  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
+  sessionStorage.setItem('agentraining_lang', lang);
+  document.getElementById('nav-cta').textContent = s.navCta;
+  document.getElementById('hero-badge').textContent = s.heroBadge;
+  document.getElementById('hero-title').innerHTML = s.heroTitleHtml;
+  document.getElementById('hero-sub').textContent = s.heroSub;
+  document.getElementById('open-cta').textContent = s.openCta;
+  document.getElementById('cta-h2').textContent = s.ctaH2;
+  document.getElementById('cta-p').textContent = s.ctaP;
+  document.getElementById('cta-btn').textContent = s.ctaBtn;
+  document.getElementById('f-home').textContent = s.fHome;
+  document.getElementById('f-studios').textContent = s.fStudios;
+  document.getElementById('f-sim').textContent = s.fSim;
+  document.getElementById('f-terms').textContent = s.fTerms;
+  document.getElementById('f-privacy').textContent = s.fPrivacy;
+  document.getElementById('f-contact').textContent = s.fContact;
+  renderCurriculumMap();
+}
+
+fetch('data/curriculum/foundation.json')
+  .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+  .then(json => {
+    curriculumData = Array.isArray(json) ? json : [];
+    const saved = sessionStorage.getItem('agentraining_lang');
+    switchLang(saved === 'zh' ? 'zh' : 'en');
+  })
+  .catch(err => {
+    console.error('[Knowledge Studio] Failed to load curriculum:', err);
+    curriculumData = [];
+    const saved = sessionStorage.getItem('agentraining_lang');
+    switchLang(saved === 'zh' ? 'zh' : 'en');
+  });
+</script>
+</body>
+</html>

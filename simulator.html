@@ -4088,5 +4088,17 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<script>
+// Four Studios deep links: keep the existing access gate, then open the requested view.
+window.addEventListener('load', () => {
+  const studio = new URLSearchParams(window.location.search).get('studio');
+  if (!studio || !sessionStorage.getItem('agentraining_ref')) return;
+  setTimeout(() => {
+    if (studio === 'client' && typeof openClientStudio === 'function') openClientStudio();
+    if (studio === 'manager' && typeof setMvpRole === 'function') setMvpRole('manager');
+  }, 300);
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Four Studios — AgentTraining AI</title>
+<meta name="description" content="Practice Studio, Client Studio, Knowledge Studio, and Manager Studio — one continuous sales capability system for insurance and health advisors."/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#1a56db"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
+    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
+    --white: #ffffff; --border: #e5e7eb; --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--white); z-index: 100;
+  }
+  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--brand); }
+  .nav-links a.current { color: var(--brand); font-weight: 700; }
+  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
+  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .btn-nav {
+    background: var(--accent); color: #111827;
+    padding: 8px 20px; border-radius: 8px; text-decoration: none;
+    font-size: 14px; font-weight: 700; border: none;
+  }
+  .btn-nav:hover { background: #e08800; }
+
+  .hero {
+    text-align: center; padding: 72px 20px 56px;
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  }
+  .hero-badge {
+    display: inline-block; background: #dbeafe; color: var(--brand);
+    padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; line-height: 1.2; margin-bottom: 18px; }
+  .hero h1 span { color: var(--brand); }
+  .hero p { font-size: 17px; color: var(--ink-muted); max-width: 640px; margin: 0 auto; line-height: 1.6; }
+
+  section { padding: 64px 20px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .studio-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  }
+  .studio-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 32px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    text-decoration: none; color: inherit; transition: transform .15s, border-color .15s;
+  }
+  .studio-card:hover { transform: translateY(-3px); border-color: var(--brand); }
+  .studio-icon { font-size: 36px; margin-bottom: 14px; }
+  .studio-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--brand); margin-bottom: 6px; }
+  .studio-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+  .studio-card p { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 18px; flex: 1; }
+  .studio-cta { font-size: 14px; font-weight: 700; color: var(--brand); }
+  .studio-card:hover .studio-cta { text-decoration: underline; }
+
+  .flow-note {
+    max-width: 760px; margin: 48px auto 0; text-align: center;
+    background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius);
+    padding: 20px 24px; font-size: 14px; color: var(--ink-muted); line-height: 1.7;
+  }
+  .flow-note strong { color: var(--ink); }
+
+  footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); }
+  footer div { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  footer a { color: var(--ink-muted); text-decoration: none; font-size: 13px; }
+  footer a:hover { color: var(--brand); }
+  footer p { font-size: 12px; color: var(--ink-muted); }
+
+  @media (max-width: 720px) {
+    nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
+    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .studio-grid { grid-template-columns: 1fr; }
+    section { padding: 44px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="studios.html" class="current" id="nav-studios-label">Studios</a>
+    <div class="nav-lang">
+      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
+    </div>
+    <a class="btn-nav" href="simulator.html?ref=demo" id="nav-cta">Try Free Demo</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge" id="hero-badge">🏛️ One Connected System</div>
+  <h1 id="hero-title">The Four Studios</h1>
+  <p id="hero-sub">Practice Studio, Client Studio, Knowledge Studio, and Manager Studio work together as one continuous sales capability system — from real client objections, to focused practice, to coaching visibility.</p>
+</div>
+
+<section>
+  <div class="section-inner">
+    <div class="studio-grid">
+      <a class="studio-card" href="simulator.html?ref=demo">
+        <div class="studio-icon">🎯</div>
+        <div class="studio-num" id="s1-num">Studio 1</div>
+        <h3 id="s1-title">Practice Studio</h3>
+        <p id="s1-body">Roleplay real objections with an AI client across the 25-scenario Insurance &amp; Health Foundation Curriculum. Get instant AI Coach scoring, strengths, and improvement tips after every session.</p>
+        <span class="studio-cta" id="s1-cta">Open Practice Studio →</span>
+      </a>
+      <a class="studio-card" href="client.html">
+        <div class="studio-icon">👥</div>
+        <div class="studio-num" id="s2-num">Studio 2</div>
+        <h3 id="s2-title">Client Studio</h3>
+        <p id="s2-body">Track real client cases — name, industry, situation, objection, status, and next follow-up. Launch practice matched to that client's objection, then see the score written back to their case.</p>
+        <span class="studio-cta" id="s2-cta">Open Client Studio →</span>
+      </a>
+      <a class="studio-card" href="knowledge.html">
+        <div class="studio-icon">📚</div>
+        <div class="studio-num" id="s3-num">Studio 3</div>
+        <h3 id="s3-title">Knowledge Studio</h3>
+        <p id="s3-body">Browse the full 5-stage curriculum map — every scenario's practice focus and success criteria in one place, so you always know what to study next and why.</p>
+        <span class="studio-cta" id="s3-cta">Open Knowledge Studio →</span>
+      </a>
+      <a class="studio-card" href="manager.html">
+        <div class="studio-icon">📊</div>
+        <div class="studio-num" id="s4-num">Studio 4</div>
+        <h3 id="s4-title">Manager Studio</h3>
+        <p id="s4-body">A dedicated view for team leaders to open Practice Studio in manager mode — see the coaching and assignment tools your team will use as they roll out.</p>
+        <span class="studio-cta" id="s4-cta">Open Manager Studio →</span>
+      </a>
+    </div>
+
+    <div class="flow-note" id="flow-note">
+      <strong>How they connect:</strong> Practice Studio → Completed Practice Result → Client Studio → Client Case → Next Follow-up → back to Practice. Knowledge Studio and Manager Studio support that loop with curriculum context and team visibility.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <a href="index.html" id="f-home">Home</a>
+    <a href="studios.html" id="f-studios">Studios</a>
+    <a href="simulator.html?ref=demo" id="f-sim">AI Simulator</a>
+    <a href="terms.html" id="f-terms">Terms of Service</a>
+    <a href="privacy.html" id="f-privacy">Privacy Policy</a>
+    <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
+  </div>
+  <p id="f-copy">© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+const STUDIOS_STRINGS = {
+  en: {
+    navStudios: 'Studios', navCta: 'Try Free Demo',
+    heroBadge: '🏛️ One Connected System', heroTitle: 'The Four Studios',
+    heroSub: "Practice Studio, Client Studio, Knowledge Studio, and Manager Studio work together as one continuous sales capability system — from real client objections, to focused practice, to coaching visibility.",
+    s1num: 'Studio 1', s1title: 'Practice Studio',
+    s1body: "Roleplay real objections with an AI client across the 25-scenario Insurance & Health Foundation Curriculum. Get instant AI Coach scoring, strengths, and improvement tips after every session.",
+    s1cta: 'Open Practice Studio →',
+    s2num: 'Studio 2', s2title: 'Client Studio',
+    s2body: "Track real client cases — name, industry, situation, objection, status, and next follow-up. Launch practice matched to that client's objection, then see the score written back to their case.",
+    s2cta: 'Open Client Studio →',
+    s3num: 'Studio 3', s3title: 'Knowledge Studio',
+    s3body: "Browse the full 5-stage curriculum map — every scenario's practice focus and success criteria in one place, so you always know what to study next and why.",
+    s3cta: 'Open Knowledge Studio →',
+    s4num: 'Studio 4', s4title: 'Manager Studio',
+    s4body: "A dedicated view for team leaders to open Practice Studio in manager mode — see the coaching and assignment tools your team will use as they roll out.",
+    s4cta: 'Open Manager Studio →',
+    flowNote: '<strong>How they connect:</strong> Practice Studio → Completed Practice Result → Client Studio → Client Case → Next Follow-up → back to Practice. Knowledge Studio and Manager Studio support that loop with curriculum context and team visibility.',
+    fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
+  },
+  zh: {
+    navStudios: '四大工作室', navCta: '免費試用',
+    heroBadge: '🏛️ 一套連貫的系統', heroTitle: '四大工作室',
+    heroSub: '練習工作室、客戶工作室、知識工作室與主管工作室共同組成一套持續運轉的銷售能力系統——從真實的客戶異議，到聚焦的練習，再到主管的輔導視角。',
+    s1num: '工作室 1', s1title: '練習工作室',
+    s1body: '透過25個情境組成的保險與健康基礎課程，與AI虛擬客戶進行真實異議的角色扮演。每次練習後立即獲得AI教練的評分、優點與改進建議。',
+    s1cta: '開啟練習工作室 →',
+    s2num: '工作室 2', s2title: '客戶工作室',
+    s2body: '追蹤真實的客戶案例——姓名、行業、情況、異議、狀態與下次跟進。啟動符合該客戶異議的練習，並將分數寫回該案例。',
+    s2cta: '開啟客戶工作室 →',
+    s3num: '工作室 3', s3title: '知識工作室',
+    s3body: '瀏覽完整的五階段課程地圖——每個情境的練習重點與成功標準都在這裡，讓你隨時知道下一步該學什麼、為什麼學。',
+    s3cta: '開啟知識工作室 →',
+    s4num: '工作室 4', s4title: '主管工作室',
+    s4body: '團隊主管專屬視角，以主管模式開啟練習工作室——查看團隊即將使用的輔導與指派工具。',
+    s4cta: '開啟主管工作室 →',
+    flowNote: '<strong>四者如何串連：</strong>練習工作室 → 完成練習結果 → 客戶工作室 → 客戶案例 → 下次跟進 → 回到練習。知識工作室與主管工作室則以課程內容與團隊視角支援這個循環。',
+    fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
+  }
+};
+
+function switchLang(lang) {
+  const s = STUDIOS_STRINGS[lang];
+  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
+  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
+  sessionStorage.setItem('agentraining_lang', lang);
+  document.getElementById('nav-studios-label').textContent = s.navStudios;
+  document.getElementById('nav-cta').textContent = s.navCta;
+  document.getElementById('hero-badge').textContent = s.heroBadge;
+  document.getElementById('hero-title').textContent = s.heroTitle;
+  document.getElementById('hero-sub').textContent = s.heroSub;
+  document.getElementById('s1-num').textContent = s.s1num;
+  document.getElementById('s1-title').textContent = s.s1title;
+  document.getElementById('s1-body').textContent = s.s1body;
+  document.getElementById('s1-cta').textContent = s.s1cta;
+  document.getElementById('s2-num').textContent = s.s2num;
+  document.getElementById('s2-title').textContent = s.s2title;
+  document.getElementById('s2-body').textContent = s.s2body;
+  document.getElementById('s2-cta').textContent = s.s2cta;
+  document.getElementById('s3-num').textContent = s.s3num;
+  document.getElementById('s3-title').textContent = s.s3title;
+  document.getElementById('s3-body').textContent = s.s3body;
+  document.getElementById('s3-cta').textContent = s.s3cta;
+  document.getElementById('s4-num').textContent = s.s4num;
+  document.getElementById('s4-title').textContent = s.s4title;
+  document.getElementById('s4-body').textContent = s.s4body;
+  document.getElementById('s4-cta').textContent = s.s4cta;
+  document.getElementById('flow-note').innerHTML = s.flowNote;
+  document.getElementById('f-home').textContent = s.fHome;
+  document.getElementById('f-studios').textContent = s.fStudios;
+  document.getElementById('f-sim').textContent = s.fSim;
+  document.getElementById('f-terms').textContent = s.fTerms;
+  document.getElementById('f-privacy').textContent = s.fPrivacy;
+  document.getElementById('f-contact').textContent = s.fContact;
+}
+
+(function initLang() {
+  const saved = sessionStorage.getItem('agentraining_lang');
+  if (saved === 'zh') switchLang('zh');
+})();
+</script>
+</body>
+</html>
