@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AgentTraining AI — AI-Powered Sales Training Simulator</title>
-<meta name="description" content="AI-powered sales training simulator for insurance, real estate, and technology professionals. Practice real conversations, get instant feedback, close more deals."/>
+<title>AgentTraining AI — Enterprise Sales Capability Platform</title>
+<meta name="description" content="Connect real client cases, personalized practice, company knowledge, and manager coaching in one continuous sales capability system."/>
 <link rel="manifest" href="/manifest.json"/>
 <meta name="theme-color" content="#1a56db"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -21,79 +21,17 @@
   "@type": "Organization",
   "name": "AgentTraining AI",
   "url": "https://agentraining.ai/",
-  "description": "AI-powered sales training simulator for insurance, real estate, and technology professionals. Practice realistic conversations, get instant feedback, and close more deals.",
+  "description": "An enterprise sales capability platform connecting real client cases, personalized practice, company knowledge, and manager coaching.",
   "knowsAbout": [
     "AI Sales Training",
     "Insurance Sales Training",
     "Real Estate Sales Training",
     "Sales Role-Play Simulation",
     "Objection Handling",
-    "AI-Powered Coaching"
-  ],
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "AI Sales Training Plans",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "SoftwareApplication",
-          "name": "AgentTraining AI Simulator",
-          "applicationCategory": "BusinessApplication",
-          "description": "AI role-play simulator for insurance, real estate, and technology sales professionals. Practice objection handling and closing techniques with instant AI feedback.",
-          "offers": [
-            {
-              "@type": "Offer",
-              "name": "Starter",
-              "price": "0",
-              "priceCurrency": "USD",
-              "description": "5 free AI practice sessions, no credit card needed"
-            },
-            {
-              "@type": "Offer",
-              "name": "Professional",
-              "price": "39",
-              "priceCurrency": "USD",
-              "billingIncrement": "month",
-              "description": "80 sessions/month, all 41 scenarios, bilingual support, up to 3 people"
-            },
-            {
-              "@type": "Offer",
-              "name": "Team",
-              "price": "99",
-              "priceCurrency": "USD",
-              "billingIncrement": "month",
-              "description": "200 sessions/month, up to 10 team seats, manager dashboard"
-            },
-            {
-              "@type": "Offer",
-              "name": "Enterprise S",
-              "price": "249",
-              "priceCurrency": "USD",
-              "billingIncrement": "month",
-              "description": "500 sessions/month, teams of 21-50, compliance reports"
-            },
-            {
-              "@type": "Offer",
-              "name": "Enterprise M",
-              "price": "499",
-              "priceCurrency": "USD",
-              "billingIncrement": "month",
-              "description": "1,200 sessions/month, teams of 51-100, SSO, advanced analytics"
-            },
-            {
-              "@type": "Offer",
-              "name": "Enterprise L",
-              "price": "899",
-              "priceCurrency": "USD",
-              "billingIncrement": "month",
-              "description": "2,500 sessions/month, teams of 101-200, custom AI fine-tuning, API access"
-            }
-          ]
-        }
-      }
-    ]
-  }
+    "AI-Powered Coaching",
+    "Sales Capability Management",
+    "Manager-Led Team Development"
+  ]
 }
 </script>
 <style>
@@ -167,9 +105,10 @@
 
   /* STATS */
   .stats { display: flex; justify-content: center; gap: 48px; padding: 40px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-  .stat { text-align: center; }
-  .stat-num { font-size: 36px; font-weight: 800; color: var(--brand); }
-  .stat-label { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+  .stat { text-align: center; max-width: 190px; }
+  .stat-num { font-size: 30px; font-weight: 800; color: var(--brand); }
+  .stat-label { font-size: 13px; color: var(--ink-muted); margin-top: 6px; line-height: 1.45; }
+  .stat-label strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 3px; }
 
   /* SECTION */
   section { padding: 72px 20px; }
@@ -502,7 +441,7 @@
       <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchIndexLang('en')">EN</button>
       <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchIndexLang('zh')">中文</button>
     </div>
-    <a class="btn-nav" href="simulator.html">Try Free Demo</a>
+    <a class="btn-nav" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Book Team Demo</a>
   </div>
 </nav>
 
@@ -513,18 +452,18 @@
   <p>AgentTraining.ai connects real client cases, company knowledge, personalized practice, and manager coaching into one continuous sales capability system.</p>
   <p class="hero-audience">Built for individual advisors, sales teams, and enterprise leaders.</p>
   <div class="hero-cta">
-    <a class="btn-primary" href="simulator.html">Try Free — No Credit Card →</a>
-    <a class="btn-secondary" href="#enterprise">Enterprise Solutions</a>
+    <a class="btn-primary" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Start a Team Pilot →</a>
+    <a class="btn-secondary" href="simulator.html">Try Individual Practice</a>
   </div>
-  <p class="hero-sub">Trusted by teams across the US, Hong Kong &amp; Singapore &nbsp;·&nbsp; English + 繁體中文</p>
+  <p class="hero-sub">Insurance-first &nbsp;·&nbsp; English + 繁體中文 &nbsp;·&nbsp; Individual and team pathways</p>
 </div>
 
 <!-- STATS -->
 <div class="stats">
-  <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Faster new agent onboarding</div></div>
-  <div class="stat"><div class="stat-num">3×</div><div class="stat-label">More practice per week vs traditional coaching</div></div>
-  <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Agents report higher confidence</div></div>
-  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available — no scheduling needed</div></div>
+  <div class="stat"><div class="stat-num">👤</div><div class="stat-label"><strong>Real Client Cases</strong>Start with the conversations your advisors actually face.</div></div>
+  <div class="stat"><div class="stat-num">🎯</div><div class="stat-label"><strong>Personalized Practice</strong>Target the capability gap behind each client challenge.</div></div>
+  <div class="stat"><div class="stat-num">📚</div><div class="stat-label"><strong>Company Knowledge</strong>Align coaching with your products, methods, and standards.</div></div>
+  <div class="stat"><div class="stat-num">📊</div><div class="stat-label"><strong>Manager Visibility</strong>Know who needs help and what should happen next.</div></div>
 </div>
 
 <!-- METHOD - SIGNATURE DIFFERENTIATOR -->
@@ -580,64 +519,64 @@
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="section-inner">
-    <div class="section-tag">Why AgentTraining AI</div>
-    <h2>Everything you need to train a top-performing sales team</h2>
-    <p class="section-sub">Built specifically for insurance, real estate, and technology sales — not generic role-play scripts.</p>
+    <div class="section-tag">One Continuous Capability System</div>
+    <h2>Four Studios. One team improvement cycle.</h2>
+    <p class="section-sub">Move from a real client challenge to targeted practice, company-aligned coaching, and a clear leadership action.</p>
     <div class="features-grid">
 
       <div class="feature-card">
         <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-blue">🤖</div>
-          <h3>Realistic AI Prospects</h3>
+          <div class="feature-icon-wrap icon-blue">🎯</div>
+          <h3>Practice Studio <span style="font-size:10px;color:#15803d;background:#dcfce7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">LIVE</span></h3>
         </div>
-        <p>Our AI simulates skeptical, curious, or price-sensitive buyers. Every session feels like a real call, not a rehearsed script.</p>
+        <p>Give every advisor a safe place to prepare for difficult conversations and receive consistent feedback.</p>
         <ul class="feature-bullets">
-          <li>Adapts to your responses in real time</li>
-          <li>Pushes back like a real client would</li>
-          <li>Multiple buyer personalities per scenario</li>
-          <li>No two sessions are exactly alike</li>
+          <li>Industry-specific role-play</li>
+          <li>Immediate scorecard and coaching</li>
+          <li>English and Traditional Chinese</li>
+          <li>Repeat safely before the real meeting</li>
         </ul>
       </div>
 
       <div class="feature-card">
         <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-purple">⚡</div>
-          <h3>Instant AI Feedback</h3>
+          <div class="feature-icon-wrap icon-purple">👤</div>
+          <h3>Client Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
         </div>
-        <p>After each conversation, receive a detailed scorecard — no waiting for a manager review.</p>
+        <p>Turn a real client objection into preparation for the advisor's next conversation and next action.</p>
         <ul class="feature-bullets">
-          <li>Objection handling score</li>
-          <li>Rapport and empathy rating</li>
-          <li>Closing technique analysis</li>
-          <li>Specific suggestions for next session</li>
+          <li>Capture needs, objections, and status</li>
+          <li>Connect cases to relevant practice</li>
+          <li>Prepare follow-up conversations</li>
+          <li>Keep the client outcome in view</li>
         </ul>
       </div>
 
       <div class="feature-card">
         <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-green">🎯</div>
-          <h3>Industry-Specific Scenarios</h3>
+          <div class="feature-icon-wrap icon-green">📚</div>
+          <h3>Knowledge Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
         </div>
-        <p>Practice the exact conversations your industry demands — built from real field experience, not generic scripts.</p>
+        <p>Bring company products, training methods, and compliance boundaries into the coaching process.</p>
         <ul class="feature-bullets">
-          <li>Life, health, annuity &amp; IUL insurance</li>
-          <li>Real estate buyer &amp; seller conversations</li>
-          <li>SaaS and technology sales demos</li>
-          <li>New scenarios added regularly</li>
+          <li>Company training materials</li>
+          <li>Product and process knowledge</li>
+          <li>Approved sales standards</li>
+          <li>Reusable successful practices</li>
         </ul>
       </div>
 
       <div class="feature-card">
         <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-orange">🌏</div>
-          <h3>Bilingual &amp; Team-Ready</h3>
+          <div class="feature-icon-wrap icon-orange">📊</div>
+          <h3>Leadership Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
         </div>
-        <p>Train in English or Traditional Chinese. Scale across your entire agency with team tools built for managers.</p>
+        <p>Help leaders see capability gaps, assign the right practice, and review what happens next.</p>
         <ul class="feature-bullets">
-          <li>English + Traditional Chinese (繁體中文)</li>
-          <li>US, Hong Kong &amp; Singapore market scenarios</li>
-          <li>Team progress tracking for managers</li>
-          <li>Unlimited practice — no session caps</li>
+          <li>See who needs help</li>
+          <li>Identify the specific skill gap</li>
+          <li>Assign focused practice</li>
+          <li>Review progress with the team</li>
         </ul>
       </div>
 
@@ -716,24 +655,34 @@
 <!-- HOW IT WORKS -->
 <section>
   <div class="section-inner">
-    <div class="section-tag">How It Works</div>
-    <h2>From zero to confident in 3 steps</h2>
-    <p class="section-sub">No setup. No downloads. Start practicing in under 60 seconds.</p>
+    <div class="section-tag">The Team Capability Loop</div>
+    <h2>From a real client challenge to a better next action</h2>
+    <p class="section-sub">Start small: one team, one recurring capability gap, and one measurable outcome.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <h3>Choose Your Scenario</h3>
-        <p>Pick an industry and situation — cold call, follow-up, objection handling, or closing. New scenarios added monthly.</p>
+        <h3>Capture the Challenge</h3>
+        <p>Start with a real objection or client conversation your advisors repeatedly face.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3>Talk to Your AI Prospect</h3>
-        <p>Have a real back-and-forth conversation. The AI adapts to what you say, just like a real client.</p>
+        <h3>Practice the Conversation</h3>
+        <p>Turn that challenge into focused role-play before the next real client interaction.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h3>Review & Improve</h3>
-        <p>Read your instant scorecard, replay the conversation, and try again with a different approach.</p>
+        <h3>Coach to Your Standard</h3>
+        <p>Use structured feedback and, during a team pilot, align coaching with company knowledge.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Identify the Gap</h3>
+        <p>See whether the advisor needs help with discovery, trust, objections, or next-step discipline.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3>Lead the Next Action</h3>
+        <p>Give the advisor focused follow-up and review whether performance improves over time.</p>
       </div>
     </div>
   </div>
@@ -937,33 +886,33 @@
   <div class="section-inner">
     <div style="text-align:center;margin-bottom:48px;">
       <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:20px;padding:6px 18px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;">For Teams &amp; Enterprises</div>
-      <h2 style="color:white;font-size:clamp(28px,4vw,44px);margin-bottom:16px;">The Problem Every Sales Manager Knows</h2>
-      <p style="color:rgba(255,255,255,0.7);font-size:18px;max-width:640px;margin:0 auto;line-height:1.6;">New agents take months to become productive. Managers spend hours coaching one-on-one. Best practices stay with your top performers instead of spreading to the whole team.</p>
+      <h2 style="color:white;font-size:clamp(28px,4vw,44px);margin-bottom:16px;">Know Who Needs Help, What They Need, and What Happens Next.</h2>
+      <p style="color:rgba(255,255,255,0.7);font-size:18px;max-width:700px;margin:0 auto;line-height:1.6;">Move beyond course completion. Connect the client challenges your team faces with targeted practice, clear capability gaps, and the leader's next coaching action.</p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:48px;">
       <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
         <div style="font-size:32px;margin-bottom:12px;">⚡</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Cut Onboarding Time by 40%</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">New agents practice 40+ real client scenarios before their first real meeting. They arrive prepared — not learning on the job.</p>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">See the Capability Gap</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Identify whether an advisor needs help with discovery, trust, objections, product explanation, or securing a clear next step.</p>
       </div>
       <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
         <div style="font-size:32px;margin-bottom:12px;">📊</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Scale Your Best Practices</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Your top performers' techniques become the standard for everyone — not just the agents lucky enough to shadow them.</p>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Assign Focused Practice</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Give the right advisor the right practice instead of sending the entire team through the same generic training.</p>
       </div>
       <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
         <div style="font-size:32px;margin-bottom:12px;">🎯</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Free Your Managers to Lead</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">AI handles the repetitive practice coaching. Your managers focus on strategy, motivation, and closing big deals — not drilling objection scripts.</p>
+        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Review the Next Outcome</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Help leaders review whether the advisor followed up, improved the conversation, and moved the client toward the next stage.</p>
       </div>
     </div>
 
     <div style="background:rgba(255,255,255,0.06);border-radius:20px;padding:36px;border:1px solid rgba(255,255,255,0.15);text-align:center;max-width:640px;margin:0 auto;">
-      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:8px;">What we tell enterprise clients:</div>
-      <blockquote style="font-size:20px;font-weight:700;color:white;line-height:1.4;margin:0 0 24px;font-style:italic;">"We help your team reduce new agent onboarding time by 40% through AI simulation — without adding to your managers' workload."</blockquote>
-      <a href="mailto:sales@agentraining.ai" style="display:inline-block;background:white;color:#1e3a8a;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;">Talk to Enterprise Sales →</a>
-      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:12px;">Teams of 20+. Custom onboarding. Dedicated support.</p>
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:8px;">A practical starting point:</div>
+      <blockquote style="font-size:20px;font-weight:700;color:white;line-height:1.4;margin:0 0 24px;font-style:italic;">"Start with one team, two or three recurring objections, and one outcome your leader wants to improve."</blockquote>
+      <a href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry" style="display:inline-block;background:white;color:#1e3a8a;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;">Start a Team Pilot →</a>
+      <p style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:12px;">Suggested pilot: 5–10 advisors · 2–3 priority objections · 4–6 weeks</p>
     </div>
   </div>
 </section>
@@ -972,8 +921,8 @@
 <section id="pricing">
   <div class="section-inner">
     <div class="section-tag">Pricing</div>
-    <h2>Simple, transparent pricing</h2>
-    <p class="section-sub">Start free. Scale as your team grows. Most clients start on Team or Enterprise — that's where the real ROI is.</p>
+    <h2>Start individually—or validate with one team.</h2>
+    <p class="section-sub">Individual advisors can begin immediately. Leaders can start with a focused pilot before deciding on a broader rollout.</p>
     <div class="pricing-grid">
       <div class="pricing-card">
         <div class="plan-name">Starter</div>
@@ -987,80 +936,45 @@
         </ul>
         <a class="btn-plan btn-plan-outline" href="simulator.html">Start Free</a>
       </div>
-      <div class="pricing-card featured">
-        <div class="featured-badge">Most Popular</div>
+      <div class="pricing-card">
         <div class="plan-name">Professional</div>
         <div class="plan-price">$39<span>/month</span></div>
-        <p class="plan-desc">For individual agents (up to 3 people). Great starting point.</p>
+        <p class="plan-desc">For individual advisors who want structured, repeatable practice.</p>
         <ul class="plan-features">
           <li>80 sessions/month</li>
           <li>All 41 scenarios</li>
           <li>Detailed scorecard + replay</li>
           <li>English + Traditional Chinese</li>
-          <li>Progress tracking dashboard</li>
-          <li>Client value assessment</li>
         </ul>
         <a class="btn-plan btn-plan-fill" href="https://www.paypal.com/ncp/payment/FQWSVH3NR73EC" target="_blank">Subscribe Now — $39/mo</a>
       </div>
-      <div class="pricing-card">
-        <div class="plan-name">Team</div>
-        <div class="plan-price">$99<span>/month</span></div>
-        <p class="plan-desc">For small teams (4-20 people) and growing agencies.</p>
+      <div class="pricing-card featured">
+        <div class="featured-badge">Recommended for Leaders</div>
+        <div class="plan-name">Team Pilot</div>
+        <div class="plan-price">Let's Talk</div>
+        <p class="plan-desc">For a leader who wants to test one priority capability gap with a focused group.</p>
         <ul class="plan-features">
-          <li>200 sessions/month</li>
-          <li>Up to 10 team seats</li>
-          <li>Manager performance dashboard</li>
-          <li>Team reports &amp; analytics</li>
-          <li>Custom scenarios</li>
-          <li>Priority email support</li>
+          <li>Suggested group of 5–10 advisors</li>
+          <li>2–3 priority client objections</li>
+          <li>Agreed pilot success measures</li>
+          <li>Leadership review at the end</li>
         </ul>
-        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Contact Sales</a>
-      </div>
-      <div class="pricing-card" style="border-color:#1e3a8a;position:relative;">
-        <div class="featured-badge" style="background:#1e3a8a;">Best for Teams</div>
-        <div class="plan-name">Enterprise S</div>
-        <div class="plan-price">$249<span>/month</span></div>
-        <p class="plan-desc" style="font-weight:600;color:#1e3a8a;">For teams of 21-50 people. Real ROI starts here.</p>
-        <ul class="plan-features">
-          <li>500 sessions/month</li>
-          <li>Manager dashboard</li>
-          <li>Compliance reports</li>
-          <li>Custom scenarios</li>
-          <li>Priority support</li>
-          <li>Onboarding included</li>
-        </ul>
-        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
+        <a class="btn-plan btn-plan-fill" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Plan My Pilot</a>
       </div>
       <div class="pricing-card">
-        <div class="plan-name">Enterprise M</div>
-        <div class="plan-price">$499<span>/month</span></div>
-        <p class="plan-desc">For teams of 51-100 people.</p>
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price">Custom</div>
+        <p class="plan-desc">For organizations ready to plan a broader rollout after validating the use case.</p>
         <ul class="plan-features">
-          <li>1,200 sessions/month</li>
-          <li>Everything in Enterprise S</li>
-          <li>SSO authentication</li>
-          <li>Advanced analytics</li>
-          <li>Dedicated support</li>
-          <li>Custom integrations</li>
+          <li>Scope based on team size and goals</li>
+          <li>Company knowledge alignment plan</li>
+          <li>Manager workflow and rollout plan</li>
+          <li>Pricing based on validated requirements</li>
         </ul>
-        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
-      </div>
-      <div class="pricing-card">
-        <div class="plan-name">Enterprise L</div>
-        <div class="plan-price">$899<span>/month</span></div>
-        <p class="plan-desc">For teams of 101-200 people.</p>
-        <ul class="plan-features">
-          <li>2,500 sessions/month</li>
-          <li>Everything in Enterprise M</li>
-          <li>Custom AI fine-tuning</li>
-          <li>API access</li>
-          <li>Dedicated account manager</li>
-          <li>Custom onboarding program</li>
-        </ul>
-        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai">Get in Touch</a>
+        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai?subject=Enterprise%20Rollout%20Inquiry">Discuss Enterprise Scope</a>
       </div>
     </div>
-    <p style="text-align: center; margin-top: 32px; font-size: 14px; color: var(--ink-muted);">Enterprise XL (200+ people) — <a href="mailto:sales@agentraining.ai" style="color: var(--brand); text-decoration: none; font-weight: 600;">Contact us for custom annual pricing</a></p>
+    <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--ink-muted);">No large rollout required to begin. A small, measurable pilot is the recommended first step.</p>
   </div>
 </section>
 
@@ -1111,9 +1025,10 @@
 
 <!-- BANNER CTA -->
 <div class="banner">
-  <h2>Ready to build a team that closes?</h2>
-  <p>Join sales professionals already training smarter with AI. Your first 3 sessions are free.</p>
-  <a class="btn-banner" href="simulator.html">Launch AI Simulator →</a>
+  <h2>Start with one team, one capability gap, and one measurable outcome.</h2>
+  <p>Choose two or three recurring client objections and test a focused pilot with 5–10 advisors.</p>
+  <a class="btn-banner" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Start a Team Pilot →</a>
+  <p style="font-size:14px;margin-top:20px;margin-bottom:0;opacity:0.75;">Individual advisor? <a href="simulator.html" style="color:white;font-weight:700;">Try the simulator free.</a></p>
 </div>
 
 <!-- FOOTER -->
