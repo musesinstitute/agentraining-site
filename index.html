@@ -148,6 +148,7 @@
   .hero h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
   .hero h1 span { color: var(--brand); }
   .hero p { font-size: 18px; color: var(--ink-muted); max-width: 600px; margin: 0 auto 36px; line-height: 1.6; }
+  .hero .hero-audience { margin-top: -20px; margin-bottom: 30px; font-size: 15px; font-weight: 600; color: var(--ink); }
   .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
   .btn-primary {
     background: var(--brand); color: var(--white);
@@ -507,9 +508,10 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">🏆 AI Sales Performance Platform</div>
-  <h1>Turn Every Agent into<br/><span>a Top Performer.</span></h1>
-  <p>Train smarter. Close more. Grow faster.<br/>AI-powered sales simulation built for insurance, real estate, and wellness teams.</p>
+  <div class="hero-badge">🏆 Enterprise Sales Capability Platform</div>
+  <h1>Train Every Advisor.<br/><span>Coach Every Manager.<br/>Advance Every Client.</span></h1>
+  <p>AgentTraining.ai connects real client cases, company knowledge, personalized practice, and manager coaching into one continuous sales capability system.</p>
+  <p class="hero-audience">Built for individual advisors, sales teams, and enterprise leaders.</p>
   <div class="hero-cta">
     <a class="btn-primary" href="simulator.html">Try Free — No Credit Card →</a>
     <a class="btn-secondary" href="#enterprise">Enterprise Solutions</a>
@@ -1144,15 +1146,18 @@ function switchIndexLang(lang) {
   // Update hero text
   const h1 = document.querySelector('.hero h1');
   const heroP = document.querySelector('.hero p');
+  const audienceP = document.querySelector('.hero-audience');
   const badge = document.querySelector('.hero-badge');
   if (lang === 'zh') {
-    h1.innerHTML = '別讓真實客戶，<br/><span>成為你的練習對象。</span>';
-    heroP.textContent = '用 AI 先練好，每一通電話都更有把握——練得越多，成交越穩。陪你練習真實情境，隨時隨地，不怕說錯。';
-    badge.textContent = '🚀 AI 銷售訓練平台';
+    h1.innerHTML = '訓練每一位顧問。<br/><span>輔導每一位主管。<br/>推進每一位客戶。</span>';
+    heroP.textContent = 'AgentTraining.ai 把真實客戶案例、企業知識、個性化練習與主管輔導連接起來，形成一套持續運轉的銷售能力系統。';
+    audienceP.textContent = '無論您是個人顧問、銷售團隊還是企業主管，都可以從這裡開始。';
+    badge.textContent = '🏆 企業銷售能力平台';
   } else {
-    h1.innerHTML = "Your Next Sales Call<br/><span>Shouldn't Be Your</span> First Attempt.";
-    heroP.textContent = 'Stop practicing on real clients — train with AI instead. Practice real sales conversations, get instant feedback, and close more deals.';
-    badge.textContent = '🚀 AI-Powered Sales Training';
+    h1.innerHTML = 'Train Every Advisor.<br/><span>Coach Every Manager.<br/>Advance Every Client.</span>';
+    heroP.textContent = 'AgentTraining.ai connects real client cases, company knowledge, personalized practice, and manager coaching into one continuous sales capability system.';
+    audienceP.textContent = 'Built for individual advisors, sales teams, and enterprise leaders.';
+    badge.textContent = '🏆 Enterprise Sales Capability Platform';
   }
 }
 </script>
