@@ -64,7 +64,17 @@
         "保持冷靜和自信，不表現防禦或過度道歉。"
       ]
     },
-    "nextScenario": "IHFC-02"
+    "nextScenario": "IHFC-02",
+    "matchKeywords": [
+      "premium too high",
+      "premium is too high",
+      "too expensive",
+      "cost too much",
+      "price is too high",
+      "can't afford the premium",
+      "monthly cost",
+      "$ a month is too much"
+    ]
   },
   {
     "id": "IHFC-02",
@@ -131,7 +141,14 @@
         "以具體且沒有壓力的下一步或跟進時間作結。"
       ]
     },
-    "nextScenario": "IHFC-03"
+    "nextScenario": "IHFC-03",
+    "matchKeywords": [
+      "think about it",
+      "need time to think",
+      "let me think",
+      "think it over",
+      "get back to you"
+    ]
   },
   {
     "id": "IHFC-03",
@@ -198,7 +215,15 @@
         "一旦客戶說出真正的預算限制，就避免再施加壓力。"
       ]
     },
-    "nextScenario": "IHFC-04"
+    "nextScenario": "IHFC-04",
+    "matchKeywords": [
+      "can't afford it",
+      "can't afford it right now",
+      "money is tight",
+      "budget is tight",
+      "afford it right now",
+      "too tight right now"
+    ]
   },
   {
     "id": "IHFC-04",
@@ -265,7 +290,18 @@
         "避免讓客戶覺得她必須在業務員和配偶之間做選擇。"
       ]
     },
-    "nextScenario": "IHFC-05"
+    "nextScenario": "IHFC-05",
+    "matchKeywords": [
+      "spouse",
+      "husband",
+      "wife",
+      "partner doesn't agree",
+      "ask my husband",
+      "ask my wife",
+      "talk to my spouse",
+      "my husband wasn't sure",
+      "my wife wasn't sure"
+    ]
   },
   {
     "id": "IHFC-05",
@@ -332,7 +368,15 @@
         "提出具體問題找出可能的保障缺口，而不是預設現有保單不足。"
       ]
     },
-    "nextScenario": "IHFC-06"
+    "nextScenario": "IHFC-06",
+    "matchKeywords": [
+      "already have insurance",
+      "already have a policy",
+      "have coverage elsewhere",
+      "existing policy",
+      "current agent",
+      "already covered"
+    ]
   },
   {
     "id": "IHFC-06",
@@ -399,7 +443,14 @@
         "詢問客戶的未來規劃，讓價值論述更個人化，而不是給出制式推銷詞。"
       ]
     },
-    "nextScenario": "IHFC-07"
+    "nextScenario": "IHFC-07",
+    "matchKeywords": [
+      "my age",
+      "too young",
+      "too young for this",
+      "why do i need this",
+      "i'm healthy"
+    ]
   },
   {
     "id": "IHFC-07",
@@ -466,7 +517,15 @@
         "尊重客戶的理財知識，而不是輕視她的問題。"
       ]
     },
-    "nextScenario": "IHFC-08"
+    "nextScenario": "IHFC-08",
+    "matchKeywords": [
+      "good investment",
+      "better investment",
+      "index fund",
+      "instead of investing",
+      "put money in the market",
+      "why not just invest"
+    ]
   },
   {
     "id": "IHFC-08",
@@ -533,7 +592,15 @@
         "確認客戶是真的感到安心，而不只是被敷衍。"
       ]
     },
-    "nextScenario": "IHFC-09"
+    "nextScenario": "IHFC-09",
+    "matchKeywords": [
+      "change my mind",
+      "change my mind later",
+      "what if i want out",
+      "lock me in",
+      "flexibility",
+      "commitment"
+    ]
   },
   {
     "id": "IHFC-09",
@@ -600,7 +667,13 @@
         "讓客戶感覺自己是計算過程中的夥伴，而不是被套進固定數字的對象。"
       ]
     },
-    "nextScenario": "IHFC-10"
+    "nextScenario": "IHFC-10",
+    "matchKeywords": [
+      "coverage too low",
+      "coverage amount",
+      "not enough coverage",
+      "coverage seems low"
+    ]
   },
   {
     "id": "IHFC-10",
@@ -667,7 +740,15 @@
         "讓客戶在討論結束時比一開始更清晰、更不焦慮。"
       ]
     },
-    "nextScenario": "IHFC-11"
+    "nextScenario": "IHFC-11",
+    "matchKeywords": [
+      "family financial planning",
+      "financial priorities",
+      "college fund",
+      "mortgage",
+      "too many priorities",
+      "where to start"
+    ]
   },
   {
     "id": "IHFC-11",
@@ -734,7 +815,13 @@
         "在繼續之前，確認客戶是否真的聽懂了。"
       ]
     },
-    "nextScenario": "IHFC-12"
+    "nextScenario": "IHFC-12",
+    "matchKeywords": [
+      "whole life vs term",
+      "whole life or term",
+      "term life",
+      "which type of life insurance"
+    ]
   },
   {
     "id": "IHFC-12",
@@ -801,7 +888,12 @@
         "修復先前矛盾推銷所損害的信任。"
       ]
     },
-    "nextScenario": "IHFC-13"
+    "nextScenario": "IHFC-13",
+    "matchKeywords": [
+      "iul",
+      "indexed universal life",
+      "iul vs whole life"
+    ]
   },
   {
     "id": "IHFC-13",
@@ -868,7 +960,12 @@
         "尊重其他投資決策屬於客戶理財顧問的專業範圍。"
       ]
     },
-    "nextScenario": "IHFC-14"
+    "nextScenario": "IHFC-14",
+    "matchKeywords": [
+      "annuity",
+      "worth it for retirement",
+      "guaranteed income annuity"
+    ]
   },
   {
     "id": "IHFC-14",
@@ -935,7 +1032,13 @@
         "避免重複客戶已經知道的雇主保險內容。"
       ]
     },
-    "nextScenario": "IHFC-15"
+    "nextScenario": "IHFC-15",
+    "matchKeywords": [
+      "critical illness",
+      "already have health insurance",
+      "medical coverage",
+      "why do i need critical illness"
+    ]
   },
   {
     "id": "IHFC-15",
@@ -1002,7 +1105,14 @@
         "提供真誠的情感安撫，同時不做過度承諾。"
       ]
     },
-    "nextScenario": "IHFC-16"
+    "nextScenario": "IHFC-16",
+    "matchKeywords": [
+      "market volatility",
+      "market is down",
+      "accounts swing",
+      "lose value",
+      "volatile market"
+    ]
   },
   {
     "id": "IHFC-16",
@@ -1069,7 +1179,15 @@
         "讓客戶結束時感覺更冷靜、更有信心，而不是更不知所措。"
       ]
     },
-    "nextScenario": "IHFC-17"
+    "nextScenario": "IHFC-17",
+    "matchKeywords": [
+      "medicare",
+      "medicare supplement",
+      "medigap",
+      "plan g",
+      "plan n",
+      "turned 65"
+    ]
   },
   {
     "id": "IHFC-17",
@@ -1136,7 +1254,13 @@
         "以客戶能理解的方式，說明長壽風險（資產可能在有生之年花光）。"
       ]
     },
-    "nextScenario": "IHFC-18"
+    "nextScenario": "IHFC-18",
+    "matchKeywords": [
+      "retirement income",
+      "turn savings into income",
+      "retire in a few years",
+      "monthly paycheck in retirement"
+    ]
   },
   {
     "id": "IHFC-18",
@@ -1203,7 +1327,14 @@
         "以真誠的細膩態度處理傳承規劃中的情感複雜性。"
       ]
     },
-    "nextScenario": "IHFC-19"
+    "nextScenario": "IHFC-19",
+    "matchKeywords": [
+      "estate planning",
+      "legacy",
+      "inheritance",
+      "leave something for my kids",
+      "treated fairly when i'm gone"
+    ]
   },
   {
     "id": "IHFC-19",
@@ -1270,7 +1401,15 @@
         "把客戶的最佳利益放在留住保單或贏得業績之前。"
       ]
     },
-    "nextScenario": "IHFC-20"
+    "nextScenario": "IHFC-20",
+    "matchKeywords": [
+      "cancel my policy",
+      "cancel this policy",
+      "replace my policy",
+      "switch policies",
+      "cheaper policy elsewhere",
+      "switch to a cheaper"
+    ]
   },
   {
     "id": "IHFC-20",
@@ -1337,7 +1476,13 @@
         "把說明連結到客戶尚未考慮過的真實風險（未經規劃的股權轉移）。"
       ]
     },
-    "nextScenario": "IHFC-21"
+    "nextScenario": "IHFC-21",
+    "matchKeywords": [
+      "buy-sell agreement",
+      "buy sell agreement",
+      "business partner",
+      "what happens if my partner"
+    ]
   },
   {
     "id": "IHFC-21",
@@ -1404,7 +1549,13 @@
         "透過客戶自己算出的數字建立真正的急迫性，而不是使用施壓手法。"
       ]
     },
-    "nextScenario": "IHFC-22"
+    "nextScenario": "IHFC-22",
+    "matchKeywords": [
+      "key person",
+      "key employee",
+      "lose my lead engineer",
+      "critical employee"
+    ]
   },
   {
     "id": "IHFC-22",
@@ -1471,7 +1622,13 @@
         "積極致力於重建信任，而不是輕視客戶過去的不好經驗。"
       ]
     },
-    "nextScenario": "IHFC-23"
+    "nextScenario": "IHFC-23",
+    "matchKeywords": [
+      "health insurance",
+      "health plan exclusions",
+      "denied coverage",
+      "self-employed health"
+    ]
   },
   {
     "id": "IHFC-23",
@@ -1538,7 +1695,14 @@
         "等到客戶明顯冷靜下來後，才推進到下一步。"
       ]
     },
-    "nextScenario": "IHFC-24"
+    "nextScenario": "IHFC-24",
+    "matchKeywords": [
+      "angry",
+      "frustrated",
+      "bad experience with",
+      "wasted my time",
+      "skeptical of agents"
+    ]
   },
   {
     "id": "IHFC-24",
@@ -1605,7 +1769,14 @@
         "讓客戶留下正面印象，而不是讓這個機會就此冷卻。"
       ]
     },
-    "nextScenario": "IHFC-25"
+    "nextScenario": "IHFC-25",
+    "matchKeywords": [
+      "no time",
+      "don't have time",
+      "busy right now",
+      "back-to-back meetings",
+      "no time right now"
+    ]
   },
   {
     "id": "IHFC-25",
@@ -1672,6 +1843,15 @@
         "以真誠的細膩態度和尊重處理健康狀況的揭露。"
       ]
     },
-    "nextScenario": null
+    "nextScenario": null,
+    "matchKeywords": [
+      "trust your company",
+      "know your company",
+      "underwriting",
+      "pre-existing condition",
+      "health condition",
+      "get declined",
+      "understand your company"
+    ]
   }
 ]
