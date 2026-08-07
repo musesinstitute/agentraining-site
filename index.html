@@ -178,6 +178,22 @@
   h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
   .section-sub { font-size: 16px; color: var(--ink-muted); max-width: 560px; line-height: 1.6; margin-bottom: 48px; }
 
+  /* FOUR STUDIOS */
+  .four-studios { background: var(--white); }
+  .studios-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .studio-tile {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px 20px; text-decoration: none; color: inherit; transition: transform .15s, border-color .15s;
+  }
+  .studio-tile:hover { transform: translateY(-3px); border-color: var(--brand); }
+  .studio-tile-icon { font-size: 28px; margin-bottom: 10px; }
+  .studio-tile h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .studio-tile p { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+  .studios-see-all { display: inline-block; margin-top: 28px; font-size: 14px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .studios-see-all:hover { text-decoration: underline; }
+  @media (max-width: 900px) { .studios-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .studios-grid { grid-template-columns: 1fr; } }
+
   /* FEATURES GRID */
   .features { background: var(--surface); }
   .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
@@ -482,8 +498,8 @@
 
   /* RESPONSIVE */
   @media (max-width: 640px) {
-    nav { padding: 14px 20px; }
-    .nav-links { gap: 16px; }
+    nav { padding: 14px 20px; flex-wrap: wrap; row-gap: 10px; }
+    .nav-links { gap: 16px; flex-wrap: wrap; justify-content: center; }
     .stats { gap: 28px; }
   }
 </style>
@@ -494,6 +510,7 @@
 <nav>
   <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
   <div class="nav-links">
+    <a href="studios.html" id="nav-studios-link">Studios</a>
     <a href="#features">Features</a>
     <a href="#pricing">Pricing</a>
     <a href="#enterprise" style="color:var(--brand);font-weight:700;">Enterprise</a>
@@ -526,6 +543,38 @@
   <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Agents report higher confidence</div></div>
   <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available — no scheduling needed</div></div>
 </div>
+
+<!-- FOUR STUDIOS -->
+<section class="four-studios" id="studios">
+  <div class="section-inner">
+    <div class="section-tag" id="studios-tag">ONE CONNECTED SYSTEM</div>
+    <h2 id="studios-h2">The Four Studios</h2>
+    <p class="section-sub" id="studios-sub">Practice Studio, Client Studio, Knowledge Studio, and Manager Studio work together — from real client objections, to focused practice, to coaching visibility.</p>
+    <div class="studios-grid">
+      <a class="studio-tile" href="simulator.html">
+        <div class="studio-tile-icon">🎯</div>
+        <h3 id="st1-h">Practice Studio</h3>
+        <p id="st1-p">Roleplay real objections, get instant AI Coach scoring.</p>
+      </a>
+      <a class="studio-tile" href="client.html">
+        <div class="studio-tile-icon">👥</div>
+        <h3 id="st2-h">Client Studio</h3>
+        <p id="st2-p">Track real client cases and see practice results on each one.</p>
+      </a>
+      <a class="studio-tile" href="knowledge.html">
+        <div class="studio-tile-icon">📚</div>
+        <h3 id="st3-h">Knowledge Studio</h3>
+        <p id="st3-p">The full 25-scenario curriculum map, always up to date.</p>
+      </a>
+      <a class="studio-tile" href="manager.html">
+        <div class="studio-tile-icon">📊</div>
+        <h3 id="st4-h">Manager Studio</h3>
+        <p id="st4-p">Coach and assign practice across your team.</p>
+      </a>
+    </div>
+    <a class="studios-see-all" href="studios.html" id="studios-see-all">See all four studios →</a>
+  </div>
+</section>
 
 <!-- METHOD - SIGNATURE DIFFERENTIATOR -->
 <section class="method">
@@ -1120,6 +1169,7 @@
 <footer>
   <div>
     <a href="index.html">Home</a>
+    <a href="studios.html" id="footer-studios-link">Studios</a>
     <a href="simulator.html">AI Simulator</a>
     <a href="terms.html">Terms of Service</a>
     <a href="privacy.html">Privacy Policy</a>
@@ -1159,6 +1209,38 @@ function switchIndexLang(lang) {
     audienceP.textContent = 'Built for individual advisors, sales teams, and enterprise leaders.';
     badge.textContent = '🏆 Enterprise Sales Capability Platform';
   }
+
+  // Four Studios section + nav/footer "Studios" links
+  const studiosText = lang === 'zh'
+    ? {
+        nav: '工作室', footer: '工作室', tag: '一套連貫的系統', h2: '四大工作室',
+        sub: '練習工作室、客戶工作室、知識工作室與主管工作室共同運作——從真實的客戶異議，到聚焦的練習，再到主管的輔導視角。',
+        st1h: '練習工作室', st1p: '與AI客戶角色扮演真實異議，立即獲得AI教練評分。',
+        st2h: '客戶工作室', st2p: '追蹤真實客戶案例，並在每個案例上查看練習結果。',
+        st3h: '知識工作室', st3p: '完整的25個情境課程地圖，內容即時同步。',
+        st4h: '主管工作室', st4p: '為團隊進行輔導與練習指派。',
+        seeAll: '查看全部四個工作室 →'
+      }
+    : {
+        nav: 'Studios', footer: 'Studios', tag: 'ONE CONNECTED SYSTEM', h2: 'The Four Studios',
+        sub: 'Practice Studio, Client Studio, Knowledge Studio, and Manager Studio work together — from real client objections, to focused practice, to coaching visibility.',
+        st1h: 'Practice Studio', st1p: 'Roleplay real objections, get instant AI Coach scoring.',
+        st2h: 'Client Studio', st2p: 'Track real client cases and see practice results on each one.',
+        st3h: 'Knowledge Studio', st3p: 'The full 25-scenario curriculum map, always up to date.',
+        st4h: 'Manager Studio', st4p: 'Coach and assign practice across your team.',
+        seeAll: 'See all four studios →'
+      };
+  const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+  setText('nav-studios-link', studiosText.nav);
+  setText('footer-studios-link', studiosText.footer);
+  setText('studios-tag', studiosText.tag);
+  setText('studios-h2', studiosText.h2);
+  setText('studios-sub', studiosText.sub);
+  setText('st1-h', studiosText.st1h); setText('st1-p', studiosText.st1p);
+  setText('st2-h', studiosText.st2h); setText('st2-p', studiosText.st2p);
+  setText('st3-h', studiosText.st3h); setText('st3-p', studiosText.st3p);
+  setText('st4-h', studiosText.st4h); setText('st4-p', studiosText.st4p);
+  setText('studios-see-all', studiosText.seeAll);
 }
 </script>
 </body>

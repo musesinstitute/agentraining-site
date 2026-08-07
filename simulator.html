@@ -120,6 +120,12 @@
       display: none; align-items: flex-start; justify-content: center;
       overflow-y: auto; padding: 24px;
     }
+    #client-studio-overlay {
+      position: fixed; inset: 0; z-index: 10001;
+      background: var(--canvas);
+      display: none; align-items: flex-start; justify-content: center;
+      overflow-y: auto; padding: 24px;
+    }
     .dash-shell {
       background: var(--white); border: 1px solid var(--border);
       border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
@@ -4070,6 +4076,20 @@ function refreshClientStudioStrings() {
   }
 }
 
+// Deep-link routing from the Four Studios pages (studios.html, client.html,
+// manager.html): ?studio=client opens Client Studio directly; ?studio=manager
+// switches the MVP role switcher to Manager and opens the dashboard on it.
+// Unknown/missing values fall through to the normal Practice Studio dashboard.
+function routeStudioParam() {
+  const params = new URLSearchParams(window.location.search);
+  const studio = params.get('studio');
+  if (studio === 'client') {
+    openClientStudio();
+  } else if (studio === 'manager') {
+    setMvpRole('manager');
+  }
+}
+
 // ── INIT ──
 if (checkAccess()) {
   setPanelMode('curriculum');
@@ -4077,6 +4097,7 @@ if (checkAccess()) {
   showLangPicker();
   setupTextSelectionMenu();
   renderDashboard();
+  routeStudioParam();
 }
 </script>
 <script>
