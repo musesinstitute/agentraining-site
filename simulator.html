@@ -152,8 +152,9 @@
       color: var(--ink-muted); margin-bottom: 10px;
     }
     .dash-card-primary { margin-bottom: 20px; }
-    .dash-cl-academy { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .dash-cl-lesson { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 12px; line-height: 1.35; }
+    .dash-cl-academy { font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 4px; font-family: var(--font-display); }
+    .dash-cl-subtitle { font-size: 12px; color: var(--ink-muted); line-height: 1.5; margin-bottom: 12px; }
+    .dash-cl-lesson { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; line-height: 1.35; }
     .dash-cl-progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .dash-progress-bar { flex: 1; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
     .dash-progress-fill { height: 100%; background: var(--accent); border-radius: 99px; width: 0%; transition: width .3s; }
@@ -193,12 +194,22 @@
     .dash-comp-seg { width: 16px; height: 8px; border-radius: 3px; background: var(--border); }
     .dash-comp-seg.filled { background: var(--accent); }
     .dash-comp-note { font-size: 11px; color: var(--ink-muted); margin-top: 14px; line-height: 1.5; font-style: italic; }
+    .dash-demo-card { background: var(--accent-lt); border: 1px dashed var(--accent); margin-bottom: 20px; }
+    .dash-demo-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .dash-demo-btn {
+      flex: 1; min-width: 140px; background: var(--white); border: 1.5px solid var(--accent);
+      border-radius: 10px; padding: 10px 12px; font-size: 12px; font-weight: 700; color: var(--accent);
+      cursor: pointer; font-family: inherit; transition: all .15s; text-align: center;
+    }
+    .dash-demo-btn:hover { background: var(--accent); color: var(--white); }
     @media (max-width: 600px) {
       .dash-shell { padding: 20px; margin: 8px auto; }
       .dash-mgr-grid { grid-template-columns: 1fr; }
       .dash-secondary-row { flex-direction: column; }
       .dash-secondary-btn { min-width: 0; }
       .dash-comp-seg { width: 12px; }
+      .dash-demo-row { flex-direction: column; }
+      .dash-demo-btn { min-width: 0; }
     }
 
     /* MARKDOWN IN CHAT */
@@ -303,7 +314,6 @@
       text-transform: uppercase; margin-bottom: 4px;
     }
     .cat-finance { color: var(--accent); }
-    .cat-realestate { color: var(--green); }
     .scenario-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
     .scenario-preview { font-size: 12px; color: var(--ink-muted); line-height: 1.4; }
     .scenario-lv {
@@ -790,6 +800,7 @@
       <div class="dash-card dash-card-primary">
         <div class="dash-card-label" id="ld-cl-label">Continue Learning</div>
         <div class="dash-cl-academy" id="ld-academy">Foundation Academy</div>
+        <div class="dash-cl-subtitle" id="ld-subtitle"></div>
         <div class="dash-cl-lesson" id="ld-lesson">—</div>
         <div class="dash-cl-progress-row">
           <div class="dash-progress-bar"><div class="dash-progress-fill" id="ld-progress-fill"></div></div>
@@ -803,6 +814,17 @@
         <button class="dash-secondary-btn" onclick="dashBrowseCurriculum()" id="ld-browse-curriculum">📚 Browse Curriculum</button>
         <button class="dash-secondary-btn" onclick="dashBrowseAllScenarios()" id="ld-browse-all">🗂 Browse All Scenarios</button>
         <button class="dash-secondary-btn" onclick="dashFreePractice()" id="ld-free-practice">🎯 Free Practice</button>
+      </div>
+
+      <!-- Live-demo quick access: opens the 3 priority Stage 1 objections directly,
+           bypassing browsing, for presenting to a room without hunting for scenarios. -->
+      <div class="dash-card dash-demo-card" id="ld-demo-card">
+        <div class="dash-card-label" id="ld-demo-label">🎤 Live Demo Quick Start</div>
+        <div class="dash-demo-row">
+          <button class="dash-demo-btn" onclick="dashOpenDemoScenario('IHFC-01')" id="ld-demo-1">💰 Premium Is Too High</button>
+          <button class="dash-demo-btn" onclick="dashOpenDemoScenario('IHFC-02')" id="ld-demo-2">🤔 I'll Think About It</button>
+          <button class="dash-demo-btn" onclick="dashOpenDemoScenario('IHFC-04')" id="ld-demo-3">💑 My Spouse Doesn't Agree</button>
+        </div>
       </div>
 
       <!-- E-412A: My Competencies card — placeholder-only, non-authoritative. No scoring
@@ -908,6 +930,10 @@
       <div id="sum-tips"></div>
     </div>
     <div class="summary-coach-note" id="sum-coach-note"></div>
+    <div class="summary-section" id="sum-next-section" style="display:none;">
+      <div class="summary-section-title" id="sum-next-label">➡️ Next Recommended Scenario</div>
+      <button class="btn-next-scenario" id="btn-next-scenario" onclick="goToNextCurriculumScenario()" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
+    </div>
     <hr class="summary-divider"/>
     <div class="summary-share-label" id="sum-share-label">Share with your manager</div>
     <div class="summary-actions">
@@ -999,6 +1025,10 @@
       <div class="coach-stage-label">Current Stage</div>
       <div id="current-stage-text" class="coach-stage-value">General Practice</div>
     </div>
+    <div class="coach-stage-card" id="learning-goal-card" style="display:none;">
+      <div class="coach-stage-label" id="learning-goal-label">Learning Goal</div>
+      <div id="learning-goal-text" class="coach-stage-value"></div>
+    </div>
     <div class="feedback-body" id="feedback-body">
       <div class="empty-feedback">
         <div class="empty-icon">🎯</div>
@@ -1038,7 +1068,8 @@ const INDUSTRY_ALIASES = {
   'Real Estate': 'real_estate',
   'realestate': 'real_estate',
   'Health & Wellness': 'health_wellness',
-  'health': 'health_wellness'
+  'health': 'health_wellness',
+  'Health': 'health_wellness'
 };
 
 function getIndustryDisplayName(rawIndustry) {
@@ -1447,100 +1478,6 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
     }
   },
 
-  // ══════════════════════════════════════
-  // 🏠 REAL ESTATE (7 scenarios)
-  // ══════════════════════════════════════
-  {
-    id: 5, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Objection Handling',
-    name: { en: "\"The price is too high\"", zh: '「房價太高了」' },
-    preview: { en: 'Buyer pushes for price reduction', zh: '買方要求降價' },
-    keywords: ['price', 'negotiation', 'offer', 'market value', 'comparable', '房價', '議價', '出價'],
-    level: 'Lv.1',
-    clientName: 'Robert Kim',
-    systemPrompt: {
-      en: `You are Robert Kim, potential home buyer. Toured house at $850K. Like it but think overpriced. Push for lower price. If agent explains comparable sales data well, consider $820K. Start: "I like the house, but $850,000 is really stretching it. I've seen similar homes going for around $780K nearby."`,
-      zh: `你是金羅伯特，潛在購房者。參觀了85萬美元的房子，喜歡但覺得定價過高。要求降價。若業務員解釋可比銷售數據，考慮82萬。開場：「我喜歡這棟房子，但85萬真的有點超了，我看到附近類似的房子大約賣78萬。」`
-    }
-  },
-  {
-    id: 6, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Objection Handling',
-    name: { en: "\"Interest rates are too high\"", zh: '「現在利率太高了」' },
-    preview: { en: 'Buyer wants to wait for rates to drop', zh: '買方想等利率下降' },
-    keywords: ['interest rate', 'mortgage', 'loan', 'wait', 'rate', '利率', '房貸', '等待'],
-    level: 'Lv.2',
-    clientName: 'Linda Zhang',
-    systemPrompt: {
-      en: `You are Linda Zhang, 42, teacher. Worried about 7% mortgage rates. Want to wait for rates to drop. If agent explains refinancing options or risk of home prices rising while waiting, might reconsider. Start: "With rates at 7%, my monthly payment would be brutal. I'm thinking of waiting another year or two."`,
-      zh: `你是張琳達，42歲老師。擔心7%房貸利率，想等利率下降。若業務員解釋再融資或等待期間房價上漲風險，可能重新考慮。開場：「7%的利率，月付會很艱難，我在考慮再等一兩年。」`
-    }
-  },
-  {
-    id: 14, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Discovery',
-    name: { en: "\"I want to see more houses\"", zh: '「我想再看看其他房子」' },
-    preview: { en: 'Buyer afraid of making wrong decision', zh: '買方害怕做出錯誤決定' },
-    keywords: ['more options', 'compare', 'hesitate', 'first time buyer', 'decide', '看更多', '比較', '猶豫', '首次'],
-    level: 'Lv.2',
-    clientName: 'Eric Chen',
-    systemPrompt: {
-      en: `You are Eric Chen, first-time buyer. Toured great house but afraid of wrong decision. Keep saying want to see more options. Real issue is fear of regret. If agent asks "What would make you feel confident enough to decide?" you start articulating real concerns. If they push to decide now, you resist. Start: "The house is nice, but I feel like I should see a few more before committing. What if something better comes along?"`,
-      zh: `你是陳艾瑞克，第一次購房。參觀了不錯的房子但害怕做錯決定。一直說想看更多選項。真正問題是害怕後悔。若業務員問「什麼能讓你有信心決定？」你開始說出真正的顧慮。若他們逼你現在決定，你抵抗。開場：「房子很好，但我覺得在承諾前應該再看幾間，萬一有更好的怎麼辦？」`
-    }
-  },
-  {
-    id: 15, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Needs Analysis',
-    name: { en: '"I\\\\\\\'m worried about the neighborhood"', zh: '「我擔心這個社區環境」' },
-    preview: { en: 'Buyer has location concerns', zh: '買方對地段有疑慮' },
-    keywords: ['neighborhood', 'school', 'safety', 'location', 'crime', '社區', '學校', '安全', '地段'],
-    level: 'Lv.3',
-    clientName: 'Maria Santos',
-    systemPrompt: {
-      en: `You are Maria Santos, mother of two. Like the house but concerned about neighborhood — schools, safety, future value. If agent brings real data on school ratings and crime trends, you warm up. If they just say "it's a great area!" without data, you push back. Start: "I love the house but I'm not sure about this neighborhood. My kids' school situation is really important to me."`,
-      zh: `你是桑托斯瑪麗亞，兩個孩子的媽媽。喜歡房子但擔心社區——學校、安全和未來價值。若業務員提供學校評分和犯罪趨勢的真實數據，你接受。若只說「這是個好地區！」沒有數據，你反駁。開場：「我愛這棟房子但不確定這個社區，我孩子的學校情況對我非常重要。」`
-    }
-  },
-  {
-    id: 28, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Objection Handling',
-    name: { en: '"I\\\\\\\'m not sure I can get a mortgage"', zh: '「我不確定我能申請到貸款」' },
-    preview: { en: 'Buyer worried about loan approval', zh: '買方擔心貸款批准' },
-    keywords: ['self-employed', 'mortgage approval', 'income', 'loan', 'freelance', '自僱', '貸款', '收入'],
-    level: 'Lv.2',
-    clientName: 'Sam Ho',
-    systemPrompt: {
-      en: `You are Sam Ho, 39, self-employed contractor. You want to buy a home but worried your variable income makes mortgage approval difficult. Objections: "Banks don't like self-employed people" and "My income varies a lot year to year." If agent explains bank statement loans, mortgage brokers who specialize in self-employed, and how to document income, you become hopeful. Start: "I've been wanting to buy for years but I'm self-employed and I've heard it's really hard to get approved. My income isn't consistent — one year I made $120K, another $80K."`,
-      zh: `你是何山姆，39歲自僱承包商。想買房但擔心可變收入使貸款批准困難。反對：「銀行不喜歡自僱人士」「我的收入逐年波動很大」。若業務員解釋銀行對帳單貸款、專門服務自僱人士的貸款經紀人和如何記錄收入，你變得充滿希望。開場：「我多年來想買房，但我是自僱人士，聽說很難獲批。我的收入不穩定——一年賺12萬，另一年8萬。」`
-    }
-  },
-  {
-    id: 29, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Needs Analysis',
-    name: { en: "\"Should I rent or buy?\"", zh: '「我應該租房還是買房？」' },
-    preview: { en: 'Client undecided on rent vs buy', zh: '客戶對租買猶豫不決' },
-    keywords: ['rent vs buy', 'renting', 'landlord', 'invest', 'property', '租房', '買房', '租', '買'],
-    level: 'Lv.1',
-    clientName: 'Julia Tan',
-    systemPrompt: {
-      en: `You are Julia Tan, 32, graphic designer. Paying $2,200/month rent and wondering if you should buy instead. Not sure if you'll stay in the city long-term. Genuinely open to advice. If agent asks about your timeline, financial goals, and lifestyle before pitching, you engage openly. If they immediately push buying without understanding your situation, you pull back. Start: "I've been renting for 6 years and my friends keep saying I'm throwing money away. But I'm not sure I want to commit to staying here. Can you help me think this through?"`,
-      zh: `你是陳朱莉亞，32歲平面設計師。每月付2,200美元租金，想知道是否應該買房。不確定是否長期留在這個城市。真誠地對建議開放。若業務員在推銷前詢問你的時間線、財務目標和生活方式，你坦誠參與。若他們在沒了解你的情況下立即推銷買房，你退縮。開場：「我租房6年了，朋友說我在浪費錢。但我不確定是否想承諾留在這裡。你能幫我理清思路嗎？」`
-    }
-  },
-  {
-    id: 30, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Objection Handling',
-    name: { en: "\"The house needs too much work\"", zh: '「這棟房子需要太多翻修」' },
-    preview: { en: 'Buyer deterred by renovation needs', zh: '買方被翻修需求嚇退' },
-    keywords: ['renovation', 'repair', 'fix', 'update', 'fixer upper', '翻修', '裝修', '修繕'],
-    level: 'Lv.3',
-    clientName: 'Frank Leung',
-    systemPrompt: {
-      en: `You are Frank Leung, 47, engineer. You toured a house at a good price but it needs a new kitchen, new bathrooms, and some structural work. You're worried about renovation costs and the hassle. Objections: "The renovation will cost $80K easily" and "I don't want to live in a construction zone for a year." If agent helps you estimate renovation costs realistically and shows how it compares to move-in-ready options at higher prices, you reconsider. Start: "I like the location and the price, but this place needs a lot of work. The kitchen is ancient and I'm pretty sure the bathrooms need to be completely redone. I just don't know if I have the energy for that."`,
-      zh: `你是梁法蘭克，47歲工程師。你參觀了一棟價格不錯但需要新廚房、新浴室和一些結構工程的房子。擔心翻修費用和麻煩。反對：「翻修費用至少8萬」「我不想在施工區住一年」。若業務員幫你實際估算翻修費用並與更高價格的即住型選項比較，你重新考慮。開場：「我喜歡地點和價格，但這個地方需要大量工程。廚房很老舊，我很確定浴室需要全部翻新。我不知道我是否有這個精力。」`
-    }
-  },
   // ── NEW FINANCE SCENARIOS ──
   {
     id: 31, cat: 'finance', industry: 'Finance & Insurance',
@@ -1649,33 +1586,6 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
     }
   },
 
-  // ── NEW REAL ESTATE SCENARIOS ──
-  {
-    id: 39, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Needs Analysis',
-    keywords: ['investment property', 'rental', 'passive income', 'ROI', 'tenant', '投資房', '租金', '被動收入'],
-    name: { en: "\"Is this a good investment property?\"", zh: '「這個投資房合適嗎？」' },
-    preview: { en: 'Investor evaluating rental property', zh: '投資者評估出租物業' },
-    level: 'Lv.2',
-    clientName: 'Raymond Ong',
-    systemPrompt: {
-      en: `You are Raymond Ong, 45, looking to buy his first investment property. You want passive income. You ask tough numbers questions: "What's the cap rate?" and "What's realistic rental income after expenses?" and "What if I can't find tenants?" If agent gives you honest numbers and helps you calculate realistic ROI, you engage seriously. If they only hype the upside, you push back. Start: "I've been thinking about buying a rental property for passive income. But I want to see the real numbers — not just the best case scenario. What's the honest return I can expect?"`,
-      zh: `你是王雷蒙，45歲，正在考慮購買第一個投資房。你想要被動收入。你問困難的數字問題：「資本化率是多少？」「扣除費用後現實的租金收入是多少？」「如果找不到租客怎麼辦？」若業務員給你誠實的數字並幫你計算現實的ROI，你認真參與。若他們只誇大好的方面，你反駁。開場：「我一直在考慮買出租房獲得被動收入。但我想看真實的數字——不只是最好的情況。我能期待什麼樣的誠實回報？」`
-    }
-  },
-  {
-    id: 40, cat: 'realestate', industry: 'Real Estate',
-    stage: 'Discovery',
-    keywords: ['downsize', 'empty nest', 'retirement', 'smaller home', 'sell', '縮小', '空巢', '退休', '賣房'],
-    name: { en: "\"Should I downsize now?\"", zh: '「我現在應該換小房子嗎？」' },
-    preview: { en: 'Empty nester considering downsizing', zh: '空巢期業主考慮換小房' },
-    level: 'Lv.2',
-    clientName: 'Catherine Wu',
-    systemPrompt: {
-      en: `You are Catherine Wu, 61, whose children just moved out. You're thinking of selling your large family home and buying something smaller. You have emotional attachment to the house. Objections: "This house has so many memories" and "What if my kids come back?" and "Is it even a good time to sell?" If agent acknowledges the emotional aspect first and then helps you think through the financial and lifestyle logic, you open up. Start: "My youngest just left for college and suddenly this 4-bedroom house feels too big. But I've lived here for 20 years. I'm not sure I'm ready to let go."`,
-      zh: `你是吳凱瑟琳，61歲，孩子剛搬出去。你在考慮賣掉大家庭房並購買更小的房子。你對這棟房子有情感依附。反對：「這棟房子有太多回憶」「如果孩子回來怎麼辦？」「現在賣是好時機嗎？」若業務員先認可情感層面然後幫你理清財務和生活方式邏輯，你敞開心扉。開場：「我最小的孩子剛去上大學，突然這個四臥室的房子感覺太大了。但我在這裡住了20年，我不確定我是否準備好放手。」`
-    }
-  }
 ];
 
 // ── STATE ──
@@ -1747,11 +1657,13 @@ const strings = {
     scoreLabel: 'Overall Score', outOf: '/ 100',
     empathy: 'Empathy & Rapport', accuracy: 'Product Accuracy', closing: 'Closing Technique',
     strengths: '✅ Strengths', tips: '💡 Tips to Improve', resetConfirm: 'Reset this conversation?',
-    catFinance: 'Finance & Insurance', catRealestate: 'Real Estate', catHealth: 'Health & Wellness', catFree: 'Free Practice',
+    catFinance: 'Finance & Insurance', catHealth: 'Health & Wellness', catFree: 'Free Practice',
     sessionEnded: '— End of Session — Click Reset to practice again —',
     curriculumTab: 'Curriculum', allScenariosTab: 'All Scenarios',
-    foundationAcademy: 'Foundation Academy', existingLibrary: 'Existing Scenario Library',
-    browseLibraryLink: '→ Browse Insurance, Real Estate, Health & Wellness (switch to All Scenarios)',
+    foundationAcademy: 'Insurance & Health Foundation Curriculum',
+    foundationSubtitle: 'Build practical sales skills through 25 structured scenarios. Start with Stage 1 and progress toward advanced insurance conversations.',
+    existingLibrary: 'Existing Scenario Library',
+    browseLibraryLink: '→ Browse the full Insurance & Health scenario library (switch to All Scenarios)',
     curriculumLoading: 'Loading curriculum…',
     curriculumFailed: 'Curriculum could not be loaded — switch to "All Scenarios" to view the existing library.',
     completedLabel: 'completed', scoreShortLabel: 'Score',
@@ -1772,7 +1684,11 @@ const strings = {
     dashAiInsightPlaceholder: 'Insights will appear after your team completes practice sessions.',
     dashOpenStudio: 'Open Practice Studio →',
     dashCompetenciesLabel: 'My Competencies',
-    dashCompetenciesNote: 'Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.'
+    dashCompetenciesNote: 'Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.',
+    learningGoalLabel: 'Learning Goal',
+    demoQuickStartLabel: '🎤 Live Demo Quick Start',
+    nextScenarioLabel: '➡️ Next Recommended Scenario',
+    curriculumCompleteLabel: '🎉 You\'ve completed the full curriculum!'
   },
   zh: {
     scenariosLabel: '練習情境', feedbackLabel: 'AI 教練回饋',
@@ -1789,11 +1705,13 @@ const strings = {
     scoreLabel: '總體評分', outOf: '/ 100',
     empathy: '同理心與信任建立', accuracy: '產品準確度', closing: '成交技巧',
     strengths: '✅ 做得好的地方', tips: '💡 改進建議', resetConfirm: '重置此對話？',
-    catFinance: '金融與保險', catRealestate: '房地產', catHealth: '健康與保健', catFree: '自由練習',
+    catFinance: '金融與保險', catHealth: '健康與保健', catFree: '自由練習',
     sessionEnded: '— 練習結束 — 點擊重置再次練習 —',
     curriculumTab: '課程', allScenariosTab: '全部情境',
-    foundationAcademy: 'Foundation Academy 基礎學院', existingLibrary: '完整情境庫',
-    browseLibraryLink: '→ 查看保險、房地產、健康與保健的完整情境（切換到「全部情境」）',
+    foundationAcademy: '保險與健康基礎銷售課程',
+    foundationSubtitle: '透過25個結構化情境，建立實用的銷售技巧。從第一階段開始，逐步邁向進階保險對話。',
+    existingLibrary: '完整情境庫',
+    browseLibraryLink: '→ 查看保險與健康的完整情境庫（切換到「全部情境」）',
     curriculumLoading: '課程載入中…',
     curriculumFailed: '課程資料無法載入，請切換到「全部情境」查看現有情境。',
     completedLabel: '已完成', scoreShortLabel: '分數',
@@ -1814,7 +1732,11 @@ const strings = {
     dashAiInsightPlaceholder: '當團隊完成練習後，洞察內容將顯示於此。',
     dashOpenStudio: '開啟練習工作室 →',
     dashCompetenciesLabel: '我的職能',
-    dashCompetenciesNote: '此 MVP 版本中的職能等級僅為示意，未來版本將依實際完成的練習紀錄計算。'
+    dashCompetenciesNote: '此 MVP 版本中的職能等級僅為示意，未來版本將依實際完成的練習紀錄計算。',
+    learningGoalLabel: '學習目標',
+    demoQuickStartLabel: '🎤 現場示範快速入口',
+    nextScenarioLabel: '➡️ 下一個推薦情境',
+    curriculumCompleteLabel: '🎉 你已完成整套課程！'
   }
 };
 
@@ -1844,7 +1766,7 @@ const scenarioMeta = {
   22: { focus: { en: 'Business protection · Key-man', zh: '企業保障 · 關鍵人壽險' }, time: '10-15' },
 };
 
-let collapsedSections = { realestate: true, health: true };
+let collapsedSections = { health: true };
 
 // ── CURRICULUM (Practice Studio — Foundation Academy) ──
 let currentPanelMode = 'curriculum';
@@ -1861,6 +1783,7 @@ function loadCurriculumData() {
       curriculumData = Array.isArray(json) ? json : [];
       renderCurrentPanel(document.getElementById('search-input') ? document.getElementById('search-input').value : '');
       updateLearnerDashboardCard();
+      updateDemoQuickStartButtons();
     })
     .catch(err => {
       console.error('[Curriculum] Failed to load data/curriculum/foundation.json — falling back to existing scenario library.', err);
@@ -1928,37 +1851,42 @@ function renderCurriculum(filter = '') {
     if (!f) return true;
     const title = (lesson.title?.[currentLang] || '').toLowerCase();
     const titleEn = (lesson.title?.en || '').toLowerCase();
-    const moduleTxt = (lesson.module || '').toLowerCase();
+    const moduleTxt = ((lesson.module?.[currentLang] || '') + ' ' + (lesson.module?.en || '')).toLowerCase();
     const skillsTxt = (lesson.skills || []).join(' ').toLowerCase();
     const industryTxt = (lesson.industry || '').toLowerCase();
     return title.includes(f) || titleEn.includes(f) || moduleTxt.includes(f) || skillsTxt.includes(f) || industryTxt.includes(f);
   });
 
   const academyHeader = document.createElement('div');
-  academyHeader.style.cssText = 'padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-muted);';
+  academyHeader.style.cssText = 'padding:10px 14px 2px;font-size:13px;font-weight:800;color:var(--ink);';
   academyHeader.textContent = s.foundationAcademy;
   list.appendChild(academyHeader);
+
+  const academySubtitle = document.createElement('div');
+  academySubtitle.style.cssText = 'padding:2px 14px 10px;font-size:11px;line-height:1.5;color:var(--ink-muted);';
+  academySubtitle.textContent = s.foundationSubtitle;
+  list.appendChild(academySubtitle);
 
   const progress = getCurriculumProgress();
 
   const modules = {};
   filtered.forEach(lesson => {
-    const key = String(lesson.moduleOrder) + '::' + lesson.module;
+    const key = String(lesson.moduleOrder);
     if (!modules[key]) modules[key] = [];
     modules[key].push(lesson);
   });
 
   Object.keys(modules).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)).forEach(key => {
     const lessons = modules[key].slice().sort((a, b) => a.lessonOrder - b.lessonOrder);
-    const moduleName = lessons[0].module;
     const moduleOrder = lessons[0].moduleOrder;
+    const moduleName = lessons[0].module?.[currentLang] || lessons[0].module?.en || '';
     const fullModuleLessons = curriculumData.filter(l => l.moduleOrder === moduleOrder);
     const completedCount = fullModuleLessons.filter(l => progress[l.id]?.completed).length;
 
     const modHeader = document.createElement('div');
     modHeader.style.cssText = 'padding:10px 14px 2px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;';
     modHeader.innerHTML = `
-      <span style="font-size:12px;font-weight:700;color:var(--ink);">Module ${moduleOrder}: ${moduleName}</span>
+      <span style="font-size:12px;font-weight:700;color:var(--ink);">${currentLang === 'zh' ? `第 ${moduleOrder} 階段：${moduleName}` : `Stage ${moduleOrder}: ${moduleName}`}</span>
       <span style="font-size:10px;color:var(--ink-muted);font-weight:600;white-space:nowrap;">${completedCount} / ${fullModuleLessons.length} ${s.completedLabel}</span>
     `;
     list.appendChild(modHeader);
@@ -2005,7 +1933,10 @@ function selectCurriculumLesson(lesson) {
     systemPrompt: lesson.systemPrompt,
     greeting: lesson.greeting,
     isCurriculum: true,
-    stage: lesson.stage
+    stage: lesson.stage?.[currentLang] || lesson.stage?.en || '',
+    objective: lesson.objective,
+    successCriteria: lesson.successCriteria,
+    curriculumOrder: lesson.curriculumOrder
   };
   selectScenario(mapped);
 }
@@ -2107,8 +2038,8 @@ function renderScenarios(filter = '') {
     });
   }
 
-  // HEALTH & REAL ESTATE — collapsible
-  [['health', s.catHealth], ['realestate', s.catRealestate]].forEach(([cat, label]) => {
+  // HEALTH — collapsible
+  [['health', s.catHealth]].forEach(([cat, label]) => {
     if (!groups[cat]) return;
     const isCollapsed = collapsedSections[cat] && !filter;
     const catHeader = document.createElement('div');
@@ -2151,6 +2082,21 @@ function updateCurrentIndustry(industry) {
   }
 }
 
+function updateLearningGoal(sc) {
+  const card = document.getElementById('learning-goal-card');
+  const label = document.getElementById('learning-goal-label');
+  const text = document.getElementById('learning-goal-text');
+  if (!card || !text) return;
+  if (label) label.textContent = strings[currentLang].learningGoalLabel;
+  const goal = sc && sc.objective ? (sc.objective[currentLang] || sc.objective.en) : '';
+  if (goal) {
+    card.style.display = '';
+    text.textContent = goal;
+  } else {
+    card.style.display = 'none';
+  }
+}
+
 function selectScenario(sc) {
   // Close mobile panel if open
   const panel = document.getElementById('panel-left');
@@ -2172,6 +2118,7 @@ function selectScenario(sc) {
   document.getElementById('send-btn').disabled = false;
   updateCurrentStage(sc?.stage);
   updateCurrentIndustry(sc?.industry);
+  updateLearningGoal(sc);
 
   // Auto-trigger welcome for free practice (id=0)
   if (sc.id === 0) {
@@ -2859,6 +2806,7 @@ const origSelectScenario = window.selectScenario;
 
 // ── SESSION SUMMARY ──
 let lastFinalData = null;
+let pendingNextLesson = null;
 
 function showSummary(data) {
   lastFinalData = data;
@@ -2917,6 +2865,30 @@ function showSummary(data) {
     document.getElementById('sum-coach-note').textContent = '"' + data.summary + '"';
   }
 
+  // Next recommended scenario (curriculum lessons only)
+  const nextSection = document.getElementById('sum-next-section');
+  const nextLabel = document.getElementById('sum-next-label');
+  const nextBtn = document.getElementById('btn-next-scenario');
+  pendingNextLesson = null;
+  if (nextSection && nextLabel && nextBtn) {
+    nextLabel.textContent = strings[currentLang].nextScenarioLabel;
+    if (currentScenario?.isCurriculum && Array.isArray(curriculumData)) {
+      const lessonDef = curriculumData.find(l => l.id === currentScenario.id);
+      const nextId = lessonDef?.nextScenario;
+      const nextLesson = nextId ? curriculumData.find(l => l.id === nextId) : null;
+      if (nextLesson) {
+        pendingNextLesson = nextLesson;
+        nextBtn.textContent = (nextLesson.title[currentLang] || nextLesson.title.en) + ' →';
+        nextSection.style.display = 'block';
+      } else {
+        nextBtn.textContent = strings[currentLang].curriculumCompleteLabel;
+        nextSection.style.display = 'block';
+      }
+    } else {
+      nextSection.style.display = 'none';
+    }
+  }
+
   // Share label & button
   document.getElementById('sum-share-label').textContent = isZh ? '分享給你的主管' : 'Share with your manager';
 
@@ -2933,6 +2905,15 @@ function showSummary(data) {
 function closeSummary() {
   document.getElementById('summary-modal').style.display = 'none';
   document.getElementById('copy-success').style.display = 'none';
+}
+
+function goToNextCurriculumScenario() {
+  if (!pendingNextLesson) { closeSummary(); return; }
+  const next = pendingNextLesson;
+  pendingNextLesson = null;
+  closeSummary();
+  setPanelMode('curriculum');
+  selectCurriculumLesson(next);
 }
 
 function copySummaryText() {
@@ -3196,6 +3177,7 @@ function setLang(lang) {
     document.getElementById('client-name').textContent = s.selectScenario;
     document.getElementById('chat-input').placeholder = s.inputPlaceholder;
   }
+  updateLearningGoal(currentScenario);
   const curBtn = document.getElementById('mode-btn-curriculum');
   const allBtn = document.getElementById('mode-btn-all');
   if (curBtn) curBtn.textContent = s.curriculumTab;
@@ -3280,9 +3262,43 @@ function refreshDashboardStrings() {
   set('md-ai-label', s.dashAiInsightLabel);
   set('md-ai-body', s.dashAiInsightPlaceholder);
   set('md-open-studio', s.dashOpenStudio);
+  set('ld-subtitle', s.foundationSubtitle);
+  set('ld-demo-label', s.demoQuickStartLabel);
   const note = document.getElementById('md-assign-note');
   if (note && note.style.display !== 'none') note.textContent = s.dashAssignNote;
   updateLearnerDashboardCard();
+  updateDemoQuickStartButtons();
+}
+
+// Live-demo quick-start buttons show the real localized lesson titles once the
+// curriculum has loaded; until then they fall back to their static HTML text.
+const DEMO_QUICK_START = [
+  { id: 'IHFC-01', btn: 'ld-demo-1', icon: '💰' },
+  { id: 'IHFC-02', btn: 'ld-demo-2', icon: '🤔' },
+  { id: 'IHFC-04', btn: 'ld-demo-3', icon: '💑' }
+];
+function updateDemoQuickStartButtons() {
+  if (!Array.isArray(curriculumData)) return;
+  DEMO_QUICK_START.forEach(({ id, btn, icon }) => {
+    const el = document.getElementById(btn);
+    const lesson = curriculumData.find(l => l.id === id);
+    if (el && lesson) el.textContent = icon + ' ' + (lesson.title[currentLang] || lesson.title.en);
+  });
+}
+
+function dashOpenDemoScenario(id) {
+  hideDashboard();
+  forceHideOnboarding();
+  setPanelMode('curriculum');
+  const openLesson = () => {
+    const lesson = Array.isArray(curriculumData) ? curriculumData.find(l => l.id === id) : null;
+    if (lesson) selectCurriculumLesson(lesson);
+  };
+  if (curriculumData === null) {
+    setTimeout(openLesson, 400); // curriculum fetch may still be in flight
+  } else {
+    openLesson();
+  }
 }
 
 // Picks the first not-yet-completed curriculum lesson (by module/lesson order),
@@ -3321,9 +3337,11 @@ function updateLearnerDashboardCard() {
   const allDone = completedCount === total;
 
   academyEl.textContent = s.foundationAcademy;
+  const nextModuleName = next.module?.[currentLang] || next.module?.en || '';
+  const nextStageLabel = currentLang === 'zh' ? `第 ${next.moduleOrder} 階段：${nextModuleName}` : `Stage ${next.moduleOrder}: ${nextModuleName}`;
   lessonEl.textContent = allDone
     ? s.dashAllComplete
-    : `Module ${next.moduleOrder}: ${next.module} — ${next.title[currentLang] || next.title.en}`;
+    : `${nextStageLabel} — ${next.title[currentLang] || next.title.en}`;
   const pct = total ? Math.round((completedCount / total) * 100) : 0;
   fillEl.style.width = pct + '%';
   pctEl.textContent = pct + '%';
