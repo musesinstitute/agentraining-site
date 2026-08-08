@@ -2622,7 +2622,15 @@ async function uploadSession(data) {
         },
         strengths: data.strengths || [],
         tips:      data.tips      || [],
-        summary:   data.summary   || ''
+        summary:   data.summary   || '',
+        transcript: (conversationHistory || []).map((m, index) => ({
+          index: index + 1,
+          speaker: m.role === 'user' ? 'agent' : 'client',
+          text: m.content
+        })),
+        sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
+        sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
+        aiClientName: currentScenario?.clientName || ''
       })
     });
     // Silent — no UI feedback needed
