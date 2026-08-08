@@ -2622,9 +2622,65 @@ async function uploadSession(data) {
         },
         strengths: data.strengths || [],
         tips:      data.tips      || [],
-        summary:   data.summary   || ''
+        summary:   data.summary   || '',
+        transcript: (conversationHistory || []).map((m, index) => ({
+          index: index + 1,
+          speaker: m.role === 'user' ? 'agent' : 'client',
+          text: m.content
+        })),
+        sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
+        sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
+        aiClientName: currentScenario?.clientName || '',
+        clientCaseName: (() => {
+          try {
+            const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
+              ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
+              : null;
+            return linked?.name || linked?.clientName || '';
+          } catch (e) { return ''; }
+        })()
       })
     });
+
+    try {
+      const key = 'agentraining_manager_sessions';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.unshift({
+        id: 'session-' + Date.now(),
+        savedAt: new Date().toISOString(),
+        ref, name, team,
+        scenario: currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
+        industry: currentScenario?.industry || '',
+        scores: {
+          overall: data.overallScore || 0,
+          empathy: data.empathy || 0,
+          accuracy: data.accuracy || 0,
+          closing: data.closing || 0
+        },
+        strengths: data.strengths || [],
+        tips: data.tips || [],
+        summary: data.summary || '',
+        transcript: (conversationHistory || []).map((m, index) => ({
+          index: index + 1,
+          speaker: m.role === 'user' ? 'agent' : 'client',
+          text: m.content
+        })),
+        sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
+        sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
+        aiClientName: currentScenario?.clientName || '',
+        clientCaseName: (() => {
+          try {
+            const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
+              ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
+              : null;
+            return linked?.name || linked?.clientName || '';
+          } catch (e) { return ''; }
+        })()
+      });
+      localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
+    } catch (e) {
+      console.warn('Manager local record save failed:', e.message);
+    }
     // Silent — no UI feedback needed
   } catch (err) {
     // Fail silently — doesn't interrupt the user experience
