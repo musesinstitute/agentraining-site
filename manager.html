@@ -98,7 +98,7 @@
 <div class="hero">
   <div class="hero-badge" id="hero-badge">📊 Studio 4 of 4</div>
   <h1 id="hero-title">Manager <span>Studio</span></h1>
-  <p id="hero-sub">A dedicated view for team leaders — open Practice Studio in manager mode to see the coaching and assignment tools your team will use as they roll out the curriculum.</p>
+  <p id="hero-sub">A team-growth view for leaders: monitor client opportunities, recruiting candidates, follow-up activity, agent activation, and the coaching your team needs next.</p>
   <a class="btn-primary" href="simulator.html?ref=demo&studio=manager" id="open-cta">Open Manager Studio →</a>
   <div class="hero-note" id="hero-note">📱 Manager Studio lives inside Practice Studio — no separate login required.</div>
 </div>
@@ -108,20 +108,20 @@
     <h2 id="preview-h2">What you'll see</h2>
     <div class="preview-grid">
       <div class="preview-card">
-        <div class="preview-card-label" id="pc1-label">Today's Team</div>
-        <div class="preview-card-body" id="pc1-body">A roster view for the agents you're coaching, once they've connected their practice sessions.</div>
+        <div class="preview-card-label" id="pc1-label">Client Opportunities</div>
+        <div class="preview-card-body" id="pc1-body">See active client cases and whether the responsible agent has practiced the next conversation.</div>
       </div>
       <div class="preview-card">
-        <div class="preview-card-label" id="pc2-label">Assignments</div>
-        <div class="preview-card-body" id="pc2-body">Assign specific curriculum scenarios to your team and track who's completed them.</div>
+        <div class="preview-card-label" id="pc2-label">Recruiting Pipeline</div>
+        <div class="preview-card-body" id="pc2-body">See candidates move from first contact to invitation, event, licensing, joining, and activation.</div>
       </div>
       <div class="preview-card">
-        <div class="preview-card-label" id="pc3-label">Team Progress</div>
-        <div class="preview-card-body" id="pc3-body">Aggregate completion and scoring across the 25-scenario Insurance &amp; Health curriculum.</div>
+        <div class="preview-card-label" id="pc3-label">Follow-up Discipline</div>
+        <div class="preview-card-body" id="pc3-body">Surface client and recruiting opportunities that need a clear next action.</div>
       </div>
       <div class="preview-card">
-        <div class="preview-card-label" id="pc4-label">Needs Attention</div>
-        <div class="preview-card-body" id="pc4-body">Surface agents or scenarios that need coaching focus before they fall behind.</div>
+        <div class="preview-card-label" id="pc4-label">Agent Activation</div>
+        <div class="preview-card-body" id="pc4-body">Identify where new members stall between joining, licensing, practice, and real action.</div>
       </div>
     </div>
 
@@ -149,7 +149,7 @@
   <h2 id="cta-h2">See it for yourself</h2>
   <p id="cta-p">Manager Studio opens inside Practice Studio in manager view.</p>
   <a class="btn-primary" href="simulator.html?ref=demo&studio=manager" id="cta-btn">Open Manager Studio →</a>
-  <p class="limitation-note" id="limitation-note">Manager Studio is an early MVP: the team roster, assignments, and team progress views are visible placeholders today, browser-local, with no live team data pipeline or cross-device sync yet. Practice Studio's roleplay and AI Coach scoring are fully functional.</p>
+  <p class="limitation-note" id="limitation-note">Pilot note: these growth metrics currently use records saved in this browser. Shared team accounts, manager assignments, and cross-device sync are the next enterprise layer.</p>
 </div>
 
 <footer>
@@ -173,39 +173,39 @@ const STRINGS = {
   en: {
     navCta: 'Try Free Demo',
     heroBadge: '📊 Studio 4 of 4', heroTitleHtml: 'Manager <span>Studio</span>',
-    heroSub: "A dedicated view for team leaders — open Practice Studio in manager mode to see the coaching and assignment tools your team will use as they roll out the curriculum.",
+    heroSub: 'A team-growth view for leaders: monitor client opportunities, recruiting candidates, follow-up activity, agent activation, and the coaching your team needs next.',
     openCta: 'Open Manager Studio →',
     heroNote: '📱 Manager Studio lives inside Practice Studio — no separate login required.',
     previewH2: "What you'll see",
-    pc1l: "Today's Team", pc1b: "A roster view for the agents you're coaching, once they've connected their practice sessions.",
-    pc2l: 'Assignments', pc2b: "Assign specific curriculum scenarios to your team and track who's completed them.",
-    pc3l: 'Team Progress', pc3b: 'Aggregate completion and scoring across the 25-scenario Insurance & Health curriculum.',
-    pc4l: 'Needs Attention', pc4b: 'Surface agents or scenarios that need coaching focus before they fall behind.',
+    pc1l: 'Client Opportunities', pc1b: 'See active client cases and whether the responsible agent has practiced the next conversation.',
+    pc2l: 'Recruiting Pipeline', pc2b: 'See candidates move from first contact to invitation, event, licensing, joining, and activation.',
+    pc3l: 'Follow-up Discipline', pc3b: 'Surface client and recruiting opportunities that need a clear next action.',
+    pc4l: 'Agent Activation', pc4b: 'Identify where new members stall between joining, licensing, practice, and real action.',
     feat1h: 'One switch, two views', feat1p: 'Toggle between Learner and Manager view right inside Practice Studio — no separate app to learn.',
     feat2h: 'AI Coaching Insight', feat2p: 'A dedicated panel for AI-generated coaching notes as your team completes practice sessions.',
     feat3h: 'Straight to Practice Studio', feat3p: 'One link opens the full curriculum your team practices against — the same 25 scenarios, same scoring.',
     ctaH2: 'See it for yourself', ctaP: 'Manager Studio opens inside Practice Studio in manager view.',
     ctaBtn: 'Open Manager Studio →',
-    limitationNote: 'Manager Studio is an early MVP: the team roster, assignments, and team progress views are visible placeholders today, browser-local, with no live team data pipeline or cross-device sync yet. Practice Studio\'s roleplay and AI Coach scoring are fully functional.',
+    limitationNote: 'Pilot note: these growth metrics currently use records saved in this browser. Shared team accounts, manager assignments, and cross-device sync are the next enterprise layer.',
     fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
   },
   zh: {
     navCta: '免費試用',
     heroBadge: '📊 工作室 4 / 4', heroTitleHtml: '主管<span>工作室</span>',
-    heroSub: '團隊主管專屬視角——以主管模式開啟練習工作室，查看團隊即將在課程推行時使用的輔導與指派工具。',
+    heroSub: '為團隊主管提供完整的增長視角：掌握客戶機會、招募候選人、跟進行動、新成員啟動，以及團隊下一步需要的訓練。',
     openCta: '開啟主管工作室 →',
     heroNote: '📱 主管工作室位於練習工作室之內，不需要另外登入。',
     previewH2: '你將會看到',
-    pc1l: '今日團隊', pc1b: '你所輔導的業務員名冊視圖，待他們連結練習紀錄後顯示。',
-    pc2l: '指派項目', pc2b: '為團隊指派特定的課程情境，並追蹤誰已完成。',
-    pc3l: '團隊進度', pc3b: '彙整團隊在25個保險與健康課程情境上的完成率與評分。',
-    pc4l: '待關注事項', pc4b: '在業務員或情境落後之前，提前標示出需要輔導重點關注的地方。',
+    pc1l: '客戶機會', pc1b: '查看活躍客戶案例，以及負責的業務員是否已經為下一次對話完成練習。',
+    pc2l: '招募流程', pc2b: '查看候選人從初次接觸、活動邀請、參加活動，到考照、加入及正式啟動的進度。',
+    pc3l: '跟進執行', pc3b: '找出尚未建立明確下一步行動的客戶與招募機會。',
+    pc4l: '新成員啟動', pc4b: '識別新成員在加入、考照、練習與實際行動之間停滯的位置。',
     feat1h: '一鍵切換，兩種視角', feat1p: '直接在練習工作室內切換「學員」與「主管」視角——不需要另一個應用程式。',
     feat2h: 'AI 輔導洞察', feat2p: '當團隊完成練習後，這裡會顯示AI生成的輔導筆記專屬面板。',
     feat3h: '直達練習工作室', feat3p: '一個連結即可開啟團隊所練習的完整課程——同樣的25個情境、同樣的評分標準。',
     ctaH2: '親自體驗看看', ctaP: '主管工作室會在練習工作室內以主管視角開啟。',
     ctaBtn: '開啟主管工作室 →',
-    limitationNote: '主管工作室目前是早期MVP：團隊名冊、指派項目與團隊進度視圖目前是可見的介面預留位置，僅儲存在瀏覽器本機，尚未串接即時團隊資料或跨裝置同步。練習工作室的角色扮演與AI教練評分功能則是完整可用的。',
+    limitationNote: '試點說明：目前的增長指標來自儲存在這個瀏覽器內的紀錄。共享團隊帳戶、主管指派及跨裝置同步，將是下一階段的企業功能。',
     fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
   }
 };

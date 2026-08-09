@@ -239,6 +239,13 @@
     .cs-status-Proposal { background: rgba(147,51,234,.12); color: #9333ea; }
     .cs-status-Won { background: rgba(16,163,74,.12); color: var(--green); }
     .cs-status-Lost { background: rgba(220,38,38,.12); color: var(--red); }
+    .cs-status-Invited, .cs-status-Attended, .cs-status-Interested { background: rgba(147,51,234,.12); color: #7e22ce; }
+    .cs-status-Applied, .cs-status-Licensing { background: rgba(217,119,6,.12); color: var(--gold); }
+    .cs-status-Joined, .cs-status-Activated { background: rgba(16,163,74,.12); color: var(--green); }
+    .cs-pipeline-tabs { display:flex; gap:8px; margin:18px 0; flex-wrap:wrap; }
+    .cs-pipeline-tab { border:1.5px solid var(--border); background:var(--white); color:var(--ink-muted); border-radius:99px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; }
+    .cs-pipeline-tab.active { background:var(--accent); color:var(--white); border-color:var(--accent); }
+    .cs-case-type { display:inline-block; font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
     .cs-case-followup { font-size: 11px; color: var(--ink-muted); }
     .cs-case-score { font-size: 11px; font-weight: 700; color: var(--accent); }
     .cs-form-title, .cs-detail-title { font-size: 16px; font-weight: 800; color: var(--ink); margin: 8px 0 16px; font-family: var(--font-display); }
@@ -970,8 +977,13 @@
 
       <button class="dash-cta-btn" id="cs-new-case-btn" onclick="openCaseForm()">+ New Client Case</button>
 
+      <div class="cs-pipeline-tabs" role="tablist" aria-label="Pipeline">
+        <button class="cs-pipeline-tab active" id="cs-tab-client" onclick="setCasePipeline('client')">💼 Client Pipeline</button>
+        <button class="cs-pipeline-tab" id="cs-tab-recruiting" onclick="setCasePipeline('recruiting')">🌱 Recruiting Pipeline</button>
+      </div>
+
       <div id="cs-case-list" class="cs-case-list"></div>
-      <div id="cs-case-empty" class="cs-empty-state" style="display:none;" id="cs-case-empty-text">No client cases yet. Create your first one above.</div>
+      <div id="cs-case-empty" class="cs-empty-state" style="display:none;">No client cases yet. Create your first one above.</div>
     </div>
 
     <!-- FORM VIEW (create / edit) -->
@@ -979,11 +991,17 @@
       <button class="cs-back-btn" onclick="closeCaseForm()" id="cs-form-back">← Back to Client Studio</button>
       <div class="cs-form-title" id="cs-form-title">New Client Case</div>
 
+      <label class="cs-field-label" id="cs-lbl-type">Record Type</label>
+      <div class="cs-radio-row">
+        <label class="cs-radio-opt"><input type="radio" name="cs-type" value="client" checked onchange="refreshCaseFormForType()" /> <span id="cs-opt-client">Client Opportunity</span></label>
+        <label class="cs-radio-opt"><input type="radio" name="cs-type" value="recruiting" onchange="refreshCaseFormForType()" /> <span id="cs-opt-recruiting">Recruiting Candidate</span></label>
+      </div>
+
       <label class="cs-field-label" id="cs-lbl-name">Client Name</label>
       <input type="text" id="cs-f-name" class="cs-input" placeholder="e.g. Michael Tran" />
 
       <label class="cs-field-label" id="cs-lbl-industry">Industry</label>
-      <div class="cs-radio-row">
+      <div class="cs-radio-row" id="cs-industry-options">
         <label class="cs-radio-opt"><input type="radio" name="cs-industry" value="Insurance" checked /> <span id="cs-opt-insurance">Insurance</span></label>
         <label class="cs-radio-opt"><input type="radio" name="cs-industry" value="Health" /> <span id="cs-opt-health">Health</span></label>
       </div>
@@ -1834,6 +1852,9 @@ const strings = {
     dashAssignNote: "Assignment creation isn't wired up yet — this is an MVP placeholder, not connected to any assignment system.",
     dashAiInsightLabel: '🤖 AI Coaching Insight',
     dashAiInsightPlaceholder: 'Insights will appear after your team completes practice sessions.',
+    dashGrowthClient: 'Active Client Opportunities', dashGrowthRecruiting: 'Recruiting Candidates',
+    dashGrowthFollowup: 'Follow-ups Needed', dashGrowthActivated: 'Activated Agents',
+    dashGrowthLocalNote: 'Browser-local pilot view based on the Client and Recruiting pipelines on this device.',
     dashOpenStudio: 'Open Practice Studio →',
     dashCompetenciesLabel: 'My Competencies',
     dashCompetenciesNote: 'Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.',
@@ -1848,16 +1869,22 @@ const strings = {
     csNewCase: 'New Client Case',
     csEmptyState: 'No client cases yet. Create your first one above.',
     csFormTitleNew: 'New Client Case', csFormTitleEdit: 'Edit Client Case',
+    csTabClient: '💼 Client Pipeline', csTabRecruiting: '🌱 Recruiting Pipeline',
+    csLblType: 'Record Type', csOptClient: 'Client Opportunity', csOptRecruiting: 'Recruiting Candidate',
+    csCandidateName: 'Candidate Name', csCandidateSituation: 'Background / Why They May Be Interested', csCandidateObjection: 'Current Concern or Objection',
+    csNewRecruit: 'New Recruiting Candidate', csEmptyRecruiting: 'No recruiting candidates yet. Add the first person you want to follow up with.',
     csLblName: 'Client Name', csLblIndustry: 'Industry',
     csOptInsurance: 'Insurance', csOptHealth: 'Health',
     csLblNeed: 'Need / Situation', csLblObjection: 'Current Objection',
     csLblStatus: 'Status', csLblFollowup: 'Next Follow-up (date or note)',
     csSave: 'Save Case', csCancel: 'Cancel', csDelete: 'Delete Case',
     csDeleteConfirm: 'Delete this client case? This cannot be undone.',
-    csRequiredName: 'Please enter the client\'s name.',
+    csRequiredName: 'Please enter the client\'s name.', csRequiredCandidate: 'Please enter the candidate\'s name.',
     csMatchFound: 'Matches curriculum scenario: {scenario}',
     csMatchNone: 'No exact curriculum match — practice will start as Free Practice with this client\'s context.',
+    csRecruitPractice: 'Recruiting practice will use this candidate\'s real background with ethical, no-pressure coaching guardrails.',
     csStatusNew: 'New', csStatusFollowup: 'Follow-up', csStatusProposal: 'Proposal', csStatusWon: 'Won', csStatusLost: 'Lost',
+    csStatusInvited: 'Invited', csStatusAttended: 'Attended Event', csStatusInterested: 'Interested', csStatusApplied: 'Applied', csStatusLicensing: 'Licensing', csStatusJoined: 'Joined', csStatusActivated: 'Activated',
     csBackToStudio: 'Back to Client Studio',
     csStartPractice: 'Start Practice', csEdit: 'Edit',
     csLatestResult: 'Latest Practice Result',
@@ -1906,6 +1933,9 @@ const strings = {
     dashAssignNote: '指派功能尚未啟用——這是 MVP 的介面預留位置，尚未串接任何指派系統。',
     dashAiInsightLabel: '🤖 AI 教練洞察',
     dashAiInsightPlaceholder: '當團隊完成練習後，洞察內容將顯示於此。',
+    dashGrowthClient: '活躍客戶機會', dashGrowthRecruiting: '招募候選人',
+    dashGrowthFollowup: '需要跟進', dashGrowthActivated: '已啟動成員',
+    dashGrowthLocalNote: '瀏覽器本地試點視圖，資料來自此裝置上的客戶與招募管道。',
     dashOpenStudio: '開啟練習工作室 →',
     dashCompetenciesLabel: '我的職能',
     dashCompetenciesNote: '此 MVP 版本中的職能等級僅為示意，未來版本將依實際完成的練習紀錄計算。',
@@ -1920,16 +1950,22 @@ const strings = {
     csNewCase: '新增客戶案例',
     csEmptyState: '尚無客戶案例。點擊上方按鈕建立第一筆。',
     csFormTitleNew: '新增客戶案例', csFormTitleEdit: '編輯客戶案例',
+    csTabClient: '💼 客戶管道', csTabRecruiting: '🌱 招募管道',
+    csLblType: '紀錄類型', csOptClient: '客戶機會', csOptRecruiting: '招募候選人',
+    csCandidateName: '候選人姓名', csCandidateSituation: '背景 / 可能感興趣的原因', csCandidateObjection: '目前的顧慮或異議',
+    csNewRecruit: '新增招募候選人', csEmptyRecruiting: '尚無招募候選人。新增第一位需要跟進的人。',
     csLblName: '客戶姓名', csLblIndustry: '行業',
     csOptInsurance: '保險', csOptHealth: '健康',
     csLblNeed: '需求 / 情況', csLblObjection: '目前的異議',
     csLblStatus: '狀態', csLblFollowup: '下次跟進（日期或備註）',
     csSave: '儲存案例', csCancel: '取消', csDelete: '刪除案例',
     csDeleteConfirm: '確定要刪除這個客戶案例嗎？此操作無法復原。',
-    csRequiredName: '請輸入客戶姓名。',
+    csRequiredName: '請輸入客戶姓名。', csRequiredCandidate: '請輸入候選人姓名。',
     csMatchFound: '已對應課程情境：{scenario}',
     csMatchNone: '沒有完全對應的課程情境——練習將以「自由練習」模式開始，並帶入此客戶的背景。',
+    csRecruitPractice: '招募練習將帶入這位候選人的真實背景，並使用誠實、無施壓的合規輔導原則。',
     csStatusNew: '新案件', csStatusFollowup: '跟進中', csStatusProposal: '已提案', csStatusWon: '已成交', csStatusLost: '已流失',
+    csStatusInvited: '已邀請', csStatusAttended: '已參加活動', csStatusInterested: '有興趣', csStatusApplied: '已申請', csStatusLicensing: '執照進行中', csStatusJoined: '已加入', csStatusActivated: '已啟動',
     csBackToStudio: '返回客戶工作室',
     csStartPractice: '開始練習', csEdit: '編輯',
     csLatestResult: '最新練習結果',
@@ -3515,6 +3551,28 @@ function refreshDashboardStrings() {
   if (note && note.style.display !== 'none') note.textContent = s.dashAssignNote;
   updateLearnerDashboardCard();
   updateDemoQuickStartButtons();
+  updateManagerGrowthMetrics();
+}
+
+function updateManagerGrowthMetrics() {
+  const s = strings[currentLang];
+  const cases = getClientCases();
+  const clientCases = cases.filter(c => getCaseType(c) === 'client' && !['Won', 'Lost'].includes(c.status));
+  const recruits = cases.filter(c => getCaseType(c) === 'recruiting' && c.status !== 'Lost');
+  const followups = cases.filter(c => c.nextFollowUp && !['Won', 'Lost', 'Activated'].includes(c.status));
+  const activated = cases.filter(c => getCaseType(c) === 'recruiting' && c.status === 'Activated');
+  const items = [
+    ['md-team-label', 'md-team-empty', s.dashGrowthClient, clientCases.length],
+    ['md-assignments-label', 'md-assignments-empty', s.dashGrowthRecruiting, recruits.length],
+    ['md-progress-label', 'md-progress-empty', s.dashGrowthFollowup, followups.length],
+    ['md-attention-label', 'md-attention-empty', s.dashGrowthActivated, activated.length]
+  ];
+  items.forEach(([labelId, valueId, label, value]) => {
+    const labelEl = document.getElementById(labelId);
+    const valueEl = document.getElementById(valueId);
+    if (labelEl) labelEl.textContent = label;
+    if (valueEl) valueEl.innerHTML = `<strong style="font-size:28px;color:var(--accent);">${value}</strong><br><span style="font-size:11px;">${s.dashGrowthLocalNote}</span>`;
+  });
 }
 
 // Live-demo quick-start buttons show the real localized lesson titles once the
@@ -3672,6 +3730,12 @@ function dashAssignPractice() {
 const CLIENT_CASES_KEY = 'agentraining_client_cases';
 let csEditingCaseId = null;  // set while the form is editing an existing case
 let csDetailCaseId = null;   // set while viewing a case detail
+let csActivePipeline = 'client';
+
+const CASE_STATUS_OPTIONS = {
+  client: ['New', 'Follow-up', 'Proposal', 'Won', 'Lost'],
+  recruiting: ['New', 'Invited', 'Attended', 'Follow-up', 'Interested', 'Applied', 'Licensing', 'Joined', 'Activated', 'Lost']
+};
 
 function getClientCases() {
   try { return JSON.parse(localStorage.getItem(CLIENT_CASES_KEY)) || []; } catch (e) { return []; }
@@ -3709,16 +3773,54 @@ function showCaseListView() {
   renderCaseList();
 }
 
+function setCasePipeline(type) {
+  csActivePipeline = type === 'recruiting' ? 'recruiting' : 'client';
+  const clientTab = document.getElementById('cs-tab-client');
+  const recruitingTab = document.getElementById('cs-tab-recruiting');
+  if (clientTab) clientTab.classList.toggle('active', csActivePipeline === 'client');
+  if (recruitingTab) recruitingTab.classList.toggle('active', csActivePipeline === 'recruiting');
+  renderCaseList();
+  refreshClientStudioStrings();
+}
+
+function getCaseType(c) {
+  return c && c.caseType === 'recruiting' ? 'recruiting' : 'client';
+}
+
+function updateStatusOptions(type, selected) {
+  const select = document.getElementById('cs-f-status');
+  if (!select) return;
+  const s = strings[currentLang];
+  select.innerHTML = CASE_STATUS_OPTIONS[type].map(value => {
+    const key = 'csStatus' + value.replace('-', '');
+    return `<option value="${value}">${s[key] || value}</option>`;
+  }).join('');
+  select.value = CASE_STATUS_OPTIONS[type].includes(selected) ? selected : 'New';
+}
+
+function refreshCaseFormForType(selectedStatus) {
+  const checked = document.querySelector('input[name="cs-type"]:checked');
+  const type = checked && checked.value === 'recruiting' ? 'recruiting' : 'client';
+  const s = strings[currentLang];
+  document.getElementById('cs-lbl-name').textContent = type === 'recruiting' ? s.csCandidateName : s.csLblName;
+  document.getElementById('cs-lbl-need').textContent = type === 'recruiting' ? s.csCandidateSituation : s.csLblNeed;
+  document.getElementById('cs-lbl-objection').textContent = type === 'recruiting' ? s.csCandidateObjection : s.csLblObjection;
+  document.getElementById('cs-lbl-industry').style.display = type === 'recruiting' ? 'none' : '';
+  document.getElementById('cs-industry-options').style.display = type === 'recruiting' ? 'none' : '';
+  updateStatusOptions(type, selectedStatus || document.getElementById('cs-f-status').value);
+  previewCaseMatch();
+}
+
 function renderCaseList() {
   const s = strings[currentLang];
   const list = document.getElementById('cs-case-list');
   const empty = document.getElementById('cs-case-empty');
   if (!list || !empty) return;
-  const cases = getClientCases().slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+  const cases = getClientCases().filter(c => getCaseType(c) === csActivePipeline).slice().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   list.innerHTML = '';
   if (cases.length === 0) {
     empty.style.display = 'block';
-    empty.textContent = s.csEmptyState;
+    empty.textContent = csActivePipeline === 'recruiting' ? s.csEmptyRecruiting : s.csEmptyState;
     return;
   }
   empty.style.display = 'none';
@@ -3730,7 +3832,9 @@ function renderCaseList() {
     const statusKey = 'csStatus' + String(c.status || 'New').replace('-', '');
     const statusLabel = s[statusKey] || c.status;
     const scoreHtml = c.lastPractice ? `<span class="cs-case-score">${s.scoreShortLabel} ${c.lastPractice.score}</span>` : '';
+    const typeLabel = getCaseType(c) === 'recruiting' ? s.csOptRecruiting : s.csOptClient;
     el.innerHTML = `
+      <div class="cs-case-type">${typeLabel}</div>
       <div class="cs-case-card-top">
         <span class="cs-case-name">${escapeHtml(c.clientName)}</span>
         <span class="cs-status-badge cs-status-${c.status}">${statusLabel}</span>
@@ -3752,12 +3856,14 @@ function openCaseForm(prefill) {
   document.getElementById('cs-view-list').style.display = 'none';
   document.getElementById('cs-view-detail').style.display = 'none';
   document.getElementById('cs-view-form').style.display = '';
-  document.getElementById('cs-form-title').textContent = strings[currentLang].csFormTitleNew;
+  document.getElementById('cs-form-title').textContent = csActivePipeline === 'recruiting' ? strings[currentLang].csNewRecruit : strings[currentLang].csFormTitleNew;
   document.getElementById('cs-f-name').value = '';
+  const typeRadio = document.querySelector(`input[name="cs-type"][value="${csActivePipeline}"]`);
+  if (typeRadio) typeRadio.checked = true;
   document.querySelector('input[name="cs-industry"][value="Insurance"]').checked = true;
   document.getElementById('cs-f-need').value = '';
   document.getElementById('cs-f-objection').value = '';
-  document.getElementById('cs-f-status').value = 'New';
+  refreshCaseFormForType('New');
   document.getElementById('cs-f-followup').value = '';
   document.getElementById('cs-delete-btn').style.display = 'none';
   document.getElementById('cs-match-preview').textContent = '';
@@ -3784,11 +3890,14 @@ function openCaseFormForEdit(caseId) {
   document.getElementById('cs-view-form').style.display = '';
   document.getElementById('cs-form-title').textContent = strings[currentLang].csFormTitleEdit;
   document.getElementById('cs-f-name').value = c.clientName || '';
+  const type = getCaseType(c);
+  const typeRadio = document.querySelector(`input[name="cs-type"][value="${type}"]`);
+  if (typeRadio) typeRadio.checked = true;
   const radio = document.querySelector(`input[name="cs-industry"][value="${c.industry}"]`);
   if (radio) radio.checked = true;
   document.getElementById('cs-f-need').value = c.need || '';
   document.getElementById('cs-f-objection').value = c.objection || '';
-  document.getElementById('cs-f-status').value = c.status || 'New';
+  refreshCaseFormForType(c.status || 'New');
   document.getElementById('cs-f-followup').value = c.nextFollowUp || '';
   document.getElementById('cs-delete-btn').style.display = '';
   previewCaseMatch();
@@ -3810,6 +3919,12 @@ function previewCaseMatch() {
   const industryEl = document.querySelector('input[name="cs-industry"]:checked');
   const industry = industryEl ? industryEl.value : 'Insurance';
   const s = strings[currentLang];
+  const typeEl = document.querySelector('input[name="cs-type"]:checked');
+  if (typeEl && typeEl.value === 'recruiting') {
+    el.textContent = objection.trim() ? s.csRecruitPractice : '';
+    el.className = 'cs-match-preview';
+    return;
+  }
   if (!objection.trim()) { el.textContent = ''; el.className = 'cs-match-preview'; return; }
   const match = matchScenarioForObjection(objection, industry);
   if (match) {
@@ -3823,8 +3938,10 @@ function previewCaseMatch() {
 
 function saveCaseForm() {
   const name = document.getElementById('cs-f-name').value.trim();
+  const typeEl = document.querySelector('input[name="cs-type"]:checked');
+  const caseType = typeEl && typeEl.value === 'recruiting' ? 'recruiting' : 'client';
   if (!name) {
-    alert(strings[currentLang].csRequiredName);
+    alert(caseType === 'recruiting' ? strings[currentLang].csRequiredCandidate : strings[currentLang].csRequiredName);
     return;
   }
   const industryEl = document.querySelector('input[name="cs-industry"]:checked');
@@ -3839,13 +3956,13 @@ function saveCaseForm() {
   if (csEditingCaseId) {
     const idx = cases.findIndex(c => c.id === csEditingCaseId);
     if (idx !== -1) {
-      cases[idx] = Object.assign({}, cases[idx], { clientName: name, industry, need, objection, status, nextFollowUp, updatedAt: now });
+      cases[idx] = Object.assign({}, cases[idx], { clientName: name, caseType, industry, need, objection, status, nextFollowUp, updatedAt: now });
     }
     saveClientCasesList(cases);
     openCaseDetail(csEditingCaseId);
   } else {
     const newCase = {
-      id: genCaseId(), clientName: name, industry, need, objection, status, nextFollowUp,
+      id: genCaseId(), clientName: name, caseType, industry, need, objection, status, nextFollowUp,
       createdAt: now, updatedAt: now, practiceHistory: [], lastPractice: null
     };
     cases.push(newCase);
@@ -3879,6 +3996,8 @@ function closeCaseDetail() {
 
 function renderCaseDetail(c) {
   const s = strings[currentLang];
+  const caseType = getCaseType(c);
+  const typeLabel = caseType === 'recruiting' ? s.csOptRecruiting : s.csOptClient;
   const industryLabel = c.industry === 'Health' ? s.csOptHealth : s.csOptInsurance;
   const statusKey = 'csStatus' + String(c.status || 'New').replace('-', '');
   const statusLabel = s[statusKey] || c.status;
@@ -3905,10 +4024,11 @@ function renderCaseDetail(c) {
   body.innerHTML = `
     <div class="cs-detail-title">${escapeHtml(c.clientName)}</div>
     <div class="cs-detail-card">
-      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblIndustry}</span><span class="cs-detail-row-value">${industryLabel}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblType}</span><span class="cs-detail-row-value">${typeLabel}</span></div>
+      ${caseType === 'client' ? `<div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblIndustry}</span><span class="cs-detail-row-value">${industryLabel}</span></div>` : ''}
       <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblStatus}</span><span class="cs-detail-row-value"><span class="cs-status-badge cs-status-${c.status}">${statusLabel}</span></span></div>
-      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblNeed}</span><span class="cs-detail-row-value">${escapeHtml(c.need) || '—'}</span></div>
-      <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblObjection}</span><span class="cs-detail-row-value">${escapeHtml(c.objection) || '—'}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${caseType === 'recruiting' ? s.csCandidateSituation : s.csLblNeed}</span><span class="cs-detail-row-value">${escapeHtml(c.need) || '—'}</span></div>
+      <div class="cs-detail-row"><span class="cs-detail-row-label">${caseType === 'recruiting' ? s.csCandidateObjection : s.csLblObjection}</span><span class="cs-detail-row-value">${escapeHtml(c.objection) || '—'}</span></div>
       <div class="cs-detail-row"><span class="cs-detail-row-label">${s.csLblFollowup}</span><span class="cs-detail-row-value">${escapeHtml(c.nextFollowUp) || '—'}</span></div>
     </div>
     ${resultHtml}
@@ -3949,6 +4069,11 @@ function matchScenarioForObjection(objectionText, industry) {
 // Builds a client-roleplay system prompt from a case's real context, used
 // only for the Free Practice fallback when no curriculum scenario matches.
 function buildCaseFreePracticePrompt(c) {
+  if (getCaseType(c) === 'recruiting') {
+    const enRecruit = `You play ${c.clientName}, a real recruiting candidate whom an insurance team member is following up with. Background: ${c.need || 'Not specified.'} Current concern: ${c.objection || 'Interested but not ready to commit.'} Stay in character and respond naturally in 2-3 sentences per turn. Require the agent to build trust, understand fit, explain the opportunity honestly, avoid pressure and unsupported income claims, and agree only to a reasonable next step. Do not identify yourself as an AI.`;
+    const zhRecruit = `你扮演${c.clientName}，一位保險團隊成員正在跟進的真實招募候選人。背景：${c.need || '未特別說明。'}目前顧慮：${c.objection || '有興趣，但尚未準備作出承諾。'}請保持角色，每次自然回覆2至3句。要求對方先建立信任、了解你是否適合、誠實介紹機會、避免施壓與未經證實的收入承諾，只有在合理時才同意明確的下一步。不要表明自己是AI。`;
+    return { en: enRecruit, zh: zhRecruit };
+  }
   const en = `You play ${c.clientName}, a real prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
   const zh = `你扮演${c.clientName}，這位業務員正在跟進的真實潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
   return { en, zh };
@@ -3961,7 +4086,7 @@ function startPracticeFromCase(caseId) {
   closeClientStudio();
   setPanelMode('curriculum');
 
-  const matched = matchScenarioForObjection(c.objection, c.industry);
+  const matched = getCaseType(c) === 'client' ? matchScenarioForObjection(c.objection, c.industry) : null;
   let mapped;
   if (matched) {
     mapped = {
@@ -4001,7 +4126,8 @@ function updateLinkedCaseBanner(caseObj) {
   if (!caseObj) { banner.style.display = 'none'; return; }
   const s = strings[currentLang];
   banner.style.display = 'flex';
-  banner.innerHTML = `<span>📁 ${s.csPracticingFor}: <strong>${escapeHtml(caseObj.clientName)}</strong>${caseObj.need ? ' — ' + escapeHtml(caseObj.need) : ''}</span>`;
+  const label = getCaseType(caseObj) === 'recruiting' ? s.csOptRecruiting : s.csPracticingFor;
+  banner.innerHTML = `<span>📁 ${label}: <strong>${escapeHtml(caseObj.clientName)}</strong>${caseObj.need ? ' — ' + escapeHtml(caseObj.need) : ''}</span>`;
 }
 
 // Writes the completed session's result back onto the linked case: last
@@ -4035,7 +4161,12 @@ function refreshClientStudioStrings() {
   set('cs-intro-title', s.csIntroTitle);
   set('cs-intro-body', s.csIntroBody);
   set('cs-intro-note', s.csIntroNote);
-  set('cs-new-case-btn', '+ ' + s.csNewCase);
+  set('cs-new-case-btn', '+ ' + (csActivePipeline === 'recruiting' ? s.csNewRecruit : s.csNewCase));
+  set('cs-tab-client', s.csTabClient);
+  set('cs-tab-recruiting', s.csTabRecruiting);
+  set('cs-lbl-type', s.csLblType);
+  set('cs-opt-client', s.csOptClient);
+  set('cs-opt-recruiting', s.csOptRecruiting);
   set('cs-form-back', '← ' + s.csBackToStudio);
   set('cs-detail-back', '← ' + s.csBackToStudio);
   set('cs-lbl-name', s.csLblName);
@@ -4053,13 +4184,8 @@ function refreshClientStudioStrings() {
   if (navBtn) navBtn.textContent = '👥 ' + s.csTitle;
   const dashBtn = document.getElementById('ld-client-studio');
   if (dashBtn) dashBtn.textContent = '👥 ' + s.csTitle;
-  const statusSelect = document.getElementById('cs-f-status');
-  if (statusSelect) {
-    Array.from(statusSelect.options).forEach(opt => {
-      const key = 'csStatus' + opt.value.replace('-', '');
-      if (s[key]) opt.textContent = s[key];
-    });
-  }
+  const checkedType = document.querySelector('input[name="cs-type"]:checked');
+  if (checkedType) refreshCaseFormForType(document.getElementById('cs-f-status')?.value);
   // Re-render whichever view is currently active so labels + dynamic content refresh.
   const listView = document.getElementById('cs-view-list');
   if (listView && listView.style.display !== 'none') renderCaseList();
