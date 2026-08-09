@@ -2631,12 +2631,13 @@ async function uploadSession(data) {
         sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
         sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
         aiClientName: currentScenario?.clientName || '',
+        linkedCaseId: currentScenario?.linkedCaseId || '',
         clientCaseName: (() => {
           try {
             const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
               ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
               : null;
-            return linked?.name || linked?.clientName || '';
+            return linked?.clientName || linked?.name || '';
           } catch (e) { return ''; }
         })()
       })
@@ -2673,7 +2674,7 @@ async function uploadSession(data) {
             const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
               ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
               : null;
-            return linked?.name || linked?.clientName || '';
+            return linked?.clientName || linked?.name || '';
           } catch (e) { return ''; }
         })()
       });
