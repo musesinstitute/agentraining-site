@@ -358,6 +358,8 @@
     .level-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
     .mode-toggle { display: flex; gap: 6px; padding: 10px 16px 0; }
     .mode-toggle .level-btn { flex: 1; text-align: center; }
+    .temporary-quick-banner { display:none; margin: 10px 16px 0; padding: 8px 10px; border: 1px dashed #d97706; border-radius: 8px; background:#fffbeb; color:#92400e; font-size:11px; line-height:1.4; }
+    .temporary-quick-banner.active { display:block; }
     .panel-search {
       padding: 12px 16px; border-bottom: 1px solid var(--border);
     }
@@ -1131,6 +1133,8 @@
 
 <button class="mobile-scenario-btn" id="mobile-scenario-btn" onclick="toggleMobilePanel()">📋 選擇情境 / Choose Scenario</button>
 
+<div id="temporary-quick-banner" class="temporary-quick-banner" role="status">🧪 Temporary Quick Practice — test mode only · 3 turns · not for public users</div>
+
 <div class="app">
 
   <!-- LEFT: Scenario List -->
@@ -1765,6 +1769,10 @@ let currentScenario = null;
 let conversationHistory = [];
 let isLoading = false;
 let turnCount = 0;
+// Temporary test-only mode. It is activated only by adding temporary=quick to the private test URL.
+const temporaryQuickPractice = new URLSearchParams(window.location.search).get('temporary') === 'quick';
+const maxPracticeTurns = temporaryQuickPractice ? 3 : 10;
+
 
 // ── PRIVATE ACCESS CONTROL ──
 // Each person gets their own ref code: simulator.html?ref=john
@@ -2345,6 +2353,9 @@ function selectScenario(sc) {
   conversationHistory = [];
   turnCount = 0;
 
+  const quickBanner = document.getElementById('temporary-quick-banner');
+  if (quickBanner) quickBanner.classList.toggle('active', temporaryQuickPractice);
+
   // Update UI
   renderCurrentPanel(document.getElementById('search-input').value);
   document.getElementById('client-name').textContent = sc.clientName;
@@ -2557,8 +2568,8 @@ async function sendMessage() {
   showTyping();
   turnCount++;
 
-  // End after 4 agent turns
-  if (turnCount >= 10) {
+  // Full Practice remains unchanged for normal users. Temporary Quick Practice ends after 3 turns.
+  if (turnCount >= maxPracticeTurns) {
     removeTyping();
     appendMessage('system', '', strings[currentLang].sessionEnded);
     isLoading = false;
