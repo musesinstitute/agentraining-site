@@ -24,7 +24,7 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 <header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>Review your team's practice results, see the real client identity, and open the complete transcript before giving coaching guidance.</p></header>
 <main>
 <div class="notice"><b>Browser-local MVP:</b> records appear here when Practice is completed in this same browser. The transcript is the evidence for coaching; the original practice source is retained as a label.</div>
-<div class="toolbar"><strong id="count">0 records</strong><div><input id="search" placeholder="Search agent or client"><button id="refresh">Refresh</button></div></div>
+<div class="toolbar"><strong id="count">0 records</strong><div><input id="search" placeholder="Search agent or client"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
 <div id="records"></div>
 </main>
 <script>
@@ -49,6 +49,23 @@ function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return A
 function list(){const q=document.getElementById('search').value.trim().toLowerCase();const all=read();const rows=all.filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));document.getElementById('count').textContent=rows.length+' record'+(rows.length===1?'':'s');const root=document.getElementById('records');if(!rows.length){root.innerHTML='<div class="empty">No practice records yet. Complete a Practice session first.</div>';return}
 root.innerHTML=rows.map((x,i)=>{const client=resolveClientName(x);const source=x.sourceLabel||'Practice';const transcript=Array.isArray(x.transcript)?x.transcript:[];return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Agent: '+esc(x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>'}).join('')}
 function toggle(i){const el=document.getElementById('d'+i);el.hidden=!el.hidden}
-document.getElementById('refresh').onclick=list;document.getElementById('search').oninput=list;list();
+function generateQuickTest(){
+  const name=prompt('Enter a test client name:', 'Xiaodong');
+  if(!name) return;
+  const now=new Date().toISOString();
+  const record={
+    id:'quick-test-'+Date.now(), name:'Quick Test Agent', industry:'Insurance',
+    scenario:'Quick Test — Client identity and transcript sync', sourceLabel:'Quick Test',
+    savedAt:now, clientCaseName:name, aiClientName:name,
+    scores:{overall:88, empathy:85, accuracy:90, closing:89},
+    summary:'Quick test record for verifying client-name display, transcript rendering, and Manager refresh without completing a full Practice session.',
+    transcript:[
+      {speaker:'client',text:'I want to understand the next step.'},
+      {speaker:'agent',text:'Of course. I will clarify the next step and follow up with you.'}
+    ]
+  };
+  const all=read();all.unshift(record);localStorage.setItem(KEY,JSON.stringify(all));list();
+}
+document.getElementById('quickTest').onclick=generateQuickTest;document.getElementById('refresh').onclick=list;document.getElementById('search').oninput=list;list();
 </script>
 </body></html>
