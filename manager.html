@@ -1,257 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Manager Studio — AgentTraining AI</title>
-<meta name="description" content="A dedicated view for team leaders to coach and track their team's practice inside Practice Studio."/>
-<link rel="manifest" href="/manifest.json"/>
-<meta name="theme-color" content="#1a56db"/>
-<link rel="apple-touch-icon" href="/icon-192.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
-    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
-    --white: #ffffff; --border: #e5e7eb; --radius: 12px; --green: #16a34a;
-    --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
-
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 40px; border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; background: var(--white); z-index: 100;
-  }
-  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
-  .nav-links a:hover { color: var(--brand); }
-  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
-  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
-  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .btn-nav { background: var(--accent); color: #111827; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; }
-  .btn-nav:hover { background: #e08800; }
-
-  .hero { text-align: center; padding: 72px 20px 48px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); }
-  .hero-badge { display: inline-block; background: #dbeafe; color: var(--brand); padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
-  .hero h1 { font-size: clamp(28px, 4.5vw, 46px); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
-  .hero h1 span { color: var(--brand); }
-  .hero p { font-size: 17px; color: var(--ink-muted); max-width: 620px; margin: 0 auto 30px; line-height: 1.6; }
-  .btn-primary { display: inline-block; background: var(--brand); color: var(--white); padding: 14px 32px; border-radius: 10px; text-decoration: none; font-size: 16px; font-weight: 700; }
-  .btn-primary:hover { background: var(--brand-dark); }
-  .hero-note { margin-top: 16px; font-size: 12px; color: var(--ink-muted); }
-
-  section { padding: 56px 20px; }
-  .section-inner { max-width: 900px; margin: 0 auto; }
-  h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; margin-bottom: 28px; text-align: center; }
-
-  .preview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .preview-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-  .preview-card-label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 8px; }
-  .preview-card-body { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
-
-  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
-  .feature-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-  .feature-icon { font-size: 26px; margin-bottom: 10px; }
-  .feature-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
-  .feature-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.55; }
-
-  .cta-band { text-align: center; padding: 56px 20px; background: var(--surface); }
-  .cta-band h2 { margin-bottom: 12px; }
-  .cta-band p { font-size: 15px; color: var(--ink-muted); margin-bottom: 24px; }
-  .limitation-note { max-width: 620px; margin: 20px auto 0; font-size: 12px; color: var(--ink-muted); font-style: italic; line-height: 1.6; }
-
-  footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); }
-  footer div { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
-  footer a { color: var(--ink-muted); text-decoration: none; font-size: 13px; }
-  footer a:hover { color: var(--brand); }
-  footer p { font-size: 12px; color: var(--ink-muted); }
-
-  @media (max-width: 720px) {
-    nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
-    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: center; }
-    .preview-grid, .feature-grid { grid-template-columns: 1fr; }
-    section { padding: 40px 16px; }
-  }
+:root{--blue:#1a56db;--ink:#111827;--muted:#6b7280;--bg:#f7f8fc;--line:#e5e7eb;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}
+nav{background:#fff;border-bottom:1px solid var(--line);padding:16px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{color:var(--blue);font-weight:800;font-size:20px;text-decoration:none}.logo span{color:#f59e0b}
+nav a{color:var(--muted);text-decoration:none;margin-left:20px}.hero{background:linear-gradient(135deg,#eff6ff,#f0fdf4);padding:48px 6%}
+h1{margin:0 0 8px;font-size:36px}.hero p{color:var(--muted);max-width:720px;line-height:1.6}
+main{max-width:1100px;margin:28px auto;padding:0 20px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
+input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;min-width:260px}button{border:0;border-radius:8px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+.notice{background:#fff7ed;border:1px solid #fed7aa;padding:12px 14px;border-radius:8px;color:#9a3412;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}.row{display:flex;gap:16px;align-items:center;padding:16px;flex-wrap:wrap}.row h3{margin:0 0 5px;font-size:16px}.meta{color:var(--muted);font-size:12px}.score{margin-left:auto;font-size:24px;font-weight:800;color:var(--blue)}.identity{font-weight:700;color:#065f46}.source{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:99px;padding:4px 8px;font-size:11px;margin-left:8px}
+.details{border-top:1px solid var(--line);padding:18px;background:#fafafa}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px}.metric b{display:block;font-size:20px}.section{margin-top:16px}.section h4{margin:0 0 8px}.section ul{margin:0;padding-left:20px;line-height:1.6}.transcript{display:flex;flex-direction:column;gap:8px}.turn{padding:10px 12px;border-radius:9px;line-height:1.5;max-width:90%}.turn.agent{align-self:flex-end;background:#dbeafe}.turn.client{align-self:flex-start;background:#fff;border:1px solid var(--line)}.turn b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:32px;text-align:center;color:var(--muted)}
+@media(max-width:700px){h1{font-size:28px}.grid{grid-template-columns:1fr 1fr}.score{margin-left:0}.row{gap:10px}}
 </style>
 </head>
 <body>
-
-<nav>
-  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="studios.html">Studios</a>
-    <div class="nav-lang">
-      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
-      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
-    </div>
-    <a class="btn-nav" href="simulator.html?ref=demo" id="nav-cta">Try Free Demo</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <div class="hero-badge" id="hero-badge">📊 Studio 4 of 4</div>
-  <h1 id="hero-title">Manager <span>Studio</span></h1>
-  <p id="hero-sub">A team-growth view for leaders: monitor client opportunities, recruiting candidates, follow-up activity, agent activation, and the coaching your team needs next.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&studio=manager" id="open-cta">Open Manager Studio →</a>
-  <div class="hero-note" id="hero-note">📱 Manager Studio lives inside Practice Studio — no separate login required.</div>
-</div>
-
-<section>
-  <div class="section-inner">
-    <h2 id="preview-h2">What you'll see</h2>
-    <div class="preview-grid">
-      <div class="preview-card">
-        <div class="preview-card-label" id="pc1-label">Client Opportunities</div>
-        <div class="preview-card-body" id="pc1-body">See active client cases and whether the responsible agent has practiced the next conversation.</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-card-label" id="pc2-label">Recruiting Pipeline</div>
-        <div class="preview-card-body" id="pc2-body">See candidates move from first contact to invitation, event, licensing, joining, and activation.</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-card-label" id="pc3-label">Follow-up Discipline</div>
-        <div class="preview-card-body" id="pc3-body">Surface client and recruiting opportunities that need a clear next action.</div>
-      </div>
-      <div class="preview-card">
-        <div class="preview-card-label" id="pc4-label">Agent Activation</div>
-        <div class="preview-card-body" id="pc4-body">Identify where new members stall between joining, licensing, practice, and real action.</div>
-      </div>
-    </div>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🔀</div>
-        <h3 id="feat1-h">One switch, two views</h3>
-        <p id="feat1-p">Toggle between Learner and Manager view right inside Practice Studio — no separate app to learn.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🤖</div>
-        <h3 id="feat2-h">AI Coaching Insight</h3>
-        <p id="feat2-p">A dedicated panel for AI-generated coaching notes as your team completes practice sessions.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3 id="feat3-h">Straight to Practice Studio</h3>
-        <p id="feat3-p">One link opens the full curriculum your team practices against — the same 25 scenarios, same scoring.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="cta-band">
-  <h2 id="cta-h2">See it for yourself</h2>
-  <p id="cta-p">Manager Studio opens inside Practice Studio in manager view.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&studio=manager" id="cta-btn">Open Manager Studio →</a>
-  <p class="limitation-note" id="limitation-note">Pilot note: these growth metrics currently use records saved in this browser. Shared team accounts, manager assignments, and cross-device sync are the next enterprise layer.</p>
-</div>
-
-<footer>
-  <div>
-    <a href="index.html" id="f-home">Home</a>
-    <a href="studios.html" id="f-studios">Studios</a>
-    <a href="simulator.html?ref=demo" id="f-sim">AI Simulator</a>
-    <a href="terms.html" id="f-terms">Terms of Service</a>
-    <a href="privacy.html" id="f-privacy">Privacy Policy</a>
-    <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
-  </div>
-  <p id="f-copy">© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
-</footer>
-
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="studios.html">Studios</a><a href="simulator.html?ref=demo">Practice</a></div></nav>
+<header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>Review your team's practice results, see the real client identity, and open the complete transcript before giving coaching guidance.</p></header>
+<main>
+<div class="notice"><b>Browser-local MVP:</b> records appear here when Practice is completed in this same browser. The transcript is the evidence for coaching; the original practice source is retained as a label.</div>
+<div class="toolbar"><strong id="count">0 records</strong><div><input id="search" placeholder="Search agent or client"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
+<div id="records"></div>
+</main>
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
-}
-
-const STRINGS = {
-  en: {
-    navCta: 'Try Free Demo',
-    heroBadge: '📊 Studio 4 of 4', heroTitleHtml: 'Manager <span>Studio</span>',
-    heroSub: 'A team-growth view for leaders: monitor client opportunities, recruiting candidates, follow-up activity, agent activation, and the coaching your team needs next.',
-    openCta: 'Open Manager Studio →',
-    heroNote: '📱 Manager Studio lives inside Practice Studio — no separate login required.',
-    previewH2: "What you'll see",
-    pc1l: 'Client Opportunities', pc1b: 'See active client cases and whether the responsible agent has practiced the next conversation.',
-    pc2l: 'Recruiting Pipeline', pc2b: 'See candidates move from first contact to invitation, event, licensing, joining, and activation.',
-    pc3l: 'Follow-up Discipline', pc3b: 'Surface client and recruiting opportunities that need a clear next action.',
-    pc4l: 'Agent Activation', pc4b: 'Identify where new members stall between joining, licensing, practice, and real action.',
-    feat1h: 'One switch, two views', feat1p: 'Toggle between Learner and Manager view right inside Practice Studio — no separate app to learn.',
-    feat2h: 'AI Coaching Insight', feat2p: 'A dedicated panel for AI-generated coaching notes as your team completes practice sessions.',
-    feat3h: 'Straight to Practice Studio', feat3p: 'One link opens the full curriculum your team practices against — the same 25 scenarios, same scoring.',
-    ctaH2: 'See it for yourself', ctaP: 'Manager Studio opens inside Practice Studio in manager view.',
-    ctaBtn: 'Open Manager Studio →',
-    limitationNote: 'Pilot note: these growth metrics currently use records saved in this browser. Shared team accounts, manager assignments, and cross-device sync are the next enterprise layer.',
-    fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
-  },
-  zh: {
-    navCta: '免費試用',
-    heroBadge: '📊 工作室 4 / 4', heroTitleHtml: '主管<span>工作室</span>',
-    heroSub: '為團隊主管提供完整的增長視角：掌握客戶機會、招募候選人、跟進行動、新成員啟動，以及團隊下一步需要的訓練。',
-    openCta: '開啟主管工作室 →',
-    heroNote: '📱 主管工作室位於練習工作室之內，不需要另外登入。',
-    previewH2: '你將會看到',
-    pc1l: '客戶機會', pc1b: '查看活躍客戶案例，以及負責的業務員是否已經為下一次對話完成練習。',
-    pc2l: '招募流程', pc2b: '查看候選人從初次接觸、活動邀請、參加活動，到考照、加入及正式啟動的進度。',
-    pc3l: '跟進執行', pc3b: '找出尚未建立明確下一步行動的客戶與招募機會。',
-    pc4l: '新成員啟動', pc4b: '識別新成員在加入、考照、練習與實際行動之間停滯的位置。',
-    feat1h: '一鍵切換，兩種視角', feat1p: '直接在練習工作室內切換「學員」與「主管」視角——不需要另一個應用程式。',
-    feat2h: 'AI 輔導洞察', feat2p: '當團隊完成練習後，這裡會顯示AI生成的輔導筆記專屬面板。',
-    feat3h: '直達練習工作室', feat3p: '一個連結即可開啟團隊所練習的完整課程——同樣的25個情境、同樣的評分標準。',
-    ctaH2: '親自體驗看看', ctaP: '主管工作室會在練習工作室內以主管視角開啟。',
-    ctaBtn: '開啟主管工作室 →',
-    limitationNote: '試點說明：目前的增長指標來自儲存在這個瀏覽器內的紀錄。共享團隊帳戶、主管指派及跨裝置同步，將是下一階段的企業功能。',
-    fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
+const KEY='agentraining_manager_sessions';
+function resolveClientName(record){
+  if(record?.linkedCaseId){
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      try{
+        const value=JSON.parse(localStorage.getItem(k)||'null');
+        if(Array.isArray(value)){
+          const match=value.find(c=>c && c.id===record.linkedCaseId);
+          if(match) return match.clientName||match.name||record.clientCaseName||record.aiClientName||'Practice client';
+        }
+      }catch(e){}
+    }
   }
-};
-
-function switchLang(lang) {
-  const s = STRINGS[lang];
-  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
-  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
-  sessionStorage.setItem('agentraining_lang', lang);
-  document.getElementById('nav-cta').textContent = s.navCta;
-  document.getElementById('hero-badge').textContent = s.heroBadge;
-  document.getElementById('hero-title').innerHTML = s.heroTitleHtml;
-  document.getElementById('hero-sub').textContent = s.heroSub;
-  document.getElementById('open-cta').textContent = s.openCta;
-  document.getElementById('hero-note').textContent = s.heroNote;
-  document.getElementById('preview-h2').textContent = s.previewH2;
-  document.getElementById('pc1-label').textContent = s.pc1l;
-  document.getElementById('pc1-body').textContent = s.pc1b;
-  document.getElementById('pc2-label').textContent = s.pc2l;
-  document.getElementById('pc2-body').textContent = s.pc2b;
-  document.getElementById('pc3-label').textContent = s.pc3l;
-  document.getElementById('pc3-body').textContent = s.pc3b;
-  document.getElementById('pc4-label').textContent = s.pc4l;
-  document.getElementById('pc4-body').textContent = s.pc4b;
-  document.getElementById('feat1-h').textContent = s.feat1h;
-  document.getElementById('feat1-p').textContent = s.feat1p;
-  document.getElementById('feat2-h').textContent = s.feat2h;
-  document.getElementById('feat2-p').textContent = s.feat2p;
-  document.getElementById('feat3-h').textContent = s.feat3h;
-  document.getElementById('feat3-p').textContent = s.feat3p;
-  document.getElementById('cta-h2').textContent = s.ctaH2;
-  document.getElementById('cta-p').textContent = s.ctaP;
-  document.getElementById('cta-btn').textContent = s.ctaBtn;
-  document.getElementById('limitation-note').textContent = s.limitationNote;
-  document.getElementById('f-home').textContent = s.fHome;
-  document.getElementById('f-studios').textContent = s.fStudios;
-  document.getElementById('f-sim').textContent = s.fSim;
-  document.getElementById('f-terms').textContent = s.fTerms;
-  document.getElementById('f-privacy').textContent = s.fPrivacy;
-  document.getElementById('f-contact').textContent = s.fContact;
+  return record?.clientCaseName||record?.aiClientName||'Practice client';
 }
-
-(function initLang() {
-  const saved = sessionStorage.getItem('agentraining_lang');
-  if (saved === 'zh') switchLang('zh');
-})();
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function list(){const q=document.getElementById('search').value.trim().toLowerCase();const all=read();const rows=all.filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));document.getElementById('count').textContent=rows.length+' record'+(rows.length===1?'':'s');const root=document.getElementById('records');if(!rows.length){root.innerHTML='<div class="empty">No practice records yet. Complete a Practice session first.</div>';return}
+root.innerHTML=rows.map((x,i)=>{const client=resolveClientName(x);const source=x.sourceLabel||'Practice';const transcript=Array.isArray(x.transcript)?x.transcript:[];return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Agent: '+esc(x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>'}).join('')}
+function toggle(i){const el=document.getElementById('d'+i);el.hidden=!el.hidden}
+function generateQuickTest(){
+  const name=prompt('Enter a test client name:', 'Xiaodong');
+  if(!name) return;
+  const now=new Date().toISOString();
+  const record={
+    id:'quick-test-'+Date.now(), name:'Quick Test Agent', industry:'Insurance',
+    scenario:'Quick Test — Client identity and transcript sync', sourceLabel:'Quick Test',
+    savedAt:now, clientCaseName:name, aiClientName:name,
+    scores:{overall:88, empathy:85, accuracy:90, closing:89},
+    summary:'Quick test record for verifying client-name display, transcript rendering, and Manager refresh without completing a full Practice session.',
+    transcript:[
+      {speaker:'client',text:'I want to understand the next step.'},
+      {speaker:'agent',text:'Of course. I will clarify the next step and follow up with you.'}
+    ]
+  };
+  const all=read();all.unshift(record);localStorage.setItem(KEY,JSON.stringify(all));list();
+}
+document.getElementById('quickTest').onclick=generateQuickTest;document.getElementById('refresh').onclick=list;document.getElementById('search').oninput=list;list();
 </script>
-</body>
-</html>
+</body></html>
