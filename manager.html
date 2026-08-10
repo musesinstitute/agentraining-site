@@ -17,14 +17,25 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 .details{border-top:1px solid var(--line);padding:18px;background:#fafafa}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px}.metric b{display:block;font-size:20px}.section{margin-top:16px}.section h4{margin:0 0 8px}.section ul{margin:0;padding-left:20px;line-height:1.6}.transcript{display:flex;flex-direction:column;gap:8px}.turn{padding:10px 12px;border-radius:9px;line-height:1.5;max-width:90%}.turn.agent{align-self:flex-end;background:#dbeafe}.turn.client{align-self:flex-start;background:#fff;border:1px solid var(--line)}.turn b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:32px;text-align:center;color:var(--muted)}
 @media(max-width:700px){h1{font-size:28px}.grid{grid-template-columns:1fr 1fr}.score{margin-left:0}.row{gap:10px}}
-</style>
+.assign-panel{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:18px}.assign-panel h2{margin:0 0 6px;font-size:18px}.assign-panel p{margin:0 0 12px;color:var(--muted)}.assign-form{display:grid;grid-template-columns:1.2fr 2fr 1fr auto;gap:10px;align-items:end}.assign-form label{font-size:12px;font-weight:700;color:var(--muted)}.assign-form input,.assign-form select{display:block;width:100%;min-width:0;margin-top:5px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}@media(max-width:800px){.assign-form{grid-template-columns:1fr 1fr}.assign-form button{width:100%}}</style>
 </head>
 <body>
 <nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="studios.html">Studios</a><a href="simulator.html?ref=demo">Practice</a></div></nav>
 <header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>Review your team's practice results, see the real client identity, and open the complete transcript before giving coaching guidance.</p></header>
 <main>
 <div class="notice"><b>Browser-local MVP:</b> records appear here when Practice is completed in this same browser. The transcript is the evidence for coaching; the original practice source is retained as a label.</div>
-<div class="toolbar"><strong id="count">0 records</strong><div><input id="search" placeholder="Search agent or client"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
+<div class="assign-panel">
+<h2>Assign Practice</h2>
+<p>Create a browser-local practice assignment for a learner. This temporary MVP is for testing in the same browser.</p>
+<div class="assign-form">
+<label>Learner name or email<input id="assignLearner" placeholder="e.g. Maria Lopez"></label>
+<label>Curriculum scenario<select id="assignScenario"><option value="">Loading scenarios…</option></select></label>
+<label>Due date<input id="assignDue" type="date"></label>
+<button id="assignPractice" type="button">Assign Practice</button>
+</div>
+<div id="assignStatus" class="meta" style="margin-top:10px"></div>
+</div>
+<div class="toolbar"><strong id="count">0 records</strong><div><input id="search" placeholder="Search agent or client"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh" type="button">Refresh</button></div></div>
 <div id="records"></div>
 </main>
 <script>
@@ -49,6 +60,34 @@ function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return A
 function list(){const q=document.getElementById('search').value.trim().toLowerCase();const all=read();const rows=all.filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));document.getElementById('count').textContent=rows.length+' record'+(rows.length===1?'':'s');const root=document.getElementById('records');if(!rows.length){root.innerHTML='<div class="empty">No practice records yet. Complete a Practice session first.</div>';return}
 root.innerHTML=rows.map((x,i)=>{const client=resolveClientName(x);const source=x.sourceLabel||'Practice';const transcript=Array.isArray(x.transcript)?x.transcript:[];return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Agent: '+esc(x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>'}).join('')}
 function toggle(i){const el=document.getElementById('d'+i);el.hidden=!el.hidden}
+const ASSIGN_KEY='agentraining_assignments';
+function readAssignments(){try{const x=JSON.parse(localStorage.getItem(ASSIGN_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+function setAssignStatus(message,ok=false){const el=document.getElementById('assignStatus');if(el){el.textContent=message;el.style.color=ok?'#166534':'#9a3412'}}
+async function loadAssignmentScenarios(){
+  const select=document.getElementById('assignScenario');
+  try{
+    const res=await fetch('data/curriculum/foundation.json',{cache:'no-store'});
+    const data=await res.json();
+    const rows=Array.isArray(data)?data:[];
+    select.innerHTML='<option value="">Select a scenario</option>'+rows.map(s=>{
+      const title=s.title?.en||s.title?.zh||s.name||s.id;
+      return '<option value="'+esc(s.id)+'">'+esc(s.id+' — '+title)+'</option>';
+    }).join('');
+  }catch(e){select.innerHTML='<option value="">Unable to load scenarios</option>';setAssignStatus('Scenario list could not be loaded. Refresh and try again.')}
+}
+function assignPractice(){
+  const learner=document.getElementById('assignLearner').value.trim();
+  const scenario=document.getElementById('assignScenario').value;
+  const due=document.getElementById('assignDue').value;
+  if(!learner||!scenario){setAssignStatus('Enter a learner and choose a scenario.');return}
+  const all=readAssignments();
+  all.unshift({id:'assignment-'+Date.now(),learner,scenario,dueDate:due||null,status:'Assigned',createdAt:new Date().toISOString()});
+  localStorage.setItem(ASSIGN_KEY,JSON.stringify(all));
+  document.getElementById('assignLearner').value='';
+  document.getElementById('assignScenario').selectedIndex=0;
+  document.getElementById('assignDue').value='';
+  setAssignStatus('Practice assigned to '+learner+'. Saved in this browser.',true);
+}
 function generateQuickTest(){
   const name=prompt('Enter a test client name:', 'Xiaodong');
   if(!name) return;
@@ -66,6 +105,6 @@ function generateQuickTest(){
   };
   const all=read();all.unshift(record);localStorage.setItem(KEY,JSON.stringify(all));list();
 }
-document.getElementById('quickTest').onclick=generateQuickTest;document.getElementById('refresh').onclick=list;document.getElementById('search').oninput=list;list();
+document.getElementById('quickTest').onclick=generateQuickTest;document.getElementById('refresh').onclick=list;document.getElementById('search').oninput=list;document.getElementById('assignPractice').onclick=assignPractice;loadAssignmentScenarios();list();
 </script>
 </body></html>
