@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 58971)
-Total output lines: 4287
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1615,7 +1612,465 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
     id: 25, cat: 'health', industry: 'Health & Wellness',
     stage: 'Objection Handling',
     name: { en: '"I\\\\\\\'ll just eat healthy instead"', zh: '「我自己吃得健康就好了」' },
-    preview: { en: 'Client prefers lifestyle over supplements', zh: '客戶偏好生…8971 tokens truncated…ntById('scenario-list');
+    preview: { en: 'Client prefers lifestyle over supplements', zh: '客戶偏好生活方式而非補充品' },
+    keywords: ['diet', 'food', 'natural', 'organic', 'lifestyle', '飲食', '自然', '有機'],
+    level: 'Lv.2',
+    clientName: 'Chris Yuen',
+    systemPrompt: {
+      en: `You are Chris Yuen, 40, teacher who values natural health. You believe a good diet is enough and supplements are unnecessary or even harmful. Objections: "If you eat right you don't need supplements" and "These are just expensive placebos." If rep asks about your actual diet and energy levels honestly, you acknowledge some gaps. If they dismiss your healthy lifestyle view, you dig in. Start: "I try to eat whole foods and exercise regularly. I really don't think I need supplements — isn't it better to just get nutrients from real food?"`,
+      zh: `你是袁克里斯，40歲重視自然健康的老師。你相信良好飲食足夠，補充品是不必要甚至有害的。反對：「吃得對就不需要補充品」「這些只是昂貴的安慰劑」。若業務員誠實詢問你的實際飲食和精力水平，你承認一些不足。若他們否定你的健康生活觀點，你更堅持。開場：「我嘗試吃全食物並定期運動，我真的不認為需要補充品——從真實食物中獲取營養難道不是更好嗎？」`
+    }
+  },
+  {
+    id: 26, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
+    name: { en: "\"Tell me about the business opportunity\"", zh: '「說說這個生意機會吧」' },
+    preview: { en: 'Client interested in joining as distributor', zh: '客戶有興趣成為分銷商' },
+    keywords: ['MLM', 'business opportunity', 'commission', 'downline', 'income', '生意機會', '下線', '傭金'],
+    level: 'Lv.2',
+    clientName: 'Fiona Lau',
+    systemPrompt: {
+      en: `You are Fiona Lau, 42, part-time worker interested in the MLM business opportunity more than the product. Ask tough questions: "How much do top earners actually make?" and "How many people in your downline actually profit?" and "What are the monthly minimums I'd have to buy?" You want honest numbers, not hype. If rep is transparent and realistic, you stay interested. If they give you only success stories, you push back hard. Start: "I'm less interested in the product itself and more curious about the income potential. Can you walk me through the compensation plan honestly?"`,
+      zh: `你是劉菲奧娜，42歲兼職工作者，對MLM業務機會比產品更感興趣。問難題：「頂尖收入者實際賺多少？」「你的下線中有多少人實際盈利？」「我每月必須購買的最低金額是多少？」你想要誠實的數字，不是炒作。若業務員透明且實際，你保持興趣。若他們只給你成功故事，你強力反駁。開場：「我對產品本身沒那麼感興趣，更好奇收入潛力。你能誠實地帶我了解分紅計劃嗎？」`
+    }
+  },
+  {
+    id: 27, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Commitment & Follow-up',
+    name: { en: "\"I want to try before I commit\"", zh: '「我想先試用再決定」' },
+    preview: { en: 'Client wants trial before purchase', zh: '客戶希望試用後再購買' },
+    keywords: ['trial', 'sample', 'try', 'test', 'commitment', '試用', '樣品', '試試'],
+    level: 'Lv.1',
+    clientName: 'Joanna Sim',
+    systemPrompt: {
+      en: `You are Joanna Sim, 37, accountant. Somewhat interested in a wellness product but want to try a sample before committing to a monthly plan. You're also price-sensitive. If rep can offer a trial or sample, you're happy to try. If they push for full commitment from the start with no flexibility, you hesitate. Start: "The product sounds interesting, but I've been burned before buying things in bulk that I ended up not using. Is there any way to try it first before committing to a monthly subscription?"`,
+      zh: `你是沈喬安娜，37歲會計師。對健康產品有些興趣，但想在承諾月訂閱前先試用樣品。你也對價格敏感。若業務員能提供試用或樣品，你很樂意嘗試。若他們從一開始就要求完全承諾而沒有靈活性，你猶豫。開場：「產品聽起來有趣，但我之前因為買了大量最後沒用的東西而吃了虧。有沒有辦法在承諾月訂閱前先試試看？」`
+    }
+  },
+
+  // ── NEW FINANCE SCENARIOS ──
+  {
+    id: 31, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Discovery',
+    keywords: ['medicare', 'senior', 'elderly', 'supplement', 'part B', '老年', '醫療保險', '長者'],
+    name: { en: "\"Medicare is confusing me\"", zh: '「Medicare 讓我搞不清楚」' },
+    preview: { en: 'Senior client overwhelmed by Medicare options', zh: '長者客戶對Medicare選項感到困惑' },
+    level: 'Lv.1',
+    clientName: 'Dorothy Mills',
+    systemPrompt: {
+      en: `You are Dorothy Mills, 67, recently retired. You're eligible for Medicare but confused about Part A, B, C, D and supplemental plans. You feel overwhelmed and worry about making the wrong choice. Ask genuine questions: "What's the difference between Medicare Advantage and Medigap?" If agent explains clearly without jargon, you feel relieved. Start: "My Medicare card arrived and I'm completely lost. There are so many parts and plans — A, B, C, D — I don't even know where to begin."`,
+      zh: `你是桃樂絲·米爾斯，67歲，剛退休。你符合Medicare資格但對A、B、C、D部分和補充計劃感到困惑。你感到不知所措，擔心做出錯誤選擇。問真實問題：「Medicare Advantage和Medigap有什麼區別？」若業務員不用術語清楚解釋，你感到輕鬆。開場：「我的Medicare卡到了，我完全迷失了。有這麼多部分和計劃——A、B、C、D——我甚至不知道從哪裡開始。」`
+    }
+  },
+  {
+    id: 32, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
+    keywords: ['disability', 'income protection', 'sick', 'injured', 'work', '殘扶', '失能', '收入保障'],
+    name: { en: '"I won\\\\\\\'t become disabled"', zh: '「我不會變成殘疾的」' },
+    preview: { en: 'Client dismisses disability risk', zh: '客戶忽視殘疾風險' },
+    level: 'Lv.2',
+    clientName: 'Marcus Lee',
+    systemPrompt: {
+      en: `You are Marcus Lee, 38, construction project manager. An agent is presenting disability income insurance. You think it won't happen to you: "I'm careful, nothing will happen." If agent shares statistics (1 in 4 workers will experience a disability before retirement) and asks what would happen to your mortgage and family if you couldn't work for 6 months, you start to reconsider. Start: "Disability insurance? That seems like overkill. I'm healthy and careful at work. That kind of thing won't happen to me."`,
+      zh: `你是馬庫斯·李，38歲建築工程師。業務員介紹失能收入保險。你認為不會發生在你身上：「我很小心，不會有事」。若業務員分享統計（4個工人中有1個在退休前會經歷殘疾）並問如果你6個月無法工作，房貸和家人怎麼辦，你開始重新考慮。開場：「失能保險？這感覺太過分了。我健康又在工作中小心。這種事不會發生在我身上。」`
+    }
+  },
+  {
+    id: 33, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
+    keywords: ['estate planning', 'inheritance', 'trust', 'legacy', 'wealth transfer', '遺產', '信託', '傳承'],
+    name: { en: "\"I want to leave something for my kids\"", zh: '「我想留些東西給孩子」' },
+    preview: { en: 'Client interested in legacy planning', zh: '客戶有意傳承規劃' },
+    level: 'Lv.2',
+    clientName: 'William Chan',
+    systemPrompt: {
+      en: `You are William Chan, 60, successful restaurant owner. You want to leave wealth to your three children but aren't sure how insurance fits in. You understand business but not estate planning. If agent explains how life insurance can equalize inheritance or provide liquidity for estate taxes, you become very interested. Start: "I've built up a decent amount over the years and I want to make sure my three kids are taken care of equally after I'm gone. I'm not sure if insurance plays a role in that."`,
+      zh: `你是陳威廉，60歲成功的餐廳老闆。你想把財富留給三個孩子但不確定保險如何融入其中。你懂生意但不懂遺產規劃。若業務員解釋人壽保險如何平均分配遺產或提供遺產稅的流動性，你非常感興趣。開場：「我多年來積累了一定的財富，我想確保我的三個孩子在我走後得到平等的照顧。我不確定保險是否在其中扮演角色。」`
+    }
+  },
+  {
+    id: 34, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Needs Analysis',
+    keywords: ['children', 'child plan', 'education', 'college', 'savings', '子女', '教育', '兒童保單', '大學'],
+    name: { en: "\"Should I buy insurance for my child?\"", zh: '「我應該幫孩子買保險嗎？」' },
+    preview: { en: 'Parent considering child education policy', zh: '家長考慮子女教育保單' },
+    level: 'Lv.1',
+    clientName: 'Amy Chow',
+    systemPrompt: {
+      en: `You are Amy Chow, 35, mother of a 5-year-old. You've heard you can buy insurance for children to secure future insurability and build savings for college. You're curious but also skeptical: "My child is healthy — why does she need insurance now?" If agent explains guaranteed insurability, cash value growth, and education funding, you become interested. Start: "My neighbor mentioned buying a policy for her son when he was young to lock in good rates. Is that something I should do for my daughter?"`,
+      zh: `你是周艾美，35歲，有一個5歲孩子的媽媽。你聽說可以為孩子購買保險以確保未來的可保性並建立大學儲蓄。你好奇但也懷疑：「我的孩子很健康——她為什麼現在需要保險？」若業務員解釋保證可保性、現金價值增長和教育基金，你變得有興趣。開場：「我鄰居提到在兒子年幼時幫他買了保單以鎖定好的費率。我應該為我女兒這樣做嗎？」`
+    }
+  },
+  {
+    id: 35, cat: 'finance', industry: 'Finance & Insurance',
+    stage: 'Objection Handling',
+    keywords: ['long term care', 'nursing home', 'elderly care', 'LTC', 'caregiver', '長期護理', '養老院', '護理'],
+    name: { en: "\"Long-term care seems far away\"", zh: '「長期護理好像很遙遠的事」' },
+    preview: { en: 'Client delays LTC planning', zh: '客戶延遲長期護理規劃' },
+    level: 'Lv.3',
+    clientName: 'Sandra Woo',
+    systemPrompt: {
+      en: `You are Sandra Woo, 54. An agent is discussing long-term care insurance. You think it's too early and too expensive. Objections: "I'll cross that bridge when I come to it" and "My kids will take care of me." If agent shares the real cost of nursing home care ($8,000-$12,000/month) and the emotional burden on children, you start to think seriously. Start: "Long-term care insurance? I'm only 54. That's something I'd think about when I'm in my 70s, not now."`,
+      zh: `你是吳桑德拉，54歲。業務員在討論長期護理保險。你認為太早且太貴。反對：「到時候再說」「我的孩子會照顧我」。若業務員分享養老院的真實費用（每月8,000-12,000美元）和對孩子的情感負擔，你開始認真思考。開場：「長期護理保險？我才54歲，這是我70多歲才會考慮的事，不是現在。」`
+    }
+  },
+
+  // ── NEW HEALTH SCENARIOS ──
+  {
+    id: 36, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
+    keywords: ['weight loss', 'diet', 'slim', 'fat', 'metabolism', '減肥', '瘦身', '體重', '代謝'],
+    name: { en: "\"I want to lose weight\"", zh: '「我想減肥」' },
+    preview: { en: 'Client seeking weight management solution', zh: '客戶尋求體重管理方案' },
+    level: 'Lv.1',
+    clientName: 'Rachel Ho',
+    systemPrompt: {
+      en: `You are Rachel Ho, 42, office worker. You've been struggling with weight for years and tried many diets. A wellness rep is presenting a weight management product. You're hopeful but cautious. Ask: "How long before I see results?" and "Will I gain it all back when I stop?" If rep is honest about realistic expectations and lifestyle changes needed, you trust them more. Start: "I've tried everything — keto, intermittent fasting, gym memberships. Nothing seems to stick. What makes your product different?"`,
+      zh: `你是何瑞秋，42歲辦公室工作者。你多年來一直在與體重作鬥爭，嘗試過很多飲食法。健康業務員介紹體重管理產品。你充滿希望但謹慎。問：「多久能看到效果？」「停止後會不會全部反彈？」若業務員對現實期望和所需的生活方式改變保持誠實，你更信任他們。開場：「我嘗試了一切——生酮、間歇性斷食、健身房會員。沒有任何東西能持續。你的產品有什麼不同？」`
+    }
+  },
+  {
+    id: 37, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Discovery',
+    keywords: ['energy', 'tired', 'fatigue', 'sleep', 'burnout', '精力', '疲勞', '睡眠', '倦怠'],
+    name: { en: '"I\'m always exhausted"', zh: '「我總是很疲憊」' },
+    preview: { en: 'Client struggling with chronic fatigue', zh: '客戶有慢性疲勞問題' },
+    level: 'Lv.1',
+    clientName: 'Jason Tan',
+    systemPrompt: {
+      en: `You are Jason Tan, 39, entrepreneur. You work 60+ hours a week, sleep poorly, and feel exhausted all the time. A wellness rep is presenting an energy supplement. You're desperate for a solution but skeptical: "Will this actually help or is it just caffeine?" If rep asks about your sleep habits and stress before recommending, and explains how specific nutrients help, you become genuinely interested. Start: "I'm running on empty. I have three cups of coffee just to function. I'm open to anything that actually works — but I've wasted money on supplements before that did nothing."`,
+      zh: `你是陳傑森，39歲企業家。你每週工作60多小時，睡眠差，總感覺精疲力竭。健康業務員介紹能量補充品。你渴望解決方案但懷疑：「這真的有幫助還是只是咖啡因？」若業務員在推薦前詢問你的睡眠習慣和壓力，並解釋特定營養素如何幫助，你真正感興趣。開場：「我精力耗盡了。我喝三杯咖啡才能正常運作。我對任何真正有效的東西都開放——但我以前在什麼都沒做到的補充品上浪費了錢。」`
+    }
+  },
+  {
+    id: 38, cat: 'health', industry: 'Health & Wellness',
+    stage: 'Objection Handling',
+    keywords: ['skincare', 'beauty', 'anti-aging', 'collagen', 'skin', '護膚', '美容', '抗老', '膠原蛋白'],
+    name: { en: "\"I already have a skincare routine\"", zh: '「我已經有護膚程序了」' },
+    preview: { en: 'Client satisfied with existing skincare', zh: '客戶對現有護膚方案滿意' },
+    level: 'Lv.2',
+    clientName: 'Vivian Lim',
+    systemPrompt: {
+      en: `You are Vivian Lim, 45, who spends $200/month on skincare already. A wellness rep is presenting an ingestible collagen product. You're skeptical: "I already take care of my skin — why would I need to eat it?" If rep explains the difference between topical and ingestible collagen and what clinical studies show, you become curious. Start: "I already have a whole skincare routine with serums and creams. I'm not sure I need another product — especially one I eat rather than apply."`,
+      zh: `你是林薇薇安，45歲，每月已花200美元在護膚品上。健康業務員介紹可食用膠原蛋白產品。你懷疑：「我已經在護理皮膚——為什麼要吃它？」若業務員解釋局部和可食用膠原蛋白的區別以及臨床研究顯示什麼，你變得好奇。開場：「我已經有整套護膚程序，包括精華液和乳霜。我不確定我需要另一個產品——尤其是吃的而不是塗的。」`
+    }
+  },
+
+];
+
+// ── STATE ──
+let currentLang = 'en';
+let currentLevelFilter = 'all';
+let currentScenario = null;
+let conversationHistory = [];
+let isLoading = false;
+let turnCount = 0;
+
+// ── PRIVATE ACCESS CONTROL ──
+// Each person gets their own ref code: simulator.html?ref=john
+// Add new names here as you invite more people.
+// VIP managers (individually tracked) + WeChat bulk channel
+const allowedRefs = {
+  'angeline':   { name: 'Angeline',       team: 'vip' },
+  'caleb':      { name: 'Caleb',          team: 'vip' },
+  'alex-b':     { name: 'Alex Brother',   team: 'vip' },
+  'tom':        { name: 'Tom',            team: 'vip' },
+  'bingo':      { name: 'Bingo',          team: 'vip' },
+  'dawson':     { name: '道森',            team: 'vip' },
+  'george-f':   { name: 'George Founder', team: 'vip' },
+  'gordon':     { name: 'Gordon Wang',    team: 'vip' },
+  'kathy':      { name: 'Kathy Chen',     team: 'vip' },
+  'rejuv':      { name: 'Rejuvenation',   team: 'vip' },
+  'yongtian':   { name: 'Yongtian',       team: 'vip' },
+  'yubing':     { name: '于冰',            team: 'vip' },
+  'lisheng':    { name: '李勝',            team: 'vip' },
+  'wechat2026': { name: 'WeChat User',    team: 'wechat' },
+  'yubing-2026': { name: 'Yu Bing (WFG Referral)', team: 'wfg' },
+  'dawson-2026': { name: 'Dawson (WFG Referral)', team: 'wfg' },
+  'gordon-2026': { name: 'Gordon Wang (WFG Referral)', team: 'wfg' },
+  'demo':       { name: 'Demo User',      team: 'default' }
+};
+
+function checkAccess() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = (params.get('ref') || '').toLowerCase().trim();
+  const entry = allowedRefs[ref];
+
+  if (!entry) {
+    document.getElementById('access-gate').style.display = 'flex';
+    return false;
+  }
+
+  // Store for this session so refresh doesn't lose access
+  sessionStorage.setItem('agentraining_ref', ref);
+  sessionStorage.setItem('agentraining_name', entry.name);
+  sessionStorage.setItem('agentraining_team', entry.team || 'default');
+
+  document.getElementById('gate-welcome').style.display = 'flex';
+  document.getElementById('gate-welcome-text').textContent = entry.name + ' · Beta Access';
+  return true;
+}
+
+const strings = {
+  en: {
+    scenariosLabel: 'Scenarios', feedbackLabel: 'AI Coach Feedback',
+    backLabel: '← Back to Home', resetLabel: '↺ Reset',
+    sendLabel: 'Send', inputPlaceholder: 'Type your response to the client...',
+    inputHint: 'Press Enter to send · Shift+Enter for new line',
+    welcomeMsg: '👈 Choose a scenario from the left panel to start your AI role-play session.',
+    emptyFeedback: 'Send your first response to get instant coaching feedback from the AI.',
+    searchPlaceholder: 'Search scenarios...',
+    selectScenario: 'Select a scenario to begin',
+    aiVirtualClient: 'AI Virtual Client',
+    thinking: 'AI client is thinking...',
+    yourResponse: 'You', clientLabel: 'AI Client',
+    scoreLabel: 'Overall Score', outOf: '/ 100',
+    empathy: 'Empathy & Rapport', accuracy: 'Product Accuracy', closing: 'Closing Technique',
+    strengths: '✅ Strengths', tips: '💡 Tips to Improve', resetConfirm: 'Reset this conversation?',
+    catFinance: 'Finance & Insurance', catHealth: 'Health & Wellness', catFree: 'Free Practice',
+    sessionEnded: '— End of Session — Click Reset to practice again —',
+    curriculumTab: 'Curriculum', allScenariosTab: 'All Scenarios',
+    foundationAcademy: 'Insurance & Health Foundation Curriculum',
+    foundationSubtitle: 'Build practical sales skills through 25 structured scenarios. Start with Stage 1 and progress toward advanced insurance conversations.',
+    existingLibrary: 'Existing Scenario Library',
+    browseLibraryLink: '→ Browse the full Insurance & Health scenario library (switch to All Scenarios)',
+    curriculumLoading: 'Loading curriculum…',
+    curriculumFailed: 'Curriculum could not be loaded — switch to "All Scenarios" to view the existing library.',
+    completedLabel: 'completed', scoreShortLabel: 'Score',
+    dashTitle: 'Practice Studio', dashViewAs: 'View as:', dashLearnerBtn: 'Learner', dashManagerBtn: 'Manager',
+    dashContinueLearningLabel: 'Continue Learning', dashContinueBtn: 'Continue Learning →',
+    dashCurriculumUnavailable: 'Curriculum is currently unavailable.', dashAllComplete: '🎉 All lessons complete!',
+    dashEstTime: 'Estimated time: ',
+    dashBrowseCurriculum: '📚 Browse Curriculum', dashBrowseAll: '🗂 Browse All Scenarios', dashFreePracticeBtn: '🎯 Free Practice',
+    dashAiCoachLabel: '🤖 AI Coach Suggestion',
+    dashAiCoachPlaceholder: 'Complete a lesson to get a personalized suggestion from your AI coach.',
+    dashTeamLabel: "Today's Team", dashTeamEmpty: 'No team members are connected yet.',
+    dashAssignmentsLabel: 'Assignments', dashAssignmentsEmpty: 'No assignments have been created.',
+    dashProgressLabel: 'Team Progress', dashProgressEmpty: 'Team progress will appear after learners complete assigned practice.',
+    dashAttentionLabel: 'Needs Attention', dashAttentionEmpty: 'Nothing needs attention right now.',
+    dashAssignBtn: '+ Assign Practice',
+    dashAssignNote: "Assignment creation isn't wired up yet — this is an MVP placeholder, not connected to any assignment system.",
+    dashAiInsightLabel: '🤖 AI Coaching Insight',
+    dashAiInsightPlaceholder: 'Insights will appear after your team completes practice sessions.',
+    dashGrowthClient: 'Active Client Opportunities', dashGrowthRecruiting: 'Recruiting Candidates',
+    dashGrowthFollowup: 'Follow-ups Needed', dashGrowthActivated: 'Activated Agents',
+    dashGrowthLocalNote: 'Browser-local pilot view based on the Client and Recruiting pipelines on this device.',
+    dashOpenStudio: 'Open Practice Studio →',
+    dashCompetenciesLabel: 'My Competencies',
+    dashCompetenciesNote: 'Competency levels are illustrative in this MVP and will be calculated from completed practice sessions in a future step.',
+    learningGoalLabel: 'Learning Goal',
+    demoQuickStartLabel: '🎤 Live Demo Quick Start',
+    nextScenarioLabel: '➡️ Next Recommended Scenario',
+    curriculumCompleteLabel: '🎉 You\'ve completed the full curriculum!',
+    csTitle: 'Client Studio', csClose: 'Close',
+    csIntroTitle: 'Turn practice into real follow-up',
+    csIntroBody: 'Create a case for a real prospect, launch practice matched to their objection, and track the result here — score, strengths, and your next follow-up.',
+    csIntroNote: '📱 Saved on this browser only. Cases do not sync across devices or team members yet.',
+    csNewCase: 'New Client Case',
+    csEmptyState: 'No client cases yet. Create your first one above.',
+    csFormTitleNew: 'New Client Case', csFormTitleEdit: 'Edit Client Case',
+    csTabClient: '💼 Client Pipeline', csTabRecruiting: '🌱 Recruiting Pipeline',
+    csLblType: 'Record Type', csOptClient: 'Client Opportunity', csOptRecruiting: 'Recruiting Candidate',
+    csCandidateName: 'Candidate Name', csCandidateSituation: 'Background / Why They May Be Interested', csCandidateObjection: 'Current Concern or Objection',
+    csNewRecruit: 'New Recruiting Candidate', csEmptyRecruiting: 'No recruiting candidates yet. Add the first person you want to follow up with.',
+    csLblName: 'Client Name', csLblIndustry: 'Industry',
+    csOptInsurance: 'Insurance', csOptHealth: 'Health',
+    csLblNeed: 'Need / Situation', csLblObjection: 'Current Objection',
+    csLblStatus: 'Status', csLblFollowup: 'Next Follow-up (date or note)',
+    csSave: 'Save Case', csCancel: 'Cancel', csDelete: 'Delete Case',
+    csDeleteConfirm: 'Delete this client case? This cannot be undone.',
+    csRequiredName: 'Please enter the client\'s name.', csRequiredCandidate: 'Please enter the candidate\'s name.',
+    csMatchFound: 'Matches curriculum scenario: {scenario}',
+    csMatchNone: 'No exact curriculum match — practice will start as Free Practice with this client\'s context.',
+    csRecruitPractice: 'Recruiting practice will use this candidate\'s real background with ethical, no-pressure coaching guardrails.',
+    csStatusNew: 'New', csStatusFollowup: 'Follow-up', csStatusProposal: 'Proposal', csStatusWon: 'Won', csStatusLost: 'Lost',
+    csStatusInvited: 'Invited', csStatusAttended: 'Attended Event', csStatusInterested: 'Interested', csStatusApplied: 'Applied', csStatusLicensing: 'Licensing', csStatusJoined: 'Joined', csStatusActivated: 'Activated',
+    csBackToStudio: 'Back to Client Studio',
+    csStartPractice: 'Start Practice', csEdit: 'Edit',
+    csLatestResult: 'Latest Practice Result',
+    csNoResultYet: 'No practice session yet. Start practice to get your first result.',
+    csReturnToCase: 'Return to Client Case',
+    csCreateCaseFromScenario: 'Turn into a Client Case',
+    csPracticingFor: 'Practicing for real client'
+  },
+  zh: {
+    scenariosLabel: '練習情境', feedbackLabel: 'AI 教練回饋',
+    backLabel: '← 返回首頁', resetLabel: '↺ 重置',
+    sendLabel: '送出', inputPlaceholder: '輸入您對客戶的回應...',
+    inputHint: '按 Enter 送出 · Shift+Enter 換行',
+    welcomeMsg: '👈 從左側面板選擇情境，開始您的 AI 角色扮演練習。',
+    emptyFeedback: '送出第一個回應，即可獲得 AI 的即時教練回饋。',
+    searchPlaceholder: '搜尋情境...',
+    selectScenario: '選擇情境以開始',
+    aiVirtualClient: 'AI 虛擬客戶',
+    thinking: 'AI 客戶思考中...',
+    yourResponse: '你', clientLabel: 'AI 客戶',
+    scoreLabel: '總體評分', outOf: '/ 100',
+    empathy: '同理心與信任建立', accuracy: '產品準確度', closing: '成交技巧',
+    strengths: '✅ 做得好的地方', tips: '💡 改進建議', resetConfirm: '重置此對話？',
+    catFinance: '金融與保險', catHealth: '健康與保健', catFree: '自由練習',
+    sessionEnded: '— 練習結束 — 點擊重置再次練習 —',
+    curriculumTab: '課程', allScenariosTab: '全部情境',
+    foundationAcademy: '保險與健康基礎銷售課程',
+    foundationSubtitle: '透過25個結構化情境，建立實用的銷售技巧。從第一階段開始，逐步邁向進階保險對話。',
+    existingLibrary: '完整情境庫',
+    browseLibraryLink: '→ 查看保險與健康的完整情境庫（切換到「全部情境」）',
+    curriculumLoading: '課程載入中…',
+    curriculumFailed: '課程資料無法載入，請切換到「全部情境」查看現有情境。',
+    completedLabel: '已完成', scoreShortLabel: '分數',
+    dashTitle: '練習工作室', dashViewAs: '檢視身份：', dashLearnerBtn: '學員', dashManagerBtn: '主管',
+    dashContinueLearningLabel: '繼續學習', dashContinueBtn: '繼續學習 →',
+    dashCurriculumUnavailable: '課程目前無法使用。', dashAllComplete: '🎉 所有課程已完成！',
+    dashEstTime: '預估時間：',
+    dashBrowseCurriculum: '📚 瀏覽課程', dashBrowseAll: '🗂 瀏覽全部情境', dashFreePracticeBtn: '🎯 自由練習',
+    dashAiCoachLabel: '🤖 AI 教練建議',
+    dashAiCoachPlaceholder: '完成一堂課程後，AI 教練將提供個人化建議。',
+    dashTeamLabel: '今日團隊', dashTeamEmpty: '尚未有團隊成員加入。',
+    dashAssignmentsLabel: '指派項目', dashAssignmentsEmpty: '尚未建立任何指派。',
+    dashProgressLabel: '團隊進度', dashProgressEmpty: '當學員完成指派練習後，團隊進度將顯示於此。',
+    dashAttentionLabel: '待關注事項', dashAttentionEmpty: '目前沒有需要關注的項目。',
+    dashAssignBtn: '+ 指派練習',
+    dashAssignNote: '指派功能尚未啟用——這是 MVP 的介面預留位置，尚未串接任何指派系統。',
+    dashAiInsightLabel: '🤖 AI 教練洞察',
+    dashAiInsightPlaceholder: '當團隊完成練習後，洞察內容將顯示於此。',
+    dashGrowthClient: '活躍客戶機會', dashGrowthRecruiting: '招募候選人',
+    dashGrowthFollowup: '需要跟進', dashGrowthActivated: '已啟動成員',
+    dashGrowthLocalNote: '瀏覽器本地試點視圖，資料來自此裝置上的客戶與招募管道。',
+    dashOpenStudio: '開啟練習工作室 →',
+    dashCompetenciesLabel: '我的職能',
+    dashCompetenciesNote: '此 MVP 版本中的職能等級僅為示意，未來版本將依實際完成的練習紀錄計算。',
+    learningGoalLabel: '學習目標',
+    demoQuickStartLabel: '🎤 現場示範快速入口',
+    nextScenarioLabel: '➡️ 下一個推薦情境',
+    curriculumCompleteLabel: '🎉 你已完成整套課程！',
+    csTitle: '客戶工作室', csClose: '關閉',
+    csIntroTitle: '把練習變成真實的跟進',
+    csIntroBody: '為真實的潛在客戶建立案例，啟動符合其異議的練習，並在這裡追蹤結果——分數、優點，以及下一步的跟進。',
+    csIntroNote: '📱 僅儲存在此瀏覽器。案例目前不會跨裝置或跨團隊成員同步。',
+    csNewCase: '新增客戶案例',
+    csEmptyState: '尚無客戶案例。點擊上方按鈕建立第一筆。',
+    csFormTitleNew: '新增客戶案例', csFormTitleEdit: '編輯客戶案例',
+    csTabClient: '💼 客戶管道', csTabRecruiting: '🌱 招募管道',
+    csLblType: '紀錄類型', csOptClient: '客戶機會', csOptRecruiting: '招募候選人',
+    csCandidateName: '候選人姓名', csCandidateSituation: '背景 / 可能感興趣的原因', csCandidateObjection: '目前的顧慮或異議',
+    csNewRecruit: '新增招募候選人', csEmptyRecruiting: '尚無招募候選人。新增第一位需要跟進的人。',
+    csLblName: '客戶姓名', csLblIndustry: '行業',
+    csOptInsurance: '保險', csOptHealth: '健康',
+    csLblNeed: '需求 / 情況', csLblObjection: '目前的異議',
+    csLblStatus: '狀態', csLblFollowup: '下次跟進（日期或備註）',
+    csSave: '儲存案例', csCancel: '取消', csDelete: '刪除案例',
+    csDeleteConfirm: '確定要刪除這個客戶案例嗎？此操作無法復原。',
+    csRequiredName: '請輸入客戶姓名。', csRequiredCandidate: '請輸入候選人姓名。',
+    csMatchFound: '已對應課程情境：{scenario}',
+    csMatchNone: '沒有完全對應的課程情境——練習將以「自由練習」模式開始，並帶入此客戶的背景。',
+    csRecruitPractice: '招募練習將帶入這位候選人的真實背景，並使用誠實、無施壓的合規輔導原則。',
+    csStatusNew: '新案件', csStatusFollowup: '跟進中', csStatusProposal: '已提案', csStatusWon: '已成交', csStatusLost: '已流失',
+    csStatusInvited: '已邀請', csStatusAttended: '已參加活動', csStatusInterested: '有興趣', csStatusApplied: '已申請', csStatusLicensing: '執照進行中', csStatusJoined: '已加入', csStatusActivated: '已啟動',
+    csBackToStudio: '返回客戶工作室',
+    csStartPractice: '開始練習', csEdit: '編輯',
+    csLatestResult: '最新練習結果',
+    csNoResultYet: '尚未進行練習。開始練習以取得第一筆結果。',
+    csReturnToCase: '返回客戶案例',
+    csCreateCaseFromScenario: '轉換為客戶案例',
+    csPracticingFor: '正在為真實客戶練習'
+  }
+};
+
+// ── RENDER SCENARIOS ──
+const hotScenarios = [1, 3, 7, 19, 21]; // IDs of hot/recommended scenarios
+const financeSubgroups = {
+  starter: { ids: [1, 3, 7, 19, 21], label: { en: '🔥 Recommended for Beginners', zh: '🔥 新手強烈推薦' } },
+  objections: { ids: [2, 4, 9, 10, 16, 17, 18, 20], label: { en: 'Common Objections', zh: '常見異議處理' } },
+  advanced: { ids: [8, 22], label: { en: 'Advanced & Specialty', zh: '進階與特殊情境' } }
+};
+
+const scenarioMeta = {
+  1:  { focus: { en: 'Objection handling · Value reframing', zh: '異議處理 · 價值重構' }, time: '5-8' },
+  2:  { focus: { en: 'Investment vs protection', zh: '投資 vs 保障論述' }, time: '6-9' },
+  3:  { focus: { en: 'Closing techniques · Handling hesitation', zh: '成交技巧 · 化解猶豫' }, time: '6-9' },
+  4:  { focus: { en: 'Risk awareness · Young clients', zh: '風險意識 · 年輕客戶' }, time: '5-8' },
+  7:  { focus: { en: 'Product explanation · IUL basics', zh: '產品解說 · IUL 基礎' }, time: '7-10' },
+  8:  { focus: { en: 'Retirement planning · Annuity', zh: '退休規劃 · 年金說明' }, time: '8-12' },
+  9:  { focus: { en: 'Coverage gaps · Portability', zh: '保障缺口 · 可攜性' }, time: '6-9' },
+  10: { focus: { en: 'Third-party objection', zh: '第三方異議處理' }, time: '7-10' },
+  16: { focus: { en: 'Trust rebuilding', zh: '重建信任' }, time: '8-12' },
+  17: { focus: { en: 'Social influence objection', zh: '社交影響力異議' }, time: '6-9' },
+  18: { focus: { en: 'Self-insurance mindset', zh: '自我保障心態' }, time: '6-9' },
+  19: { focus: { en: 'Product comparison · Whole Life vs Term', zh: '產品比較 · 定期 vs 終身' }, time: '7-10' },
+  20: { focus: { en: 'Flexible options · Timing objection', zh: '彈性方案 · 時機異議' }, time: '5-8' },
+  21: { focus: { en: 'Critical illness · Needs discovery', zh: '重疾保障 · 需求探索' }, time: '6-9' },
+  22: { focus: { en: 'Business protection · Key-man', zh: '企業保障 · 關鍵人壽險' }, time: '10-15' },
+};
+
+let collapsedSections = { health: true };
+
+// ── CURRICULUM (Practice Studio — Foundation Academy) ──
+let currentPanelMode = 'curriculum';
+let curriculumData = null; // null = not yet loaded, [] = load failed
+const CURRICULUM_PROGRESS_KEY = 'agenttraining_curriculum_progress';
+
+function loadCurriculumData() {
+  fetch('data/curriculum/foundation.json')
+    .then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(json => {
+      curriculumData = Array.isArray(json) ? json : [];
+      renderCurrentPanel(document.getElementById('search-input') ? document.getElementById('search-input').value : '');
+      updateLearnerDashboardCard();
+      updateDemoQuickStartButtons();
+    })
+    .catch(err => {
+      console.error('[Curriculum] Failed to load data/curriculum/foundation.json — falling back to existing scenario library.', err);
+      curriculumData = [];
+      currentPanelMode = 'all';
+      updateModeToggleUI();
+      renderCurrentPanel('');
+      updateLearnerDashboardCard();
+    });
+}
+
+function updateModeToggleUI() {
+  const curBtn = document.getElementById('mode-btn-curriculum');
+  const allBtn = document.getElementById('mode-btn-all');
+  if (curBtn) curBtn.classList.toggle('active', currentPanelMode === 'curriculum');
+  if (allBtn) allBtn.classList.toggle('active', currentPanelMode === 'all');
+}
+
+function setPanelMode(mode) {
+  currentPanelMode = mode;
+  updateModeToggleUI();
+  const levelFilter = document.getElementById('level-filter');
+  if (levelFilter) levelFilter.style.display = (mode === 'curriculum') ? 'none' : '';
+  renderCurrentPanel(document.getElementById('search-input').value);
+}
+
+function renderCurrentPanel(filter = '') {
+  if (currentPanelMode === 'curriculum') {
+    renderCurriculum(filter);
+  } else {
+    renderScenarios(filter);
+  }
+}
+
+function getCurriculumProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(CURRICULUM_PROGRESS_KEY)) || {};
+  } catch (e) { return {}; }
+}
+
+function saveCurriculumProgress(lessonId, score) {
+  try {
+    const progress = getCurriculumProgress();
+    progress[lessonId] = { completed: true, score: score, date: new Date().toISOString().slice(0, 10) };
+    localStorage.setItem(CURRICULUM_PROGRESS_KEY, JSON.stringify(progress));
+  } catch (e) { console.error('[Curriculum] Could not save progress to localStorage:', e); }
+}
+
+function renderCurriculum(filter = '') {
+  const s = strings[currentLang];
+  const list = document.getElementById('scenario-list');
   list.innerHTML = '';
 
   if (curriculumData === null) {
