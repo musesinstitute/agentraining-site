@@ -16,15 +16,18 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}.row{display:flex;gap:16px;align-items:center;padding:16px;flex-wrap:wrap}.row h3{margin:0 0 5px;font-size:16px}.meta{color:var(--muted);font-size:12px}.score{margin-left:auto;font-size:24px;font-weight:800;color:var(--blue)}.identity{font-weight:700;color:#065f46}.source{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:99px;padding:4px 8px;font-size:11px;margin-left:8px}
 .details{border-top:1px solid var(--line);padding:18px;background:#fafafa}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px}.metric b{display:block;font-size:20px}.section{margin-top:16px}.section h4{margin:0 0 8px}.section ul{margin:0;padding-left:20px;line-height:1.6}.transcript{display:flex;flex-direction:column;gap:8px}.turn{padding:10px 12px;border-radius:9px;line-height:1.5;max-width:90%}.turn.agent{align-self:flex-end;background:#dbeafe}.turn.client{align-self:flex-start;background:#fff;border:1px solid var(--line)}.turn b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:32px;text-align:center;color:var(--muted)}
+.assign{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:18px;margin:0 0 22px}.assign h2{margin:0 0 6px;font-size:20px}.assign p{color:var(--muted);margin:0 0 14px}.assign-grid{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1.3fr) 150px 170px auto;gap:10px;align-items:end}.assign label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:5px}.assign input,.assign select{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit}.assign-status{margin-top:10px;min-height:20px;font-size:13px}.assign-status.ok{color:#047857}.assign-status.error{color:#b91c1c}.assignments{margin:0 0 28px}.assignment-row{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:8px;flex-wrap:wrap}.assignment-row small{display:block;color:var(--muted);margin-top:3px}.assignment-actions{display:flex;align-items:center;gap:10px}.assignment-status{font-size:12px;font-weight:700;color:#1d4ed8}.assignment-status.completed{color:#047857}.start-link{display:inline-block;border-radius:8px;padding:8px 12px;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;font-size:12px}
 .dashboard-section{margin:28px 0}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}.section-heading h2{margin:0;font-size:22px}.section-heading p{margin:0;color:var(--muted);font-size:12px}.case-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}.case-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.case-name{font-size:17px;font-weight:800}.case-type{display:inline-block;background:#ecfdf5;color:#065f46;border-radius:99px;padding:4px 8px;font-size:11px;margin-left:8px}.case-status{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:700}.case-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.case-field{background:#fafafa;border:1px solid var(--line);border-radius:8px;padding:10px;line-height:1.45}.case-field b{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px}
-@media(max-width:700px){h1{font-size:28px}.grid,.case-grid{grid-template-columns:1fr}.score{margin-left:0}.row{gap:10px}.section-heading{align-items:flex-start;flex-direction:column}}
+@media(max-width:900px){.assign-grid{grid-template-columns:1fr 1fr}.assign-grid button{width:100%}}@media(max-width:700px){h1{font-size:28px}.grid,.case-grid,.assign-grid{grid-template-columns:1fr}.score{margin-left:0}.row{gap:10px}.section-heading{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
 <nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="studios.html">Studios</a><a href="simulator.html?ref=demo">Practice</a></div></nav>
 <header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>See active client and recruiting cases immediately, then review completed practice results and full transcripts for coaching.</p></header>
 <main>
-<div class="notice"><b>Browser-local MVP:</b> new cases and completed practice results appear here when they are saved in this same browser. Data does not yet sync across devices or team members.</div>
+<div class="notice"><b>Browser-local MVP:</b> assignments, cases, and completed results appear when they are used in this same browser. Cross-device team sync is not yet included.</div>
+<section class="assign" aria-labelledby="assign-title"><h2 id="assign-title">Assign Practice</h2><p>Choose a learner, curriculum scenario, and practice length. Quick Practice ends after 3 learner turns and returns a final score and transcript.</p><div class="assign-grid"><div><label for="learnerName">Learner name or email</label><input id="learnerName" autocomplete="off" placeholder="e.g. Maria Chen"></div><div><label for="assignScenario">Curriculum scenario</label><select id="assignScenario"><option value="">Loading scenarios…</option></select></div><div><label for="practiceMode">Practice length</label><select id="practiceMode"><option value="quick">Quick · 3–5 min</option><option value="standard">Standard · 8–10 min</option><option value="full">Full · 15–20 min</option></select></div><div><label for="dueDate">Due date (optional)</label><input id="dueDate" type="date"></div><button id="assignPractice" type="button">Assign Practice</button></div><div id="assignStatus" class="assign-status" role="status" aria-live="polite"></div></section>
+<section class="assignments" id="assignments" hidden><div class="section-heading"><div><h2>Current Assignments</h2><p>Open an assignment to test the learner experience in this browser.</p></div><strong id="assignmentCount">0 assignments</strong></div><div id="assignmentList"></div></section>
 <div class="toolbar"><strong id="count">0 cases · 0 results</strong><div><input id="search" placeholder="Search case, client, or agent"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
 <section class="dashboard-section"><div class="section-heading"><div><h2>Client Cases</h2><p>New cases appear here immediately; no completed practice is required.</p></div><strong id="caseCount">0 cases</strong></div><div id="cases"></div></section>
 <section class="dashboard-section"><div class="section-heading"><div><h2>Practice Results</h2><p>Completed sessions, competency scores, coaching summary, and transcript.</p></div><strong id="resultCount">0 results</strong></div><div id="records"></div></section>
@@ -32,6 +35,7 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 <script>
 const RESULTS_KEY='agentraining_manager_sessions';
 const CASES_KEY='agentraining_client_cases';
+const ASSIGNMENTS_KEY='agentraining_assignments';
 function resolveClientName(record){
   if(record?.linkedCaseId){
     const match=readCases().find(c=>c && c.id===record.linkedCaseId);
@@ -43,6 +47,57 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'
 function readArray(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[]}catch(e){return[]}}
 function readResults(){return readArray(RESULTS_KEY)}
 function readCases(){return readArray(CASES_KEY)}
+function readAssignments(){return readArray(ASSIGNMENTS_KEY)}
+function saveAssignments(rows){localStorage.setItem(ASSIGNMENTS_KEY,JSON.stringify(rows))}
+function setAssignStatus(message,kind){const el=document.getElementById('assignStatus');el.textContent=message;el.className='assign-status '+(kind||'')}
+function modeLabel(mode){return mode==='quick'?'Quick · 3 turns':mode==='standard'?'Standard · 6 turns':'Full · 10 turns'}
+function renderAssignments(){
+  const all=readAssignments();
+  const section=document.getElementById('assignments');
+  const root=document.getElementById('assignmentList');
+  document.getElementById('assignmentCount').textContent=all.length+' assignment'+(all.length===1?'':'s');
+  section.hidden=!all.length;
+  if(!all.length){root.innerHTML='';return}
+  root.innerHTML=all.map(x=>{
+    const completed=x.status==='Completed';
+    const href='simulator.html?ref=demo&assignment='+encodeURIComponent(x.id);
+    return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?' · Due '+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(x.status||'Assigned')+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'">Start Practice</a>')+'</div></div>';
+  }).join('');
+}
+async function loadAssignmentScenarios(){
+  const select=document.getElementById('assignScenario');
+  try{
+    const response=await fetch('data/curriculum/foundation.json',{cache:'no-store'});
+    if(!response.ok)throw new Error('Scenario file could not be loaded ('+response.status+')');
+    const data=await response.json();
+    const scenarios=Array.isArray(data)?data:(data.scenarios||data.curriculum||[]);
+    if(!scenarios.length)throw new Error('No curriculum scenarios were found');
+    select.innerHTML='<option value="">Select a scenario</option>'+scenarios.map((x,i)=>{const id=x.id||x.key||('curriculum-'+i);const name=x.name||x.title?.en||x.title?.zh||x.en?.name||x.zh?.name||id;return '<option value="'+esc(id)+'" data-name="'+esc(name)+'">'+esc(name)+'</option>'}).join('');
+  }catch(error){
+    select.innerHTML='<option value="">Unable to load scenarios</option>';
+    select.disabled=true;
+    setAssignStatus(error.message,'error');
+  }
+}
+function assignPractice(){
+  const learner=document.getElementById('learnerName').value.trim();
+  const select=document.getElementById('assignScenario');
+  const option=select.options[select.selectedIndex];
+  const mode=document.getElementById('practiceMode').value;
+  const dueDate=document.getElementById('dueDate').value;
+  if(!learner){setAssignStatus('Please enter a learner name or email.','error');document.getElementById('learnerName').focus();return}
+  if(!select.value||!option){setAssignStatus('Please select a curriculum scenario.','error');return}
+  try{
+    const all=readAssignments();
+    all.unshift({id:'assignment-'+Date.now(),learner,scenarioId:select.value,scenarioName:option.dataset.name||option.textContent,mode,dueDate,status:'Assigned',createdAt:new Date().toISOString()});
+    saveAssignments(all);
+    document.getElementById('learnerName').value='';
+    document.getElementById('dueDate').value='';
+    select.selectedIndex=0;
+    setAssignStatus(modeLabel(mode)+' assigned successfully.','ok');
+    renderAssignments();
+  }catch(error){setAssignStatus('Could not save assignment: '+error.message,'error')}
+}
 function renderCases(rows){
   const root=document.getElementById('cases');
   document.getElementById('caseCount').textContent=rows.length+' case'+(rows.length===1?'':'s');
@@ -61,7 +116,7 @@ function renderResults(rows){
     const client=resolveClientName(x);
     const source=x.sourceLabel||'Practice';
     const transcript=Array.isArray(x.transcript)?x.transcript:[];
-    return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Agent: '+esc(x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>';
+    return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Learner: '+esc(x.learner||x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+(x.practiceMode?' · '+esc(modeLabel(x.practiceMode)):'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>';
   }).join('');
 }
 function list(){
@@ -91,9 +146,12 @@ function generateQuickTest(){
   const all=readResults();all.unshift(record);localStorage.setItem(RESULTS_KEY,JSON.stringify(all));list();
 }
 document.getElementById('quickTest').onclick=generateQuickTest;
-document.getElementById('refresh').onclick=list;
+document.getElementById('assignPractice').onclick=assignPractice;
+document.getElementById('refresh').onclick=()=>{renderAssignments();list()};
 document.getElementById('search').oninput=list;
-window.addEventListener('storage',list);
+window.addEventListener('storage',()=>{renderAssignments();list()});
+loadAssignmentScenarios();
+renderAssignments();
 list();
 </script>
 </body></html>
