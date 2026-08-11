@@ -358,8 +358,8 @@
     .level-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
     .mode-toggle { display: flex; gap: 6px; padding: 10px 16px 0; }
     .mode-toggle .level-btn { flex: 1; text-align: center; }
-    .temporary-quick-banner { display:none; margin: 10px 16px 0; padding: 8px 10px; border: 1px dashed #d97706; border-radius: 8px; background:#fffbeb; color:#92400e; font-size:11px; line-height:1.4; }
-    .temporary-quick-banner.active { display:block; }
+    .practice-mode-banner { display:none; margin: 10px 16px 0; padding: 8px 10px; border: 1px solid #bfdbfe; border-radius: 8px; background:#eff6ff; color:#1e40af; font-size:12px; font-weight:600; line-height:1.4; }
+    .practice-mode-banner.active { display:block; }
     .panel-search {
       padding: 12px 16px; border-bottom: 1px solid var(--border);
     }
@@ -1133,7 +1133,7 @@
 
 <button class="mobile-scenario-btn" id="mobile-scenario-btn" onclick="toggleMobilePanel()">📋 選擇情境 / Choose Scenario</button>
 
-<div id="temporary-quick-banner" class="temporary-quick-banner" role="status">🧪 Temporary Quick Practice — test mode only · 3 turns · not for public users</div>
+<div id="practice-mode-banner" class="practice-mode-banner" role="status"></div>
 
 <div class="app">
 
@@ -1769,9 +1769,60 @@ let currentScenario = null;
 let conversationHistory = [];
 let isLoading = false;
 let turnCount = 0;
-// Temporary test-only mode. It is activated only by adding temporary=quick to the private test URL.
-const temporaryQuickPractice = new URLSearchParams(window.location.search).get('temporary') === 'quick';
-const maxPracticeTurns = temporaryQuickPractice ? 3 : 10;
+const ASSIGNMENTS_KEY = 'agentraining_assignments';
+const practiceParams = new URLSearchParams(window.location.search);
+const requestedAssignmentId = practiceParams.get('assignment') || '';
+const temporaryQuickPractice = practiceParams.get('temporary') === 'quick';
+const requestedMode = practiceParams.get('practiceMode');
+let currentPracticeMode = temporaryQuickPractice ? 'quick' : (['quick','standard','full'].includes(requestedMode) ? requestedMode : 'full');
+let maxPracticeTurns = currentPracticeMode === 'quick' ? 3 : currentPracticeMode === 'standard' ? 6 : 10;
+let activeAssignment = null;
+
+function readPracticeAssignments() {
+  try {
+    const rows = JSON.parse(localStorage.getItem(ASSIGNMENTS_KEY) || '[]');
+    return Array.isArray(rows) ? rows : [];
+  } catch (e) { return []; }
+}
+
+function savePracticeAssignments(rows) {
+  localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify(rows));
+}
+
+function practiceModeLabel() {
+  return currentPracticeMode === 'quick' ? 'Quick Practice · 3 turns · about 3–5 minutes'
+    : currentPracticeMode === 'standard' ? 'Standard Practice · 6 turns · about 8–10 minutes'
+    : 'Full Practice · 10 turns · about 15–20 minutes';
+}
+
+function updatePracticeModeBanner() {
+  const banner = document.getElementById('practice-mode-banner');
+  if (!banner) return;
+  banner.textContent = '⏱ ' + practiceModeLabel();
+  banner.classList.toggle('active', currentPracticeMode !== 'full' || !!activeAssignment);
+}
+
+function launchAssignedPractice() {
+  if (!requestedAssignmentId || !Array.isArray(curriculumData) || !curriculumData.length) return;
+  const assignments = readPracticeAssignments();
+  const index = assignments.findIndex(x => x && x.id === requestedAssignmentId);
+  if (index === -1) return;
+  const assignment = assignments[index];
+  const lesson = curriculumData.find(x => String(x.id) === String(assignment.scenarioId));
+  if (!lesson) return;
+  activeAssignment = assignment;
+  currentPracticeMode = ['quick','standard','full'].includes(assignment.mode) ? assignment.mode : 'full';
+  maxPracticeTurns = currentPracticeMode === 'quick' ? 3 : currentPracticeMode === 'standard' ? 6 : 10;
+  if (assignment.learner) sessionStorage.setItem('agentraining_name', assignment.learner);
+  assignments[index] = Object.assign({}, assignment, {status:'In Progress',startedAt:assignment.startedAt||new Date().toISOString()});
+  activeAssignment = assignments[index];
+  savePracticeAssignments(assignments);
+  if (typeof forceHideOnboarding === 'function') forceHideOnboarding();
+  if (typeof hideDashboard === 'function') hideDashboard();
+  setPanelMode('curriculum');
+  selectCurriculumLesson(lesson);
+  updatePracticeModeBanner();
+}
 
 
 // ── PRIVATE ACCESS CONTROL ──
@@ -2028,6 +2079,7 @@ function loadCurriculumData() {
       renderCurrentPanel(document.getElementById('search-input') ? document.getElementById('search-input').value : '');
       updateLearnerDashboardCard();
       updateDemoQuickStartButtons();
+      launchAssignedPractice();
     })
     .catch(err => {
       console.error('[Curriculum] Failed to load data/curriculum/foundation.json — falling back to existing scenario library.', err);
@@ -2353,8 +2405,7 @@ function selectScenario(sc) {
   conversationHistory = [];
   turnCount = 0;
 
-  const quickBanner = document.getElementById('temporary-quick-banner');
-  if (quickBanner) quickBanner.classList.toggle('active', temporaryQuickPractice);
+  updatePracticeModeBanner();
 
   // Update UI
   renderCurrentPanel(document.getElementById('search-input').value);
@@ -2568,7 +2619,7 @@ async function sendMessage() {
   showTyping();
   turnCount++;
 
-  // Full Practice remains unchanged for normal users. Temporary Quick Practice ends after 3 turns.
+  // End automatically at the assigned practice length, then generate the final evaluation.
   if (turnCount >= maxPracticeTurns) {
     removeTyping();
     appendMessage('system', '', strings[currentLang].sessionEnded);
@@ -2647,7 +2698,28 @@ async function callClaude(messages, system) {
 
 
 // ── SILENT SESSION UPLOAD (for manager dashboard) ──
+function completeActiveAssignment(data) {
+  if (!activeAssignment) return;
+  try {
+    const assignments = readPracticeAssignments();
+    const index = assignments.findIndex(x => x && x.id === activeAssignment.id);
+    if (index === -1) return;
+    assignments[index] = Object.assign({}, assignments[index], {
+      status: 'Completed',
+      completedAt: new Date().toISOString(),
+      score: data.overallScore || 0,
+      practiceMode: currentPracticeMode,
+      transcript: (conversationHistory || []).map((m, i) => ({index:i+1,speaker:m.role==='user'?'agent':'client',text:m.content}))
+    });
+    activeAssignment = assignments[index];
+    savePracticeAssignments(assignments);
+  } catch (e) {
+    console.warn('Assignment completion save failed:', e.message);
+  }
+}
+
 async function uploadSession(data) {
+  completeActiveAssignment(data);
   try {
     const ref   = sessionStorage.getItem('agentraining_ref') || 'demo';
     const name  = sessionStorage.getItem('agentraining_name') || 'Demo User';
@@ -2658,6 +2730,9 @@ async function uploadSession(data) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ref, name, team,
+        assignmentId: activeAssignment?.id || '',
+        learner: activeAssignment?.learner || name,
+        practiceMode: currentPracticeMode,
         scenario:  currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
         industry:  currentScenario?.industry || '',
         lang:      currentLang,
@@ -2697,6 +2772,9 @@ async function uploadSession(data) {
         id: 'session-' + Date.now(),
         savedAt: new Date().toISOString(),
         ref, name, team,
+        assignmentId: activeAssignment?.id || '',
+        learner: activeAssignment?.learner || name,
+        practiceMode: currentPracticeMode,
         scenario: currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
         industry: currentScenario?.industry || '',
         scores: {
