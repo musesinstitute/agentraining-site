@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Manager Studio — AgentTraining AI</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="pilot-cloud.js"></script>
 <style>
 :root{--blue:#1a56db;--ink:#111827;--muted:#6b7280;--bg:#f7f8fc;--line:#e5e7eb;--card:#fff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}
@@ -25,7 +27,7 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 <nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="studios.html">Studios</a><a href="simulator.html?ref=demo">Practice</a></div></nav>
 <header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>See active client and recruiting cases immediately, then review completed practice results and full transcripts for coaching.</p></header>
 <main>
-<div class="notice"><b>Browser-local MVP:</b> assignments, cases, and completed results appear when they are used in this same browser. Cross-device team sync is not yet included.</div>
+<div class="notice" id="storageNotice"><b>Browser-local MVP:</b> assignments, cases, and completed results appear when they are used in this same browser. Cross-device team sync is not yet included.</div>
 <section class="assign" aria-labelledby="assign-title"><h2 id="assign-title">Assign Practice</h2><p>Choose a learner, curriculum scenario, and practice length. Quick Practice ends after 3 learner turns and returns a final score and transcript.</p><div class="assign-grid"><div><label for="learnerName">Learner name or email</label><input id="learnerName" autocomplete="off" placeholder="e.g. Maria Chen"></div><div><label for="assignScenario">Curriculum scenario</label><select id="assignScenario"><option value="">Loading scenarios…</option></select></div><div><label for="practiceMode">Practice length</label><select id="practiceMode"><option value="quick">Quick · 3–5 min</option><option value="standard">Standard · 8–10 min</option><option value="full">Full · 15–20 min</option></select></div><div><label for="dueDate">Due date (optional)</label><input id="dueDate" type="date"></div><button id="assignPractice" type="button">Assign Practice</button></div><div id="assignStatus" class="assign-status" role="status" aria-live="polite"></div></section>
 <section class="assignments" id="assignments" hidden><div class="section-heading"><div><h2>Current Assignments</h2><p>Open an assignment to test the learner experience in this browser.</p></div><strong id="assignmentCount">0 assignments</strong></div><div id="assignmentList"></div></section>
 <div class="toolbar"><strong id="count">0 cases · 0 results</strong><div><input id="search" placeholder="Search case, client, or agent"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
@@ -36,6 +38,8 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 const RESULTS_KEY='agentraining_manager_sessions';
 const CASES_KEY='agentraining_client_cases';
 const ASSIGNMENTS_KEY='agentraining_assignments';
+let cloudAssignments=[];
+let cloudResults=[];
 function resolveClientName(record){
   if(record?.linkedCaseId){
     const match=readCases().find(c=>c && c.id===record.linkedCaseId);
@@ -52,7 +56,7 @@ function saveAssignments(rows){localStorage.setItem(ASSIGNMENTS_KEY,JSON.stringi
 function setAssignStatus(message,kind){const el=document.getElementById('assignStatus');el.textContent=message;el.className='assign-status '+(kind||'')}
 function modeLabel(mode){return mode==='quick'?'Quick · 3 turns':mode==='standard'?'Standard · 6 turns':'Full · 10 turns'}
 function renderAssignments(){
-  const all=readAssignments();
+  const all=PilotCloud.enabled?cloudAssignments:readAssignments();
   const section=document.getElementById('assignments');
   const root=document.getElementById('assignmentList');
   document.getElementById('assignmentCount').textContent=all.length+' assignment'+(all.length===1?'':'s');
@@ -60,7 +64,7 @@ function renderAssignments(){
   if(!all.length){root.innerHTML='';return}
   root.innerHTML=all.map(x=>{
     const completed=x.status==='Completed';
-    const href='simulator.html?ref=demo&assignment='+encodeURIComponent(x.id);
+    const href='simulator.html?ref=demo'+(PilotCloud.enabled?'&pilot=1':'')+'&assignment='+encodeURIComponent(x.id);
     return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?' · Due '+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(x.status||'Assigned')+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'">Start Practice</a>')+'</div></div>';
   }).join('');
 }
@@ -79,7 +83,7 @@ async function loadAssignmentScenarios(){
     setAssignStatus(error.message,'error');
   }
 }
-function assignPractice(){
+async function assignPractice(){
   const learner=document.getElementById('learnerName').value.trim();
   const select=document.getElementById('assignScenario');
   const option=select.options[select.selectedIndex];
@@ -88,9 +92,15 @@ function assignPractice(){
   if(!learner){setAssignStatus('Please enter a learner name or email.','error');document.getElementById('learnerName').focus();return}
   if(!select.value||!option){setAssignStatus('Please select a curriculum scenario.','error');return}
   try{
-    const all=readAssignments();
-    all.unshift({id:'assignment-'+Date.now(),learner,scenarioId:select.value,scenarioName:option.dataset.name||option.textContent,mode,dueDate,status:'Assigned',createdAt:new Date().toISOString()});
-    saveAssignments(all);
+    const record={learner,assignedTo:learner,scenarioId:select.value,scenarioName:option.dataset.name||option.textContent,mode,dueDate};
+    if(PilotCloud.enabled){
+      const result=await PilotCloud.request('assignments',{method:'POST',requiredRole:'manager',body:JSON.stringify(record)});
+      cloudAssignments.unshift(result.assignment);
+    }else{
+      const all=readAssignments();
+      all.unshift({id:'assignment-'+Date.now(),...record,status:'Assigned',createdAt:new Date().toISOString()});
+      saveAssignments(all);
+    }
     document.getElementById('learnerName').value='';
     document.getElementById('dueDate').value='';
     select.selectedIndex=0;
@@ -122,7 +132,7 @@ function renderResults(rows){
 function list(){
   const q=document.getElementById('search').value.trim().toLowerCase();
   const cases=readCases().filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));
-  const results=readResults().filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));
+  const results=(PilotCloud.enabled?cloudResults:readResults()).filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));
   document.getElementById('count').textContent=cases.length+' case'+(cases.length===1?'':'s')+' · '+results.length+' result'+(results.length===1?'':'s');
   renderCases(cases);
   renderResults(results);
@@ -147,11 +157,28 @@ function generateQuickTest(){
 }
 document.getElementById('quickTest').onclick=generateQuickTest;
 document.getElementById('assignPractice').onclick=assignPractice;
-document.getElementById('refresh').onclick=()=>{renderAssignments();list()};
+async function refreshCloud(){
+  if(!PilotCloud.enabled){renderAssignments();list();return}
+  setAssignStatus('Refreshing secure Pilot data…','');
+  try{
+    await PilotCloud.ready('manager');
+    const [assignmentData,sessionData]=await Promise.all([
+      PilotCloud.request('assignments',{requiredRole:'manager'}),
+      PilotCloud.request('sessions',{requiredRole:'manager'})
+    ]);
+    cloudAssignments=assignmentData.assignments||[];
+    cloudResults=sessionData.sessions||[];
+    document.getElementById('storageNotice').innerHTML='<b>Secure Pilot workspace:</b> assignments, scores, transcripts, and completion status are stored in the team cloud workspace and available across signed-in devices.';
+    document.getElementById('storageNotice').style.cssText='background:#ecfdf5;border:1px solid #a7f3d0;padding:12px 14px;border-radius:8px;color:#065f46;margin-bottom:18px';
+    document.getElementById('quickTest').hidden=true;
+    document.getElementById('learnerName').placeholder='learner@example.com';
+    renderAssignments();list();setAssignStatus('Pilot data is up to date.','ok');
+  }catch(error){setAssignStatus(error.message,'error')}
+}
+document.getElementById('refresh').onclick=refreshCloud;
 document.getElementById('search').oninput=list;
 window.addEventListener('storage',()=>{renderAssignments();list()});
 loadAssignmentScenarios();
-renderAssignments();
-list();
+refreshCloud();
 </script>
 </body></html>

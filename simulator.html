@@ -13,6 +13,8 @@
   <meta name="mobile-web-app-capable" content="yes"/>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="pilot-cloud.js"></script>
   <style>
     :root {
       --ink: #0D0F14; --ink-soft: #3D4151; --ink-muted: #7B8099;
@@ -1802,9 +1804,19 @@ function updatePracticeModeBanner() {
   banner.classList.toggle('active', currentPracticeMode !== 'full' || !!activeAssignment);
 }
 
-function launchAssignedPractice() {
+async function launchAssignedPractice() {
   if (!requestedAssignmentId || !Array.isArray(curriculumData) || !curriculumData.length) return;
-  const assignments = readPracticeAssignments();
+  let assignments = readPracticeAssignments();
+  if (PilotCloud.enabled) {
+    try {
+      await PilotCloud.ready();
+      const result = await PilotCloud.request('assignments');
+      assignments = result.assignments || [];
+    } catch (error) {
+      console.warn('Pilot assignment load failed:', error.message);
+      return;
+    }
+  }
   const index = assignments.findIndex(x => x && x.id === requestedAssignmentId);
   if (index === -1) return;
   const assignment = assignments[index];
@@ -1816,7 +1828,14 @@ function launchAssignedPractice() {
   if (assignment.learner) sessionStorage.setItem('agentraining_name', assignment.learner);
   assignments[index] = Object.assign({}, assignment, {status:'In Progress',startedAt:assignment.startedAt||new Date().toISOString()});
   activeAssignment = assignments[index];
-  savePracticeAssignments(assignments);
+  if (PilotCloud.enabled) {
+    try {
+      const result = await PilotCloud.request('assignments',{method:'PATCH',body:JSON.stringify({id:assignment.id,status:'In Progress'})});
+      activeAssignment = result.assignment;
+    } catch (error) { console.warn('Pilot assignment start update failed:', error.message); }
+  } else {
+    savePracticeAssignments(assignments);
+  }
   if (typeof forceHideOnboarding === 'function') forceHideOnboarding();
   if (typeof hideDashboard === 'function') hideDashboard();
   setPanelMode('curriculum');
@@ -2698,9 +2717,15 @@ async function callClaude(messages, system) {
 
 
 // ── SILENT SESSION UPLOAD (for manager dashboard) ──
-function completeActiveAssignment(data) {
+async function completeActiveAssignment(data) {
   if (!activeAssignment) return;
   try {
+    const transcript = (conversationHistory || []).map((m, i) => ({index:i+1,speaker:m.role==='user'?'agent':'client',text:m.content}));
+    if (PilotCloud.enabled) {
+      const result = await PilotCloud.request('assignments',{method:'PATCH',body:JSON.stringify({id:activeAssignment.id,status:'Completed',score:data.overallScore||0,transcript})});
+      activeAssignment = result.assignment;
+      return;
+    }
     const assignments = readPracticeAssignments();
     const index = assignments.findIndex(x => x && x.id === activeAssignment.id);
     if (index === -1) return;
@@ -2719,99 +2744,61 @@ function completeActiveAssignment(data) {
 }
 
 async function uploadSession(data) {
-  completeActiveAssignment(data);
+  await completeActiveAssignment(data);
+  const ref   = sessionStorage.getItem('agentraining_ref') || 'demo';
+  const name  = sessionStorage.getItem('agentraining_name') || 'Demo User';
+  const team  = sessionStorage.getItem('agentraining_team') || 'default';
+  const record = {
+    ref, name, team,
+    assignmentId: activeAssignment?.id || '',
+    learner: activeAssignment?.learner || name,
+    practiceMode: currentPracticeMode,
+    scenario: currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
+    industry: currentScenario?.industry || '',
+    lang: currentLang,
+    scores: {
+      overall: data.overallScore || 0,
+      empathy: data.empathy || 0,
+      accuracy: data.accuracy || 0,
+      closing: data.closing || 0
+    },
+    strengths: data.strengths || [],
+    tips: data.tips || [],
+    summary: data.summary || '',
+    transcript: (conversationHistory || []).map((m, index) => ({
+      index: index + 1,
+      speaker: m.role === 'user' ? 'agent' : 'client',
+      text: m.content
+    })),
+    sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
+    sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
+    aiClientName: currentScenario?.clientName || '',
+    linkedCaseId: currentScenario?.linkedCaseId || '',
+    clientCaseName: (() => {
+      try {
+        const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
+          ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
+          : null;
+        return linked?.clientName || linked?.name || '';
+      } catch (e) { return ''; }
+    })()
+  };
   try {
-    const ref   = sessionStorage.getItem('agentraining_ref') || 'demo';
-    const name  = sessionStorage.getItem('agentraining_name') || 'Demo User';
-    const team  = sessionStorage.getItem('agentraining_team') || 'default';
-
-    await fetch('/.netlify/functions/save-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ref, name, team,
-        assignmentId: activeAssignment?.id || '',
-        learner: activeAssignment?.learner || name,
-        practiceMode: currentPracticeMode,
-        scenario:  currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
-        industry:  currentScenario?.industry || '',
-        lang:      currentLang,
-        scores: {
-          overall:  data.overallScore || 0,
-          empathy:  data.empathy      || 0,
-          accuracy: data.accuracy     || 0,
-          closing:  data.closing      || 0
-        },
-        strengths: data.strengths || [],
-        tips:      data.tips      || [],
-        summary:   data.summary   || '',
-        transcript: (conversationHistory || []).map((m, index) => ({
-          index: index + 1,
-          speaker: m.role === 'user' ? 'agent' : 'client',
-          text: m.content
-        })),
-        sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
-        sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
-        aiClientName: currentScenario?.clientName || '',
-        linkedCaseId: currentScenario?.linkedCaseId || '',
-        clientCaseName: (() => {
-          try {
-            const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
-              ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
-              : null;
-            return linked?.clientName || linked?.name || '';
-          } catch (e) { return ''; }
-        })()
-      })
-    });
-
-    try {
+    if (PilotCloud.enabled) await PilotCloud.request('sessions',{method:'POST',body:JSON.stringify(record)});
+  } catch (err) {
+    console.warn('Pilot session upload failed:', err.message);
+  }
+  try {
+    if (!PilotCloud.enabled) {
       const key = 'agentraining_manager_sessions';
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      existing.unshift({
+      existing.unshift(Object.assign({}, record, {
         id: 'session-' + Date.now(),
-        savedAt: new Date().toISOString(),
-        ref, name, team,
-        assignmentId: activeAssignment?.id || '',
-        learner: activeAssignment?.learner || name,
-        practiceMode: currentPracticeMode,
-        scenario: currentScenario?.name?.en || currentScenario?.name?.[currentLang] || '',
-        industry: currentScenario?.industry || '',
-        scores: {
-          overall: data.overallScore || 0,
-          empathy: data.empathy || 0,
-          accuracy: data.accuracy || 0,
-          closing: data.closing || 0
-        },
-        strengths: data.strengths || [],
-        tips: data.tips || [],
-        summary: data.summary || '',
-        transcript: (conversationHistory || []).map((m, index) => ({
-          index: index + 1,
-          speaker: m.role === 'user' ? 'agent' : 'client',
-          text: m.content
-        })),
-        sourceType: currentScenario?.id === 0 ? 'free-practice' : 'scenario',
-        sourceLabel: currentScenario?.id === 0 ? 'Free Practice' : 'Curriculum Scenario',
-        aiClientName: currentScenario?.clientName || '',
-        clientCaseName: (() => {
-          try {
-            const linked = currentScenario?.linkedCaseId && typeof getClientCases === 'function'
-              ? getClientCases().find(c => c.id === currentScenario.linkedCaseId)
-              : null;
-            return linked?.clientName || linked?.name || '';
-          } catch (e) { return ''; }
-        })()
-      });
+        savedAt: new Date().toISOString()
+      }));
       localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
-    } catch (e) {
-      console.warn('Manager local record save failed:', e.message);
     }
-    // Silent — no UI feedback needed
-  } catch (err) {
-    // Fail silently — doesn't interrupt the user experience
-    console.warn('Session upload failed (non-critical):', err.message);
-  }
+  } catch (e) { console.warn('Manager local record save failed:', e.message); }
 }
 
 

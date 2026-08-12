@@ -1,0 +1,11 @@
+{
+  "name": "agentraining-site",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.7.13",
+    "@netlify/identity": "^1.2.0"
+  }
+}
