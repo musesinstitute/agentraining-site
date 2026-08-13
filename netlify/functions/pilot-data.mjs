@@ -348,11 +348,17 @@ export default async function handler(req) {
 
     if (req.method === 'POST' && resource === 'assignments') {
       verifyRequestOrigin(req);
-      if (!actor.isManager) return reply(403, { error: 'Manager access is required.' });
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'assignment_create', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
       const input = await req.json();
       const record = assignmentRecord(input, actor);
       if (!record.assignedTo || !record.scenarioId || !record.scenarioName) return reply(400, { error: 'Learner email and curriculum scenario are required.' });
       await store.setJSON(`${teamPrefix}/assignments/${record.id}`, record, { onlyIfNew: true });
+      await writeAudit(store, teamPrefix, actor, 'assignment_create', 'success', {
+        assignmentId: record.id, assignedTo: record.assignedTo, scenarioId: record.scenarioId
+      });
       return reply(201, { assignment: record });
     }
 
