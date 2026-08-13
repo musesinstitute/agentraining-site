@@ -226,6 +226,72 @@ function fallbackCoachReply(profile, sessions, assignments) {
   return `${evidence}${insight} ${action}`;
 }
 
+function managerChatPrefix(teamPrefix, actor) {
+  return `${teamPrefix}/manager-chat/${safeSegment(actor.id, 'manager')}/`;
+}
+
+function managerChatMessage(role, content, learnerEmail, extras = {}) {
+  return {
+    id: crypto.randomUUID(), role, content: cleanText(content, 6000),
+    learnerEmail: normalizeEmail(learnerEmail), createdAt: new Date().toISOString(),
+    visibility: 'manager_work_intelligence', ...extras
+  };
+}
+
+function sessionEvidence(profile, sessions) {
+  const byId = new Map(sessions.map(session => [session.id, session]));
+  const rows = [];
+  for (const claim of (profile?.claims || []).filter(item => item.status === 'active' && item.visibility === 'manager_summary')) {
+    for (const ref of (claim.evidenceRefs || []).slice(-3)) {
+      const session = byId.get(ref.sessionId);
+      const excerptTurn = (session?.transcript || []).find(turn => turn.speaker === 'agent');
+      rows.push({
+        evidenceId: ref.evidenceId, sessionId: ref.sessionId,
+        activity: ref.scenario || session?.scenario || 'Practice', date: ref.observedAt || session?.savedAt,
+        competency: claim.competency, claimType: claim.claimType, score: ref.score,
+        overall: ref.overall, transcriptExcerpt: cleanText(excerptTurn?.text || session?.summary, 500),
+        sourceLink: `learner-profile.html?pilot=1&learner=${encodeURIComponent(profile.learnerEmail)}#${encodeURIComponent(claim.claimId)}`,
+        confidence: claim.confidence?.level || 'low',
+        limitations: (claim.evidenceRefs || []).length < 2 ? 'Based on one Practice session; not a durable trait.' : 'Based only on recent recorded Practice evidence.'
+      });
+    }
+  }
+  const unique = new Map(rows.map(row => [`${row.evidenceId}-${row.competency}-${row.claimType}`, row]));
+  return [...unique.values()].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
+}
+
+function managerIntelligence(profile, sessions, assignments, question) {
+  const claims = (profile?.claims || []).filter(item => item.status === 'active' && item.visibility === 'manager_summary');
+  const strength = claims.find(item => item.claimType === 'strength');
+  const growth = claims.find(item => item.claimType === 'growth_area');
+  const evidence = sessionEvidence(profile, sessions);
+  const latest = sessions[0];
+  const activeAssignment = assignments.find(item => item.status !== 'Completed');
+  if (!latest || !claims.length) {
+    return {
+      content: `There is not enough recorded Practice evidence to assess ${profile?.preferredName || profile?.learnerEmail || 'this learner'} reliably. No strength or weakness should be inferred yet. Next step: assign one short, job-relevant Practice and review the resulting transcript.`,
+      evidence, assignmentDraft: null
+    };
+  }
+  const focus = growth?.competency || 'closing';
+  const content = [
+    `${profile.preferredName || profile.learnerEmail} has ${sessions.length} recorded Practice session${sessions.length === 1 ? '' : 's'}. The latest was “${latest.scenario}” with an overall score of ${latest.scores?.overall || 0}/100.`,
+    strength ? `Evidence-backed strength: ${strength.statement}` : '',
+    growth ? `Evidence-backed growth area: ${growth.statement}` : '',
+    `Manager interpretation: use this as coaching evidence, not as a fixed personality judgment. ${growth?.confidence?.level === 'low' ? 'Confidence is low because the current pattern is based on limited evidence.' : `Current confidence is ${growth?.confidence?.level || 'low'}.`}`,
+    activeAssignment ? `An active assignment already exists: “${activeAssignment.scenarioName}” (${activeAssignment.status}).` : `Recommended next step: assign one targeted Practice focused on ${focus.replace(/_/g, ' ')}.`
+  ].filter(Boolean).join('\n\n');
+  return {
+    content, evidence,
+    assignmentDraft: activeAssignment ? null : {
+      learner: profile.preferredName || profile.learnerEmail,
+      assignedTo: profile.learnerEmail, focusCompetency: focus,
+      rationale: growth?.statement || `Build additional evidence for ${focus.replace(/_/g, ' ')}.`,
+      mode: 'quick'
+    }
+  };
+}
+
 async function generateCoachReply(profile, sessions, assignments, history, learnerMessage) {
   const text = cleanText(learnerMessage, 6000).toLowerCase();
   const latest = sessions[0];
@@ -325,6 +391,68 @@ export default async function handler(req) {
       const visible = actor.isManager ? rows : rows.filter(row => row.userId === actor.id);
       visible.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
       return reply(200, { sessions: visible });
+    }
+
+    if (req.method === 'GET' && resource === 'manager-chat') {
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'manager_chat_read', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      const requested = normalizeEmail(url.searchParams.get('learner'));
+      await backfillProfiles(store, teamPrefix, actor, requested);
+      const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
+      profiles.sort((a, b) => String(a.preferredName || a.learnerEmail).localeCompare(String(b.preferredName || b.learnerEmail)));
+      const stored = await listJSON(store, managerChatPrefix(teamPrefix, actor));
+      const messages = stored.filter(item => !requested || normalizeEmail(item.learnerEmail) === requested);
+      messages.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+      await writeAudit(store, teamPrefix, actor, 'manager_chat_roster', 'success', { requestedLearner: requested, resultCount: profiles.length });
+      return reply(200, {
+        profiles: profiles.map(profile => ({
+          learnerEmail: profile.learnerEmail, preferredName: profile.preferredName,
+          updatedAt: profile.updatedAt, claimCount: (profile.claims || []).filter(item => item.status === 'active').length
+        })),
+        messages,
+        privacy: 'Manager Chat uses authorized work-related Practice evidence. Private Learner Coach Chat is never included.'
+      });
+    }
+
+    if (req.method === 'POST' && resource === 'manager-chat') {
+      verifyRequestOrigin(req);
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'manager_chat_query', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      const input = await req.json();
+      const learnerEmail = normalizeEmail(input.learnerEmail);
+      const question = cleanText(input.content, 6000);
+      if (!learnerEmail || !question) return reply(400, { error: 'Select a learner and enter a question.' });
+      await backfillProfiles(store, teamPrefix, actor, learnerEmail);
+      const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
+      const profile = profiles.find(item => normalizeEmail(item.learnerEmail) === learnerEmail);
+      if (!profile) {
+        await writeAudit(store, teamPrefix, actor, 'manager_chat_query', 'not_found', { learnerEmail });
+        return reply(404, { error: 'No authorized Practice profile was found for this learner.' });
+      }
+      const sessions = (await listJSON(store, `${teamPrefix}/sessions/`)).filter(item => normalizeEmail(item.learner) === learnerEmail);
+      sessions.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
+      const assignments = (await listJSON(store, `${teamPrefix}/assignments/`)).filter(item => normalizeEmail(item.assignedTo) === learnerEmail);
+      assignments.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+      const result = managerIntelligence(profile, sessions, assignments, question);
+      const prefix = managerChatPrefix(teamPrefix, actor);
+      const managerMessage = managerChatMessage('user', question, learnerEmail);
+      const assistantMessage = managerChatMessage('assistant', result.content, learnerEmail, {
+        evidenceIds: result.evidence.map(item => item.evidenceId), assignmentDraft: result.assignmentDraft
+      });
+      await store.setJSON(`${prefix}${managerMessage.createdAt}-${managerMessage.id}`, managerMessage, { onlyIfNew: true });
+      await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`, assistantMessage, { onlyIfNew: true });
+      await writeAudit(store, teamPrefix, actor, 'manager_chat_query', 'success', {
+        learnerEmail, evidenceIds: result.evidence.map(item => item.evidenceId), assignmentDrafted: Boolean(result.assignmentDraft)
+      });
+      return reply(201, {
+        managerMessage, assistantMessage, evidence: result.evidence,
+        assignmentDraft: result.assignmentDraft,
+        privacy: 'No private Learner Coach Chat content was accessed or included.'
+      });
     }
 
     if (req.method === 'GET' && resource === 'coach-messages') {
