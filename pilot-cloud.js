@@ -74,11 +74,16 @@
   }
 
   async function request(resource, options = {}) {
-    const user = await ready(options.requiredRole);
+    const { requiredRole, query, ...fetchOptions } = options;
+    const user = await ready(requiredRole);
     const token = await user.jwt();
-    const response = await fetch(`/.netlify/functions/pilot-data?resource=${encodeURIComponent(resource)}`, {
-      ...options,
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}`, ...(options.headers || {}) }
+    const params = new URLSearchParams({ resource });
+    Object.entries(query || {}).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') params.set(key, String(value));
+    });
+    const response = await fetch(`/.netlify/functions/pilot-data?${params}`, {
+      ...fetchOptions,
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}`, ...(fetchOptions.headers || {}) }
     });
     const body = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(body.error || `Pilot cloud request failed (${response.status}).`);
