@@ -1068,6 +1068,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <a id="learner-profile-nav" href="learner-profile.html?pilot=1" title="Learner Success Profile" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🎯 My Profile</a>
+    <a id="coach-chat-nav" href="coach-chat.html?pilot=1" title="Personal AI Coach" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🤝 My Coach</a>
     <button id="dashboard-nav-btn" onclick="showDashboard()" title="Practice Studio Dashboard" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">📋 Dashboard</button>
     <button id="client-studio-nav-btn" onclick="openClientStudio()" title="Client Studio" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">👥 Client Studio</button>
     <button id="voice-toggle-btn" onclick="toggleVoice()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🔇 Voice OFF</button>
@@ -1077,7 +1078,7 @@
     </div>
   </div>
 </nav>
-<script>if(window.PilotCloud&&PilotCloud.enabled){document.getElementById("learner-profile-nav").style.display="inline-block"}</script>
+<script>if(window.PilotCloud&&PilotCloud.enabled){document.getElementById("learner-profile-nav").style.display="inline-block";document.getElementById("coach-chat-nav").style.display="inline-block"}</script>
 
 <!-- SESSION SUMMARY MODAL -->
 <div id="summary-modal" class="summary-modal" style="display:none;">
