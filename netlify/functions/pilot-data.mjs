@@ -164,6 +164,103 @@ async function backfillProfiles(store, teamPrefix, actor, requestedEmail) {
   }
 }
 
+async function writeAudit(store, teamPrefix, actor, action, outcome, details = {}) {
+  const event = {
+    id: crypto.randomUUID(), action, outcome,
+    actorId: actor.id, actorEmail: actor.email, actorRoles: actor.roles,
+    occurredAt: new Date().toISOString(), details
+  };
+  await store.setJSON(`${teamPrefix}/audit/${event.occurredAt}-${event.id}`, event, { onlyIfNew: true });
+}
+
+function privateCoachPrefix(teamPrefix, actor) {
+  return `${teamPrefix}/private-coach/${safeSegment(actor.id, 'learner')}/`;
+}
+
+function coachMessage(role, content) {
+  return {
+    id: crypto.randomUUID(), role,
+    content: cleanText(content, 6000),
+    createdAt: new Date().toISOString(),
+    visibility: 'learner_only'
+  };
+}
+
+function activeClaims(profile, type) {
+  return (profile?.claims || []).filter(claim => claim.claimType === type && claim.status === 'active');
+}
+
+function initialCoachMessage(profile, assignments) {
+  const name = cleanText(profile?.preferredName, 80) || 'there';
+  const strength = activeClaims(profile, 'strength')[0];
+  const growth = activeClaims(profile, 'growth_area')[0];
+  const next = assignments.find(item => item.status !== 'Completed');
+  let text = `Welcome, ${name}. From today forward, I will be your Personal AI Coach. I can help you practice, understand feedback, prepare for a client conversation, and choose the next skill to strengthen.`;
+  if (strength || growth) {
+    text += ' Based on your current Practice evidence:';
+    if (strength) text += ` ${strength.statement}`;
+    if (growth) text += ` ${growth.statement}`;
+  } else {
+    text += ' There is not yet enough Practice evidence to identify a reliable pattern.';
+  }
+  text += next
+    ? ` Your next assigned action is “${next.scenarioName}.” Would you like a short preparation tip before you begin?`
+    : ' What would make the biggest difference for you right now?';
+  return coachMessage('assistant', text);
+}
+
+function fallbackCoachReply(profile, sessions, assignments) {
+  const strength = activeClaims(profile, 'strength')[0];
+  const growth = activeClaims(profile, 'growth_area')[0];
+  const latest = sessions[0];
+  const next = assignments.find(item => item.status !== 'Completed');
+  const evidence = latest
+    ? `Your latest Practice was “${latest.scenario}” on ${new Date(latest.savedAt).toLocaleDateString('en-US')} with an overall score of ${latest.scores?.overall || 0}/100.`
+    : 'There is not yet enough completed Practice evidence to make a reliable assessment.';
+  const insight = growth ? ` ${growth.statement}` : strength ? ` ${strength.statement}` : '';
+  const action = next
+    ? `Next action: open your assigned “${next.scenarioName}” Practice and focus on the assigned behavior.`
+    : growth
+      ? `Next action: complete one short Practice focused on ${growth.competency.replace(/_/g, ' ')}.`
+      : 'Next action: complete one short Practice so I can coach from evidence.';
+  return `${evidence}${insight} ${action}`;
+}
+
+async function generateCoachReply(profile, sessions, assignments, history, learnerMessage) {
+  const text = cleanText(learnerMessage, 6000).toLowerCase();
+  const latest = sessions[0];
+  const strength = activeClaims(profile, 'strength')[0];
+  const growth = activeClaims(profile, 'growth_area')[0];
+  const next = assignments.find(item => item.status !== 'Completed');
+  const evidence = latest
+    ? `Evidence: in your latest “${latest.scenario}” Practice, your overall score was ${latest.scores?.overall || 0}/100${latest.summary ? `, and the Coach Summary recorded: ${latest.summary}` : '.'}`
+    : 'Evidence: there is not yet a completed Practice session available for a reliable assessment.';
+  let coaching;
+  if (/result|score|feedback|explain|summary|结果|分数|反馈|解释|总结/.test(text)) {
+    coaching = growth
+      ? `Interpretation: ${growth.statement} This is a current evidence-based coaching claim, not a fixed personal trait.`
+      : strength
+        ? `Interpretation: ${strength.statement} This describes the available Practice evidence, not a fixed personal trait.`
+        : 'Interpretation: more Practice evidence is needed before identifying a stable pattern.';
+  } else if (/prepare|assignment|准备|作业|指派/.test(text)) {
+    coaching = next
+      ? `Preparation: for “${next.scenarioName},” choose one clear objective, ask one open question, and end with a specific next step.`
+      : 'Preparation: choose one conversation objective, ask an open question, and end with a specific next step.';
+  } else {
+    coaching = growth
+      ? `Coaching focus: ${growth.statement}`
+      : strength
+        ? `Coaching focus: build on this evidence—${strength.statement}`
+        : 'Coaching focus: complete a short Practice so your guidance can be grounded in observable evidence.';
+  }
+  const action = next
+    ? `Next action: open your assigned “${next.scenarioName}” Practice and focus on that one behavior.`
+    : growth
+      ? `Next action: complete one short Practice focused on ${growth.competency.replace(/_/g, ' ')}.`
+      : 'Next action: complete one short Practice, then return here for an evidence-linked explanation.';
+  return `${evidence}\n\n${coaching}\n\n${action}`;
+}
+
 export default async function handler(req) {
   try {
     const user = await getUser();
@@ -228,6 +325,56 @@ export default async function handler(req) {
       const visible = actor.isManager ? rows : rows.filter(row => row.userId === actor.id);
       visible.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
       return reply(200, { sessions: visible });
+    }
+
+    if (req.method === 'GET' && resource === 'coach-messages') {
+      if (actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'private_coach_read', 'denied', { reason: 'learner_only' });
+        return reply(403, { error: 'Private Coach Chat is available only to the learner.' });
+      }
+      await backfillProfiles(store, teamPrefix, actor, '');
+      const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
+      const profile = profiles.find(row => row.learnerId === actor.id) || null;
+      const sessions = (await listJSON(store, `${teamPrefix}/sessions/`)).filter(row => row.userId === actor.id);
+      sessions.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
+      const assignments = (await listJSON(store, `${teamPrefix}/assignments/`)).filter(row => normalizeEmail(row.assignedTo) === actor.email);
+      assignments.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+      const stored = await listJSON(store, privateCoachPrefix(teamPrefix, actor));
+      stored.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+      const messages = stored.length ? stored : [initialCoachMessage(profile, assignments)];
+      return reply(200, {
+        messages, profile, assignments,
+        privacy: 'Private Coach Chat is learner-only. Managers receive authorized work evidence, not this conversation.'
+      });
+    }
+
+    if (req.method === 'POST' && resource === 'coach-messages') {
+      verifyRequestOrigin(req);
+      if (actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'private_coach_write', 'denied', { reason: 'learner_only' });
+        return reply(403, { error: 'Private Coach Chat is available only to the learner.' });
+      }
+      const input = await req.json();
+      const content = cleanText(input.content, 6000);
+      if (!content) return reply(400, { error: 'Please enter a message.' });
+      const prefix = privateCoachPrefix(teamPrefix, actor);
+      const learnerMessage = coachMessage('user', content);
+      await store.setJSON(`${prefix}${learnerMessage.createdAt}-${learnerMessage.id}`, learnerMessage, { onlyIfNew: true });
+
+      await backfillProfiles(store, teamPrefix, actor, '');
+      const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
+      const profile = profiles.find(row => row.learnerId === actor.id) || null;
+      const sessions = (await listJSON(store, `${teamPrefix}/sessions/`)).filter(row => row.userId === actor.id);
+      sessions.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
+      const assignments = (await listJSON(store, `${teamPrefix}/assignments/`)).filter(row => normalizeEmail(row.assignedTo) === actor.email);
+      assignments.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+      const history = await listJSON(store, prefix);
+      history.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+      const replyText = await generateCoachReply(profile, sessions, assignments, history, content);
+      const assistantMessage = coachMessage('assistant', replyText);
+      await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`, assistantMessage, { onlyIfNew: true });
+      await writeAudit(store, teamPrefix, actor, 'private_coach_message', 'success', { evidenceSessionId: profile?.latestSessionId || '' });
+      return reply(201, { userMessage: learnerMessage, assistantMessage });
     }
 
     if (req.method === 'GET' && resource === 'profiles') {
