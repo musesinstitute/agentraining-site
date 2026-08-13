@@ -426,6 +426,22 @@
     .stats { gap: 28px; }
   }
 </style>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  if (!window.netlifyIdentity) return;
+  window.netlifyIdentity.on('init', function (user) {
+    const hash = window.location.hash || '';
+    if (!user && /(?:invite|confirmation|recovery)_token=/.test(hash)) {
+      window.netlifyIdentity.open();
+    }
+  });
+  window.netlifyIdentity.on('login', function () {
+    window.netlifyIdentity.close();
+    window.location.href = '/manager.html?pilot=1';
+  });
+});
+</script>
 </head>
 <body>
 
