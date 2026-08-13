@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learner Success Profile — AgentTraining.ai</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="pilot-cloud.js"></script>
+<style>
+:root{--blue:#1a56db;--ink:#111827;--muted:#64748b;--bg:#f7f8fc;--line:#e2e8f0;--green:#047857;--amber:#b45309;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}nav{background:#fff;border-bottom:1px solid var(--line);padding:16px 6%;display:flex;justify-content:space-between;align-items:center}.logo{color:var(--blue);font-weight:800;font-size:20px;text-decoration:none}.logo span{color:#f59e0b}nav a{color:var(--muted);text-decoration:none;margin-left:18px}.hero{padding:42px 6%;background:linear-gradient(135deg,#eff6ff,#ecfdf5)}h1{margin:0 0 8px;font-size:34px}.hero p{margin:0;color:var(--muted);line-height:1.6;max-width:760px}main{max-width:1050px;margin:26px auto;padding:0 20px}.notice{padding:14px 16px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px;color:#1e3a8a;line-height:1.55;margin-bottom:20px}.status{padding:28px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:12px}.profile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:22px}.profile-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}.profile h2{margin:0 0 5px;font-size:23px}.meta{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.column h3{margin:0 0 10px;font-size:17px}.claim{border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:12px}.claim.strength{border-left:4px solid var(--green)}.claim.growth_area{border-left:4px solid var(--amber)}.claim.disputed{opacity:.7;border-left-color:var(--red)}.claim-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.claim p{line-height:1.55;margin:8px 0}.badge{font-size:11px;font-weight:700;border-radius:99px;padding:4px 8px;background:#f1f5f9;color:#475569;white-space:nowrap}.evidence{margin-top:10px;background:#f8fafc;border-radius:8px;padding:10px}.evidence summary{cursor:pointer;font-weight:700;color:#334155}.evidence-item{padding:9px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.5}.evidence-item:first-of-type{margin-top:8px}.actions{margin-top:10px}.actions button{border:1px solid #fecaca;background:#fff;color:var(--red);border-radius:7px;padding:7px 10px;cursor:pointer;font-weight:700}.empty{color:var(--muted);padding:16px;background:#f8fafc;border-radius:9px}.privacy{font-size:12px;color:var(--muted);line-height:1.55;margin-top:18px}@media(max-width:720px){.grid{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="simulator.html?ref=demo&pilot=1">Practice</a><a href="manager.html?pilot=1">Manager</a></div></nav>
+<header class="hero"><h1>Learner Success Profile</h1><p>An evidence-based, revisable view of demonstrated strengths, growth areas, and progress. It reflects work evidence—not a fixed personality judgment.</p></header>
+<main>
+<div class="notice"><b>Privacy boundary:</b> Managers can see authorized work-related evidence and training results. Private Coach Chat is not automatically exposed. Learners can dispute profile claims that appear inaccurate.</div>
+<div id="root" class="status">Loading secure learner intelligence…</div>
+</main>
+<script>
+const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+let me=null;
+function evidenceHTML(ref){return '<div class="evidence-item"><b>'+esc(ref.scenario||'Practice')+'</b><br>'+esc(new Date(ref.observedAt).toLocaleString())+' · '+esc(ref.score)+'/100 · Overall '+esc(ref.overall)+'/100<br><span class="meta">Rubric '+esc(ref.rubricVersion||'—')+'</span></div>'}
+function claimHTML(claim,own){
+  const refs=Array.isArray(claim.evidenceRefs)?claim.evidenceRefs:[];
+  const disputed=claim.status==='disputed';
+  return '<article class="claim '+esc(claim.claimType)+' '+(disputed?'disputed':'')+'"><div class="claim-top"><b>'+esc(claim.competency||claim.claimType)+'</b><span class="badge">'+esc(claim.confidence?.level||'low')+' confidence</span></div><p>'+esc(claim.statement)+'</p><details class="evidence"><summary>Evidence ('+refs.length+')</summary>'+refs.map(evidenceHTML).join('')+'</details>'+(own&&!disputed?'<div class="actions"><button type="button" onclick="disputeClaim(\''+esc(claim.claimId)+'\')">Flag as inaccurate</button></div>':'')+(disputed?'<div class="meta" style="margin-top:9px;color:#b91c1c">Disputed — excluded from automatic high-confidence recommendations.</div>':'')+'</article>';
+}
+function profileHTML(profile,own){
+  const claims=Array.isArray(profile.claims)?profile.claims:[];
+  const strengths=claims.filter(x=>x.claimType==='strength');
+  const growth=claims.filter(x=>x.claimType==='growth_area');
+  return '<section class="profile"><div class="profile-head"><div><h2>'+esc(profile.preferredName||profile.learnerEmail)+'</h2><div class="meta">'+esc(profile.learnerEmail)+' · Updated '+esc(new Date(profile.updatedAt).toLocaleString())+'</div></div><span class="badge">Evidence-based · '+esc(profile.schemaVersion)+'</span></div><div class="grid"><div class="column"><h3>Demonstrated strengths</h3>'+(strengths.length?strengths.map(x=>claimHTML(x,own)).join(''):'<div class="empty">More Practice evidence is needed.</div>')+'</div><div class="column"><h3>Growth areas</h3>'+(growth.length?growth.map(x=>claimHTML(x,own)).join(''):'<div class="empty">More Practice evidence is needed.</div>')+'</div></div><p class="privacy">A single session produces low-confidence language. Confidence increases only when comparable, recent evidence repeats the same pattern.</p></section>';
+}
+async function loadProfiles(){
+  const root=document.getElementById('root');
+  try{
+    me=await PilotCloud.request('me');
+    const learner=new URLSearchParams(location.search).get('learner')||'';
+    const isManager=(me.roles||[]).includes('manager')||(me.roles||[]).includes('admin');
+    const data=await PilotCloud.request('profiles',{query:learner?{learner}:undefined,requiredRole:learner?'manager':undefined});
+    const profiles=data.profiles||[];
+    root.className='';
+    root.innerHTML=profiles.length?profiles.map(p=>profileHTML(p,!isManager&&p.learnerEmail===me.email)).join(''):'<div class="status">No Learner Success Profile exists yet. Complete one Pilot Practice session to create the first evidence-linked profile.</div>';
+  }catch(error){root.className='status';root.textContent=error.message}
+}
+async function disputeClaim(claimId){
+  const note=prompt('Briefly explain what appears inaccurate (optional):','');
+  if(note===null)return;
+  try{await PilotCloud.request('profiles',{method:'PATCH',body:JSON.stringify({claimId,note})});await loadProfiles()}catch(error){alert(error.message)}
+}
+loadProfiles();
+</script>
+</body></html>
