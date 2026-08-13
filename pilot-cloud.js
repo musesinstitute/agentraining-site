@@ -2,6 +2,7 @@
   const params = new URLSearchParams(window.location.search);
   const enabled = params.get('pilot') === '1';
   let readyPromise;
+  let finishReady;
 
   function currentUser() {
     return window.netlifyIdentity && window.netlifyIdentity.currentUser();
@@ -29,7 +30,9 @@
         button.textContent = 'Signing in…';
         status.textContent = '';
         try {
-          await window.netlifyIdentity.login(email, password, true);
+          const loggedIn = await window.netlifyIdentity.gotrue.login(email, password, true);
+          if (finishReady) finishReady(loggedIn);
+          else window.location.reload();
         } catch (error) {
           status.textContent = error?.message || 'Sign-in failed. Please check your email and password.';
           button.disabled = false;
@@ -53,6 +56,7 @@
       readyPromise = new Promise(resolve => {
         window.netlifyIdentity.init();
         const finish = user => { hideGate(); resolve(user); };
+        finishReady = finish;
         const user = currentUser();
         if (user) finish(user);
         else {
