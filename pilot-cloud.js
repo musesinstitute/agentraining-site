@@ -73,10 +73,28 @@
     return user;
   }
 
+  async function resetExpiredSession() {
+    try {
+      await window.netlifyIdentity.logout();
+    } catch (error) {
+      try { localStorage.removeItem('gotrue.user'); } catch (storageError) {}
+    }
+    readyPromise = null;
+    finishReady = null;
+    showGate('Your secure session expired. Please sign in again to continue.');
+  }
+
   async function request(resource, options = {}) {
     const { requiredRole, query, ...fetchOptions } = options;
-    const user = await ready(requiredRole);
-    const token = await user.jwt();
+    let user = await ready(requiredRole);
+    let token;
+    try {
+      token = await user.jwt();
+    } catch (error) {
+      await resetExpiredSession();
+      user = await ready(requiredRole);
+      token = await user.jwt();
+    }
     const params = new URLSearchParams({ resource });
     Object.entries(query || {}).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') params.set(key, String(value));
