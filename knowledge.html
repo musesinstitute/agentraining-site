@@ -63,6 +63,8 @@
   .lesson-criteria li { font-size: 12px; color: var(--ink); line-height: 1.6; padding-left: 16px; position: relative; }
   .lesson-criteria li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
   .lesson-industry { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--brand); }
+  .lesson-action { display: block; margin-top: 14px; padding: 9px 11px; border-radius: 8px; background: #eff6ff; color: var(--brand); font-size: 12px; font-weight: 800; text-decoration: none; text-align: center; }
+  .lesson-action:hover { background: #dbeafe; }
 
   .loading-note, .error-note { text-align: center; color: var(--ink-muted); font-size: 14px; padding: 40px 0; }
   .error-note { color: #dc2626; }
@@ -91,12 +93,13 @@
   <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
+      <a href="pilot.html?pilot=1">Pilot Home</a>
     <a href="studios.html">Studios</a>
     <div class="nav-lang">
       <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
       <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
     </div>
-    <a class="btn-nav" href="simulator.html?ref=demo" id="nav-cta">Try Free Demo</a>
+    <a class="btn-nav" href="simulator.html?ref=demo&pilot=1" id="nav-cta">Try Free Demo</a>
   </div>
 </nav>
 
@@ -104,7 +107,7 @@
   <div class="hero-badge" id="hero-badge">📚 Studio 3 of 4</div>
   <h1 id="hero-title">Knowledge <span>Studio</span></h1>
   <p id="hero-sub">The full Insurance &amp; Health Foundation Curriculum map — every scenario's practice focus and success criteria, pulled straight from the same 25-scenario curriculum Practice Studio uses, so you always know what to study next and why.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo" id="open-cta">Open Practice Studio →</a>
+  <a class="btn-primary" href="simulator.html?ref=demo&pilot=1" id="open-cta">Open Practice Studio →</a>
 </div>
 
 <section>
@@ -116,14 +119,14 @@
 <div class="cta-band">
   <h2 id="cta-h2">Ready to practice one of these?</h2>
   <p id="cta-p">Every scenario above is one click away in Practice Studio.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo" id="cta-btn">Open Practice Studio →</a>
+  <a class="btn-primary" href="simulator.html?ref=demo&pilot=1" id="cta-btn">Open Practice Studio →</a>
 </div>
 
 <footer>
   <div>
     <a href="index.html" id="f-home">Home</a>
     <a href="studios.html" id="f-studios">Studios</a>
-    <a href="simulator.html?ref=demo" id="f-sim">AI Simulator</a>
+    <a href="simulator.html?ref=demo&pilot=1" id="f-sim">AI Simulator</a>
     <a href="terms.html" id="f-terms">Terms of Service</a>
     <a href="privacy.html" id="f-privacy">Privacy Policy</a>
     <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
@@ -213,6 +216,7 @@ function renderCurriculumMap() {
                   ${criteria.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
                 </ul>
                 <span class="lesson-industry">${escapeHtml(lesson.industry || '')}</span>
+                <a class="lesson-action" href="simulator.html?ref=demo&amp;pilot=1&amp;practice=${encodeURIComponent(lesson.id || lesson.key || '')}">${currentLang === 'zh' ? '練習這個情境 →' : 'Practice this scenario →'}</a>
               </div>
             `;
           }).join('')}
