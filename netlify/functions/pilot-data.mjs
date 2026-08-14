@@ -238,6 +238,33 @@ function managerChatMessage(role, content, learnerEmail, extras = {}) {
   };
 }
 
+function assignmentEventMessage(event, audience) {
+  const content = audience === 'manager'
+    ? event.managerContent
+    : event.learnerContent;
+  return {
+    id: `assignment-event-${event.id}-${audience}`,
+    role: 'assistant', content, learnerEmail: event.assignedTo,
+    createdAt: event.createdAt, visibility: audience === 'manager' ? 'manager_work_intelligence' : 'learner_only',
+    assignmentEvent: true, assignmentId: event.assignmentId, eventType: event.type,
+    evidenceIds: event.evidenceIds || []
+  };
+}
+
+async function writeAssignmentEvent(store, teamPrefix, input) {
+  const event = {
+    id: `${cleanText(input.assignmentId, 100)}-${cleanText(input.type, 40)}`,
+    assignmentId: cleanText(input.assignmentId, 100), type: cleanText(input.type, 40),
+    assignedTo: normalizeEmail(input.assignedTo), learner: cleanText(input.learner, 120),
+    scenarioId: cleanText(input.scenarioId, 120), scenarioName: cleanText(input.scenarioName, 300),
+    createdAt: input.createdAt || new Date().toISOString(), score: Number(input.score) || 0,
+    sessionId: cleanText(input.sessionId, 100), evidenceIds: Array.isArray(input.evidenceIds) ? input.evidenceIds.slice(0, 20) : [],
+    learnerContent: cleanText(input.learnerContent, 6000), managerContent: cleanText(input.managerContent, 6000)
+  };
+  await store.setJSON(`${teamPrefix}/assignment-events/${event.id}`, event);
+  return event;
+}
+
 function sessionEvidence(profile, sessions) {
   const byId = new Map(sessions.map(session => [session.id, session]));
   const rows = [];
@@ -356,6 +383,13 @@ export default async function handler(req) {
       const record = assignmentRecord(input, actor);
       if (!record.assignedTo || !record.scenarioId || !record.scenarioName) return reply(400, { error: 'Learner email and curriculum scenario are required.' });
       await store.setJSON(`${teamPrefix}/assignments/${record.id}`, record, { onlyIfNew: true });
+      await writeAssignmentEvent(store, teamPrefix, {
+        assignmentId: record.id, type: 'assigned', assignedTo: record.assignedTo,
+        learner: record.learner, scenarioId: record.scenarioId, scenarioName: record.scenarioName,
+        createdAt: record.createdAt,
+        learnerContent: `Your manager assigned “${record.scenarioName}” (${record.mode} Practice). It is ready in your Assignment Inbox.`,
+        managerContent: `Assignment confirmed: “${record.scenarioName}” was sent to ${record.learner || record.assignedTo}. The learner can now launch it from Coach Chat or the Assignment Inbox.`
+      });
       await writeAudit(store, teamPrefix, actor, 'assignment_create', 'success', {
         assignmentId: record.id, assignedTo: record.assignedTo, scenarioId: record.scenarioId
       });
@@ -389,6 +423,35 @@ export default async function handler(req) {
       const record = sessionRecord(input, actor);
       await store.setJSON(`${teamPrefix}/sessions/${record.id}`, record, { onlyIfNew: true });
       const profile = await updateLearnerProfile(store, teamPrefix, actor, record);
+      if (record.assignmentId) {
+        const assignmentKey = `${teamPrefix}/assignments/${record.assignmentId}`;
+        const assignment = await store.get(assignmentKey, { type: 'json' });
+        if (assignment && normalizeEmail(assignment.assignedTo) === actor.email) {
+          const completed = {
+            ...assignment, status: 'Completed', completedAt: new Date().toISOString(),
+            score: record.scores.overall, transcript: record.transcript,
+            resultSessionId: record.id, resultProfileId: profile.profileId
+          };
+          await store.setJSON(assignmentKey, completed);
+          const sessionClaims = (profile.claims || []).filter(claim =>
+            claim.status === 'active' && (claim.evidenceRefs || []).some(ref => ref.sessionId === record.id));
+          const strength = sessionClaims.find(claim => claim.claimType === 'strength');
+          const growth = sessionClaims.find(claim => claim.claimType === 'growth_area');
+          const evidenceIds = sessionClaims.flatMap(claim => (claim.evidenceRefs || [])
+            .filter(ref => ref.sessionId === record.id).map(ref => ref.evidenceId));
+          await writeAssignmentEvent(store, teamPrefix, {
+            assignmentId: assignment.id, type: 'completed', assignedTo: assignment.assignedTo,
+            learner: assignment.learner || record.learnerName, scenarioId: assignment.scenarioId,
+            scenarioName: assignment.scenarioName || record.scenario, score: record.scores.overall,
+            sessionId: record.id, evidenceIds,
+            learnerContent: `You completed “${assignment.scenarioName || record.scenario}” with an overall score of ${record.scores.overall}/100.${strength ? ` Current evidence: ${strength.statement}` : ''}${growth ? ` Next coaching focus: ${growth.statement}` : ''}`,
+            managerContent: `${assignment.learner || record.learnerName} completed “${assignment.scenarioName || record.scenario}” with an overall score of ${record.scores.overall}/100.${strength ? ` Evidence-backed strength: ${strength.statement}` : ''}${growth ? ` Evidence-backed growth area: ${growth.statement}` : ''} The transcript, rubric result, and evidence are now available for follow-up coaching.`
+          });
+          await writeAudit(store, teamPrefix, actor, 'assignment_complete', 'success', {
+            assignmentId: assignment.id, sessionId: record.id, evidenceIds
+          });
+        }
+      }
       return reply(201, { session: record, profile });
     }
 
@@ -409,7 +472,14 @@ export default async function handler(req) {
       const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
       profiles.sort((a, b) => String(a.preferredName || a.learnerEmail).localeCompare(String(b.preferredName || b.learnerEmail)));
       const stored = await listJSON(store, managerChatPrefix(teamPrefix, actor));
-      const messages = stored.filter(item => !requested || normalizeEmail(item.learnerEmail) === requested);
+      const events = requested
+        ? (await listJSON(store, `${teamPrefix}/assignment-events/`))
+          .filter(event => normalizeEmail(event.assignedTo) === requested)
+          .map(event => assignmentEventMessage(event, 'manager'))
+        : [];
+      const messages = requested
+        ? [...stored.filter(item => normalizeEmail(item.learnerEmail) === requested), ...events]
+        : [];
       messages.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
       await writeAudit(store, teamPrefix, actor, 'manager_chat_roster', 'success', { requestedLearner: requested, resultCount: profiles.length });
       return reply(200, {
@@ -474,8 +544,11 @@ export default async function handler(req) {
       const assignments = (await listJSON(store, `${teamPrefix}/assignments/`)).filter(row => normalizeEmail(row.assignedTo) === actor.email);
       assignments.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
       const stored = await listJSON(store, privateCoachPrefix(teamPrefix, actor));
-      stored.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
-      const messages = stored.length ? stored : [initialCoachMessage(profile, assignments)];
+      const events = (await listJSON(store, `${teamPrefix}/assignment-events/`))
+        .filter(event => normalizeEmail(event.assignedTo) === actor.email)
+        .map(event => assignmentEventMessage(event, 'learner'));
+      const messages = [...(stored.length ? stored : [initialCoachMessage(profile, assignments)]), ...events];
+      messages.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
       return reply(200, {
         messages, profile, assignments,
         privacy: 'Private Coach Chat is learner-only. Managers receive authorized work evidence, not this conversation.'
