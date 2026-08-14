@@ -71,5 +71,6 @@ document.getElementById('composer').addEventListener('submit',event=>{event.prev
 document.getElementById('messageInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();document.getElementById('composer').requestSubmit()}});
 document.getElementById('starters').addEventListener('click',event=>{const prompt=event.target.dataset?.prompt;if(prompt)sendMessage(prompt)});
 loadCoach();
+setInterval(()=>{if(!document.hidden)loadCoach()},30000);
 </script>
 </body></html>
