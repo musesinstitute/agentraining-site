@@ -2747,7 +2747,6 @@ async function completeActiveAssignment(data) {
 }
 
 async function uploadSession(data) {
-  await completeActiveAssignment(data);
   const ref   = sessionStorage.getItem('agentraining_ref') || 'demo';
   const name  = sessionStorage.getItem('agentraining_name') || 'Demo User';
   const team  = sessionStorage.getItem('agentraining_team') || 'default';
@@ -2788,6 +2787,7 @@ async function uploadSession(data) {
   };
   try {
     if (PilotCloud.enabled) await PilotCloud.request('sessions',{method:'POST',body:JSON.stringify(record)});
+    else await completeActiveAssignment(data);
   } catch (err) {
     console.warn('Pilot session upload failed:', err.message);
   }
