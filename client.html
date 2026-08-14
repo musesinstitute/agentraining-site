@@ -93,6 +93,7 @@
   <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
+      <a href="pilot.html?pilot=1">Pilot Home</a>
     <a href="studios.html">Studios</a>
     <div class="nav-lang">
       <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
@@ -106,8 +107,8 @@
   <div class="hero-badge" id="hero-badge">👥 Studio 2 of 4</div>
   <h1 id="hero-title">Client <span>Studio</span></h1>
   <p id="hero-sub">Track both client opportunities and recruiting candidates. Practice the next real conversation, follow up consistently, and move each relationship toward a clear next step.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&studio=client" id="open-cta">Open Client Studio →</a>
-  <div class="hero-note" id="hero-note">📱 Client Studio lives inside Practice Studio and saves cases on this browser.</div>
+  <a class="btn-primary" href="simulator.html?ref=demo&studio=client&pilot=1" id="open-cta">Open Client Studio →</a>
+  <div class="hero-note" id="hero-note">Pilot note: client case notes stay on this browser in this release; authenticated assignments and Practice results sync in the secure team workspace.</div>
 </div>
 
 <section>
@@ -162,8 +163,9 @@
 <div class="cta-band">
   <h2 id="cta-h2">Ready to open your first case?</h2>
   <p id="cta-p">Client Studio opens inside Practice Studio — no separate login.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&studio=client" id="cta-btn">Open Client Studio →</a>
-  <p class="limitation-note" id="limitation-note">Cases are saved in this browser only (localStorage). They do not sync across devices or team members yet.</p>
+  <a class="btn-primary" href="simulator.html?ref=demo&studio=client&pilot=1" id="cta-btn">Open Client Studio →</a>
+  <p class="limitation-note" id="limitation-note">Pilot boundary: case notes remain browser-local in this release. Do not enter sensitive client data. Team assignments, scores, summaries, and transcripts use the authenticated Pilot workspace.</p>
+  <p><a class="btn-primary" href="manager.html?pilot=1" id="manager-next">Continue to Leadership →</a></p>
 </div>
 
 <footer>
@@ -189,7 +191,7 @@ const STRINGS = {
     heroBadge: '👥 Studio 2 of 4', heroTitleHtml: 'Client <span>Studio</span>',
     heroSub: 'Track both client opportunities and recruiting candidates. Practice the next real conversation, follow up consistently, and move each relationship toward a clear next step.',
     openCta: 'Open Client Studio →',
-    heroNote: '📱 Client Studio lives inside Practice Studio and saves cases on this browser.',
+    heroNote: 'Pilot note: client case notes stay on this browser in this release; authenticated assignments and Practice results sync in the secure team workspace.',
     flowH2: 'Part of one continuous loop',
     f1: 'Practice Studio', f2: 'Completed Result', f3: 'Client Studio', f4: 'Client Case', f5: 'Next Follow-up', f6: 'Practice',
     feat1h: 'Two growth pipelines', feat1p: 'Track client opportunities and recruiting candidates without confusing the two journeys.',
@@ -200,7 +202,7 @@ const STRINGS = {
     fl5: 'Status — New, Follow-up, Proposal, Won, Lost', fl6: 'Next follow-up date or note',
     ctaH2: 'Ready to open your first case?', ctaP: 'Client Studio opens inside Practice Studio — no separate login.',
     ctaBtn: 'Open Client Studio →',
-    limitationNote: 'Cases are saved in this browser only (localStorage). They do not sync across devices or team members yet.',
+    limitationNote: 'Pilot boundary: case notes remain browser-local in this release. Do not enter sensitive client data. Team assignments, scores, summaries, and transcripts use the authenticated Pilot workspace.', managerNext: 'Continue to Leadership →',
     fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
   },
   zh: {
@@ -208,7 +210,7 @@ const STRINGS = {
     heroBadge: '👥 工作室 2 / 4', heroTitleHtml: '客戶<span>工作室</span>',
     heroSub: '同時追蹤客戶機會與招募候選人。為下一次真實對話先做練習，持續跟進，讓每一段關係走向清楚的下一步。',
     openCta: '開啟客戶工作室 →',
-    heroNote: '📱 客戶工作室位於練習工作室之內，案例儲存在此瀏覽器。',
+    heroNote: 'Pilot 說明：本版本的案例備註保留在此瀏覽器；登入後的指派與練習結果會同步到安全的團隊空間。',
     flowH2: '一個連貫循環的一部分',
     f1: '練習工作室', f2: '完成練習結果', f3: '客戶工作室', f4: '客戶案例', f5: '下次跟進', f6: '練習',
     feat1h: '兩條增長管道', feat1p: '分別追蹤客戶機會與招募候選人，不混淆兩種不同的發展歷程。',
@@ -219,7 +221,7 @@ const STRINGS = {
     fl5: '狀態——新案件、跟進中、已提案、已成交、已流失', fl6: '下次跟進日期或備註',
     ctaH2: '準備好建立第一個案例了嗎？', ctaP: '客戶工作室在練習工作室內開啟——不需要另外登入。',
     ctaBtn: '開啟客戶工作室 →',
-    limitationNote: '案例僅儲存在此瀏覽器（localStorage）。目前不會跨裝置或跨團隊成員同步。',
+    limitationNote: 'Pilot 邊界：本版本的案例備註仍保留在瀏覽器。請勿輸入敏感客戶資料；團隊指派、分數、摘要和逐字稿使用登入後的 Pilot 空間。', managerNext: '前往主管工作室 →',
     fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
   }
 };
@@ -259,6 +261,7 @@ function switchLang(lang) {
   document.getElementById('cta-p').textContent = s.ctaP;
   document.getElementById('cta-btn').textContent = s.ctaBtn;
   document.getElementById('limitation-note').textContent = s.limitationNote;
+  document.getElementById('manager-next').textContent = s.managerNext;
   document.getElementById('f-home').textContent = s.fHome;
   document.getElementById('f-studios').textContent = s.fStudios;
   document.getElementById('f-sim').textContent = s.fSim;

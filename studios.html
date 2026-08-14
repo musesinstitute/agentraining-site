@@ -73,6 +73,9 @@
   .studio-cta { font-size: 14px; font-weight: 700; color: var(--brand); }
   .studio-card:hover .studio-cta { text-decoration: underline; }
 
+  .studio-output { margin: 16px 0 2px; padding: 10px 12px; border-radius: 8px; background: #f8fafc; color: #334155; font-size: 12px; line-height: 1.5; }
+  .studio-output b { color: var(--brand); }
+
   .flow-note {
     max-width: 760px; margin: 48px auto 0; text-align: center;
     background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius);
@@ -100,6 +103,7 @@
   <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
+      <a href="pilot.html?pilot=1">Pilot Home</a>
     <a href="studios.html" class="current" id="nav-studios-label">Studios</a>
     <div class="nav-lang">
       <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
@@ -118,32 +122,36 @@
 <section>
   <div class="section-inner">
     <div class="studio-grid">
-      <a class="studio-card" href="simulator.html?ref=demo">
+      <a class="studio-card" href="simulator.html?ref=demo&pilot=1">
         <div class="studio-icon">🎯</div>
         <div class="studio-num" id="s1-num">Studio 1</div>
         <h3 id="s1-title">Practice Studio</h3>
         <p id="s1-body">Roleplay real objections with an AI client across the 25-scenario Insurance &amp; Health Foundation Curriculum. Get instant AI Coach scoring, strengths, and improvement tips after every session.</p>
+        <div class="studio-output" id="s1-output"><b>Output:</b> score, transcript, Coach Summary, and evidence for the next decision.</div>
         <span class="studio-cta" id="s1-cta">Open Practice Studio →</span>
       </a>
-      <a class="studio-card" href="client.html">
+      <a class="studio-card" href="client.html?pilot=1">
         <div class="studio-icon">👥</div>
         <div class="studio-num" id="s2-num">Studio 2</div>
         <h3 id="s2-title">Client Studio</h3>
         <p id="s2-body">Track two growth pipelines: real client opportunities and recruiting candidates. Practice the next conversation, record follow-up, and move each relationship forward.</p>
+        <div class="studio-output" id="s2-output"><b>Output:</b> one clear objection, next follow-up, and a matched Practice.</div>
         <span class="studio-cta" id="s2-cta">Open Client Studio →</span>
       </a>
-      <a class="studio-card" href="knowledge.html">
+      <a class="studio-card" href="knowledge.html?pilot=1">
         <div class="studio-icon">📚</div>
         <div class="studio-num" id="s3-num">Studio 3</div>
         <h3 id="s3-title">Knowledge Studio</h3>
         <p id="s3-body">Browse the full 5-stage curriculum map — every scenario's practice focus and success criteria in one place, so you always know what to study next and why.</p>
+        <div class="studio-output" id="s3-output"><b>Output:</b> the right scenario and success criteria for targeted learning.</div>
         <span class="studio-cta" id="s3-cta">Open Knowledge Studio →</span>
       </a>
-      <a class="studio-card" href="manager.html">
+      <a class="studio-card" href="manager.html?pilot=1">
         <div class="studio-icon">📊</div>
         <div class="studio-num" id="s4-num">Studio 4</div>
         <h3 id="s4-title">Manager Studio</h3>
         <p id="s4-body">Give team leaders visibility into client activity, recruiting follow-up, agent activation, coaching needs, and the next practice to assign.</p>
+        <div class="studio-output" id="s4-output"><b>Output:</b> a human-confirmed coaching action and the next assignment.</div>
         <span class="studio-cta" id="s4-cta">Open Manager Studio →</span>
       </a>
     </div>
@@ -180,16 +188,16 @@ const STUDIOS_STRINGS = {
     heroSub: "Practice Studio, Client Studio, Knowledge Studio, and Manager Studio work together as one continuous sales capability system — from real client objections, to focused practice, to coaching visibility.",
     s1num: 'Studio 1', s1title: 'Practice Studio',
     s1body: "Roleplay real objections with an AI client across the 25-scenario Insurance & Health Foundation Curriculum. Get instant AI Coach scoring, strengths, and improvement tips after every session.",
-    s1cta: 'Open Practice Studio →',
+    s1cta: 'Open Practice Studio →', s1output: '<b>Output:</b> score, transcript, Coach Summary, and evidence for the next decision.',
     s2num: 'Studio 2', s2title: 'Client Studio',
     s2body: 'Track two growth pipelines: real client opportunities and recruiting candidates. Practice the next conversation, record follow-up, and move each relationship forward.',
-    s2cta: 'Open Client Studio →',
+    s2cta: 'Open Client Studio →', s2output: '<b>Output:</b> one clear objection, next follow-up, and a matched Practice.',
     s3num: 'Studio 3', s3title: 'Knowledge Studio',
     s3body: "Browse the full 5-stage curriculum map — every scenario's practice focus and success criteria in one place, so you always know what to study next and why.",
-    s3cta: 'Open Knowledge Studio →',
+    s3cta: 'Open Knowledge Studio →', s3output: '<b>Output:</b> the right scenario and success criteria for targeted learning.',
     s4num: 'Studio 4', s4title: 'Manager Studio',
     s4body: 'Give team leaders visibility into client activity, recruiting follow-up, agent activation, coaching needs, and the next practice to assign.',
-    s4cta: 'Open Manager Studio →',
+    s4cta: 'Open Manager Studio →', s4output: '<b>Output:</b> a human-confirmed coaching action and the next assignment.',
     flowNote: '<strong>How they connect:</strong> Practice Studio → Completed Practice Result → Client Studio → Client Case → Next Follow-up → back to Practice. Knowledge Studio and Manager Studio support that loop with curriculum context and team visibility.',
     fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
   },
@@ -199,16 +207,16 @@ const STUDIOS_STRINGS = {
     heroSub: '練習工作室、客戶工作室、知識工作室與主管工作室共同組成一套持續運轉的銷售能力系統——從真實的客戶異議，到聚焦的練習，再到主管的輔導視角。',
     s1num: '工作室 1', s1title: '練習工作室',
     s1body: '透過25個情境組成的保險與健康基礎課程，與AI虛擬客戶進行真實異議的角色扮演。每次練習後立即獲得AI教練的評分、優點與改進建議。',
-    s1cta: '開啟練習工作室 →',
+    s1cta: '開啟練習工作室 →', s1output: '<b>產出：</b>評分、逐字稿、教練摘要，以及下一個決策所需的證據。',
     s2num: '工作室 2', s2title: '客戶工作室',
     s2body: '追蹤兩條增長管道：真實客戶機會與招募候選人。練習下一次對話、記錄跟進，並推動每一段關係前進。',
-    s2cta: '開啟客戶工作室 →',
+    s2cta: '開啟客戶工作室 →', s2output: '<b>產出：</b>一個明確異議、下一次跟進，以及相應的練習。',
     s3num: '工作室 3', s3title: '知識工作室',
     s3body: '瀏覽完整的五階段課程地圖——每個情境的練習重點與成功標準都在這裡，讓你隨時知道下一步該學什麼、為什麼學。',
-    s3cta: '開啟知識工作室 →',
+    s3cta: '開啟知識工作室 →', s3output: '<b>產出：</b>適合的情境與針對性學習的成功標準。',
     s4num: '工作室 4', s4title: '主管工作室',
     s4body: '讓主管看見客戶行動、招募跟進、新人啟動、需要輔導的能力，以及下一項應指派的練習。',
-    s4cta: '開啟主管工作室 →',
+    s4cta: '開啟主管工作室 →', s4output: '<b>產出：</b>由主管確認的輔導行動與下一項指派。',
     flowNote: '<strong>四者如何串連：</strong>練習工作室 → 完成練習結果 → 客戶工作室 → 客戶案例 → 下次跟進 → 回到練習。知識工作室與主管工作室則以課程內容與團隊視角支援這個循環。',
     fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
   }
@@ -228,18 +236,22 @@ function switchLang(lang) {
   document.getElementById('s1-title').textContent = s.s1title;
   document.getElementById('s1-body').textContent = s.s1body;
   document.getElementById('s1-cta').textContent = s.s1cta;
+  document.getElementById('s1-output').innerHTML = s.s1output;
   document.getElementById('s2-num').textContent = s.s2num;
   document.getElementById('s2-title').textContent = s.s2title;
   document.getElementById('s2-body').textContent = s.s2body;
   document.getElementById('s2-cta').textContent = s.s2cta;
+  document.getElementById('s2-output').innerHTML = s.s2output;
   document.getElementById('s3-num').textContent = s.s3num;
   document.getElementById('s3-title').textContent = s.s3title;
   document.getElementById('s3-body').textContent = s.s3body;
   document.getElementById('s3-cta').textContent = s.s3cta;
+  document.getElementById('s3-output').innerHTML = s.s3output;
   document.getElementById('s4-num').textContent = s.s4num;
   document.getElementById('s4-title').textContent = s.s4title;
   document.getElementById('s4-body').textContent = s.s4body;
   document.getElementById('s4-cta').textContent = s.s4cta;
+  document.getElementById('s4-output').innerHTML = s.s4output;
   document.getElementById('flow-note').innerHTML = s.flowNote;
   document.getElementById('f-home').textContent = s.fHome;
   document.getElementById('f-studios').textContent = s.fStudios;
