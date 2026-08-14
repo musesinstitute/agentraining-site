@@ -1,268 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Knowledge Studio — AgentTraining AI</title>
-<meta name="description" content="The full 5-stage Insurance &amp; Health Foundation Curriculum map — every scenario's practice focus and success criteria in one place."/>
-<link rel="manifest" href="/manifest.json"/>
-<meta name="theme-color" content="#1a56db"/>
-<link rel="apple-touch-icon" href="/icon-192.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Company Knowledge Studio — AgentTraining.ai</title>
+<meta name="description" content="Turn authorized enterprise training knowledge into manager-approved coaching and Practice.">
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="pilot-cloud.js"></script>
 <style>
-  :root {
-    --brand: #1a56db; --brand-dark: #1241a8; --accent: #f59e0b;
-    --ink: #111827; --ink-muted: #6b7280; --surface: #f9fafb;
-    --white: #ffffff; --border: #e5e7eb; --radius: 12px; --green: #16a34a;
-    --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
-
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 40px; border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; background: var(--white); z-index: 100;
-  }
-  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
-  .nav-links a:hover { color: var(--brand); }
-  .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
-  .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
-  .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .btn-nav { background: var(--accent); color: #111827; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; }
-  .btn-nav:hover { background: #e08800; }
-
-  .hero { text-align: center; padding: 72px 20px 48px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); }
-  .hero-badge { display: inline-block; background: #dbeafe; color: var(--brand); padding: 4px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
-  .hero h1 { font-size: clamp(28px, 4.5vw, 46px); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
-  .hero h1 span { color: var(--brand); }
-  .hero p { font-size: 17px; color: var(--ink-muted); max-width: 620px; margin: 0 auto 30px; line-height: 1.6; }
-  .btn-primary { display: inline-block; background: var(--brand); color: var(--white); padding: 14px 32px; border-radius: 10px; text-decoration: none; font-size: 16px; font-weight: 700; }
-  .btn-primary:hover { background: var(--brand-dark); }
-
-  section { padding: 56px 20px; }
-  .section-inner { max-width: 980px; margin: 0 auto; }
-
-  .stage-block { margin-bottom: 44px; }
-  .stage-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
-  .stage-num { font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--white); background: var(--brand); border-radius: 99px; padding: 4px 12px; white-space: nowrap; }
-  .stage-name { font-size: 19px; font-weight: 800; }
-  .lesson-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-  .lesson-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
-  .lesson-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-  .lesson-order { font-size: 11px; color: var(--ink-muted); font-weight: 700; }
-  .lesson-diff { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface); color: var(--ink-muted); border: 1px solid var(--border); white-space: nowrap; }
-  .lesson-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
-  .lesson-focus { font-size: 13px; color: var(--ink-muted); line-height: 1.55; margin-bottom: 10px; }
-  .lesson-criteria { list-style: none; }
-  .lesson-criteria li { font-size: 12px; color: var(--ink); line-height: 1.6; padding-left: 16px; position: relative; }
-  .lesson-criteria li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
-  .lesson-industry { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--brand); }
-  .lesson-action { display: block; margin-top: 14px; padding: 9px 11px; border-radius: 8px; background: #eff6ff; color: var(--brand); font-size: 12px; font-weight: 800; text-decoration: none; text-align: center; }
-  .lesson-action:hover { background: #dbeafe; }
-
-  .loading-note, .error-note { text-align: center; color: var(--ink-muted); font-size: 14px; padding: 40px 0; }
-  .error-note { color: #dc2626; }
-
-  .cta-band { text-align: center; padding: 56px 20px; background: var(--surface); }
-  .cta-band h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; margin-bottom: 12px; }
-  .cta-band p { font-size: 15px; color: var(--ink-muted); margin-bottom: 24px; }
-
-  footer { padding: 40px 20px; text-align: center; border-top: 1px solid var(--border); }
-  footer div { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
-  footer a { color: var(--ink-muted); text-decoration: none; font-size: 13px; }
-  footer a:hover { color: var(--brand); }
-  footer p { font-size: 12px; color: var(--ink-muted); }
-
-  @media (max-width: 720px) {
-    nav { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
-    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: center; }
-    .lesson-grid { grid-template-columns: 1fr; }
-    section { padding: 40px 16px; }
-  }
+:root{--blue:#1a56db;--blue2:#0f3ea8;--ink:#0f172a;--muted:#64748b;--bg:#f6f8fc;--card:#fff;--line:#dfe5ee;--green:#047857;--amber:#b45309;--red:#b91c1c;--purple:#6d28d9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}a{color:inherit}nav{height:64px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);gap:16px}.logo{font-size:20px;font-weight:900;color:var(--blue);text-decoration:none}.logo span{color:#f59e0b}.navlinks{display:flex;align-items:center;gap:16px;font-size:13px}.navlinks a{text-decoration:none;color:#475569}.navlinks a:hover{color:var(--blue)}.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.lang button{border:0;background:#fff;padding:6px 9px;color:#64748b;cursor:pointer}.lang button.active{background:#eff6ff;color:var(--blue);font-weight:800}.hero{padding:54px 5%;background:linear-gradient(135deg,#eff6ff 0%,#ecfdf5 55%,#faf5ff 100%)}.hero-inner{max-width:1180px;margin:auto}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #bfdbfe;background:#fff;color:var(--blue);border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:16px 0 12px;max-width:850px}.hero p{font-size:17px;color:#475569;line-height:1.65;max-width:820px;margin:0}.flow{max-width:1180px;margin:-24px auto 24px;padding:0 18px}.flow-card{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 36px rgba(15,23,42,.08);overflow:hidden}.flow-step{padding:18px;border-right:1px solid var(--line)}.flow-step:last-child{border:0}.flow-step b{display:block;color:var(--blue);margin-bottom:6px}.flow-step span{font-size:12px;color:var(--muted);line-height:1.5}.shell{max-width:1180px;margin:auto;padding:0 18px 60px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:32px 0 14px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted)}.secure-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;padding:13px 15px;color:#1e40af;line-height:1.55}.manager-panel{display:none;background:#fff;border:1px solid #bfdbfe;border-radius:16px;padding:22px;margin-top:18px}.manager-panel.visible{display:block}.manager-panel h3{font-size:20px;margin:0 0 6px}.manager-panel>p{color:var(--muted);margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.field.full{grid-column:1/-1}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#334155}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px 12px;background:#fff;font:inherit;color:var(--ink)}.field textarea{min-height:180px;resize:vertical;line-height:1.55}.field small{display:block;color:var(--muted);margin-top:5px;line-height:1.45}.consent{display:flex;gap:10px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:12px;line-height:1.5;color:#7c2d12}.consent input{margin-top:3px}.button-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn:hover{background:var(--blue2)}.btn.secondary{background:#fff;color:var(--blue);border:1px solid #93c5fd}.btn.green{background:var(--green)}.btn.danger{background:#fff;color:var(--red);border:1px solid #fecaca}.btn:disabled{opacity:.55;cursor:not-allowed}.status{min-height:22px;margin-top:10px;font-size:13px}.status.ok{color:var(--green)}.status.error{color:var(--red)}.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.source-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}.source-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.source-card h3{font-size:18px;margin:0}.meta{font-size:11px;color:var(--muted);margin-top:4px}.pill{display:inline-block;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;background:#f1f5f9;color:#475569}.pill.analyzed{background:#fef3c7;color:#92400e}.pill.approved{background:#d1fae5;color:#065f46}.analysis{background:#f8fafc;border-radius:10px;padding:13px;line-height:1.55}.analysis h4{margin:0 0 6px;font-size:13px}.analysis p{margin:0;color:#334155}.analysis ul{margin:8px 0 0;padding-left:18px;color:#475569}.analysis li{margin:4px 0}.practice-draft{border-left:3px solid var(--purple);padding:9px 12px;background:#faf5ff;border-radius:0 9px 9px 0}.practice-draft b{display:block;color:var(--purple);margin-bottom:4px}.source-actions{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}.empty{background:#fff;border:1px dashed #cbd5e1;border-radius:13px;padding:30px;text-align:center;color:var(--muted)}.platform{margin-top:40px}.stage{margin:18px 0}.stage-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.stage-head strong{font-size:17px}.stage-num{background:var(--blue);color:#fff;border-radius:99px;padding:5px 10px;font-size:11px}.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.lesson{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px}.lesson h4{margin:7px 0;font-size:15px}.lesson p{color:var(--muted);font-size:12px;line-height:1.5;margin:0}.lesson a{display:block;margin-top:12px;text-align:center;background:#eff6ff;color:var(--blue);font-weight:800;border-radius:8px;padding:8px;text-decoration:none;font-size:12px}.trust{margin-top:28px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:14px;color:#065f46;line-height:1.55;font-size:12px}@media(max-width:850px){.flow-card{grid-template-columns:1fr 1fr}.flow-step:nth-child(2){border-right:0}.flow-step:nth-child(-n+2){border-bottom:1px solid var(--line)}.source-grid,.lesson-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.navlinks>a:not(.pilot-link){display:none}.hero{padding:38px 5%}.flow-card,.source-grid,.lesson-grid,.form-grid{grid-template-columns:1fr}.flow-step{border-right:0;border-bottom:1px solid var(--line)!important}.field.full{grid-column:auto}.section-head{align-items:flex-start;flex-direction:column}.hero p{font-size:15px}}
 </style>
 </head>
 <body>
-
-<nav>
-  <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-      <a href="pilot.html?pilot=1">Pilot Home</a>
-    <a href="studios.html">Studios</a>
-    <div class="nav-lang">
-      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchLang('en')">EN</button>
-      <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchLang('zh')">中文</button>
-    </div>
-    <a class="btn-nav" href="simulator.html?ref=demo&pilot=1" id="nav-cta">Try Free Demo</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <div class="hero-badge" id="hero-badge">📚 Studio 3 of 4</div>
-  <h1 id="hero-title">Knowledge <span>Studio</span></h1>
-  <p id="hero-sub">The full Insurance &amp; Health Foundation Curriculum map — every scenario's practice focus and success criteria, pulled straight from the same 25-scenario curriculum Practice Studio uses, so you always know what to study next and why.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&pilot=1" id="open-cta">Open Practice Studio →</a>
-</div>
-
-<section>
-  <div class="section-inner" id="curriculum-map">
-    <div class="loading-note" id="loading-note">Loading curriculum…</div>
-  </div>
-</section>
-
-<div class="cta-band">
-  <h2 id="cta-h2">Ready to practice one of these?</h2>
-  <p id="cta-p">Every scenario above is one click away in Practice Studio.</p>
-  <a class="btn-primary" href="simulator.html?ref=demo&pilot=1" id="cta-btn">Open Practice Studio →</a>
-</div>
-
-<footer>
-  <div>
-    <a href="index.html" id="f-home">Home</a>
-    <a href="studios.html" id="f-studios">Studios</a>
-    <a href="simulator.html?ref=demo&pilot=1" id="f-sim">AI Simulator</a>
-    <a href="terms.html" id="f-terms">Terms of Service</a>
-    <a href="privacy.html" id="f-privacy">Privacy Policy</a>
-    <a href="mailto:contact@agentraining.ai" id="f-contact">Contact</a>
-  </div>
-  <p id="f-copy">© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
-</footer>
-
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="navlinks"><a href="pilot.html?pilot=1" class="pilot-link">Pilot Home</a><a href="studios.html?pilot=1">Four Studios</a><a href="simulator.html?ref=demo&pilot=1">Practice</a><div class="lang"><button id="enBtn" class="active" type="button">EN</button><button id="zhBtn" type="button">中文</button></div></div></nav>
+<header class="hero"><div class="hero-inner"><span class="badge" data-en="Company Knowledge Library" data-zh="企業知識庫">Company Knowledge Library</span><h1 data-en="Turn company knowledge into coached performance." data-zh="把企業知識轉化為可衡量的培訓成果。">Turn company knowledge into coached performance.</h1><p data-en="Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive." data-zh="把經授權的培訓材料帶入安全的團隊空間。AI負責整理、主管負責審核，學員得到聚焦的知識與練習，而不是另一個被動的內容檔案庫。">Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive.</p></div></header>
+<div class="flow"><div class="flow-card"><div class="flow-step"><b data-en="1 · Add source" data-zh="1 · 加入來源">1 · Add source</b><span data-en="Video link, transcript, SOP, script, or training notes." data-zh="影片連結、逐字稿、SOP、話術或培訓筆記。">Video link, transcript, SOP, script, or training notes.</span></div><div class="flow-step"><b data-en="2 · AI analyzes" data-zh="2 · AI分析">2 · AI analyzes</b><span data-en="Summary, key points, audience, and quality." data-zh="摘要、重點、適用對象與內容品質。">Summary, key points, audience, and quality.</span></div><div class="flow-step"><b data-en="3 · Manager approves" data-zh="3 · 主管批准">3 · Manager approves</b><span data-en="Human judgment stays in control before release." data-zh="發布以前始終由主管作出判斷。">Human judgment stays in control before release.</span></div><div class="flow-step"><b data-en="4 · Practice improves" data-zh="4 · 練習改進">4 · Practice improves</b><span data-en="Turn knowledge into a targeted role-play draft." data-zh="把知識轉化為針對性的角色扮演草案。">Turn knowledge into a targeted role-play draft.</span></div></div></div>
+<main class="shell">
+<div class="secure-note" id="secureNote">Open this page from your authenticated Pilot workspace to use the Company Knowledge Library. The platform curriculum remains available below.</div>
+<section class="manager-panel" id="managerPanel">
+<h3 data-en="Add company knowledge" data-zh="加入企業知識">Add company knowledge</h3><p data-en="For a training video, provide the authorized video link and upload or paste its transcript. This Pilot does not copy or host the video file." data-zh="對於培訓影片，請提供經授權的影片連結，並上傳或貼上逐字稿。本 Pilot 不會複製或儲存影片檔案。">For a training video, provide the authorized video link and upload or paste its transcript. This Pilot does not copy or host the video file.</p>
+<form id="knowledgeForm">
+<div class="form-grid">
+<div class="field"><label for="sourceTitle" data-en="Title" data-zh="標題">Title</label><input id="sourceTitle" maxlength="240" required placeholder="Monday Sales Training — Price Objections"></div>
+<div class="field"><label for="sourceType" data-en="Source type" data-zh="來源類型">Source type</label><select id="sourceType"><option value="video_transcript">Training video + transcript</option><option value="document_notes">Document / training notes</option><option value="sop_script">SOP / sales script</option><option value="meeting_transcript">Zoom / meeting transcript</option></select></div>
+<div class="field full"><label for="sourceUrl" data-en="Authorized source link (optional)" data-zh="經授權的來源連結（可選）">Authorized source link (optional)</label><input id="sourceUrl" type="url" placeholder="https://..."><small data-en="The system records this reference but does not automatically download the video." data-zh="系統只記錄此來源，不會自動下載影片。">The system records this reference but does not automatically download the video.</small></div>
+<div class="field full"><label for="transcriptFile" data-en="Upload text transcript (optional)" data-zh="上傳文字逐字稿（可選）">Upload text transcript (optional)</label><input id="transcriptFile" type="file" accept=".txt,.md,.vtt,.srt,text/plain"><small data-en="Accepted: TXT, MD, VTT, SRT up to 1 MB. The text is reviewed before saving." data-zh="接受TXT、MD、VTT、SRT，最大1MB；儲存前可先檢查文字。">Accepted: TXT, MD, VTT, SRT up to 1 MB. The text is reviewed before saving.</small></div>
+<div class="field full"><label for="sourceContent" data-en="Authorized transcript or training notes" data-zh="經授權的逐字稿或培訓筆記">Authorized transcript or training notes</label><textarea id="sourceContent" maxlength="30000" placeholder="Paste the transcript, SOP, script, or training notes here…"></textarea><small id="charCount">0 / 30,000</small></div>
+<div class="field full"><label class="consent"><input id="sourceConsent" type="checkbox"><span data-en="I confirm that my organization owns or is authorized to use this material, and I authorize AI processing to create a manager-reviewed summary and Practice Draft." data-zh="我確認本企業擁有或獲准使用此材料，並授權AI進行處理，以產生由主管審核的摘要與練習草案。">I confirm that my organization owns or is authorized to use this material, and I authorize AI processing to create a manager-reviewed summary and Practice Draft.</span></label></div>
+<div class="field full"><div class="button-row"><button class="btn" id="saveSource" type="submit" data-en="Save secure draft" data-zh="儲存安全草稿">Save secure draft</button><span data-en="AI analysis starts only when the manager chooses Analyze." data-zh="只有主管選擇「分析」後，AI分析才會開始。">AI analysis starts only when the manager chooses Analyze.</span></div><div class="status" id="formStatus" role="status" aria-live="polite"></div></div>
+</div></form></section>
+<div class="section-head"><div><h2 data-en="Company Knowledge" data-zh="企業知識">Company Knowledge</h2><p id="librarySubtitle">Manager-approved knowledge for this team.</p></div><a class="btn secondary" href="pilot.html?pilot=1" data-en="Return to Pilot Home" data-zh="返回Pilot首頁">Return to Pilot Home</a></div>
+<div id="sourceLibrary" class="empty">Sign in to load the secure Company Knowledge Library.</div>
+<section class="platform"><div class="section-head"><div><h2 data-en="Platform Curriculum" data-zh="平台課程">Platform Curriculum</h2><p data-en="The existing 25-scenario Insurance & Health Foundation Curriculum remains available." data-zh="原有的25個保險與健康基礎課程情境繼續保留。">The existing 25-scenario Insurance & Health Foundation Curriculum remains available.</p></div></div><div id="curriculumMap" class="empty">Loading curriculum…</div></section>
+<div class="trust"><b data-en="Enterprise trust boundary:" data-zh="企業信任邊界：">Enterprise trust boundary:</b> <span data-en="Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included." data-zh="知識依登入團隊隔離。學員只能看到主管批准的分析，原始逐字稿不向學員展示，私人Learner Coach對話永不包含其中。">Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included.</span></div>
+</main>
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
+var currentLang='en', companySources=[], canManage=false;
+function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+function setLang(lang){currentLang=lang;document.documentElement.lang=lang==='zh'?'zh-Hant':'en';document.getElementById('enBtn').classList.toggle('active',lang==='en');document.getElementById('zhBtn').classList.toggle('active',lang==='zh');document.querySelectorAll('[data-en]').forEach(function(el){el.textContent=el.getAttribute(lang==='zh'?'data-zh':'data-en')});sessionStorage.setItem('agentraining_lang',lang);renderSources();renderCurriculum()}
+document.getElementById('enBtn').onclick=function(){setLang('en')};document.getElementById('zhBtn').onclick=function(){setLang('zh')};
+function statusLabel(status){var labels=currentLang==='zh'?{draft:'草稿',analyzed:'待主管審核',approved:'已批准'}:{draft:'Draft',analyzed:'Manager review',approved:'Approved'};return labels[status]||status}
+function typeLabel(type){var en={video_transcript:'Training video',document_notes:'Document / notes',sop_script:'SOP / script',meeting_transcript:'Meeting transcript'};var zh={video_transcript:'培訓影片',document_notes:'文件／筆記',sop_script:'SOP／話術',meeting_transcript:'會議逐字稿'};return (currentLang==='zh'?zh:en)[type]||type}
+function renderSources(){
+ var root=document.getElementById('sourceLibrary');
+ if(!companySources.length){root.className='empty';root.textContent=currentLang==='zh'?(canManage?'尚未加入企業知識。請使用上方表格建立第一個安全草稿。':'目前沒有主管已批准的企業知識。'):(canManage?'No company knowledge yet. Use the form above to create the first secure draft.':'No manager-approved company knowledge is available yet.');return}
+ root.className='source-grid';
+ root.innerHTML=companySources.map(function(source){
+  var analysis=source.analysis||{},draft=analysis.practiceDraft||{},points=Array.isArray(analysis.keyPoints)?analysis.keyPoints:[],actions='';
+  if(canManage&&source.status==='draft')actions+='<button class="btn" data-action="analyze" data-id="'+esc(source.id)+'">'+(currentLang==='zh'?'AI分析':'Analyze with AI')+'</button>';
+  if(canManage&&source.status==='analyzed')actions+='<button class="btn green" data-action="approve" data-id="'+esc(source.id)+'">'+(currentLang==='zh'?'批准給團隊':'Approve for team')+'</button>';
+  if(canManage)actions+='<button class="btn danger" data-action="delete" data-id="'+esc(source.id)+'">'+(currentLang==='zh'?'刪除':'Delete')+'</button>';
+  var sourceLink=source.sourceUrl?'<a href="'+esc(source.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentLang==='zh'?'查看授權來源':'Open authorized source')+'</a>':'';
+  var analysisHtml=analysis.summary?'<div class="analysis"><h4>'+(currentLang==='zh'?'AI摘要 · 主管審核':'AI Summary · Manager Review')+'</h4><p>'+esc(analysis.summary)+'</p>'+(points.length?'<ul>'+points.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div>':'<div class="analysis"><p>'+(currentLang==='zh'?'尚未進行AI分析。':'AI analysis has not run yet.')+'</p></div>';
+  var draftHtml=draft.title?'<div class="practice-draft"><b>'+(currentLang==='zh'?'Practice草案：':'Practice Draft: ')+esc(draft.title)+'</b><span>'+esc(draft.objective||draft.situation||'')+'</span></div>':'';
+  return '<article class="source-card"><div class="source-top"><div><h3>'+esc(source.title)+'</h3><div class="meta">'+esc(typeLabel(source.sourceType))+' · '+esc(new Date(source.updatedAt||source.createdAt).toLocaleDateString())+' '+sourceLink+'</div></div><span class="pill '+esc(source.status)+'">'+esc(statusLabel(source.status))+'</span></div>'+analysisHtml+draftHtml+'<div class="source-actions">'+actions+'</div></article>'
+ }).join('');
 }
-
-let currentLang = 'en';
-let curriculumData = null;
-
-const STRINGS = {
-  en: {
-    navCta: 'Try Free Demo',
-    heroBadge: '📚 Studio 3 of 4', heroTitleHtml: 'Knowledge <span>Studio</span>',
-    heroSub: "The full Insurance & Health Foundation Curriculum map — every scenario's practice focus and success criteria, pulled straight from the same 25-scenario curriculum Practice Studio uses, so you always know what to study next and why.",
-    openCta: 'Open Practice Studio →',
-    ctaH2: 'Ready to practice one of these?', ctaP: 'Every scenario above is one click away in Practice Studio.', ctaBtn: 'Open Practice Studio →',
-    loading: 'Loading curriculum…', error: 'Curriculum could not be loaded right now — please open Practice Studio directly.',
-    stageLabel: 'Stage', lessonLabel: 'Lesson', of: 'of',
-    fHome: 'Home', fStudios: 'Studios', fSim: 'AI Simulator', fTerms: 'Terms of Service', fPrivacy: 'Privacy Policy', fContact: 'Contact'
-  },
-  zh: {
-    navCta: '免費試用',
-    heroBadge: '📚 工作室 3 / 4', heroTitleHtml: '知識<span>工作室</span>',
-    heroSub: '完整的保險與健康基礎課程地圖——每個情境的練習重點與成功標準，直接取自練習工作室所使用的同一套25個情境課程，讓你隨時知道下一步該學什麼、為什麼學。',
-    openCta: '開啟練習工作室 →',
-    ctaH2: '準備好練習其中一個了嗎？', ctaP: '以上每個情境都能在練習工作室一鍵開始。', ctaBtn: '開啟練習工作室 →',
-    loading: '課程載入中…', error: '目前無法載入課程——請直接開啟練習工作室。',
-    stageLabel: '第', lessonLabel: '第', of: '課，共',
-    fHome: '首頁', fStudios: '工作室', fSim: 'AI 模擬器', fTerms: '服務條款', fPrivacy: '隱私政策', fContact: '聯絡我們'
-  }
-};
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str == null ? '' : String(str);
-  return div.innerHTML;
+document.getElementById('sourceLibrary').addEventListener('click',function(event){var button=event.target.closest('button[data-action]');if(!button)return;var action=button.dataset.action,id=button.dataset.id;if(action==='delete'){deleteSource(id);return}knowledgeAction(action,id,button)});
+async function loadKnowledge(){
+ if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>Secure Pilot:</b> <a href="knowledge.html?pilot=1">Open the authenticated Company Knowledge Library.</a>';return}
+ try{
+  var me=await PilotCloud.request('me'),data=await PilotCloud.request('knowledge');canManage=data.canManage===true;companySources=data.sources||[];
+  document.getElementById('secureNote').innerHTML='<b>'+(canManage?'Manager workspace:':'Learner workspace:')+'</b> '+esc(data.privacy||'Company knowledge is isolated to this team.');
+  document.getElementById('librarySubtitle').textContent=canManage?'Draft, analyze, approve, and govern this team’s knowledge.':'Only manager-approved knowledge is shown.';
+  document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources()
+ }catch(error){document.getElementById('sourceLibrary').className='empty';document.getElementById('sourceLibrary').textContent=error.message}
 }
-
-function renderCurriculumMap() {
-  const s = STRINGS[currentLang];
-  const container = document.getElementById('curriculum-map');
-  if (!Array.isArray(curriculumData) || curriculumData.length === 0) {
-    container.innerHTML = `<div class="error-note">${s.error}</div>`;
-    return;
-  }
-
-  const stages = {};
-  curriculumData.forEach(lesson => {
-    const key = lesson.moduleOrder;
-    if (!stages[key]) stages[key] = [];
-    stages[key].push(lesson);
-  });
-
-  let html = '';
-  Object.keys(stages).sort((a, b) => a - b).forEach(key => {
-    const lessons = stages[key].slice().sort((a, b) => a.lessonOrder - b.lessonOrder);
-    const stageName = lessons[0].module?.[currentLang] || lessons[0].module?.en || '';
-    html += `
-      <div class="stage-block">
-        <div class="stage-header">
-          <span class="stage-num">${currentLang === 'zh' ? `第 ${key} 階段` : `Stage ${key}`}</span>
-          <span class="stage-name">${escapeHtml(stageName)}</span>
-        </div>
-        <div class="lesson-grid">
-          ${lessons.map(lesson => {
-            const title = lesson.title?.[currentLang] || lesson.title?.en || '';
-            const focus = lesson.objective?.[currentLang] || lesson.objective?.en || '';
-            const criteria = (lesson.successCriteria?.[currentLang] || lesson.successCriteria?.en || []).slice(0, 3);
-            const orderLabel = currentLang === 'zh'
-              ? `第 ${lesson.lessonOrder} 課，共 ${lessons.length} 課`
-              : `Lesson ${lesson.lessonOrder} of ${lessons.length}`;
-            return `
-              <div class="lesson-card">
-                <div class="lesson-top">
-                  <span class="lesson-order">${orderLabel}</span>
-                  <span class="lesson-diff">${escapeHtml(lesson.difficulty || '')}</span>
-                </div>
-                <div class="lesson-title">${escapeHtml(title)}</div>
-                <div class="lesson-focus">${escapeHtml(focus)}</div>
-                <ul class="lesson-criteria">
-                  ${criteria.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
-                </ul>
-                <span class="lesson-industry">${escapeHtml(lesson.industry || '')}</span>
-                <a class="lesson-action" href="simulator.html?ref=demo&amp;pilot=1&amp;practice=${encodeURIComponent(lesson.id || lesson.key || '')}">${currentLang === 'zh' ? '練習這個情境 →' : 'Practice this scenario →'}</a>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `;
-  });
-  container.innerHTML = html;
-}
-
-function switchLang(lang) {
-  currentLang = lang;
-  const s = STRINGS[lang];
-  document.getElementById('nav-en').classList.toggle('active', lang === 'en');
-  document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
-  sessionStorage.setItem('agentraining_lang', lang);
-  document.getElementById('nav-cta').textContent = s.navCta;
-  document.getElementById('hero-badge').textContent = s.heroBadge;
-  document.getElementById('hero-title').innerHTML = s.heroTitleHtml;
-  document.getElementById('hero-sub').textContent = s.heroSub;
-  document.getElementById('open-cta').textContent = s.openCta;
-  document.getElementById('cta-h2').textContent = s.ctaH2;
-  document.getElementById('cta-p').textContent = s.ctaP;
-  document.getElementById('cta-btn').textContent = s.ctaBtn;
-  document.getElementById('f-home').textContent = s.fHome;
-  document.getElementById('f-studios').textContent = s.fStudios;
-  document.getElementById('f-sim').textContent = s.fSim;
-  document.getElementById('f-terms').textContent = s.fTerms;
-  document.getElementById('f-privacy').textContent = s.fPrivacy;
-  document.getElementById('f-contact').textContent = s.fContact;
-  renderCurriculumMap();
-}
-
-fetch('data/curriculum/foundation.json')
-  .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
-  .then(json => {
-    curriculumData = Array.isArray(json) ? json : [];
-    const saved = sessionStorage.getItem('agentraining_lang');
-    switchLang(saved === 'zh' ? 'zh' : 'en');
-  })
-  .catch(err => {
-    console.error('[Knowledge Studio] Failed to load curriculum:', err);
-    curriculumData = [];
-    const saved = sessionStorage.getItem('agentraining_lang');
-    switchLang(saved === 'zh' ? 'zh' : 'en');
-  });
+function setFormStatus(message,kind){var el=document.getElementById('formStatus');el.textContent=message;el.className='status '+(kind||'')}
+document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 30,000'});
+document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>1048576){setFormStatus('Transcript file must be 1 MB or smaller.','error');this.value='';return}try{var text=await file.text();document.getElementById('sourceContent').value=text.slice(0,30000);document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus('Transcript loaded. Review it before saving.','ok')}catch(error){setFormStatus('Transcript could not be read.','error')}});
+document.getElementById('knowledgeForm').addEventListener('submit',async function(event){event.preventDefault();var button=document.getElementById('saveSource');button.disabled=true;setFormStatus('Saving secure draft…','');try{var payload={action:'create',title:document.getElementById('sourceTitle').value.trim(),sourceType:document.getElementById('sourceType').value,sourceUrl:document.getElementById('sourceUrl').value.trim(),content:document.getElementById('sourceContent').value.trim(),consentConfirmed:document.getElementById('sourceConsent').checked};var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify(payload)});companySources.unshift(data.source);this.reset();document.getElementById('charCount').textContent='0 / 30,000';setFormStatus('Secure draft saved. Choose Analyze with AI when ready.','ok');renderSources()}catch(error){setFormStatus(error.message,'error')}finally{button.disabled=false}});
+async function knowledgeAction(action,id,button){button.disabled=true;button.textContent=currentLang==='zh'?'處理中…':'Working…';try{var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:action,id:id})});companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources()}catch(error){alert(error.message);button.disabled=false}}
+async function deleteSource(id){if(!confirm(currentLang==='zh'?'刪除此企業知識來源？此操作無法復原。':'Delete this company knowledge source? This cannot be undone.'))return;try{await PilotCloud.request('knowledge',{method:'DELETE',requiredRole:'manager',query:{id:id}});companySources=companySources.filter(function(x){return x.id!==id});renderSources()}catch(error){alert(error.message)}}
+var curriculumData=[];
+function renderCurriculum(){var root=document.getElementById('curriculumMap');if(!curriculumData.length){root.className='empty';root.textContent=currentLang==='zh'?'課程目前無法載入。':'Curriculum is unavailable right now.';return}var stages={};curriculumData.forEach(function(x){var key=x.moduleOrder||1;(stages[key]||(stages[key]=[])).push(x)});root.className='';root.innerHTML=Object.keys(stages).sort(function(a,b){return a-b}).map(function(key){var items=stages[key].sort(function(a,b){return (a.lessonOrder||0)-(b.lessonOrder||0)}),name=(items[0].module&&((currentLang==='zh'?items[0].module.zh:items[0].module.en)||items[0].module.en))||'';return '<section class="stage"><div class="stage-head"><span class="stage-num">'+(currentLang==='zh'?'第 '+key+' 階段':'Stage '+key)+'</span><strong>'+esc(name)+'</strong></div><div class="lesson-grid">'+items.map(function(x){var title=(x.title&&((currentLang==='zh'?x.title.zh:x.title.en)||x.title.en))||'',focus=(x.objective&&((currentLang==='zh'?x.objective.zh:x.objective.en)||x.objective.en))||'',id=x.id||x.key||'';return '<article class="lesson"><span class="pill">'+esc(x.difficulty||'')+'</span><h4>'+esc(title)+'</h4><p>'+esc(focus)+'</p><a href="simulator.html?ref=demo&amp;pilot=1&amp;practice='+encodeURIComponent(id)+'">'+(currentLang==='zh'?'練習此情境 →':'Practice this scenario →')+'</a></article>'}).join('')+'</div></section>'}).join('')}
+fetch('data/curriculum/foundation.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Curriculum unavailable');return r.json()}).then(function(rows){curriculumData=Array.isArray(rows)?rows:[];renderCurriculum()}).catch(function(){curriculumData=[];renderCurriculum()});
+setLang(sessionStorage.getItem('agentraining_lang')==='zh'?'zh':'en');loadKnowledge();
 </script>
-</body>
-</html>
+</body></html>
