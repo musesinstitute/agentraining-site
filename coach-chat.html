@@ -57,7 +57,7 @@ async function loadCoach(){
   try{
     const data=await PilotCloud.request('coach-messages');
     messages=data.messages||[];renderMessages();renderEvidence(data.profile);renderAssignments(data.assignments);document.getElementById('privacyNote').textContent=currentLang==='zh'?document.getElementById('privacyNote').textContent:(data.privacy||document.getElementById('privacyNote').textContent);
-  }catch(error){document.getElementById('messages').innerHTML='<div class="status">'+esc(error.message)+'</div>';document.getElementById('composer').hidden=true;document.getElementById('insights').innerHTML='<div class="status">'+t('Unavailable','暂时无法使用')+'</div>';document.getElementById('assignments').innerHTML='<div class="status">Unavailable</div>'}
+  }catch(error){document.getElementById('messages').innerHTML='<div class="status">'+esc(error.message)+'</div>';document.getElementById('composer').hidden=true;document.getElementById('insights').innerHTML='<div class="status">'+t('Unavailable','暂时无法使用')+'</div>';document.getElementById('assignments').innerHTML='<div class="status">'+t('Unavailable','暂时无法使用')+'</div>'}
 }
 async function sendMessage(content){
   content=String(content||'').trim();if(!content)return;
