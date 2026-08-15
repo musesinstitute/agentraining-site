@@ -73,7 +73,7 @@ function renderAssignments(){
   root.innerHTML=all.map(x=>{
     const completed=x.status==='Completed';
     const href='simulator.html?ref=demo'+(PilotCloud.enabled?'&pilot=1':'')+'&assignment='+encodeURIComponent(x.id);
-    return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(currentLang==='zh'?(x.status==='Completed'?'已完成':'已指派'):(x.status||'Assigned'))+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'"'>"+t('Start Practice','开始练习')+"</a>')+'</div></div>';
+    return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(currentLang==='zh'?(x.status==='Completed'?'已完成':'已指派'):(x.status||'Assigned'))+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'">'+t('Start Practice','开始练习')+'</a>')+'</div></div>';
   }).join('');
 }
 async function loadAssignmentScenarios(){
