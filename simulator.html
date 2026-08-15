@@ -2537,7 +2537,7 @@ function speakText(text) {
 function toggleVoice() {
   voiceEnabled = !voiceEnabled;
   const btn = document.getElementById('voice-toggle-btn');
-  if (btn) btn.textContent = voiceEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+  if (btn) btn.textContent = voiceEnabled ? (currentLang==='zh'?'🔊 语音开启':'🔊 Voice ON') : (currentLang==='zh'?'🔇 语音关闭':'🔇 Voice OFF');
 }
 
 // ── TEXT SELECTION MENU ──
@@ -3623,6 +3623,10 @@ function setLang(lang) {
   document.getElementById('feedback-label').textContent = s.feedbackLabel;
   document.getElementById('back-label').textContent = s.backLabel.replace('← ','');
   const teamMessagesNav=document.getElementById('team-messages-nav');if(teamMessagesNav)teamMessagesNav.textContent=lang==='zh'?'💬 团队消息':'💬 Team Messages';
+  const pilotNav=document.getElementById('pilot-home-nav');if(pilotNav)pilotNav.textContent=lang==='zh'?'🏠 试用首页':'🏠 Pilot Home';
+  const dashboardNav=document.getElementById('dashboard-nav-btn');if(dashboardNav)dashboardNav.textContent=lang==='zh'?'📋 练习主页':'📋 Dashboard';
+  const clientNav=document.getElementById('client-studio-nav-btn');if(clientNav)clientNav.textContent=lang==='zh'?'👥 客户工作室':'👥 Client Studio';
+  const voiceNav=document.getElementById('voice-toggle-btn');if(voiceNav)voiceNav.textContent=voiceEnabled?(lang==='zh'?'🔊 语音开启':'🔊 Voice ON'):(lang==='zh'?'🔇 语音关闭':'🔇 Voice OFF');
   const profileNav=document.getElementById('learner-profile-nav');if(profileNav)profileNav.textContent=lang==='zh'?'🎯 我的成长档案':'🎯 My Profile';
   const coachNav=document.getElementById('coach-chat-nav');if(coachNav)coachNav.textContent=lang==='zh'?'🤝 我的私人 AI 教练':'🤝 My Coach';
   document.getElementById('reset-label').textContent = s.resetLabel;
