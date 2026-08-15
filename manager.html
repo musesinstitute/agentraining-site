@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}
 nav{background:#fff;border-bottom:1px solid var(--line);padding:16px 6%;display:flex;justify-content:space-between;align-items:center}
 .logo{color:var(--blue);font-weight:800;font-size:20px;text-decoration:none}.logo span{color:#f59e0b}
-nav a{color:var(--muted);text-decoration:none;margin-left:20px}.hero{background:linear-gradient(135deg,#eff6ff,#f0fdf4);padding:48px 6%}
+nav a{color:var(--muted);text-decoration:none;margin-left:20px}.lang-switch{display:inline-flex;gap:4px;margin-left:16px}.lang-btn{min-width:0;padding:7px 9px;background:#fff;color:#475569;border:1px solid var(--line)}.lang-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}.hero{background:linear-gradient(135deg,#eff6ff,#f0fdf4);padding:48px 6%}
 h1{margin:0 0 8px;font-size:36px}.hero p{color:var(--muted);max-width:720px;line-height:1.6}
 main{max-width:1100px;margin:28px auto;padding:0 20px}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
 input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;min-width:260px}button{border:0;border-radius:8px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
@@ -25,7 +25,7 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 </style>
 </head>
 <body>
-<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="pilot.html?pilot=1">Pilot Home</a><a href="studios.html">Studios</a><a href="manager-chat.html?pilot=1">Manager AI</a><a href="learner-profile.html?pilot=1">Profiles</a><a href="knowledge.html?pilot=1">Knowledge</a><a href="simulator.html?ref=demo&pilot=1">Practice</a></div></nav>
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="pilot.html?pilot=1">Pilot Home</a><a href="studios.html">Studios</a><a href="manager-chat.html?pilot=1">Manager AI</a><a href="learner-profile.html?pilot=1">Profiles</a><a href="knowledge.html?pilot=1">Knowledge</a><a href="simulator.html?ref=demo&pilot=1">Practice</a><span class="lang-switch" aria-label="Language / 语言"><button class="lang-btn" id="langEn" type="button">EN</button><button class="lang-btn" id="langZh" type="button">中文</button></span></div></nav>
 <header class="hero"><h1>Manager <span style="color:#1a56db">Studio</span></h1><p>See active client and recruiting cases immediately, then review completed practice results and full transcripts for coaching.</p></header>
 <main>
 <div class="notice" id="storageNotice"><b>Browser-local MVP:</b> assignments, cases, and completed results appear when they are used in this same browser. Cross-device team sync is not yet included.</div>
@@ -42,6 +42,12 @@ const CASES_KEY='agentraining_client_cases';
 const ASSIGNMENTS_KEY='agentraining_assignments';
 let cloudAssignments=[];
 let cloudResults=[];
+const currentLang=sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en');
+const t=(en,zh)=>currentLang==='zh'?zh:en;
+const staticZh={'Pilot Home':'试用首页','Studios':'功能工作室','Manager AI':'主管 AI','Profiles':'学员档案','Knowledge':'企业知识库','Practice':'练习','See active client and recruiting cases immediately, then review completed practice results and full transcripts for coaching.':'及时查看客户和招聘案例，并查看已完成练习的分数、教练总结和完整对话记录，以便进行辅导。','Manager next action':'主管下一步','Loading team priorities…':'正在读取团队重点…','Checking assignments and evidence.':'正在检查练习指派和表现记录。','Continue':'继续','Assign Practice':'指派练习','Choose a learner, curriculum scenario, and practice length. Quick Practice ends after 3 learner turns and returns a final score and transcript.':'请选择学员、培训情境和练习时长。快速练习在学员完成 3 轮回答后结束，并生成最终分数和完整对话记录。','Learner name or email':'学员姓名或邮箱','Curriculum scenario':'培训情境','Practice length':'练习时长','Quick · 3–5 min':'快速 · 3–5 分钟','Standard · 8–10 min':'标准 · 8–10 分钟','Full · 15–20 min':'完整 · 15–20 分钟','Due date (optional)':'截止日期（可选）','Current Assignments':'当前练习指派','Open an assignment to test the learner experience in this browser.':'打开一项练习，可查看学员将看到的练习体验。','Quick Test Record':'建立快速测试记录','Refresh':'刷新','Client Cases':'客户案例','New cases appear here immediately; no completed practice is required.':'新案例会立即显示在这里，无需先完成练习。','Practice Results':'练习结果','Completed sessions, competency scores, coaching summary, and transcript.':'查看已完成练习、能力分数、教练总结和完整对话记录（Transcript）。'};
+function applyStaticLanguage(){document.documentElement.lang=currentLang==='zh'?'zh-CN':'en';document.getElementById('langEn').classList.toggle('active',currentLang==='en');document.getElementById('langZh').classList.toggle('active',currentLang==='zh');if(currentLang==='zh'){const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const raw=node.nodeValue,trim=raw.trim();if(staticZh[trim])node.nodeValue=raw.replace(trim,staticZh[trim])}}document.getElementById('search').placeholder=t('Search case, client, or learner','搜索案例、客户或学员');document.getElementById('learnerName').placeholder=t('e.g. Maria Chen','例如：陈玛丽');}
+function useLang(lang){sessionStorage.setItem('agentraining_lang',lang);location.reload()}
+document.getElementById('langEn').onclick=()=>useLang('en');document.getElementById('langZh').onclick=()=>useLang('zh');applyStaticLanguage();
 function resolveClientName(record){
   if(record?.linkedCaseId){
     const match=readCases().find(c=>c && c.id===record.linkedCaseId);
@@ -56,31 +62,31 @@ function readCases(){return readArray(CASES_KEY)}
 function readAssignments(){return readArray(ASSIGNMENTS_KEY)}
 function saveAssignments(rows){localStorage.setItem(ASSIGNMENTS_KEY,JSON.stringify(rows))}
 function setAssignStatus(message,kind){const el=document.getElementById('assignStatus');el.textContent=message;el.className='assign-status '+(kind||'')}
-function modeLabel(mode){return mode==='quick'?'Quick · 3 turns':mode==='standard'?'Standard · 6 turns':'Full · 10 turns'}
+function modeLabel(mode){return mode==='quick'?t('Quick · 3 turns','快速 · 3 轮回答'):mode==='standard'?t('Standard · 6 turns','标准 · 6 轮回答'):t('Full · 10 turns','完整 · 10 轮回答')}
 function renderAssignments(){
   const all=PilotCloud.enabled?cloudAssignments:readAssignments();
   const section=document.getElementById('assignments');
   const root=document.getElementById('assignmentList');
-  document.getElementById('assignmentCount').textContent=all.length+' assignment'+(all.length===1?'':'s');
+  document.getElementById('assignmentCount').textContent=t(all.length+' assignment'+(all.length===1?'':'s'),all.length+' 项练习指派');
   section.hidden=!all.length;
   if(!all.length){root.innerHTML='';return}
   root.innerHTML=all.map(x=>{
     const completed=x.status==='Completed';
     const href='simulator.html?ref=demo'+(PilotCloud.enabled?'&pilot=1':'')+'&assignment='+encodeURIComponent(x.id);
-    return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?' · Due '+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(x.status||'Assigned')+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'">Start Practice</a>')+'</div></div>';
+    return '<div class="assignment-row"><div><b>'+esc(x.learner)+'</b><small>'+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(currentLang==='zh'?(x.status==='Completed'?'已完成':'已指派'):(x.status||'Assigned'))+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+(completed?'':'<a class="start-link" href="'+href+'"'>"+t('Start Practice','开始练习')+"</a>')+'</div></div>';
   }).join('');
 }
 async function loadAssignmentScenarios(){
   const select=document.getElementById('assignScenario');
   try{
     const response=await fetch('data/curriculum/foundation.json',{cache:'no-store'});
-    if(!response.ok)throw new Error('Scenario file could not be loaded ('+response.status+')');
+    if(!response.ok)throw new Error(t('Scenario file could not be loaded (','无法载入培训情境文件（')+response.status+t(')','）'));
     const data=await response.json();
     const scenarios=Array.isArray(data)?data:(data.scenarios||data.curriculum||[]);
-    if(!scenarios.length)throw new Error('No curriculum scenarios were found');
-    select.innerHTML='<option value="">Select a scenario</option>'+scenarios.map((x,i)=>{const id=x.id||x.key||('curriculum-'+i);const name=x.name||x.title?.en||x.title?.zh||x.en?.name||x.zh?.name||id;return '<option value="'+esc(id)+'" data-name="'+esc(name)+'">'+esc(name)+'</option>'}).join('');
+    if(!scenarios.length)throw new Error(t('No curriculum scenarios were found','没有找到培训情境'));
+    select.innerHTML='<option value="">'+t('Select a scenario','请选择培训情境')+'</option>'+scenarios.map((x,i)=>{const id=x.id||x.key||('curriculum-'+i);const name=x.name||x.title?.en||x.title?.zh||x.en?.name||x.zh?.name||id;return '<option value="'+esc(id)+'" data-name="'+esc(name)+'">'+esc(name)+'</option>'}).join('');
   }catch(error){
-    select.innerHTML='<option value="">Unable to load scenarios</option>';
+    select.innerHTML='<option value="">'+t('Unable to load scenarios','无法载入培训情境')+'</option>';
     select.disabled=true;
     setAssignStatus(error.message,'error');
   }
@@ -91,8 +97,8 @@ async function assignPractice(){
   const option=select.options[select.selectedIndex];
   const mode=document.getElementById('practiceMode').value;
   const dueDate=document.getElementById('dueDate').value;
-  if(!learner){setAssignStatus('Please enter a learner name or email.','error');document.getElementById('learnerName').focus();return}
-  if(!select.value||!option){setAssignStatus('Please select a curriculum scenario.','error');return}
+  if(!learner){setAssignStatus(t('Please enter a learner name or email.','请输入学员姓名或邮箱。'),'error');document.getElementById('learnerName').focus();return}
+  if(!select.value||!option){setAssignStatus(t('Please select a curriculum scenario.','请选择培训情境。'),'error');return}
   try{
     const record={learner,assignedTo:learner,scenarioId:select.value,scenarioName:option.dataset.name||option.textContent,mode,dueDate};
     if(PilotCloud.enabled){
@@ -106,29 +112,29 @@ async function assignPractice(){
     document.getElementById('learnerName').value='';
     document.getElementById('dueDate').value='';
     select.selectedIndex=0;
-    setAssignStatus(modeLabel(mode)+' assigned successfully.','ok');
+    setAssignStatus(t(modeLabel(mode)+' assigned successfully.','练习已成功指派：'+modeLabel(mode)+'。'),'ok');
     renderAssignments();
-  }catch(error){setAssignStatus('Could not save assignment: '+error.message,'error')}
+  }catch(error){setAssignStatus(t('Could not save assignment: ','无法保存练习指派：')+error.message,'error')}
 }
 function renderCases(rows){
   const root=document.getElementById('cases');
-  document.getElementById('caseCount').textContent=rows.length+' case'+(rows.length===1?'':'s');
-  if(!rows.length){root.innerHTML='<div class="empty">No matching cases yet. Create a New Case in Client Studio and refresh this page.</div>';return}
+  document.getElementById('caseCount').textContent=t(rows.length+' case'+(rows.length===1?'':'s'),rows.length+' 个案例');
+  if(!rows.length){root.innerHTML='<div class="empty">'+t('No matching cases yet. Create a New Case in Client Studio and refresh this page.','目前没有符合条件的案例。请在客户工作室建立新案例，然后刷新本页。')+'</div>';return}
   root.innerHTML=rows.map(c=>{
-    const type=c.caseType==='recruiting'?'Recruiting':'Client';
+    const type=c.caseType==='recruiting'?t('Recruiting','招聘'):t('Client','客户');
     const last=c.lastPractice;
-    return '<article class="case-card"><div class="case-top"><div><span class="case-name">'+esc(c.clientName||c.name||'Unnamed case')+'</span><span class="case-type">'+type+'</span><div class="meta">'+esc(c.industry||'')+' · Updated '+esc(c.updatedAt?new Date(c.updatedAt).toLocaleString():'—')+'</div></div><span class="case-status">'+esc(c.status||'New')+'</span></div><div class="case-grid"><div class="case-field"><b>Need / Situation</b>'+esc(c.need||'—')+'</div><div class="case-field"><b>Current Objection</b>'+esc(c.objection||'—')+'</div><div class="case-field"><b>Next Follow-up</b>'+esc(c.nextFollowUp||'—')+'</div><div class="case-field"><b>Latest Practice</b>'+(last?esc((last.score??0)+'/100 · '+(last.result||last.scenario||'Completed')):'Not completed yet')+'</div></div></article>';
+    return '<article class="case-card"><div class="case-top"><div><span class="case-name">'+esc(c.clientName||c.name||t('Unnamed case','未命名案例'))+'</span><span class="case-type">'+type+'</span><div class="meta">'+esc(c.industry||'')+t(' · Updated ',' · 更新时间 ')+esc(c.updatedAt?new Date(c.updatedAt).toLocaleString():'—')+'</div></div><span class="case-status">'+esc(c.status||'New')+'</span></div><div class="case-grid"><div class="case-field"><b>'+t('Need / Situation','需要 / 情况')+'</b>'+esc(c.need||'—')+'</div><div class="case-field"><b>'+t('Current Objection','当前顾虑')+'</b>'+esc(c.objection||'—')+'</div><div class="case-field"><b>'+t('Next Follow-up','下一步跟进')+'</b>'+esc(c.nextFollowUp||'—')+'</div><div class="case-field"><b>'+t('Latest Practice','最近一次练习')+'</b>'+(last?esc((last.score??0)+'/100 · '+(last.result||last.scenario||'Completed')):t('Not completed yet','尚未完成'))+'</div></div></article>';
   }).join('');
 }
 function renderResults(rows){
-  document.getElementById('resultCount').textContent=rows.length+' result'+(rows.length===1?'':'s');
+  document.getElementById('resultCount').textContent=t(rows.length+' result'+(rows.length===1?'':'s'),rows.length+' 个练习结果');
   const root=document.getElementById('records');
-  if(!rows.length){root.innerHTML='<div class="empty">No matching practice results yet. Complete a Practice session first.</div>';return}
+  if(!rows.length){root.innerHTML='<div class="empty">'+t('No matching practice results yet. Complete a Practice session first.','目前没有符合条件的练习结果。请先完成一次练习。')+'</div>';return}
   root.innerHTML=rows.map((x,i)=>{
     const client=resolveClientName(x);
-    const source=x.sourceLabel||'Practice';
+    const source=x.sourceLabel||t('Practice','练习');
     const transcript=Array.isArray(x.transcript)?x.transcript:[];
-    return '<article class="card"><div class="row"><div><h3><span class="identity">Client: '+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">Learner: '+esc(x.learner||x.name||'Demo User')+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">Scenario: '+esc(x.scenario||'')+(x.practiceMode?' · '+esc(modeLabel(x.practiceMode)):'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><a class="start-link" href="learner-profile.html?pilot=1&amp;learner='+encodeURIComponent(x.learner||x.learnerName||'')+'">Profile</a><button onclick="toggle('+i+')">View details</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">Empathy<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">Knowledge<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">Closing<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>Coach summary</h4><p>'+esc(x.summary||'No summary saved.')+'</p></div><div class="section"><h4>Transcript ('+transcript.length+' turns)</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?'Agent':'Client')+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">No transcript was saved for this older record.</p>')+'</div></div></div></article>';
+    return '<article class="card"><div class="row"><div><h3><span class="identity">'+t('Client: ','客户：')+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">'+t('Learner: ','学员：')+esc(x.learner||x.name||t('Demo User','测试用户'))+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">'+t('Scenario: ','培训情境：')+esc(x.scenario||'')+(x.practiceMode?' · '+esc(modeLabel(x.practiceMode)):'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><a class="start-link" href="learner-profile.html?pilot=1&amp;learner='+encodeURIComponent(x.learner||x.learnerName||'')+'">'+t('Profile','学员档案')+'</a><button onclick="toggle('+i+')">'+t('View details','查看详情')+'</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">'+t('Empathy','同理心')+'<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">'+t('Knowledge','知识准确度')+'<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">'+t('Closing','推进与结尾')+'<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>'+t('Coach summary','教练总结')+'</h4><p>'+esc(x.summary||t('No summary saved.','没有保存教练总结。'))+'</p></div><div class="section"><h4>'+t('Transcript (','完整对话记录（Transcript）（')+transcript.length+t(' turns)',' 轮）')+'</h4><div class="transcript">'+(transcript.length?transcript.map(t=>'<div class="turn '+(t.speaker==='agent'?'agent':'client')+'"><b>'+esc(t.speaker==='agent'?t('Learner','学员'):t('AI role-play partner','AI 情境角色'))+'</b>'+esc(t.text)+'</div>').join(''):'<p class="meta">'+t('No transcript was saved for this older record.','这条较早的记录没有保存完整对话。')+'</p>')+'</div></div></div></article>';
   }).join('');
 }
 function renderNextAction(){
@@ -138,25 +144,25 @@ function renderNextAction(){
   const latest=results[0];
   const root=document.getElementById('nextAction');
   if(open.length){
-    root.innerHTML='<div><small>Manager next action</small><h2>Review '+open.length+' active assignment'+(open.length===1?'':'s')+'</h2><p>Check who is waiting, then follow up or adjust the coaching plan.</p></div><a href="#assignments">Review assignments</a>';
+    root.innerHTML='<div><small>'+t('Manager next action','主管下一步')+'</small><h2>'+t('Review '+open.length+' active assignment'+(open.length===1?'':'s'),'查看 '+open.length+' 项进行中的练习指派')+'</h2><p>'+t('Check who is waiting, then follow up or adjust the coaching plan.','查看哪些学员正在等待，并进行跟进或调整辅导计划。')+'</p></div><a href="#assignments">'+t('Review assignments','查看练习指派')+'</a>';
   }else if(latest){
-    root.innerHTML='<div><small>Manager next action</small><h2>Turn the latest result into coaching</h2><p>Review evidence and use human judgment before assigning the next Practice.</p></div><a href="manager-chat.html?pilot=1">Open Manager AI</a>';
+    root.innerHTML='<div><small>'+t('Manager next action','主管下一步')+'</small><h2>'+t('Turn the latest result into coaching','根据最近一次结果进行辅导')+'</h2><p>'+t('Review work evidence and use human judgment before assigning the next Practice.','查看练习证据，并由主管判断后再指派下一项练习。')+'</p></div><a href="manager-chat.html?pilot=1">'+t('Open Manager AI','打开主管 AI')+'</a>';
   }else{
-    root.innerHTML='<div><small>Manager next action</small><h2>Create the first focused assignment</h2><p>Choose one learner, one scenario, and one clear practice length.</p></div><a href="#assign-panel">Assign Practice</a>';
+    root.innerHTML='<div><small>'+t('Manager next action','主管下一步')+'</small><h2>'+t('Create the first focused assignment','建立第一项有明确目标的练习')+'</h2><p>'+t('Choose one learner, one scenario, and one clear practice length.','选择一名学员、一个培训情境和清楚的练习时长。')+'</p></div><a href="#assign-panel">'+t('Assign Practice','指派练习')+'</a>';
   }
 }
 function list(){
   const q=document.getElementById('search').value.trim().toLowerCase();
   const cases=readCases().filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));
   const results=(PilotCloud.enabled?cloudResults:readResults()).filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));
-  document.getElementById('count').textContent=cases.length+' case'+(cases.length===1?'':'s')+' · '+results.length+' result'+(results.length===1?'':'s');
+  document.getElementById('count').textContent=t(cases.length+' case'+(cases.length===1?'':'s')+' · '+results.length+' result'+(results.length===1?'':'s'),cases.length+' 个案例 · '+results.length+' 个练习结果');
   renderCases(cases);
   renderResults(results);
   renderNextAction();
 }
 function toggle(i){const el=document.getElementById('d'+i);el.hidden=!el.hidden}
 function generateQuickTest(){
-  const name=prompt('Enter a test client name:', 'Xiaodong');
+  const name=prompt(t('Enter a test client name:','请输入测试客户姓名：'), t('Xiaodong','小东'));
   if(!name) return;
   const now=new Date().toISOString();
   const record={
@@ -176,7 +182,7 @@ document.getElementById('quickTest').onclick=generateQuickTest;
 document.getElementById('assignPractice').onclick=assignPractice;
 async function refreshCloud(){
   if(!PilotCloud.enabled){renderAssignments();list();return}
-  setAssignStatus('Refreshing secure Pilot data…','');
+  setAssignStatus(t('Refreshing secure Pilot data…','正在刷新安全试用数据…'),'');
   try{
     await PilotCloud.ready('manager');
     const [assignmentData,sessionData]=await Promise.all([
@@ -185,11 +191,11 @@ async function refreshCloud(){
     ]);
     cloudAssignments=assignmentData.assignments||[];
     cloudResults=sessionData.sessions||[];
-    document.getElementById('storageNotice').innerHTML='<b>Secure Pilot workspace:</b> assignments, scores, transcripts, and completion status are stored in the team cloud workspace and available across signed-in devices.';
+    document.getElementById('storageNotice').innerHTML='<b>'+t('Secure Pilot workspace:','安全试用工作区：')+'</b> '+t('Assignments, scores, transcripts, and completion status are stored in the team cloud workspace and available across signed-in devices.','练习指派、分数、完整对话记录和完成状态均保存在团队云端工作区，登录后可在不同设备查看。');
     document.getElementById('storageNotice').style.cssText='background:#ecfdf5;border:1px solid #a7f3d0;padding:12px 14px;border-radius:8px;color:#065f46;margin-bottom:18px';
     document.getElementById('quickTest').hidden=true;
     document.getElementById('learnerName').placeholder='learner@example.com';
-    renderAssignments();list();setAssignStatus('Pilot data is up to date.','ok');
+    renderAssignments();list();setAssignStatus(t('Pilot data is up to date.','试用数据已更新。'),'ok');
   }catch(error){setAssignStatus(error.message,'error')}
 }
 document.getElementById('refresh').onclick=refreshCloud;
