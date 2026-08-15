@@ -51,7 +51,7 @@ function renderAssignments(rows){
   const root=document.getElementById('assignments');
   const active=(rows||[]).filter(x=>x.status!=='Completed');
   if(!active.length){root.innerHTML='<div class="status">'+t('No active assignment. Ask your coach what to practice next.','目前没有进行中的练习任务。您可以询问 AI 教练下一步练习什么。')+'</div>';return}
-  root.innerHTML=active.map(x=>'<div class="assignment"><b>'+esc(x.scenarioName)+'</b><small>'+esc(x.mode||'standard')+' · '+esc(x.status)+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small><a class="start" href="simulator.html?ref=demo&amp;pilot=1&amp;assignment='+encodeURIComponent(x.id)+'">"+t('Start Practice','开始练习')+"</a></div>').join('');
+  root.innerHTML=active.map(x=>'<div class="assignment"><b>'+esc(x.scenarioName)+'</b><small>'+esc(x.mode||'standard')+' · '+esc(x.status)+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small><a class="start" href="simulator.html?ref=demo&amp;pilot=1&amp;assignment='+encodeURIComponent(x.id)+'">'+t('Start Practice','开始练习')+'</a></div>').join('');
 }
 async function loadCoach(){
   try{
