@@ -3,6 +3,7 @@
   const enabled = params.get('pilot') === '1';
   let readyPromise;
   let finishReady;
+  let switchHandled = false;
   const requestedLang = params.get('lang');
   if (requestedLang === 'en' || requestedLang === 'zh') sessionStorage.setItem('agentraining_lang', requestedLang);
   const currentLang = requestedLang || sessionStorage.getItem('agentraining_lang') || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
@@ -21,6 +22,48 @@
 
   function roles(user) {
     return user?.app_metadata?.roles || [];
+  }
+
+  function removeAccountControls() {
+    document.getElementById('pilot-account-controls')?.remove();
+  }
+
+  async function signOut() {
+    removeAccountControls();
+    try {
+      await window.netlifyIdentity.logout();
+    } catch (error) {
+      try { localStorage.removeItem('gotrue.user'); } catch (storageError) {}
+    }
+    readyPromise = null;
+    finishReady = null;
+    window.location.reload();
+  }
+
+  function mountAccountControls(user) {
+    if (!enabled || !user) return;
+    let controls = document.getElementById('pilot-account-controls');
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.id = 'pilot-account-controls';
+      controls.style.cssText = 'position:fixed;right:14px;bottom:14px;z-index:19000;display:flex;align-items:center;gap:9px;max-width:calc(100vw - 28px);padding:9px 10px;background:#fff;border:1px solid #cbd5e1;border-radius:11px;box-shadow:0 8px 28px rgba(15,23,42,.18);font:12px Arial,sans-serif;color:#475569';
+      const email = document.createElement('span');
+      email.id = 'pilot-account-email';
+      email.style.cssText = 'max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.id = 'pilot-sign-out';
+      button.textContent = t('Sign out', '退出登录');
+      button.style.cssText = 'border:1px solid #bfdbfe;border-radius:8px;background:#eff6ff;color:#1d4ed8;padding:7px 10px;font-weight:700;cursor:pointer;white-space:nowrap';
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        button.textContent = t('Signing out…', '正在退出…');
+        await signOut();
+      });
+      controls.append(email, button);
+      document.body.appendChild(controls);
+    }
+    controls.querySelector('#pilot-account-email').textContent = user.email || t('Signed in', '已登录');
   }
 
   function showGate(message) {
@@ -65,10 +108,24 @@
   async function ready(requiredRole) {
     if (!enabled) return null;
     if (!window.netlifyIdentity) throw new Error(t('Pilot sign-in could not be loaded.','无法载入试用登录功能。'));
+    if (!switchHandled && params.get('switch') === '1') {
+      switchHandled = true;
+      window.netlifyIdentity.init();
+      try {
+        await window.netlifyIdentity.logout();
+      } catch (error) {
+        try { localStorage.removeItem('gotrue.user'); } catch (storageError) {}
+      }
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('switch');
+      window.history.replaceState({}, '', cleanUrl.href);
+      readyPromise = null;
+      finishReady = null;
+    }
     if (!readyPromise) {
       readyPromise = new Promise(resolve => {
         window.netlifyIdentity.init();
-        const finish = user => { hideGate(); resolve(user); };
+        const finish = user => { hideGate(); mountAccountControls(user); resolve(user); };
         finishReady = finish;
         const user = currentUser();
         if (user) finish(user);
@@ -94,6 +151,7 @@
     }
     readyPromise = null;
     finishReady = null;
+    removeAccountControls();
     showGate(t('Your secure session expired. Please sign in again to continue.','您的安全登录已过期，请重新登录后继续。'));
   }
 
@@ -121,5 +179,5 @@
     return body;
   }
 
-  window.PilotCloud = { enabled, ready, request, currentUser };
+  window.PilotCloud = { enabled, ready, request, currentUser, signOut };
 })();
