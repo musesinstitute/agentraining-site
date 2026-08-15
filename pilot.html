@@ -10,18 +10,15 @@
 </style>
 </head>
 <body>
-<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="nav-right"><div class="lang-switch" aria-label="Language / 语言"><button class="lang-btn" id="langEn" type="button">EN</button><button class="lang-btn" id="langZh" type="button">中文</button></div><span class="identity" id="identity">Secure Pilot</span><button class="signout" id="signout" type="button">Sign out / 退出</button></div></nav>
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="nav-right"><div class="lang-switch" aria-label="Language / 语言"><a class="lang-btn" id="langEn" href="pilot.html?pilot=1&amp;lang=en">EN</a><a class="lang-btn" id="langZh" href="pilot.html?pilot=1&amp;lang=zh">中文</a></div><span class="identity" id="identity">Secure Pilot</span><button class="signout" id="signout" type="button">Sign out / 退出</button></div></nav>
 <header class="hero"><div class="hero-inner"><div class="eyebrow">Secure Pilot Workspace</div><h1 id="welcome">Welcome to your Pilot Home</h1><p id="subtitle">One clear place to see what matters now and where to go next.</p><span class="role" id="roleBadge">Loading role…</span></div></header>
 <main class="shell" id="app"><div class="status">Loading your secure workspace…</div></main>
 <script>
-const currentLang=sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en');
+const requestedLang=new URLSearchParams(location.search).get('lang');if(requestedLang==='en'||requestedLang==='zh')sessionStorage.setItem('agentraining_lang',requestedLang);const currentLang=requestedLang||sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en');
 const t=(en,zh)=>currentLang==='zh'?zh:en;
 const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-function useLang(lang){sessionStorage.setItem('agentraining_lang',lang);location.reload()}
 document.getElementById('langEn').classList.toggle('active',currentLang==='en');
 document.getElementById('langZh').classList.toggle('active',currentLang==='zh');
-document.getElementById('langEn').onclick=()=>useLang('en');
-document.getElementById('langZh').onclick=()=>useLang('zh');
 document.documentElement.lang=currentLang==='zh'?'zh-CN':'en';
 document.querySelector('.eyebrow').textContent=t('Secure Pilot Workspace','安全试用工作区');
 document.getElementById('welcome').textContent=t('Welcome to your Pilot Home','欢迎进入试用首页');
