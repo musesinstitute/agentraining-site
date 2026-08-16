@@ -128,8 +128,19 @@
         const finish = user => { hideGate(); mountAccountControls(user); resolve(user); };
         finishReady = finish;
         const user = currentUser();
-        if (user) finish(user);
-        else {
+        if (user) {
+          Promise.resolve(user.jwt())
+            .then(() => finish(user))
+            .catch(async () => {
+              try {
+                await window.netlifyIdentity.logout();
+              } catch (error) {
+                try { localStorage.removeItem('gotrue.user'); } catch (storageError) {}
+              }
+              removeAccountControls();
+              showGate(t('Please sign in with your current Learner email and password.','请使用当前的学员邮箱和密码登录。'));
+            });
+        } else {
           showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'));
           window.netlifyIdentity.on('login', loggedIn => { window.netlifyIdentity.close(); finish(loggedIn); });
           window.netlifyIdentity.on('close', () => {
@@ -155,7 +166,7 @@
     readyPromise = null;
     finishReady = null;
     removeAccountControls();
-    showGate(t('Your secure session expired. Please sign in again to continue.','您的安全登录已过期，请重新登录后继续。'));
+    showGate(t("This browser saved an old test session. Please sign in with your current Learner email and password.","此浏览器保存了旧的测试登录。请使用当前的学员邮箱和密码重新登录。"));
   }
 
   async function request(resource, options = {}) {
