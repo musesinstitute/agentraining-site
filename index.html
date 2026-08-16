@@ -1114,9 +1114,9 @@ function switchIndexLang(lang) {
       console.error('Identity callback error:', error);
     });
 
-    // The widget reads the token from the URL hash and completes
-    // invitation, email confirmation, or password recovery.
-    window.netlifyIdentity.open();
+    // Do not call open() here. The Identity widget reads the URL token
+    // automatically and opens the correct Invite, Confirmation, or Recovery
+    // setup screen. Calling open() without a page would overwrite it with Login.
   }
 
   if (document.readyState === 'loading') {
