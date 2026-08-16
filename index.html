@@ -1092,5 +1092,39 @@ function switchIndexLang(lang) {
   }
 }
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script>
+<script>
+(function setupIdentityEmailCallback() {
+  const tokenHash = window.location.hash || '';
+  const isIdentityCallback = /(?:invite|confirmation|recovery|email_change)_token=/.test(tokenHash);
+  if (!isIdentityCallback) return;
+
+  function finishIdentitySetup() {
+    if (!window.netlifyIdentity) {
+      window.setTimeout(finishIdentitySetup, 100);
+      return;
+    }
+
+    window.netlifyIdentity.on('login', function () {
+      window.netlifyIdentity.close();
+      window.location.replace('/team-messages.html?pilot=1&lang=zh');
+    });
+
+    window.netlifyIdentity.on('error', function (error) {
+      console.error('Identity callback error:', error);
+    });
+
+    // The widget reads the token from the URL hash and completes
+    // invitation, email confirmation, or password recovery.
+    window.netlifyIdentity.open();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', finishIdentitySetup, { once: true });
+  } else {
+    finishIdentitySetup();
+  }
+})();
+</script>
+</body>
 </html>
