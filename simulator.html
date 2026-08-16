@@ -1069,7 +1069,7 @@
   <div style="display:flex;align-items:center;gap:10px;">
     <a id="pilot-home-nav" href="pilot.html?pilot=1" title="Pilot Home" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🏠 Pilot Home</a>
     <a id="learner-profile-nav" href="learner-profile.html?pilot=1" title="Learner Success Profile" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🎯 My Profile</a>
-    <a id="coach-chat-nav" href="coach-chat.html?pilot=1" title="Personal AI Coach" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🤝 My Coach</a>
+    <a id="coach-chat-nav" href="coach-chat.html?pilot=1" title="Personal AI Coach" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🤝 My Coach</a><a id="team-messages-nav" href="team-messages.html?pilot=1" title="Team Messages" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">💬 Team Messages</a>
     <button id="dashboard-nav-btn" onclick="showDashboard()" title="Practice Studio Dashboard" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">📋 Dashboard</button>
     <button id="client-studio-nav-btn" onclick="openClientStudio()" title="Client Studio" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">👥 Client Studio</button>
     <button id="voice-toggle-btn" onclick="toggleVoice()" style="background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);cursor:pointer;">🔇 Voice OFF</button>
@@ -1079,7 +1079,7 @@
     </div>
   </div>
 </nav>
-<script>if(window.PilotCloud&&PilotCloud.enabled){document.getElementById("pilot-home-nav").style.display="inline-block";document.getElementById("learner-profile-nav").style.display="inline-block";document.getElementById("coach-chat-nav").style.display="inline-block"}</script>
+<script>if(window.PilotCloud&&PilotCloud.enabled){document.getElementById("pilot-home-nav").style.display="inline-block";document.getElementById("learner-profile-nav").style.display="inline-block";document.getElementById("coach-chat-nav").style.display="inline-block";document.getElementById("team-messages-nav").style.display="inline-block"}</script>
 
 <!-- SESSION SUMMARY MODAL -->
 <div id="summary-modal" class="summary-modal" style="display:none;">
@@ -2537,7 +2537,7 @@ function speakText(text) {
 function toggleVoice() {
   voiceEnabled = !voiceEnabled;
   const btn = document.getElementById('voice-toggle-btn');
-  if (btn) btn.textContent = voiceEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+  if (btn) btn.textContent = voiceEnabled ? (currentLang==='zh'?'🔊 语音开启':'🔊 Voice ON') : (currentLang==='zh'?'🔇 语音关闭':'🔇 Voice OFF');
 }
 
 // ── TEXT SELECTION MENU ──
@@ -3622,6 +3622,13 @@ function setLang(lang) {
   document.getElementById('scenarios-label').textContent = s.scenariosLabel;
   document.getElementById('feedback-label').textContent = s.feedbackLabel;
   document.getElementById('back-label').textContent = s.backLabel.replace('← ','');
+  const teamMessagesNav=document.getElementById('team-messages-nav');if(teamMessagesNav)teamMessagesNav.textContent=lang==='zh'?'💬 团队消息':'💬 Team Messages';
+  const pilotNav=document.getElementById('pilot-home-nav');if(pilotNav)pilotNav.textContent=lang==='zh'?'🏠 试用首页':'🏠 Pilot Home';
+  const dashboardNav=document.getElementById('dashboard-nav-btn');if(dashboardNav)dashboardNav.textContent=lang==='zh'?'📋 练习主页':'📋 Dashboard';
+  const clientNav=document.getElementById('client-studio-nav-btn');if(clientNav)clientNav.textContent=lang==='zh'?'👥 客户工作室':'👥 Client Studio';
+  const voiceNav=document.getElementById('voice-toggle-btn');if(voiceNav)voiceNav.textContent=voiceEnabled?(lang==='zh'?'🔊 语音开启':'🔊 Voice ON'):(lang==='zh'?'🔇 语音关闭':'🔇 Voice OFF');
+  const profileNav=document.getElementById('learner-profile-nav');if(profileNav)profileNav.textContent=lang==='zh'?'🎯 我的成长档案':'🎯 My Profile';
+  const coachNav=document.getElementById('coach-chat-nav');if(coachNav)coachNav.textContent=lang==='zh'?'🤝 我的私人 AI 教练':'🤝 My Coach';
   document.getElementById('reset-label').textContent = s.resetLabel;
   document.getElementById('input-hint').textContent = s.inputHint;
   document.getElementById('search-input').placeholder = s.searchPlaceholder;
