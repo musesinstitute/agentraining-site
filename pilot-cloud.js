@@ -74,12 +74,26 @@
       gate.style.cssText = 'position:fixed;inset:0;z-index:20000;background:rgba(15,23,42,.94);display:flex;align-items:center;justify-content:center;padding:24px;font-family:Arial,sans-serif';
       const enUrl = new URL(window.location.href); enUrl.searchParams.set('lang', 'en');
       const zhUrl = new URL(window.location.href); zhUrl.searchParams.set('lang', 'zh');
-      gate.innerHTML = '<div style="width:100%;max-width:460px;background:#fff;border-radius:18px;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.35)"><div style="text-align:center"><h1 style="margin:0 0 10px;font-size:26px">AgentTraining.ai Pilot</h1><div style="display:flex;justify-content:center;gap:6px;margin:0 0 12px"><a href="'+enUrl.href+'" style="text-decoration:none;border:1px solid #cbd5e1;border-radius:8px;padding:6px 9px;color:#1d4ed8;font-weight:700">EN</a><a href="'+zhUrl.href+'" style="text-decoration:none;border:1px solid #cbd5e1;border-radius:8px;padding:6px 9px;color:#1d4ed8;font-weight:700">中文</a></div><p id="pilot-auth-message" style="color:#64748b;line-height:1.6"></p></div><button id="pilot-open-login" type="button" style="width:100%;margin-top:18px;border:0;border-radius:9px;background:#1a56db;color:#fff;padding:13px 22px;font-weight:700;cursor:pointer">'+t('Open secure sign-in','打开安全登录')+'</button><p style="margin:13px 0 0;color:#64748b;text-align:center;font-size:12px;line-height:1.55">'+t('Use your existing invited account. Password recovery is available in the Netlify sign-in window.','请使用已经接受邀请的现有账号。Netlify 登录窗口内可以恢复密码。')+'</p></div>';
+      gate.innerHTML = '<div style="width:100%;max-width:460px;background:#fff;border-radius:18px;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.35)"><div style="text-align:center"><h1 style="margin:0 0 10px;font-size:26px">AgentTraining.ai Pilot</h1><div style="display:flex;justify-content:center;gap:6px;margin:0 0 12px"><a href="'+enUrl.href+'" style="text-decoration:none;border:1px solid #cbd5e1;border-radius:8px;padding:6px 9px;color:#1d4ed8;font-weight:700">EN</a><a href="'+zhUrl.href+'" style="text-decoration:none;border:1px solid #cbd5e1;border-radius:8px;padding:6px 9px;color:#1d4ed8;font-weight:700">中文</a></div><p id="pilot-auth-message" style="color:#64748b;line-height:1.6"></p></div><form id="pilot-auth-form"><label for="pilot-auth-email" style="display:block;margin:18px 0 6px;color:#334155;font-weight:700">'+t('Email','邮箱')+'</label><input id="pilot-auth-email" type="email" autocomplete="username" required style="width:100%;min-width:0;border:1px solid #cbd5e1;border-radius:9px;padding:12px;font:inherit"><label for="pilot-auth-password" style="display:block;margin:14px 0 6px;color:#334155;font-weight:700">'+t('Password','密码')+'</label><input id="pilot-auth-password" type="password" autocomplete="current-password" required style="width:100%;min-width:0;border:1px solid #cbd5e1;border-radius:9px;padding:12px;font:inherit"><button id="pilot-auth-button" type="submit" style="width:100%;margin-top:20px;border:0;border-radius:9px;background:#1a56db;color:#fff;padding:13px 22px;font-weight:700;cursor:pointer">'+t('Sign in securely','安全登录')+'</button><p id="pilot-auth-status" role="status" aria-live="polite" style="min-height:20px;margin:12px 0 0;color:#b91c1c;text-align:center;font-size:13px"></p></form><p style="margin:4px 0 0;color:#64748b;text-align:center;font-size:11px;line-height:1.5">'+t('This first-party form avoids browser-blocked pop-up windows.','此站内登录表单不使用可能被浏览器阻挡的弹出窗口。')+'</p></div>';
       document.body.appendChild(gate);
-      gate.querySelector('#pilot-open-login').addEventListener('click', () => {
-        if (window.netlifyIdentity.setLocale) window.netlifyIdentity.setLocale(currentLang === 'zh' ? 'zhCN' : 'en');
-        hideGate();
-        window.netlifyIdentity.open('login');
+      gate.querySelector('#pilot-auth-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        const button = gate.querySelector('#pilot-auth-button');
+        const status = gate.querySelector('#pilot-auth-status');
+        const email = gate.querySelector('#pilot-auth-email').value.trim();
+        const password = gate.querySelector('#pilot-auth-password').value;
+        button.disabled = true;
+        button.textContent = t('Signing in…', '正在登录…');
+        status.textContent = '';
+        try {
+          const loggedIn = await window.netlifyIdentity.gotrue.login(email, password, true);
+          if (finishReady) finishReady(loggedIn);
+          else window.location.reload();
+        } catch (error) {
+          status.textContent = authError(error);
+          button.disabled = false;
+          button.textContent = t('Sign in securely', '安全登录');
+        }
       });
     }
     gate.querySelector('#pilot-auth-message').textContent = message;
