@@ -78,6 +78,7 @@
       document.body.appendChild(gate);
       gate.querySelector('#pilot-open-login').addEventListener('click', () => {
         if (window.netlifyIdentity.setLocale) window.netlifyIdentity.setLocale(currentLang === 'zh' ? 'zhCN' : 'en');
+        hideGate();
         window.netlifyIdentity.open('login');
       });
     }
@@ -117,6 +118,9 @@
         else {
           showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'));
           window.netlifyIdentity.on('login', loggedIn => { window.netlifyIdentity.close(); finish(loggedIn); });
+          window.netlifyIdentity.on('close', () => {
+            if (!currentUser()) showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'));
+          });
         }
       });
     }
