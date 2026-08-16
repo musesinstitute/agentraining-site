@@ -1095,35 +1095,114 @@ function switchIndexLang(lang) {
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script>
 <script>
 (function setupIdentityEmailCallback() {
-  const tokenHash = window.location.hash || '';
-  const isIdentityCallback = /(?:invite|confirmation|recovery|email_change)_token=/.test(tokenHash);
-  if (!isIdentityCallback) return;
+  const tokenMatch = (window.location.hash || '').match(/(?:^#|&)(invite_token|recovery_token)=([^&]+)/);
+  if (!tokenMatch) return;
 
-  function finishIdentitySetup() {
-    if (!window.netlifyIdentity) {
-      window.setTimeout(finishIdentitySetup, 100);
+  const tokenType = tokenMatch[1];
+  const token = decodeURIComponent(tokenMatch[2]);
+  const isInvite = tokenType === 'invite_token';
+
+  const style = document.createElement('style');
+  style.textContent = [
+    '#netlify-identity-widget{display:none!important}',
+    '.identity-setup-backdrop{position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.72);display:flex;align-items:center;justify-content:center;padding:20px}',
+    '.identity-setup-card{width:min(460px,100%);background:#fff;border-radius:18px;padding:30px;box-shadow:0 24px 70px rgba(0,0,0,.28);font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;color:#111827}',
+    '.identity-setup-card h2{font-size:24px;margin:0 0 8px}.identity-setup-card p{font-size:14px;line-height:1.55;color:#6b7280;margin:0 0 22px}',
+    '.identity-field{margin:0 0 16px}.identity-field label{display:block;font-size:14px;font-weight:700;margin:0 0 7px}',
+    '.identity-password-wrap{display:flex;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden;background:#fff}',
+    '.identity-password-wrap:focus-within{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,219,.12)}',
+    '.identity-password-wrap input{flex:1;min-width:0;border:0;outline:0;padding:12px 13px;font-size:16px}',
+    '.identity-toggle{border:0;border-left:1px solid #e5e7eb;background:#f8fafc;color:#1a56db;padding:0 12px;font-weight:700;cursor:pointer;white-space:nowrap}',
+    '.identity-submit{width:100%;border:0;border-radius:10px;background:#1a56db;color:#fff;padding:13px;font-size:16px;font-weight:800;cursor:pointer}',
+    '.identity-submit:disabled{opacity:.55;cursor:not-allowed}.identity-status{min-height:22px;margin:12px 0 0;font-size:13px;font-weight:600}',
+    '.identity-status.error{color:#b91c1c}.identity-status.success{color:#15803d}'
+  ].join('');
+  document.head.appendChild(style);
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'identity-setup-backdrop';
+  backdrop.innerHTML =
+    '<main class="identity-setup-card" role="dialog" aria-modal="true" aria-labelledby="identity-setup-title">' +
+      '<h2 id="identity-setup-title">' + (isInvite ? '完成注册 / Complete signup' : '重设密码 / Reset password') + '</h2>' +
+      '<p>' + (isInvite ? '请设置并确认您的登录密码。/ Set and confirm your login password.' : '请输入并确认您的新密码。/ Enter and confirm your new password.') + '</p>' +
+      '<form id="identity-setup-form">' +
+        '<div class="identity-field"><label for="identity-password">密码 / Password</label>' +
+          '<div class="identity-password-wrap"><input id="identity-password" type="password" minlength="6" autocomplete="new-password" required>' +
+          '<button class="identity-toggle" type="button" data-target="identity-password">👁 显示 / Show</button></div></div>' +
+        '<div class="identity-field"><label for="identity-password-confirm">确认密码 / Confirm password</label>' +
+          '<div class="identity-password-wrap"><input id="identity-password-confirm" type="password" minlength="6" autocomplete="new-password" required>' +
+          '<button class="identity-toggle" type="button" data-target="identity-password-confirm">👁 显示 / Show</button></div></div>' +
+        '<button class="identity-submit" type="submit">' + (isInvite ? '完成注册 / Complete signup' : '保存新密码 / Save new password') + '</button>' +
+        '<div id="identity-setup-status" class="identity-status" role="alert"></div>' +
+      '</form>' +
+    '</main>';
+  document.body.appendChild(backdrop);
+
+  backdrop.querySelectorAll('.identity-toggle').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const input = document.getElementById(button.getAttribute('data-target'));
+      const showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      button.textContent = showing ? '👁 显示 / Show' : '🙈 隐藏 / Hide';
+    });
+  });
+
+  const form = document.getElementById('identity-setup-form');
+  const password = document.getElementById('identity-password');
+  const confirmPassword = document.getElementById('identity-password-confirm');
+  const status = document.getElementById('identity-setup-status');
+  const submit = form.querySelector('.identity-submit');
+
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    status.className = 'identity-status';
+    status.textContent = '';
+
+    if (password.value !== confirmPassword.value) {
+      status.className = 'identity-status error';
+      status.textContent = '两次输入的密码不一致。/ Passwords do not match.';
+      confirmPassword.focus();
       return;
     }
 
-    window.netlifyIdentity.on('login', function () {
-      window.netlifyIdentity.close();
-      window.location.replace('/team-messages.html?pilot=1&lang=zh');
-    });
+    if (password.value.length < 6) {
+      status.className = 'identity-status error';
+      status.textContent = '密码至少需要 6 个字符。/ Password must contain at least 6 characters.';
+      password.focus();
+      return;
+    }
 
-    window.netlifyIdentity.on('error', function (error) {
-      console.error('Identity callback error:', error);
-    });
+    submit.disabled = true;
+    submit.textContent = '处理中… / Processing…';
 
-    // Do not call open() here. The Identity widget reads the URL token
-    // automatically and opens the correct Invite, Confirmation, or Recovery
-    // setup screen. Calling open() without a page would overwrite it with Login.
-  }
+    try {
+      while (!window.netlifyIdentity || !window.netlifyIdentity.gotrue) {
+        await new Promise(function(resolve) { window.setTimeout(resolve, 100); });
+      }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', finishIdentitySetup, { once: true });
-  } else {
-    finishIdentitySetup();
-  }
+      if (isInvite) {
+        await window.netlifyIdentity.gotrue.acceptInvite(token, password.value, true);
+      } else {
+        const user = await window.netlifyIdentity.gotrue.recover(token, true);
+        await user.update({ password: password.value });
+      }
+
+      status.className = 'identity-status success';
+      status.textContent = '设置成功，正在进入… / Success. Signing you in…';
+      window.setTimeout(function() {
+        window.location.replace('/team-messages.html?pilot=1&lang=zh');
+      }, 500);
+    } catch (error) {
+      status.className = 'identity-status error';
+      status.textContent = /expired|invalid/i.test(String(error && error.message || error))
+        ? '此链接已失效，请使用最新邮件。/ This link has expired. Please use the newest email.'
+        : '设置未完成，请稍后再试。/ Setup could not be completed. Please try again.';
+      submit.disabled = false;
+      submit.textContent = isInvite ? '完成注册 / Complete signup' : '保存新密码 / Save new password';
+    }
+  });
+
+  password.focus();
 })();
 </script>
 </body>
