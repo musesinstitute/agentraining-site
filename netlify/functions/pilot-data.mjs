@@ -254,6 +254,26 @@ function managerChatMessage(role, content, learnerEmail, extras = {}) {
   };
 }
 
+function teamMessagePrefix(teamPrefix, learnerEmail) {
+  return `${teamPrefix}/team-messages/${safeSegment(normalizeEmail(learnerEmail), 'learner')}/`;
+}
+
+function teamMessageRecord(input, actor, learnerEmail) {
+  const now = new Date().toISOString();
+  return {
+    id: crypto.randomUUID(),
+    teamId: actor.teamId,
+    learnerEmail: normalizeEmail(learnerEmail),
+    senderEmail: actor.email,
+    senderRole: actor.isManager ? 'manager' : 'learner',
+    content: cleanText(input.content, 4000),
+    assignmentId: cleanText(input.assignmentId, 100),
+    createdAt: now,
+    visibility: 'manager_learner_work_message',
+    readBy: [actor.email]
+  };
+}
+
 function assignmentEventMessage(event, audience) {
   const content = audience === 'manager'
     ? event.managerContent
@@ -796,6 +816,71 @@ export default async function handler(req) {
       await writeAudit(store, teamPrefix, actor, 'private_coach_message', 'success', { evidenceSessionId: profile?.latestSessionId || '' });
       return reply(201, { userMessage: learnerMessage, assistantMessage });
     }
+
+    if (req.method === 'GET' && resource === 'team-messages') {
+      const requestedLearner = normalizeEmail(url.searchParams.get('learner'));
+      if (actor.isManager && !requestedLearner) {
+        const all = await listJSON(store, `${teamPrefix}/team-messages/`);
+        const threads = new Map();
+        for (const message of all) {
+          const learnerEmail = normalizeEmail(message.learnerEmail);
+          if (!learnerEmail) continue;
+          const current = threads.get(learnerEmail) || { learnerEmail, latestAt: '', latestMessage: '', unreadCount: 0 };
+          if (String(message.createdAt) > current.latestAt) {
+            current.latestAt = message.createdAt;
+            current.latestMessage = cleanText(message.content, 180);
+          }
+          if (message.senderEmail !== actor.email && !(message.readBy || []).includes(actor.email)) current.unreadCount += 1;
+          threads.set(learnerEmail, current);
+        }
+        return reply(200, { threads: [...threads.values()].sort((a, b) => String(b.latestAt).localeCompare(String(a.latestAt))), privacy: 'Work messages are visible to the learner and authorized managers. Private Coach Chat is excluded.' });
+      }
+      const learnerEmail = actor.isManager ? requestedLearner : actor.email;
+      if (!learnerEmail) return reply(400, { error: 'Select a team member.' });
+      const rows = await listJSON(store, teamMessagePrefix(teamPrefix, learnerEmail));
+      rows.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+      const unreadCount = rows.filter(message => message.senderEmail !== actor.email && !(message.readBy || []).includes(actor.email)).length;
+      await writeAudit(store, teamPrefix, actor, 'team_messages_list', 'success', { learnerEmail, resultCount: rows.length });
+      return reply(200, {
+        messages: rows,
+        learnerEmail,
+        unreadCount,
+        canManage: actor.isManager,
+        privacy: 'This work conversation is visible to the learner and authorized managers. Private Learner Coach Chat is never included.'
+      });
+    }
+
+    if (req.method === 'POST' && resource === 'team-messages') {
+      verifyRequestOrigin(req);
+      const input = await req.json();
+      const learnerEmail = actor.isManager ? normalizeEmail(input.learnerEmail) : actor.email;
+      if (!learnerEmail) return reply(400, { error: 'Select a team member.' });
+      const record = teamMessageRecord(input, actor, learnerEmail);
+      if (!record.content) return reply(400, { error: 'Write a message before sending.' });
+      const key = `${teamMessagePrefix(teamPrefix, learnerEmail)}${record.createdAt}-${record.id}`;
+      await store.setJSON(key, record, { onlyIfNew: true });
+      await writeAudit(store, teamPrefix, actor, 'team_message_send', 'success', { learnerEmail, messageId: record.id, assignmentId: record.assignmentId, senderRole: record.senderRole });
+      return reply(201, { message: record });
+    }
+
+    if (req.method === 'PATCH' && resource === 'team-messages') {
+      verifyRequestOrigin(req);
+      const input = await req.json();
+      const learnerEmail = actor.isManager ? normalizeEmail(input.learnerEmail) : actor.email;
+      if (!learnerEmail) return reply(400, { error: 'Select a team member.' });
+      const rows = await listJSON(store, teamMessagePrefix(teamPrefix, learnerEmail));
+      let marked = 0;
+      for (const message of rows.slice(-250)) {
+        const readBy = Array.isArray(message.readBy) ? message.readBy : [];
+        if (message.senderEmail === actor.email || readBy.includes(actor.email)) continue;
+        const updated = { ...message, readBy: [...readBy, actor.email].slice(-20) };
+        await store.setJSON(`${teamMessagePrefix(teamPrefix, learnerEmail)}${message.createdAt}-${message.id}`, updated);
+        marked += 1;
+      }
+      await writeAudit(store, teamPrefix, actor, 'team_messages_mark_read', 'success', { learnerEmail, marked });
+      return reply(200, { marked });
+    }
+
 
     if (req.method === 'GET' && resource === 'profiles') {
       const requested = normalizeEmail(url.searchParams.get('learner'));
