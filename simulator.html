@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
   <meta name="apple-mobile-web-app-title" content="AgentTraining AI"/>
-  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
@@ -1785,6 +1785,7 @@ let turnCount = 0;
 const ASSIGNMENTS_KEY = 'agentraining_assignments';
 const practiceParams = new URLSearchParams(window.location.search);
 const requestedAssignmentId = practiceParams.get('assignment') || '';
+const requestedPracticeId = practiceParams.get('practice') || '';
 const temporaryQuickPractice = practiceParams.get('temporary') === 'quick';
 const requestedMode = practiceParams.get('practiceMode');
 let currentPracticeMode = temporaryQuickPractice ? 'quick' : (['quick','standard','full'].includes(requestedMode) ? requestedMode : 'full');
@@ -2161,7 +2162,8 @@ function loadCurriculumData() {
       renderCurrentPanel(document.getElementById('search-input') ? document.getElementById('search-input').value : '');
       updateLearnerDashboardCard();
       updateDemoQuickStartButtons();
-      launchAssignedPractice();
+      if (requestedAssignmentId) launchAssignedPractice();
+      else launchRequestedCurriculumPractice();
     })
     .catch(err => {
       console.error('[Curriculum] Failed to load data/curriculum/foundation.json — falling back to existing scenario library.', err);
@@ -2171,6 +2173,16 @@ function loadCurriculumData() {
       renderCurrentPanel('');
       updateLearnerDashboardCard();
     });
+}
+
+function launchRequestedCurriculumPractice() {
+  if (!requestedPracticeId || !Array.isArray(curriculumData)) return;
+  const lesson = curriculumData.find(item => String(item.id) === String(requestedPracticeId));
+  if (!lesson) return;
+  if (typeof forceHideOnboarding === 'function') forceHideOnboarding();
+  if (typeof hideDashboard === 'function') hideDashboard();
+  setPanelMode('curriculum');
+  selectCurriculumLesson(lesson);
 }
 
 function updateModeToggleUI() {

@@ -1,7 +1,7 @@
 // AgentTraining AI — Service Worker
 // Caches key assets for faster loading on mobile
 
-const CACHE_NAME = 'agentraining-v1';
+const CACHE_NAME = 'agentraining-pilot-20260817';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

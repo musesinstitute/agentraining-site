@@ -118,6 +118,20 @@ function claimStatement(type, label, score, count) {
     : `In this session, ${label.toLowerCase()} was the clearest growth area (${score}/100).`;
 }
 
+function claimStatementZh(type, competency, score, count) {
+  const labels = { empathy: '同理心与信任建立', accuracy: '知识与解释能力', closing: '确认下一步的能力' };
+  const label = labels[competency] || competency;
+  if (count >= 3) return type === 'strength'
+    ? `近期多次练习证据一致显示，${label}是目前已经表现出的优势。`
+    : `近期多次练习证据一致显示，${label}是目前需要改进的方向。`;
+  if (count === 2) return type === 'strength'
+    ? `两次近期练习初步显示，${label}可能正在形成优势。`
+    : `两次近期练习初步显示，${label}可能是需要加强的方向。`;
+  return type === 'strength'
+    ? `在本次练习中，${label}是表现最强的项目（${score}/100）。`
+    : `在本次练习中，${label}是最需要改进的项目（${score}/100）。`;
+}
+
 function upsertClaim(claims, type, competency, session) {
   const id = `${type}-${competency.key}`;
   const existing = claims.find(x => x.claimId === id && x.status !== 'disputed');
@@ -133,6 +147,7 @@ function upsertClaim(claims, type, competency, session) {
   const claim = {
     claimId: id, claimType: type, competency: competency.key,
     statement: claimStatement(type, competency.label, session.scores[competency.key], evidenceRefs.length),
+    statementZh: claimStatementZh(type, competency.key, session.scores[competency.key], evidenceRefs.length),
     evidenceRefs, confidence, observedAt: session.savedAt,
     validUntil: new Date(Date.parse(session.savedAt) + 90 * 86400000).toISOString(),
     visibility: 'manager_summary', status: 'active', generatedBy: 'learner-intelligence-rules-v1'
@@ -207,22 +222,34 @@ function activeClaims(profile, type) {
   return (profile?.claims || []).filter(claim => claim.claimType === type && claim.status === 'active');
 }
 
-function initialCoachMessage(profile, assignments) {
+function usesChinese(value) {
+  return /[\u3400-\u9fff]/.test(String(value || ''));
+}
+
+function localizedClaim(claim, zh) {
+  return zh ? (claim?.statementZh || claim?.statement || '') : (claim?.statement || '');
+}
+
+function initialCoachMessage(profile, assignments, requestedLang) {
+  const zh = requestedLang === 'zh' || profile?.background?.language === 'zh';
   const name = cleanText(profile?.preferredName, 80) || 'there';
   const strength = activeClaims(profile, 'strength')[0];
   const growth = activeClaims(profile, 'growth_area')[0];
   const next = assignments.find(item => item.status !== 'Completed');
-  let text = `Welcome, ${name}. From today forward, I will be your Personal AI Coach. I can help you practice, understand feedback, prepare for a client conversation, and choose the next skill to strengthen.`;
+  let text = zh
+    ? `您好，${name}。从今天开始，我将作为您的私人 AI 教练，帮助您练习、理解反馈、准备客户对话，并选择下一项需要加强的技能。`
+    : `Welcome, ${name}. From today forward, I will be your Personal AI Coach. I can help you practice, understand feedback, prepare for a client conversation, and choose the next skill to strengthen.`;
   if (strength || growth) {
-    text += ' Based on your current Practice evidence:';
-    if (strength) text += ` ${strength.statement}`;
-    if (growth) text += ` ${growth.statement}`;
+    text += zh ? ' 根据您目前的练习证据：' : ' Based on your current Practice evidence:';
+    if (strength) text += ` ${zh ? (strength.statementZh || strength.statement) : strength.statement}`;
+    if (growth) text += ` ${zh ? (growth.statementZh || growth.statement) : growth.statement}`;
   } else {
-    text += ' There is not yet enough Practice evidence to identify a reliable pattern.';
+    text += zh ? ' 目前还没有足够练习证据可以判断可靠的表现规律。' : ' There is not yet enough Practice evidence to identify a reliable pattern.';
   }
-  text += next
-    ? ` Your next assigned action is “${next.scenarioName}.” Would you like a short preparation tip before you begin?`
-    : ' What would make the biggest difference for you right now?';
+  text += next ? (zh
+    ? ` 您的下一项任务是“${next.scenarioName}”。开始前需要一条简短的准备建议吗？`
+    : ` Your next assigned action is “${next.scenarioName}.” Would you like a short preparation tip before you begin?`)
+    : (zh ? ' 目前什么帮助会对您最有用？' : ' What would make the biggest difference for you right now?');
   return coachMessage('assistant', text);
 }
 
@@ -282,6 +309,7 @@ function assignmentEventMessage(event, audience) {
   return {
     id: `assignment-event-${event.id}-${audience}`,
     role: 'assistant', content, learnerEmail: event.assignedTo,
+    contentZh: audience === 'manager' ? event.managerContentZh : event.learnerContentZh,
     createdAt: event.createdAt, visibility: audience === 'manager' ? 'manager_work_intelligence' : 'learner_only',
     assignmentEvent: true, assignmentId: event.assignmentId, eventType: event.type,
     evidenceIds: event.evidenceIds || []
@@ -296,7 +324,8 @@ async function writeAssignmentEvent(store, teamPrefix, input) {
     scenarioId: cleanText(input.scenarioId, 120), scenarioName: cleanText(input.scenarioName, 300),
     createdAt: input.createdAt || new Date().toISOString(), score: Number(input.score) || 0,
     sessionId: cleanText(input.sessionId, 100), evidenceIds: Array.isArray(input.evidenceIds) ? input.evidenceIds.slice(0, 20) : [],
-    learnerContent: cleanText(input.learnerContent, 6000), managerContent: cleanText(input.managerContent, 6000)
+    learnerContent: cleanText(input.learnerContent, 6000), managerContent: cleanText(input.managerContent, 6000),
+    learnerContentZh: cleanText(input.learnerContentZh, 6000), managerContentZh: cleanText(input.managerContentZh, 6000)
   };
   await store.setJSON(`${teamPrefix}/assignment-events/${event.id}`, event);
   return event;
@@ -316,7 +345,8 @@ function sessionEvidence(profile, sessions) {
         overall: ref.overall, transcriptExcerpt: cleanText(excerptTurn?.text || session?.summary, 500),
         sourceLink: `learner-profile.html?pilot=1&learner=${encodeURIComponent(profile.learnerEmail)}#${encodeURIComponent(claim.claimId)}`,
         confidence: claim.confidence?.level || 'low',
-        limitations: (claim.evidenceRefs || []).length < 2 ? 'Based on one Practice session; not a durable trait.' : 'Based only on recent recorded Practice evidence.'
+        limitations: (claim.evidenceRefs || []).length < 2 ? 'Based on one Practice session; not a durable trait.' : 'Based only on recent recorded Practice evidence.',
+        limitationsZh: (claim.evidenceRefs || []).length < 2 ? '仅根据一次练习，不能视为稳定特征。' : '仅根据近期已记录的练习证据。'
       });
     }
   }
@@ -325,6 +355,7 @@ function sessionEvidence(profile, sessions) {
 }
 
 function managerIntelligence(profile, sessions, assignments, question) {
+  const zh = usesChinese(question);
   const claims = (profile?.claims || []).filter(item => item.status === 'active' && item.visibility === 'manager_summary');
   const strength = claims.find(item => item.claimType === 'strength');
   const growth = claims.find(item => item.claimType === 'growth_area');
@@ -333,24 +364,32 @@ function managerIntelligence(profile, sessions, assignments, question) {
   const activeAssignment = assignments.find(item => item.status !== 'Completed');
   if (!latest || !claims.length) {
     return {
-      content: `There is not enough recorded Practice evidence to assess ${profile?.preferredName || profile?.learnerEmail || 'this learner'} reliably. No strength or weakness should be inferred yet. Next step: assign one short, job-relevant Practice and review the resulting transcript.`,
+      content: zh
+        ? `目前没有足够的练习记录，可以可靠评估${profile?.preferredName || profile?.learnerEmail || '这名学员'}。现在不应推断其固定优势或弱点。下一步：指派一项简短、与工作有关的练习，并查看完成后的完整对话。`
+        : `There is not enough recorded Practice evidence to assess ${profile?.preferredName || profile?.learnerEmail || 'this learner'} reliably. No strength or weakness should be inferred yet. Next step: assign one short, job-relevant Practice and review the resulting transcript.`,
       evidence, assignmentDraft: null
     };
   }
   const focus = growth?.competency || 'closing';
-  const content = [
+  const content = (zh ? [
+    `${profile.preferredName || profile.learnerEmail}目前有${sessions.length}次练习记录。最近一次是“${latest.scenario}”，总分${latest.scores?.overall || 0}/100。`,
+    strength ? `有证据支持的优势：${localizedClaim(strength, true)}` : '',
+    growth ? `有证据支持的改进方向：${localizedClaim(growth, true)}` : '',
+    `主管解读：请把这些内容作为辅导证据，而不是固定的人格判断。${growth?.confidence?.level === 'low' ? '由于目前证据有限，可信度较低。' : `当前可信度为${growth?.confidence?.level || '低'}。`}`,
+    activeAssignment ? `目前已有一项进行中的任务：“${activeAssignment.scenarioName}”（${activeAssignment.status}）。` : `建议下一步：针对${focus.replace(/_/g, ' ')}指派一项练习。`
+  ] : [
     `${profile.preferredName || profile.learnerEmail} has ${sessions.length} recorded Practice session${sessions.length === 1 ? '' : 's'}. The latest was “${latest.scenario}” with an overall score of ${latest.scores?.overall || 0}/100.`,
     strength ? `Evidence-backed strength: ${strength.statement}` : '',
     growth ? `Evidence-backed growth area: ${growth.statement}` : '',
     `Manager interpretation: use this as coaching evidence, not as a fixed personality judgment. ${growth?.confidence?.level === 'low' ? 'Confidence is low because the current pattern is based on limited evidence.' : `Current confidence is ${growth?.confidence?.level || 'low'}.`}`,
     activeAssignment ? `An active assignment already exists: “${activeAssignment.scenarioName}” (${activeAssignment.status}).` : `Recommended next step: assign one targeted Practice focused on ${focus.replace(/_/g, ' ')}.`
-  ].filter(Boolean).join('\n\n');
+  ]).filter(Boolean).join('\n\n');
   return {
     content, evidence,
     assignmentDraft: activeAssignment ? null : {
       learner: profile.preferredName || profile.learnerEmail,
       assignedTo: profile.learnerEmail, focusCompetency: focus,
-      rationale: growth?.statement || `Build additional evidence for ${focus.replace(/_/g, ' ')}.`,
+      rationale: localizedClaim(growth, zh) || (zh ? `为${focus.replace(/_/g, ' ')}收集更多练习证据。` : `Build additional evidence for ${focus.replace(/_/g, ' ')}.`),
       mode: 'quick'
     }
   };
@@ -358,36 +397,37 @@ function managerIntelligence(profile, sessions, assignments, question) {
 
 async function generateCoachReply(profile, sessions, assignments, history, learnerMessage) {
   const text = cleanText(learnerMessage, 6000).toLowerCase();
+  const zh = usesChinese(learnerMessage) || profile?.background?.language === 'zh';
   const latest = sessions[0];
   const strength = activeClaims(profile, 'strength')[0];
   const growth = activeClaims(profile, 'growth_area')[0];
   const next = assignments.find(item => item.status !== 'Completed');
   const evidence = latest
-    ? `Evidence: in your latest “${latest.scenario}” Practice, your overall score was ${latest.scores?.overall || 0}/100${latest.summary ? `, and the Coach Summary recorded: ${latest.summary}` : '.'}`
-    : 'Evidence: there is not yet a completed Practice session available for a reliable assessment.';
+    ? (zh ? `练习证据：您最近一次“${latest.scenario}”练习的总分为${latest.scores?.overall || 0}/100${latest.summary ? `；教练总结记录为：${latest.summary}` : '。'}` : `Evidence: in your latest “${latest.scenario}” Practice, your overall score was ${latest.scores?.overall || 0}/100${latest.summary ? `, and the Coach Summary recorded: ${latest.summary}` : '.'}`)
+    : (zh ? '练习证据：目前还没有已完成的练习，无法作出可靠评估。' : 'Evidence: there is not yet a completed Practice session available for a reliable assessment.');
   let coaching;
   if (/result|score|feedback|explain|summary|结果|分数|反馈|解释|总结/.test(text)) {
     coaching = growth
-      ? `Interpretation: ${growth.statement} This is a current evidence-based coaching claim, not a fixed personal trait.`
+      ? (zh ? `解读：${localizedClaim(growth, true)}这只是根据当前练习证据形成的辅导观察，不是固定的人格特征。` : `Interpretation: ${growth.statement} This is a current evidence-based coaching claim, not a fixed personal trait.`)
       : strength
-        ? `Interpretation: ${strength.statement} This describes the available Practice evidence, not a fixed personal trait.`
-        : 'Interpretation: more Practice evidence is needed before identifying a stable pattern.';
+        ? (zh ? `解读：${localizedClaim(strength, true)}这描述的是现有练习证据，不是固定的人格特征。` : `Interpretation: ${strength.statement} This describes the available Practice evidence, not a fixed personal trait.`)
+        : (zh ? '解读：需要更多练习证据，才能判断是否存在稳定规律。' : 'Interpretation: more Practice evidence is needed before identifying a stable pattern.');
   } else if (/prepare|assignment|准备|作业|指派/.test(text)) {
     coaching = next
-      ? `Preparation: for “${next.scenarioName},” choose one clear objective, ask one open question, and end with a specific next step.`
-      : 'Preparation: choose one conversation objective, ask an open question, and end with a specific next step.';
+      ? (zh ? `准备建议：针对“${next.scenarioName}”，先确定一个明确目标，提出一个开放式问题，并在结尾确认具体的下一步。` : `Preparation: for “${next.scenarioName},” choose one clear objective, ask one open question, and end with a specific next step.`)
+      : (zh ? '准备建议：先确定一个对话目标，提出一个开放式问题，并在结尾确认具体的下一步。' : 'Preparation: choose one conversation objective, ask an open question, and end with a specific next step.');
   } else {
     coaching = growth
-      ? `Coaching focus: ${growth.statement}`
+      ? (zh ? `辅导重点：${localizedClaim(growth, true)}` : `Coaching focus: ${growth.statement}`)
       : strength
-        ? `Coaching focus: build on this evidence—${strength.statement}`
-        : 'Coaching focus: complete a short Practice so your guidance can be grounded in observable evidence.';
+        ? (zh ? `辅导重点：在这项证据基础上继续加强——${localizedClaim(strength, true)}` : `Coaching focus: build on this evidence—${strength.statement}`)
+        : (zh ? '辅导重点：先完成一次简短练习，让后续建议建立在可观察的证据上。' : 'Coaching focus: complete a short Practice so your guidance can be grounded in observable evidence.');
   }
   const action = next
-    ? `Next action: open your assigned “${next.scenarioName}” Practice and focus on that one behavior.`
+    ? (zh ? `下一步：打开指定的“${next.scenarioName}”练习，并集中练习这一项行为。` : `Next action: open your assigned “${next.scenarioName}” Practice and focus on that one behavior.`)
     : growth
-      ? `Next action: complete one short Practice focused on ${growth.competency.replace(/_/g, ' ')}.`
-      : 'Next action: complete one short Practice, then return here for an evidence-linked explanation.';
+      ? (zh ? `下一步：完成一次针对${growth.competency.replace(/_/g, ' ')}的简短练习。` : `Next action: complete one short Practice focused on ${growth.competency.replace(/_/g, ' ')}.`)
+      : (zh ? '下一步：先完成一次简短练习，然后回到这里查看有证据支持的解释。' : 'Next action: complete one short Practice, then return here for an evidence-linked explanation.');
   return `${evidence}\n\n${coaching}\n\n${action}`;
 }
 
@@ -622,7 +662,9 @@ export default async function handler(req) {
         learner: record.learner, scenarioId: record.scenarioId, scenarioName: record.scenarioName,
         createdAt: record.createdAt,
         learnerContent: `Your manager assigned “${record.scenarioName}” (${record.mode} Practice). It is ready in your Assignment Inbox.`,
-        managerContent: `Assignment confirmed: “${record.scenarioName}” was sent to ${record.learner || record.assignedTo}. The learner can now launch it from Coach Chat or the Assignment Inbox.`
+        managerContent: `Assignment confirmed: “${record.scenarioName}” was sent to ${record.learner || record.assignedTo}. The learner can now launch it from Coach Chat or the Assignment Inbox.`,
+        learnerContentZh: `主管已指派“${record.scenarioName}”（${record.mode}练习）。您可以从练习任务收件箱开始。`,
+        managerContentZh: `指派已确认：“${record.scenarioName}”已发送给${record.learner || record.assignedTo}。学员现在可以从 AI 教练或练习任务收件箱开始。`
       });
       await writeAudit(store, teamPrefix, actor, 'assignment_create', 'success', {
         assignmentId: record.id, assignedTo: record.assignedTo, scenarioId: record.scenarioId
@@ -685,7 +727,9 @@ export default async function handler(req) {
             scenarioName: assignment.scenarioName || record.scenario, score: record.scores.overall,
             sessionId: record.id, evidenceIds,
             learnerContent: `You completed “${assignment.scenarioName || record.scenario}” with an overall score of ${record.scores.overall}/100.${strength ? ` Current evidence: ${strength.statement}` : ''}${growth ? ` Next coaching focus: ${growth.statement}` : ''}`,
-            managerContent: `${assignment.learner || record.learnerName} completed “${assignment.scenarioName || record.scenario}” with an overall score of ${record.scores.overall}/100.${strength ? ` Evidence-backed strength: ${strength.statement}` : ''}${growth ? ` Evidence-backed growth area: ${growth.statement}` : ''} The transcript, rubric result, and evidence are now available for follow-up coaching.`
+            managerContent: `${assignment.learner || record.learnerName} completed “${assignment.scenarioName || record.scenario}” with an overall score of ${record.scores.overall}/100.${strength ? ` Evidence-backed strength: ${strength.statement}` : ''}${growth ? ` Evidence-backed growth area: ${growth.statement}` : ''} The transcript, rubric result, and evidence are now available for follow-up coaching.`,
+            learnerContentZh: `您已完成“${assignment.scenarioName || record.scenario}”，总分为${record.scores.overall}/100。${strength ? ` 当前证据：${strength.statementZh || strength.statement}` : ''}${growth ? ` 下一项辅导重点：${growth.statementZh || growth.statement}` : ''}`,
+            managerContentZh: `${assignment.learner || record.learnerName}已完成“${assignment.scenarioName || record.scenario}”，总分为${record.scores.overall}/100。${strength ? ` 有证据支持的优势：${strength.statementZh || strength.statement}` : ''}${growth ? ` 有证据支持的改进方向：${growth.statementZh || growth.statement}` : ''}完整对话、评分结果和练习证据现已可用于后续辅导。`
           });
           await writeAudit(store, teamPrefix, actor, 'assignment_complete', 'success', {
             assignmentId: assignment.id, sessionId: record.id, evidenceIds
@@ -787,7 +831,7 @@ export default async function handler(req) {
       const events = (await listJSON(store, `${teamPrefix}/assignment-events/`))
         .filter(event => normalizeEmail(event.assignedTo) === actor.email)
         .map(event => assignmentEventMessage(event, 'learner'));
-      const messages = [...(stored.length ? stored : [initialCoachMessage(profile, assignments)]), ...events];
+      const messages = [...(stored.length ? stored : [initialCoachMessage(profile, assignments, url.searchParams.get('lang'))]), ...events];
       messages.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
       return reply(200, {
         messages, profile, assignments,

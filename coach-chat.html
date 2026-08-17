@@ -39,13 +39,13 @@ function applyLang(){document.documentElement.lang=currentLang==='zh'?'zh-CN':'e
 applyLang();
 const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let messages=[];
-function messageHTML(item){return '<div class="message '+(item.role==='user'?'user':'assistant')+'">'+esc(item.content)+'<small>'+esc(item.createdAt?new Date(item.createdAt).toLocaleString(currentLang==='zh'?'zh-CN':'en-US'):'')+'</small></div>'}
+function messageHTML(item){return '<div class="message '+(item.role==='user'?'user':'assistant')+'">'+esc(currentLang==='zh'?(item.contentZh||item.content):item.content)+'<small>'+esc(item.createdAt?new Date(item.createdAt).toLocaleString(currentLang==='zh'?'zh-CN':'en-US'):'')+'</small></div>'}
 function renderMessages(){const root=document.getElementById('messages');root.innerHTML=messages.map(messageHTML).join('');root.scrollTop=root.scrollHeight;document.getElementById('starters').hidden=false}
 function renderEvidence(profile){
   const root=document.getElementById('insights');
   const claims=(profile?.claims||[]).filter(x=>x.status==='active');
   if(!claims.length){root.innerHTML='<div class="status">'+t('Complete a Practice session to create evidence-linked coaching.','请先完成一次练习，以建立有依据的辅导记录。')+'</div>';return}
-  root.innerHTML=claims.slice(0,4).map(x=>'<div class="insight '+(x.claimType==='growth_area'?'growth':'')+'"><b>'+(x.claimType==='growth_area'?t('Growth area','需要改进'):t('Strength','优势'))+'</b><br>'+esc(x.statement)+'<div class="confidence">'+esc(x.confidence?.level||'low')+t(' confidence · ',' 可信度 · ')+esc((x.evidenceRefs||[]).length)+' evidence item(s)</div></div>').join('');
+  root.innerHTML=claims.slice(0,4).map(x=>'<div class="insight '+(x.claimType==='growth_area'?'growth':'')+'"><b>'+(x.claimType==='growth_area'?t('Growth area','需要改进'):t('Strength','优势'))+'</b><br>'+esc(currentLang==='zh'?(x.statementZh||x.statement):x.statement)+'<div class="confidence">'+esc(currentLang==='zh'?({low:'低',medium:'中',high:'高'}[x.confidence?.level]||x.confidence?.level||'低'):(x.confidence?.level||'low'))+t(' confidence · ',' 可信度 · ')+esc((x.evidenceRefs||[]).length)+t(' evidence item(s)',' 项练习证据')+'</div></div>').join('');
 }
 function renderAssignments(rows){
   const root=document.getElementById('assignments');
@@ -55,7 +55,7 @@ function renderAssignments(rows){
 }
 async function loadCoach(){
   try{
-    const data=await PilotCloud.request('coach-messages');
+    const data=await PilotCloud.request('coach-messages',{query:{lang:currentLang}});
     messages=data.messages||[];renderMessages();renderEvidence(data.profile);renderAssignments(data.assignments);document.getElementById('privacyNote').textContent=currentLang==='zh'?document.getElementById('privacyNote').textContent:(data.privacy||document.getElementById('privacyNote').textContent);
   }catch(error){document.getElementById('messages').innerHTML='<div class="status">'+esc(error.message)+'</div>';document.getElementById('composer').hidden=true;document.getElementById('insights').innerHTML='<div class="status">'+t('Unavailable','暂时无法使用')+'</div>';document.getElementById('assignments').innerHTML='<div class="status">'+t('Unavailable','暂时无法使用')+'</div>'}
 }
