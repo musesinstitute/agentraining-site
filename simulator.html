@@ -577,6 +577,11 @@
       color: var(--ink-muted);
     }
     .summary-meta { font-size: 12px; color: var(--ink-muted); margin-bottom: 18px; line-height: 1.8; }
+    .summary-sync { display:none; margin:-8px 0 16px; padding:11px 12px; border-radius:9px; background:#eff6ff; color:#1d4ed8; font-size:12px; line-height:1.5; }
+    .summary-sync.success { display:block; background:#ecfdf5; color:#047857; }
+    .summary-sync.error { display:block; background:#fef2f2; color:#b91c1c; }
+    .summary-sync.saving { display:block; }
+    .summary-sync button { margin-left:8px; border:1px solid currentColor; border-radius:6px; background:transparent; color:inherit; padding:4px 7px; font-weight:700; cursor:pointer; }
     .summary-overall {
       text-align: center; background: var(--canvas);
       border-radius: 12px; padding: 16px; margin-bottom: 16px;
@@ -1090,6 +1095,7 @@
     </div>
     <div class="summary-title" id="sum-title"></div>
     <div class="summary-meta" id="sum-meta"></div>
+    <div class="summary-sync" id="sum-sync" role="status" aria-live="polite"></div>
     <div class="summary-overall">
       <div class="summary-overall-num" id="sum-overall-num"></div>
       <div class="summary-overall-label" id="sum-overall-label">Overall Score / 100</div>
@@ -1175,6 +1181,7 @@
       <button class="reset-btn" onclick="resetChat()" id="reset-label">↺ Reset</button>
     </div>
     <div id="linked-case-banner" class="linked-case-banner" style="display:none;"></div>
+    <div id="assigned-practice-status" role="status" aria-live="polite" style="display:none;margin:10px 14px 0;padding:10px 12px;border-radius:9px;background:#eff6ff;color:#1d4ed8;font-size:12px;line-height:1.5;"></div>
     <div class="chat-messages" id="chat-messages">
       <div class="msg">
         <div class="msg-bubble system" id="welcome-msg">
@@ -1808,6 +1815,15 @@ function updatePracticeModeBanner() {
   banner.classList.toggle('active', currentPracticeMode !== 'full' || !!activeAssignment);
 }
 
+function showAssignedPracticeStatus(kind, en, zh) {
+  const root = document.getElementById('assigned-practice-status');
+  if (!root || !requestedAssignmentId) return;
+  root.style.display = 'block';
+  root.style.background = kind === 'error' ? '#fef2f2' : kind === 'success' ? '#ecfdf5' : '#eff6ff';
+  root.style.color = kind === 'error' ? '#b91c1c' : kind === 'success' ? '#047857' : '#1d4ed8';
+  root.textContent = currentLang === 'zh' ? zh : en;
+}
+
 function knowledgeAssignmentLesson(assignment) {
   const draft = assignment?.customScenario || {};
   const title = draft.title || assignment.scenarioName || 'Company Knowledge Practice';
@@ -1842,7 +1858,8 @@ function knowledgeAssignmentLesson(assignment) {
 }
 
 async function launchAssignedPractice() {
-  if (!requestedAssignmentId || !Array.isArray(curriculumData) || !curriculumData.length) return;
+  if (!requestedAssignmentId || !Array.isArray(curriculumData)) return;
+  showAssignedPracticeStatus('loading', 'Loading your assigned Practice…', '正在载入主管指派的练习…');
   let assignments = readPracticeAssignments();
   if (PilotCloud.enabled) {
     try {
@@ -1851,15 +1868,22 @@ async function launchAssignedPractice() {
       assignments = result.assignments || [];
     } catch (error) {
       console.warn('Pilot assignment load failed:', error.message);
+      showAssignedPracticeStatus('error', 'The assigned Practice could not be loaded. Return to your Assignment Inbox and try again.', '无法载入这项指定练习。请返回练习任务收件箱后再试一次。');
       return;
     }
   }
   const index = assignments.findIndex(x => x && x.id === requestedAssignmentId);
-  if (index === -1) return;
+  if (index === -1) {
+    showAssignedPracticeStatus('error', 'This assignment was not found for the signed-in Learner. Return to your Assignment Inbox.', '当前登录的 Learner 找不到这项任务。请返回练习任务收件箱。');
+    return;
+  }
   const assignment = assignments[index];
   const lesson = curriculumData.find(x => String(x.id) === String(assignment.scenarioId))
     || (assignment.sourceType === 'company_knowledge' ? knowledgeAssignmentLesson(assignment) : null);
-  if (!lesson) return;
+  if (!lesson) {
+    showAssignedPracticeStatus('error', 'This assignment refers to Practice content that is not available. Please contact your manager.', '这项任务所需的练习内容目前不可用，请联系主管。');
+    return;
+  }
   activeAssignment = assignment;
   currentPracticeMode = ['quick','standard','full'].includes(assignment.mode) ? assignment.mode : 'full';
   maxPracticeTurns = currentPracticeMode === 'quick' ? 3 : currentPracticeMode === 'standard' ? 6 : 10;
@@ -1879,6 +1903,7 @@ async function launchAssignedPractice() {
   setPanelMode('curriculum');
   selectCurriculumLesson(lesson);
   updatePracticeModeBanner();
+  showAssignedPracticeStatus('success', `Assigned Practice ready: ${assignment.scenarioName}.`, `指定练习已经准备好：${assignment.scenarioName}。`);
 }
 
 
@@ -2787,6 +2812,7 @@ async function uploadSession(data) {
   const team  = sessionStorage.getItem('agentraining_team') || 'default';
   const record = {
     ref, name, team,
+    clientSessionId: activeAssignment?.id ? 'assignment-' + activeAssignment.id : '',
     assignmentId: activeAssignment?.id || '',
     learner: activeAssignment?.learner || name,
     practiceMode: currentPracticeMode,
@@ -2825,6 +2851,7 @@ async function uploadSession(data) {
     else await completeActiveAssignment(data);
   } catch (err) {
     console.warn('Pilot session upload failed:', err.message);
+    return { ok: false, error: err.message };
   }
   try {
     if (!PilotCloud.enabled) {
@@ -2837,6 +2864,7 @@ async function uploadSession(data) {
       localStorage.setItem(key, JSON.stringify(existing.slice(0, 100)));
     }
   } catch (e) { console.warn('Manager local record save failed:', e.message); }
+  return { ok: true };
 }
 
 
@@ -3217,9 +3245,41 @@ let lastFinalData = null;
 let pendingNextLesson = null;
 let pendingCaseAction = null;
 
+function updateSummarySyncStatus(state, message) {
+  const root = document.getElementById('sum-sync');
+  if (!root) return;
+  root.className = 'summary-sync ' + state;
+  root.innerHTML = message;
+}
+
+async function syncCompletedPractice(data) {
+  updateSummarySyncStatus('saving', currentLang === 'zh'
+    ? '正在保存分数、完整对话记录和完成状态…'
+    : 'Saving the score, transcript, and completion status…');
+  const result = await uploadSession(data);
+  if (result.ok) {
+    const savedMessage = PilotCloud.enabled
+      ? (currentLang === 'zh'
+        ? '✓ 已保存。任务已标记为“已完成”，主管现在可以查看分数、教练总结和完整对话记录。'
+        : '✓ Saved. The assignment is marked Completed, and your manager can now review the score, Coach Summary, and full transcript.')
+      : (currentLang === 'zh' ? '✓ 练习结果已保存在此浏览器。' : '✓ Practice result saved in this browser.');
+    updateSummarySyncStatus('success', savedMessage);
+    return;
+  }
+  const retry = activeAssignment
+    ? '<button type="button" onclick="retrySummarySync()">'+(currentLang === 'zh' ? '重新同步' : 'Retry sync')+'</button>'
+    : '';
+  updateSummarySyncStatus('error', (currentLang === 'zh'
+    ? '尚未能同步到安全工作区。请暂时保留本页面。'
+    : 'The result has not synced to the secure workspace yet. Please keep this page open.') + retry);
+}
+
+function retrySummarySync() {
+  if (lastFinalData) syncCompletedPractice(lastFinalData);
+}
+
 function showSummary(data) {
   lastFinalData = data;
-  uploadSession(data); // silent background upload
   const isZh = currentLang === 'zh';
   const name = sessionStorage.getItem('agentraining_name') || 'Agent';
   const ref  = sessionStorage.getItem('agentraining_ref') || '';
@@ -3332,6 +3392,7 @@ function showSummary(data) {
   document.getElementById('btn-close-sum').textContent = isZh ? '關閉' : 'Close';
 
   document.getElementById('summary-modal').style.display = 'flex';
+  syncCompletedPractice(data);
 }
 
 function closeSummary() {

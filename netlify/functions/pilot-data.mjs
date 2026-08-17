@@ -77,6 +77,7 @@ function sessionRecord(input, actor) {
   })) : [];
   return {
     id: crypto.randomUUID(), teamId: actor.teamId, userId: actor.id,
+    clientSessionId: cleanText(input.clientSessionId, 140),
     learner: actor.email,
     learnerName: cleanText(input.learner || input.name || actor.email, 120),
     savedAt: new Date().toISOString(), assignmentId: cleanText(input.assignmentId, 100),
@@ -653,8 +654,14 @@ export default async function handler(req) {
     if (req.method === 'POST' && resource === 'sessions') {
       verifyRequestOrigin(req);
       const input = await req.json();
-      const record = sessionRecord(input, actor);
-      await store.setJSON(`${teamPrefix}/sessions/${record.id}`, record, { onlyIfNew: true });
+      const clientSessionId = cleanText(input.clientSessionId, 140);
+      let prior = null;
+      if (clientSessionId) {
+        const priorSessions = await listJSON(store, `${teamPrefix}/sessions/`);
+        prior = priorSessions.find(item => item.userId === actor.id && item.clientSessionId === clientSessionId) || null;
+      }
+      const record = prior || sessionRecord(input, actor);
+      if (!prior) await store.setJSON(`${teamPrefix}/sessions/${record.id}`, record, { onlyIfNew: true });
       const profile = await updateLearnerProfile(store, teamPrefix, actor, record);
       if (record.assignmentId) {
         const assignmentKey = `${teamPrefix}/assignments/${record.assignmentId}`;
@@ -685,7 +692,7 @@ export default async function handler(req) {
           });
         }
       }
-      return reply(201, { session: record, profile });
+      return reply(prior ? 200 : 201, { session: record, profile, duplicate: Boolean(prior) });
     }
 
     if (req.method === 'GET' && resource === 'sessions') {
