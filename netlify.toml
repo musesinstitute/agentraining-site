@@ -11,7 +11,7 @@
 
 [[edge_functions]]
   function = "pilot-cloud-roster-patch"
-  path = "/js/pilot-cloud.js"
+  path = "/pilot-cloud.js"
 
 [[redirects]]
   from = "/api/*"
