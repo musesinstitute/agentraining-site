@@ -9,6 +9,10 @@
   function = "manager-render-hotfix"
   path = "/manager.html"
 
+[[edge_functions]]
+  function = "pilot-cloud-roster-patch"
+  path = "/js/pilot-cloud.js"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
