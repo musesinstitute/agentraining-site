@@ -1,6 +1,32 @@
 (function () {
   const params = new URLSearchParams(window.location.search);
   const enabled = params.get('pilot') === '1';
+
+  // The simulator still has a legacy private-beta ref gate. Pilot access is
+  // authenticated by Netlify Identity instead, so let the page bootstrap past
+  // the legacy gate without exposing or consuming a real invite/referral code.
+  // Restore the native URLSearchParams as soon as the document is ready.
+  const NativeURLSearchParams = window.URLSearchParams;
+  if (enabled && !params.get('ref')) {
+    class PilotBootstrapSearchParams extends NativeURLSearchParams {
+      get(name) {
+        if (name === 'ref' && !super.get('ref')) return 'demo';
+        return super.get(name);
+      }
+    }
+    window.URLSearchParams = PilotBootstrapSearchParams;
+    window.addEventListener('DOMContentLoaded', () => {
+      window.URLSearchParams = NativeURLSearchParams;
+      sessionStorage.setItem('agentraining_ref', 'pilot');
+      sessionStorage.setItem('agentraining_name', 'Pilot User');
+      sessionStorage.setItem('agentraining_team', 'pilot');
+      const legacyWelcome = document.getElementById('gate-welcome');
+      if (legacyWelcome) legacyWelcome.style.display = 'none';
+      const legacyGate = document.getElementById('access-gate');
+      if (legacyGate) legacyGate.style.display = 'none';
+    }, { once: true });
+  }
+
   let readyPromise;
   let finishReady;
   let switchHandled = false;
