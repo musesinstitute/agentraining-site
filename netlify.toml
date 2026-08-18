@@ -5,6 +5,10 @@
   function = "pilot-team-gate"
   path = "/.netlify/functions/pilot-data"
 
+[[edge_functions]]
+  function = "manager-render-hotfix"
+  path = "/manager.html"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
