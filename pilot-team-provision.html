@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pilot Team Provisioning — AgentTraining AI</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<style>
+body{margin:0;background:#f7f8fc;color:#111827;font:14px Arial,sans-serif}.wrap{max-width:920px;margin:40px auto;padding:0 20px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:24px;margin:14px 0}h1{margin-top:0}.muted{color:#6b7280;line-height:1.6}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:12px 14px}.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:10px;padding:12px 14px}.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:10px;padding:12px 14px}button{border:0;border-radius:9px;padding:11px 15px;background:#1a56db;color:#fff;font-weight:700;cursor:pointer}button[disabled]{opacity:.5;cursor:not-allowed}.secondary{background:#fff;color:#1d4ed8;border:1px solid #93c5fd}.row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid #eee;align-items:center;flex-wrap:wrap}.row:last-child{border-bottom:0}.email{font-weight:700}.meta{font-size:12px;color:#6b7280;margin-top:4px}.pill{display:inline-block;border-radius:99px;padding:3px 8px;background:#eef2ff;color:#3730a3;font-size:11px;margin-left:5px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body><div class="wrap">
+<div class="card"><h1>Pilot Team Provisioning</h1><p class="muted">One-time admin migration tool for assigning an explicit <code>team_id</code> to existing Netlify Identity users before the legacy shared-team fallback is removed.</p><div class="warn"><b>Safety:</b> this page never changes users automatically. Only an Identity user with the <code>admin</code> role can perform updates. Existing roles and provider metadata are preserved.</div></div>
+<div class="card" id="authCard"><p id="authStatus">Checking admin access…</p></div>
+<div class="card" id="toolCard" hidden>
+<div class="actions"><button id="refreshBtn" class="secondary">Refresh users</button><button id="bulkBtn" disabled>Assign founding-pilot to all users missing team_id</button></div>
+<p class="muted" id="summary"></p><div id="users"></div><div id="result"></div>
+</div>
+</div>
+<script>
+const TEAM_ID='founding-pilot';
+const authStatus=document.getElementById('authStatus');
+const toolCard=document.getElementById('toolCard');
+const usersRoot=document.getElementById('users');
+const summary=document.getElementById('summary');
+const result=document.getElementById('result');
+const bulkBtn=document.getElementById('bulkBtn');
+const refreshBtn=document.getElementById('refreshBtn');
+let currentUsers=[];
+function rolesOf(user){return user?.app_metadata?.roles||[]}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function requireAdmin(){
+  window.netlifyIdentity.init();
+  let user=window.netlifyIdentity.currentUser();
+  if(!user){authStatus.innerHTML='Please <button id="loginBtn">sign in</button> with an Identity admin account.';document.getElementById('loginBtn').onclick=()=>window.netlifyIdentity.open('login');window.netlifyIdentity.on('login',()=>location.reload());return null}
+  try{await user.getUserData()}catch(e){}
+  if(!rolesOf(user).includes('admin')){authStatus.innerHTML='<div class="error"><b>Admin role required.</b><br>This account is signed in but does not have the Identity <code>admin</code> role. No provisioning actions are available.</div>';return null}
+  authStatus.innerHTML='<div class="ok"><b>Admin verified.</b> Signed in as '+esc(user.email)+'.</div>';
+  toolCard.hidden=false;return user;
+}
+async function loadUsers(){
+  result.innerHTML='';usersRoot.innerHTML='Loading…';bulkBtn.disabled=true;
+  const user=window.netlifyIdentity.currentUser();
+  const data=await user.admin.listUsers();
+  currentUsers=Array.isArray(data?.users)?data.users:(Array.isArray(data)?data:[]);
+  const missing=currentUsers.filter(u=>!u?.app_metadata?.team_id);
+  summary.textContent=currentUsers.length+' Identity users · '+missing.length+' missing team_id';
+  bulkBtn.disabled=missing.length===0;
+  usersRoot.innerHTML=currentUsers.map(u=>{
+    const meta=u.app_metadata||{};const team=meta.team_id||'';const roles=Array.isArray(meta.roles)?meta.roles:[];
+    return '<div class="row"><div><div class="email">'+esc(u.email)+'</div><div class="meta">roles: '+esc(roles.join(', ')||'none')+' · team_id: '+esc(team||'MISSING')+'</div></div><div>'+(team?'<span class="pill">'+esc(team)+'</span>':'<button class="assignOne" data-id="'+esc(u.id)+'">Assign '+TEAM_ID+'</button>')+'</div></div>';
+  }).join('');
+  document.querySelectorAll('.assignOne').forEach(btn=>btn.onclick=()=>assignUser(btn.dataset.id));
+}
+async function assignUser(id){
+  const user=window.netlifyIdentity.currentUser();const target=currentUsers.find(u=>u.id===id);if(!target)return;
+  const prior=target.app_metadata||{};
+  await user.admin.updateUser({id:target.id},{app_metadata:{...prior,team_id:TEAM_ID}});
+  result.innerHTML='<div class="ok">Updated '+esc(target.email)+' → team_id='+TEAM_ID+'</div>';await loadUsers();
+}
+async function assignAllMissing(){
+  const missing=currentUsers.filter(u=>!u?.app_metadata?.team_id);
+  if(!missing.length)return;
+  if(!confirm('Assign team_id='+TEAM_ID+' to '+missing.length+' users currently missing team_id? Existing roles and metadata will be preserved.'))return;
+  bulkBtn.disabled=true;const user=window.netlifyIdentity.currentUser();let done=0;
+  for(const target of missing){const prior=target.app_metadata||{};await user.admin.updateUser({id:target.id},{app_metadata:{...prior,team_id:TEAM_ID}});done++;result.innerHTML='<div class="ok">Updated '+done+' / '+missing.length+' users…</div>'}
+  result.innerHTML='<div class="ok"><b>Migration complete.</b> '+done+' users now have team_id='+TEAM_ID+'. Sign out and back in before testing Pilot data.</div>';await loadUsers();
+}
+refreshBtn.onclick=()=>loadUsers().catch(e=>{result.innerHTML='<div class="error">'+esc(e.message||e)+'</div>'});
+bulkBtn.onclick=()=>assignAllMissing().catch(e=>{result.innerHTML='<div class="error">'+esc(e.message||e)+'</div>';bulkBtn.disabled=false});
+requireAdmin().then(u=>{if(u)loadUsers().catch(e=>{result.innerHTML='<div class="error">'+esc(e.message||e)+'</div>'})});
+</script></body></html>
