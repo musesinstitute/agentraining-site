@@ -1,4 +1,4 @@
-import { getUser, verifyRequestOrigin } from '@netlify/identity';
+import { verifyRequestOrigin } from '@netlify/identity';
 
 const jsonHeaders = {
   'content-type': 'application/json; charset=utf-8',
@@ -10,13 +10,26 @@ function reply(status, body) {
   return new Response(JSON.stringify(body), { status, headers: jsonHeaders });
 }
 
+async function verifyLegacyIdentity(req) {
+  const authorization = req.headers.get('authorization') || '';
+  if (!/^Bearer\s+\S+/i.test(authorization)) return null;
+
+  const origin = new URL(req.url).origin;
+  const response = await fetch(`${origin}/.netlify/identity/user`, {
+    method: 'GET',
+    headers: { authorization }
+  });
+  if (!response.ok) return null;
+  return response.json().catch(() => null);
+}
+
 export default async function handler(req) {
   try {
     if (req.method !== 'POST') return reply(405, { error: 'Method not allowed.' });
     verifyRequestOrigin(req);
 
-    const user = await getUser();
-    if (!user) return reply(401, { error: 'Please sign in to continue.' });
+    const user = await verifyLegacyIdentity(req);
+    if (!user?.id) return reply(401, { error: 'Please sign in to continue.' });
     if (!process.env.OPENAI_API_KEY) return reply(500, { error: 'OPENAI_API_KEY is not configured.' });
 
     const input = await req.json().catch(() => ({}));
