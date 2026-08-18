@@ -1,6 +1,10 @@
 [build]
   functions = "netlify/functions"
 
+[[edge_functions]]
+  function = "pilot-team-gate"
+  path = "/.netlify/functions/pilot-data"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
