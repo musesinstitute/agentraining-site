@@ -51,10 +51,12 @@
   async function transcribe(blob) {
     if (!window.PilotCloud?.enabled) throw new Error('PilotCloud is not ready.');
     const user = await window.PilotCloud.ready();
-    const token = await user.jwt();
+    const token = user?.token?.access_token || await user.jwt();
+    if (!token) throw new Error(isZh() ? '登入憑證不存在，請重新登入。' : 'No sign-in token is available. Please sign in again.');
     const audioBase64 = await blobToBase64(blob);
     const response = await fetch('/.netlify/functions/openai-transcribe', {
       method: 'POST',
+      credentials: 'same-origin',
       headers: {
         'content-type': 'application/json',
         authorization: `Bearer ${token}`
