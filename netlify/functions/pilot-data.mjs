@@ -34,8 +34,65 @@ function userContext(user) {
     email: normalizeEmail(user.email),
     roles,
     isManager: roles.includes('manager') || roles.includes('admin'),
+    isLearner: roles.includes('learner'),
     teamId: safeSegment(metadata.team_id, 'founding-pilot')
   };
+}
+
+// Every authenticated Pilot request (not just the separate pilot-roster
+// function) upserts this account into the team roster. This is the
+// authoritative registration path: it reuses the exact identity/teamId
+// resolution that already reliably authenticates every page (Assignment
+// Inbox, Coach Chat, etc.), instead of depending on a signed-in learner's
+// browser also fetching a freshly-patched pilot-cloud.js and completing a
+// second, separate Bearer-token round trip to /.netlify/identity/user.
+// Key layout matches netlify/functions/pilot-roster.mjs (teams/{id}/roster/{userId})
+// so the existing manager roster reader (and Manager learner picker) sees it
+// without any change on that side.
+async function registerRosterMembership(store, teamPrefix, actor) {
+  try {
+    const key = `${teamPrefix}/roster/${safeSegment(actor.id, 'user')}`;
+    await store.setJSON(key, {
+      id: actor.id,
+      email: actor.email,
+      roles: actor.roles,
+      teamId: actor.teamId,
+      isLearner: actor.isLearner,
+      isManager: actor.isManager,
+      lastSeenAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.warn('pilot-data roster registration skipped', error);
+  }
+}
+
+// Learners who are registered in the team roster but have not yet completed
+// a Practice session have no Learner Success Profile (profiles are only
+// created from session evidence). Without this, a brand-new invited Learner
+// is invisible to every Manager-facing learner list (Assign Practice picker,
+// Manager AI learner selector, Learner Profiles) until after their first
+// completed session — which the Manager cannot arrange because they can't
+// select the learner in the first place. This returns lightweight
+// placeholder profiles (no claims yet) for roster learners lacking a real
+// profile, so they show up immediately as "no evidence yet" and remain
+// selectable.
+async function rosterShellProfiles(store, teamPrefix, existingEmails) {
+  const rosterRows = await listJSON(store, `${teamPrefix}/roster/`);
+  return rosterRows
+    .filter(row => row.isLearner && row.email && !existingEmails.has(normalizeEmail(row.email)))
+    .map(row => ({
+      profileId: null,
+      teamId: row.teamId,
+      learnerId: row.id,
+      learnerEmail: normalizeEmail(row.email),
+      preferredName: row.email,
+      background: {},
+      goals: [],
+      claims: [],
+      latestSessionId: null,
+      updatedAt: row.lastSeenAt || new Date(0).toISOString(),
+      schemaVersion: 'pilot-roster-shell-v1'
+    }));
 }
 
 function assignmentRecord(input, actor) {
@@ -558,6 +615,7 @@ export default async function handler(req) {
     const resource = url.searchParams.get('resource');
     const store = getStore({ name: STORE_NAME, consistency: 'strong' });
     const teamPrefix = `teams/${actor.teamId}`;
+    await registerRosterMembership(store, teamPrefix, actor);
 
     if (req.method === 'GET' && resource === 'me') return reply(200, { email: actor.email, roles: actor.roles, teamId: actor.teamId });
 
@@ -754,6 +812,8 @@ export default async function handler(req) {
       const requested = normalizeEmail(url.searchParams.get('learner'));
       await backfillProfiles(store, teamPrefix, actor, requested);
       const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
+      const existingProfileEmails = new Set(profiles.map(row => normalizeEmail(row.learnerEmail)));
+      profiles.push(...await rosterShellProfiles(store, teamPrefix, existingProfileEmails));
       profiles.sort((a, b) => String(a.preferredName || a.learnerEmail).localeCompare(String(b.preferredName || b.learnerEmail)));
       const stored = await listJSON(store, managerChatPrefix(teamPrefix, actor));
       const events = requested
@@ -788,7 +848,12 @@ export default async function handler(req) {
       if (!learnerEmail || !question) return reply(400, { error: 'Select a learner and enter a question.' });
       await backfillProfiles(store, teamPrefix, actor, learnerEmail);
       const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
-      const profile = profiles.find(item => normalizeEmail(item.learnerEmail) === learnerEmail);
+      let profile = profiles.find(item => normalizeEmail(item.learnerEmail) === learnerEmail);
+      if (!profile) {
+        const existingProfileEmails = new Set(profiles.map(row => normalizeEmail(row.learnerEmail)));
+        profile = (await rosterShellProfiles(store, teamPrefix, existingProfileEmails))
+          .find(row => row.learnerEmail === learnerEmail);
+      }
       if (!profile) {
         await writeAudit(store, teamPrefix, actor, 'manager_chat_query', 'not_found', { learnerEmail });
         return reply(404, { error: 'No authorized Practice profile was found for this learner.' });
@@ -937,9 +1002,17 @@ export default async function handler(req) {
       const requested = normalizeEmail(url.searchParams.get('learner'));
       await backfillProfiles(store, teamPrefix, actor, requested);
       const rows = await listJSON(store, `${teamPrefix}/profiles/`);
-      const visible = actor.isManager
-        ? (requested ? rows.filter(row => normalizeEmail(row.learnerEmail) === requested) : rows)
-        : rows.filter(row => row.learnerId === actor.id);
+      let visible;
+      if (actor.isManager) {
+        if (requested) {
+          visible = rows.filter(row => normalizeEmail(row.learnerEmail) === requested);
+        } else {
+          const existingEmails = new Set(rows.map(row => normalizeEmail(row.learnerEmail)));
+          visible = [...rows, ...await rosterShellProfiles(store, teamPrefix, existingEmails)];
+        }
+      } else {
+        visible = rows.filter(row => row.learnerId === actor.id);
+      }
       visible.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
       return reply(200, { profiles: visible });
     }
