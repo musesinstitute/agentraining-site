@@ -287,27 +287,69 @@ function localizedClaim(claim, zh) {
   return zh ? (claim?.statementZh || claim?.statement || '') : (claim?.statement || '');
 }
 
+// ROOM 4C — explicit intent routing (learner side).
+// Pure, deterministic, EN+ZH keyword classification. Intent names are internal
+// only: generateCoachReply() uses the returned id to decide which response
+// shape/evidence path to use; the learner only ever sees a natural reply, never
+// an intent label. Not an autonomous action engine — it never touches
+// assignments, sessions, or profiles itself, only selects how to phrase a
+// reply from data already loaded by the caller.
+function routeLearnerIntent(message) {
+  const text = cleanText(message, 6000).toLowerCase();
+  if (!text) return 'general_coaching';
+  const has = re => re.test(text);
+  if (has(/that'?s not true|that is not true|that'?s wrong|i disagree with|correct my profile|update my goal|这是错的|这不是真的|这不对|不同意.{0,10}(评估|结论)|更正.{0,10}(档案|资料)|更新.{0,10}目标/)) return 'correct_record';
+  if (has(/explain.{0,25}(score|result)|why.{0,40}(score|result)|\bfeedback\b|did i do (well|wrong|right)|summarize.{0,25}practice|解释.{0,10}(分数|结果)|为什么.{0,15}(分数|结果)|反馈|做得(好|对|不好|错)|总结.{0,10}练习/)) return 'explain_result';
+  if (has(/help me prepare|prepare (for|me)|practice preparation|what should i say|how (should|do) i handle|准备.{0,10}(练习|任务|情境|场景|作业)|帮.{0,6}准备|该说什么|怎么(应对|处理).{0,10}(情境|场景)/)) return 'prepare_practice';
+  if (has(/what should i (practice|improve)|next skill|recommend.{0,10}practice|下一步.{0,10}练习什么|该(提升|加强).{0,10}什么|下一项技能|推荐.{0,10}练习/)) return 'recommend_next';
+  if (has(/what do you know about me|what (are|is) my strength|what have you learned about me|你了解我|你对我.{0,10}(了解|看法)|我的优势是什么/)) return 'know_me';
+  if (has(/am i improving|how am i doing|what progress (have i made|i.?ve made)|我(在)?进步吗|我做得怎么样|有什么进步/)) return 'reflect_progress';
+  return 'general_coaching';
+}
+
+// ROOM 4C — explicit intent routing (manager side). Same contract as
+// routeLearnerIntent(): pure classifier, internal-only labels, no side effects.
+function routeManagerIntent(message) {
+  const text = cleanText(message, 6000).toLowerCase();
+  if (!text) return 'general_manager';
+  const has = re => re.test(text);
+  if (has(/show me the evidence|why do you say that|prove it|show source|show (the )?evidence|显示.{0,10}(证据|依据)|为什么.{0,10}(这么说|这样说)|证据在哪|出示证据/)) return 'evidence_request';
+  if (has(/did[\s\S]{0,40}(help|improve)|did the (assigned|training)|after (that|the) practice|what happened after|有效吗|有帮助吗|之后.{0,15}(有|有没有).{0,10}(进步|提高|改善)/)) return 'follow_up';
+  if (has(/\bassign\b|give (him|her|them).{0,15}(practice|exercise)|指派|安排.{0,10}练习|给.{0,6}(练习|任务)/)) return 'recommend_assignment';
+  if (has(/prepare me for|one-on-one|what should i discuss|coaching prep|准备.{0,10}(一对一|辅导)|该(和|跟).{0,10}讨论什么/)) return 'coaching_prep';
+  if (has(/why (is|isn'?t|does)|why.{0,20}(not improving|struggl)|为什么.{0,15}(没有进步|没进步|不进步|困难|挣扎)/)) return 'cause_analysis';
+  if (has(/biggest (skill )?gap|team (weakness|trend|need)|what does my team need|团队.{0,10}(差距|弱点|趋势|需要)|整个团队/)) return 'team_diagnosis';
+  if (has(/strengths and (weaknesses|growth)|how is .{0,20} doing|summarize this learner|summarize .{0,15}(member|learner)|优势和.{0,6}(弱点|不足|需要改进)|表现怎么样|总结.{0,10}(这名|这位)?(学员|成员)/)) return 'member_review';
+  return 'general_manager';
+}
+
+// ROOM 4C — finalized Learner opening. Shown only when this learner has no
+// prior Coach Chat history (see the stored.length check at the coach-messages
+// GET call site). Personalizes [Name] from the authenticated profile when a
+// real name is available; never fabricates one, and deliberately does not
+// dump scores/evidence or reference specific assignments here — the
+// Assignment Inbox stays the separate, unchanged surface for that. Later
+// replies (generateCoachReply) remain fully evidence-based.
 function initialCoachMessage(profile, assignments, requestedLang) {
   const zh = requestedLang === 'zh' || profile?.background?.language === 'zh';
-  const name = cleanText(profile?.preferredName, 80) || 'there';
-  const strength = activeClaims(profile, 'strength')[0];
-  const growth = activeClaims(profile, 'growth_area')[0];
-  const next = assignments.find(item => item.status !== 'Completed');
-  let text = zh
-    ? `您好，${name}。从今天开始，我将作为您的私人 AI 教练，帮助您练习、理解反馈、准备客户对话，并选择下一项需要加强的技能。`
-    : `Welcome, ${name}. From today forward, I will be your Personal AI Coach. I can help you practice, understand feedback, prepare for a client conversation, and choose the next skill to strengthen.`;
-  if (strength || growth) {
-    text += zh ? ' 根据您目前的练习证据：' : ' Based on your current Practice evidence:';
-    if (strength) text += ` ${zh ? (strength.statementZh || strength.statement) : strength.statement}`;
-    if (growth) text += ` ${zh ? (growth.statementZh || growth.statement) : growth.statement}`;
-  } else {
-    text += zh ? ' 目前还没有足够练习证据可以判断可靠的表现规律。' : ' There is not yet enough Practice evidence to identify a reliable pattern.';
-  }
-  text += next ? (zh
-    ? ` 您的下一项任务是“${next.scenarioName}”。开始前需要一条简短的准备建议吗？`
-    : ` Your next assigned action is “${next.scenarioName}.” Would you like a short preparation tip before you begin?`)
-    : (zh ? ' 目前什么帮助会对您最有用？' : ' What would make the biggest difference for you right now?');
+  const rawName = cleanText(profile?.preferredName, 80);
+  const hasName = Boolean(rawName) && !rawName.includes('@');
+  const text = zh
+    ? `您好${hasName ? `，${rawName}` : ''}。从今天开始，我会成为您的 AI 教练和成长伙伴，陪伴您不断提升专业能力并走向事业成功。\n\n我可以帮助您进行练习、理解反馈、准备客户对话，并找出下一项最值得加强的技能。\n\n现在开始，什么样的帮助对您最有价值？`
+    : `Welcome${hasName ? `, ${rawName}` : ''}. From today forward, I will be your AI coach and companion toward career success.\n\nI can help you practice, understand feedback, prepare for a client conversation, and choose the next skill to strengthen.\n\nTo begin, what would make the biggest difference for you right now?`;
   return coachMessage('assistant', text);
+}
+
+// ROOM 4C — finalized Manager opening. Shown only when this specific
+// learner's manager-chat thread has no prior messages (mirrors
+// initialCoachMessage's stored.length check). The example questions and
+// "Rachel" are illustrative copy only, never real team data.
+function initialManagerMessage(requestedLang, learnerEmail) {
+  const zh = requestedLang === 'zh';
+  const text = zh
+    ? `我可以帮助您理解团队的训练证据，并决定下一步最有价值的辅导行动。\n\n您可以问我，例如：\n\n• 本周团队最大的技能差距是什么？\n• Rachel 目前有哪些优势和需要改进的地方？\n• 帮我准备与 Rachel 的一对一辅导。\n• 哪些成员应该练习价格异议处理？\n• 我之前指派的训练真的有效吗？\n\n对于重要结论，我会说明依据；练习指派和辅导决定始终由您确认。`
+    : `I can help you understand your team’s training evidence and take the next coaching action.\n\nYou can ask me things like:\n\n• What is our biggest skill gap this week?\n• What are Rachel’s current strengths and growth areas?\n• Prepare me for my one-on-one with Rachel.\n• Which members should practice price objections?\n• Did the training I assigned actually help?\n\nI’ll show the evidence behind important conclusions, and you remain in control of assignments and coaching decisions.`;
+  return managerChatMessage('assistant', text, learnerEmail);
 }
 
 function fallbackCoachReply(profile, sessions, assignments) {
@@ -411,81 +453,227 @@ function sessionEvidence(profile, sessions) {
   return [...unique.values()].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
 }
 
+// ROOM 4C — Manager Answer Contract (see AGENTS-facing spec section E):
+// answer first in plain language, ground material statements in authorized
+// evidence, separate observed fact from AI interpretation, surface
+// confidence/evidence sufficiency, and recommend a proportionate action.
+// Human confirmation (Confirm Assignment) is required before any assignment
+// is sent — this function only ever returns a draft, never posts one.
 function managerIntelligence(profile, sessions, assignments, question) {
   const zh = usesChinese(question);
+  const intent = routeManagerIntent(question);
   const claims = (profile?.claims || []).filter(item => item.status === 'active' && item.visibility === 'manager_summary');
   const strength = claims.find(item => item.claimType === 'strength');
   const growth = claims.find(item => item.claimType === 'growth_area');
   const evidence = sessionEvidence(profile, sessions);
   const latest = sessions[0];
   const activeAssignment = assignments.find(item => item.status !== 'Completed');
-  if (!latest || !claims.length) {
-    return {
-      content: zh
-        ? `目前没有足够的练习记录，可以可靠评估${profile?.preferredName || profile?.learnerEmail || '这名学员'}。现在不应推断其固定优势或弱点。下一步：指派一项简短、与工作有关的练习，并查看完成后的完整对话。`
-        : `There is not enough recorded Practice evidence to assess ${profile?.preferredName || profile?.learnerEmail || 'this learner'} reliably. No strength or weakness should be inferred yet. Next step: assign one short, job-relevant Practice and review the resulting transcript.`,
-      evidence, assignmentDraft: null
-    };
-  }
+  const name = profile?.preferredName || profile?.learnerEmail || (zh ? '这名学员' : 'this learner');
   const focus = growth?.competency || 'closing';
-  const content = (zh ? [
-    `${profile.preferredName || profile.learnerEmail}目前有${sessions.length}次练习记录。最近一次是“${latest.scenario}”，总分${latest.scores?.overall || 0}/100。`,
-    strength ? `有证据支持的优势：${localizedClaim(strength, true)}` : '',
-    growth ? `有证据支持的改进方向：${localizedClaim(growth, true)}` : '',
-    `主管解读：请把这些内容作为辅导证据，而不是固定的人格判断。${growth?.confidence?.level === 'low' ? '由于目前证据有限，可信度较低。' : `当前可信度为${growth?.confidence?.level || '低'}。`}`,
-    activeAssignment ? `目前已有一项进行中的任务：“${activeAssignment.scenarioName}”（${activeAssignment.status}）。` : `建议下一步：针对${focus.replace(/_/g, ' ')}指派一项练习。`
-  ] : [
-    `${profile.preferredName || profile.learnerEmail} has ${sessions.length} recorded Practice session${sessions.length === 1 ? '' : 's'}. The latest was “${latest.scenario}” with an overall score of ${latest.scores?.overall || 0}/100.`,
-    strength ? `Evidence-backed strength: ${strength.statement}` : '',
-    growth ? `Evidence-backed growth area: ${growth.statement}` : '',
-    `Manager interpretation: use this as coaching evidence, not as a fixed personality judgment. ${growth?.confidence?.level === 'low' ? 'Confidence is low because the current pattern is based on limited evidence.' : `Current confidence is ${growth?.confidence?.level || 'low'}.`}`,
-    activeAssignment ? `An active assignment already exists: “${activeAssignment.scenarioName}” (${activeAssignment.status}).` : `Recommended next step: assign one targeted Practice focused on ${focus.replace(/_/g, ' ')}.`
-  ]).filter(Boolean).join('\n\n');
-  return {
-    content, evidence,
-    assignmentDraft: activeAssignment ? null : {
-      learner: profile.preferredName || profile.learnerEmail,
-      assignedTo: profile.learnerEmail, focusCompetency: focus,
-      rationale: localizedClaim(growth, zh) || (zh ? `为${focus.replace(/_/g, ' ')}收集更多练习证据。` : `Build additional evidence for ${focus.replace(/_/g, ' ')}.`),
-      mode: 'quick'
+  const draftFor = (focusCompetency, rationale) => ({
+    learner: profile?.preferredName || profile?.learnerEmail,
+    assignedTo: profile?.learnerEmail, focusCompetency, rationale, mode: 'quick'
+  });
+
+  if (!latest || !claims.length) {
+    const content = zh
+      ? `目前没有足够的练习记录，可以可靠评估${name}。现在不应推断其固定优势或弱点。下一步：指派一项简短、与工作有关的练习，并查看完成后的完整对话。`
+      : `There is not enough recorded Practice evidence to assess ${name} reliably. No strength or weakness should be inferred yet. Next step: assign one short, job-relevant Practice and review the resulting transcript.`;
+    // recommend_assignment still gets a draft even before any evidence exists
+    // (assigning a first Practice is the whole point of that intent) - every
+    // other intent stays evidence-gated and returns no draft.
+    const assignmentDraft = (intent === 'recommend_assignment' && !activeAssignment)
+      ? draftFor('empathy', zh ? '目前还没有练习证据，建议先安排一次简短练习以建立基础证据。' : 'There is no Practice evidence yet — start with one short Practice to establish a baseline.')
+      : null;
+    return { content, evidence, assignmentDraft };
+  }
+
+  const summaryLine = zh
+    ? `${name}目前有${sessions.length}次练习记录。最近一次是“${latest.scenario}”，总分${latest.scores?.overall || 0}/100。`
+    : `${name} has ${sessions.length} recorded Practice session${sessions.length === 1 ? '' : 's'}. The latest was “${latest.scenario}” with an overall score of ${latest.scores?.overall || 0}/100.`;
+  const strengthLine = strength ? (zh ? `有证据支持的优势：${localizedClaim(strength, true)}` : `Evidence-backed strength: ${strength.statement}`) : '';
+  const growthLine = growth ? (zh ? `有证据支持的改进方向：${localizedClaim(growth, true)}` : `Evidence-backed growth area: ${growth.statement}`) : '';
+  const confidenceLine = zh
+    ? `解读提醒：请把这些内容作为辅导证据，而不是固定的人格判断。${growth?.confidence?.level === 'low' ? '由于目前证据有限，可信度较低。' : `当前可信度为${growth?.confidence?.level || '低'}。`}`
+    : `Interpretation note: use this as coaching evidence, not a fixed personality judgment. ${growth?.confidence?.level === 'low' ? 'Confidence is low because the current pattern is based on limited evidence.' : `Current confidence is ${growth?.confidence?.level || 'low'}.`}`;
+
+  let content;
+  let assignmentDraft = null;
+
+  if (intent === 'evidence_request') {
+    content = zh
+      ? `以下是这个结论背后的练习证据（详见右侧证据栏）：\n\n${summaryLine}\n\n${[strengthLine, growthLine].filter(Boolean).join('\n')}\n\n${confidenceLine}`
+      : `Here is the Practice evidence behind that (see the Evidence Drawer for full detail):\n\n${summaryLine}\n\n${[strengthLine, growthLine].filter(Boolean).join('\n')}\n\n${confidenceLine}`;
+  } else if (intent === 'follow_up') {
+    const linked = assignments.filter(a => a.status === 'Completed' && a.resultSessionId);
+    const scored = linked.map(a => sessions.find(s => s.id === a.resultSessionId)).filter(Boolean)
+      .sort((a, b) => String(a.savedAt).localeCompare(String(b.savedAt)));
+    if (scored.length >= 2) {
+      const before = scored[0], after = scored[scored.length - 1];
+      const delta = (after.scores?.overall || 0) - (before.scores?.overall || 0);
+      content = zh
+        ? `已指派练习完成前后的证据比较：最早记录总分${before.scores?.overall || 0}/100（“${before.scenario}”），最近一次总分${after.scores?.overall || 0}/100（“${after.scenario}”），差异为${delta >= 0 ? '+' : ''}${delta}分。${delta > 0 ? '这是有证据支持的进步，但仍建议持续观察。' : delta < 0 ? '目前证据显示尚未看到明显提升，可能需要调整练习重点或方式。' : '目前证据显示分数暂无明显变化。'}`
+        : `Before/after evidence for the assigned Practice: the earliest recorded score was ${before.scores?.overall || 0}/100 (“${before.scenario}”), and the most recent is ${after.scores?.overall || 0}/100 (“${after.scenario}”), a change of ${delta >= 0 ? '+' : ''}${delta} points. ${delta > 0 ? 'That is evidence-backed improvement, though it is worth continuing to observe.' : delta < 0 ? 'The evidence does not yet show clear improvement — the focus or format of Practice may need adjusting.' : 'The evidence shows no clear change in score yet.'}`;
+    } else if (scored.length === 1) {
+      content = zh
+        ? `已有一次完成的指派练习（总分${scored[0].scores?.overall || 0}/100），但目前只有一次可比较的记录，还不足以判断训练是否真的带来了提升。需要更多可比较的证据。`
+        : `There is one completed assigned Practice on record (score ${scored[0].scores?.overall || 0}/100), but only one comparable data point — not yet enough to say whether the training genuinely helped. More comparable evidence is needed.`;
+    } else {
+      content = zh
+        ? `目前没有已完成、且与指派练习关联的记录可供比较，因此无法判断训练是否有效。${activeAssignment ? `目前有一项进行中的任务：“${activeAssignment.scenarioName}”（${activeAssignment.status}）。` : ''}`
+        : `There is no completed, assignment-linked Practice on record yet to compare, so I cannot say whether the training helped. ${activeAssignment ? `There is an active assignment in progress: “${activeAssignment.scenarioName}” (${activeAssignment.status}).` : ''}`;
     }
-  };
+  } else if (intent === 'cause_analysis') {
+    const observed = zh
+      ? `已观察到的事实：${summaryLine}${growthLine ? ' ' + growthLine : strengthLine ? ' ' + strengthLine : ''}`
+      : `Observed facts: ${summaryLine}${growthLine ? ' ' + growthLine : strengthLine ? ' ' + strengthLine : ''}`;
+    const interp = zh
+      ? `AI 推测（并非已证实的结论）：可能的原因包括练习次数尚少、这项技能刚开始接触，或情境难度较高，也可能与准备时间、动机或对情境的熟悉程度有关。这些都只是可能的解释，不能视为已确认的原因，也不能作为对这名学员的固定判断。建议通过一对一对话直接了解情况，而不是仅凭这些证据下结论。`
+      : `AI interpretation (not an established fact): possible explanations include a limited number of Practice repetitions so far, this being a newer skill area, or higher scenario difficulty — it could also relate to preparation time, motivation, or familiarity with the scenario. These are only possible explanations, not a confirmed cause, and should not be treated as a fixed judgment about this learner. A direct one-on-one conversation is the best way to understand what's actually happening, not this evidence alone.`;
+    content = `${observed}\n\n${interp}`;
+  } else if (intent === 'coaching_prep') {
+    const questionsEn = [
+      growth ? `In ${growth.competency.replace(/_/g, ' ')}, what do you feel is the biggest challenge right now?` : 'Looking at your latest Practice, what part felt most challenging?',
+      'What do you feel you did well in that session?',
+      'If you could redo that conversation, what would you do differently?',
+      activeAssignment ? `How is "${activeAssignment.scenarioName}" going so far?` : 'What would help you most before your next Practice?'
+    ];
+    const questionsZh = [
+      growth ? `在${growth.competency.replace(/_/g, ' ')}方面，你觉得目前最大的挑战是什么？` : '最近这次练习中，你觉得哪个部分最有挑战？',
+      '完成这次练习后，你自己感觉哪里做得不错？',
+      '如果可以重新来一次，你会有什么不同的做法？',
+      activeAssignment ? `“${activeAssignment.scenarioName}”目前进行得怎么样？` : '在下一次练习之前，什么对你最有帮助？'
+    ];
+    content = zh
+      ? `辅导目标：帮助${name}在${growth ? growth.competency.replace(/_/g, ' ') : '当前技能'}上取得具体进步。\n\n可以讨论的证据：${summaryLine} ${growthLine}\n\n建议提问：\n${questionsZh.map(q => '• ' + q).join('\n')}\n\n值得肯定之处：${strengthLine || '持续按时完成练习本身就值得肯定。'}\n\n建议下一步：${activeAssignment ? `跟进目前进行中的任务“${activeAssignment.scenarioName}”。` : `一对一之后，可以考虑指派一项针对${focus.replace(/_/g, ' ')}的练习。`}`
+      : `Coaching objective: help ${name} make concrete progress in ${growth ? growth.competency.replace(/_/g, ' ') : 'their current focus area'}.\n\nEvidence to discuss: ${summaryLine} ${growthLine}\n\nSuggested questions:\n${questionsEn.map(q => '• ' + q).join('\n')}\n\nWorth recognizing: ${strengthLine || 'Consistently completing Practice sessions is itself worth recognizing.'}\n\nSuggested next action: ${activeAssignment ? `follow up on the active assignment “${activeAssignment.scenarioName}.”` : `after the one-on-one, consider assigning one Practice focused on ${focus.replace(/_/g, ' ')}.`}`;
+  } else if (intent === 'recommend_assignment') {
+    content = zh
+      ? `${summaryLine}\n\n${growthLine || strengthLine}\n\n${confidenceLine}\n\n${activeAssignment ? `目前已有一项进行中的任务：“${activeAssignment.scenarioName}”（${activeAssignment.status}），建议先让这项完成后再指派新的练习。` : `已在右侧生成一份练习指派草案，重点是${focus.replace(/_/g, ' ')}。请检查后点击“确认指派”。`}`
+      : `${summaryLine}\n\n${growthLine || strengthLine}\n\n${confidenceLine}\n\n${activeAssignment ? `An assignment is already active: “${activeAssignment.scenarioName}” (${activeAssignment.status}) — consider letting it finish before assigning something new.` : `I've drafted an assignment recommendation in the panel on the right, focused on ${focus.replace(/_/g, ' ')}. Review it and click Confirm Assignment to send it.`}`;
+    if (!activeAssignment) {
+      assignmentDraft = draftFor(focus, localizedClaim(growth, zh) || (zh ? `为${focus.replace(/_/g, ' ')}收集更多练习证据。` : `Build additional evidence for ${focus.replace(/_/g, ' ')}.`));
+    }
+  } else if (intent === 'team_diagnosis') {
+    content = zh
+      ? `目前这个对话范围是“${name}”这一位学员，还没有整个团队的聚合数据。就这位学员而言：${summaryLine} ${growthLine || strengthLine}\n\n如果需要了解整个团队的技能差距，建议逐一切换学员查看证据，我会根据每位学员已授权的练习证据分别说明。`
+      : `This conversation is currently scoped to one learner, ${name} — there isn't a team-wide aggregate view here yet. For this learner specifically: ${summaryLine} ${growthLine || strengthLine}\n\nTo assess the whole team's skill gaps, switch between team members and I can summarize each one's authorized evidence individually.`;
+  } else if (intent === 'member_review') {
+    content = zh
+      ? `${summaryLine}\n\n${strengthLine}\n${growthLine}\n\n${confidenceLine}`
+      : `${summaryLine}\n\n${strengthLine}\n${growthLine}\n\n${confidenceLine}`;
+  } else {
+    content = zh
+      ? `${summaryLine}\n\n${[strengthLine, growthLine].filter(Boolean).join('\n')}\n\n${confidenceLine}\n\n${activeAssignment ? `目前已有一项进行中的任务：“${activeAssignment.scenarioName}”（${activeAssignment.status}）。` : `建议下一步：针对${focus.replace(/_/g, ' ')}指派一项练习，或直接提出更具体的问题（例如原因分析、一对一准备、或后续追踪）。`}`
+      : `${summaryLine}\n\n${[strengthLine, growthLine].filter(Boolean).join('\n')}\n\n${confidenceLine}\n\n${activeAssignment ? `An active assignment already exists: “${activeAssignment.scenarioName}” (${activeAssignment.status}).` : `Recommended next step: assign one targeted Practice focused on ${focus.replace(/_/g, ' ')}, or ask a more specific question (cause analysis, one-on-one prep, or a follow-up check).`}`;
+  }
+
+  return { content, evidence, assignmentDraft };
 }
 
+// ROOM 4C — explicit intent-routed Learner Coach Chat replies. Reuses
+// activeClaims()/sessions/assignments exactly as before; only the response
+// shape per intent changed. Evidence-based coaching is preserved for every
+// intent - only the finalized opening message (initialCoachMessage) dropped
+// the evidence dump, not these ongoing replies.
 async function generateCoachReply(profile, sessions, assignments, history, learnerMessage) {
-  const text = cleanText(learnerMessage, 6000).toLowerCase();
   const zh = usesChinese(learnerMessage) || profile?.background?.language === 'zh';
+  const intent = routeLearnerIntent(learnerMessage);
   const latest = sessions[0];
   const strength = activeClaims(profile, 'strength')[0];
   const growth = activeClaims(profile, 'growth_area')[0];
   const next = assignments.find(item => item.status !== 'Completed');
-  const evidence = latest
+  const evidenceLine = latest
     ? (zh ? `练习证据：您最近一次“${latest.scenario}”练习的总分为${latest.scores?.overall || 0}/100${latest.summary ? `；教练总结记录为：${latest.summary}` : '。'}` : `Evidence: in your latest “${latest.scenario}” Practice, your overall score was ${latest.scores?.overall || 0}/100${latest.summary ? `, and the Coach Summary recorded: ${latest.summary}` : '.'}`)
     : (zh ? '练习证据：目前还没有已完成的练习，无法作出可靠评估。' : 'Evidence: there is not yet a completed Practice session available for a reliable assessment.');
-  let coaching;
-  if (/result|score|feedback|explain|summary|结果|分数|反馈|解释|总结/.test(text)) {
-    coaching = growth
-      ? (zh ? `解读：${localizedClaim(growth, true)}这只是根据当前练习证据形成的辅导观察，不是固定的人格特征。` : `Interpretation: ${growth.statement} This is a current evidence-based coaching claim, not a fixed personal trait.`)
-      : strength
-        ? (zh ? `解读：${localizedClaim(strength, true)}这描述的是现有练习证据，不是固定的人格特征。` : `Interpretation: ${strength.statement} This describes the available Practice evidence, not a fixed personal trait.`)
-        : (zh ? '解读：需要更多练习证据，才能判断是否存在稳定规律。' : 'Interpretation: more Practice evidence is needed before identifying a stable pattern.');
-  } else if (/prepare|assignment|准备|作业|指派/.test(text)) {
-    coaching = next
-      ? (zh ? `准备建议：针对“${next.scenarioName}”，先确定一个明确目标，提出一个开放式问题，并在结尾确认具体的下一步。` : `Preparation: for “${next.scenarioName},” choose one clear objective, ask one open question, and end with a specific next step.`)
-      : (zh ? '准备建议：先确定一个对话目标，提出一个开放式问题，并在结尾确认具体的下一步。' : 'Preparation: choose one conversation objective, ask an open question, and end with a specific next step.');
-  } else {
-    coaching = growth
-      ? (zh ? `辅导重点：${localizedClaim(growth, true)}` : `Coaching focus: ${growth.statement}`)
-      : strength
-        ? (zh ? `辅导重点：在这项证据基础上继续加强——${localizedClaim(strength, true)}` : `Coaching focus: build on this evidence—${strength.statement}`)
-        : (zh ? '辅导重点：先完成一次简短练习，让后续建议建立在可观察的证据上。' : 'Coaching focus: complete a short Practice so your guidance can be grounded in observable evidence.');
-  }
-  const action = next
+  const actionLine = next
     ? (zh ? `下一步：打开指定的“${next.scenarioName}”练习，并集中练习这一项行为。` : `Next action: open your assigned “${next.scenarioName}” Practice and focus on that one behavior.`)
     : growth
       ? (zh ? `下一步：完成一次针对${growth.competency.replace(/_/g, ' ')}的简短练习。` : `Next action: complete one short Practice focused on ${growth.competency.replace(/_/g, ' ')}.`)
       : (zh ? '下一步：先完成一次简短练习，然后回到这里查看有证据支持的解释。' : 'Next action: complete one short Practice, then return here for an evidence-linked explanation.');
-  return `${evidence}\n\n${coaching}\n\n${action}`;
+
+  if (intent === 'explain_result') {
+    if (!latest) {
+      return zh
+        ? '目前还没有已完成的练习记录，因此无法解释具体的分数或结果。请先完成一次练习，我就可以根据证据为您解释。'
+        : 'There is not yet a completed Practice session to explain, so I cannot walk through a score yet. Complete one Practice session and I can explain it from the evidence.';
+    }
+    const parts = [evidenceLine];
+    if (growth) parts.push(zh ? `解读：${localizedClaim(growth, true)}这是根据目前证据形成的辅导观察，不代表固定的人格特征——更多练习证据可能会改变这个观察。` : `Interpretation: ${growth.statement} This is a coaching observation based on current evidence, not a fixed trait — more Practice evidence could change it.`);
+    if (strength) parts.push(zh ? `同时，${localizedClaim(strength, true)}` : `At the same time, ${strength.statement}`);
+    if (!growth && !strength) parts.push(zh ? '目前证据还不足以指出明确的优势或改进方向。' : 'There is not yet enough evidence to point to a clear strength or growth area.');
+    return parts.join('\n\n');
+  }
+
+  if (intent === 'prepare_practice') {
+    const focusLine = growth ? (zh ? `根据目前证据，可以重点关注：${localizedClaim(growth, true)}` : `Based on current evidence, a useful focus is: ${growth.statement}`) : '';
+    if (next) {
+      return zh
+        ? `准备建议——“${next.scenarioName}”：\n1) 明确这次对话的一个目标。\n2) 提出至少一个开放式问题，先了解对方的真实想法。\n3) 在结尾确认一个具体的下一步。${focusLine ? `\n\n${focusLine}` : ''}`
+        : `Preparation for "${next.scenarioName}":\n1) Decide one clear objective for the conversation.\n2) Ask at least one open question to understand the other side first.\n3) Close by confirming one specific next step.${focusLine ? `\n\n${focusLine}` : ''}`;
+    }
+    return zh
+      ? `目前没有进行中的指定任务，这里是一般性的准备建议：\n1) 明确一个对话目标。\n2) 提出一个开放式问题。\n3) 结尾确认具体的下一步。${focusLine ? `\n\n${focusLine}` : ''}`
+      : `There is no active assigned Practice right now, so here is general preparation guidance:\n1) Decide one conversation objective.\n2) Ask one open question.\n3) Close by confirming a specific next step.${focusLine ? `\n\n${focusLine}` : ''}`;
+  }
+
+  if (intent === 'recommend_next') {
+    if (growth) {
+      return zh
+        ? `建议下一步练习重点：${growth.competency.replace(/_/g, ' ')}。\n原因：${localizedClaim(growth, true)}\n这是根据您目前的练习证据给出的个人辅导建议，不是主管指派的正式任务——如果您想把它变成正式练习，可以自行在练习页面开始，或请主管指派。`
+        : `Recommended next focus: ${growth.competency.replace(/_/g, ' ')}.\nWhy: ${growth.statement}\nThis is personal coaching guidance based on your current Practice evidence, not a formal assignment from your manager — you're welcome to start it yourself from Practice, or ask your manager to assign it.`;
+    }
+    return zh
+      ? '目前证据还不足以指出一个最有价值的下一项技能。建议先完成一次简短练习，我就可以根据证据给出具体建议。'
+      : 'There is not yet enough evidence to point to one highest-value next skill. Complete one short Practice first, and I can give a specific, evidence-linked recommendation.';
+  }
+
+  if (intent === 'know_me') {
+    const rawName = cleanText(profile?.preferredName, 80);
+    const selfLine = (rawName && !rawName.includes('@')) ? (zh ? `您的档案姓名：${rawName}。` : `Your profile name: ${rawName}.`) : '';
+    const claimLines = [];
+    if (strength) claimLines.push(zh ? `根据练习证据观察到的优势：${localizedClaim(strength, true)}` : `Observed from Practice evidence — a strength: ${strength.statement}`);
+    if (growth) claimLines.push(zh ? `根据练习证据观察到的改进方向：${localizedClaim(growth, true)}` : `Observed from Practice evidence — a growth area: ${growth.statement}`);
+    if (!claimLines.length) {
+      return [selfLine, zh
+        ? '目前还没有足够的练习证据，我不能对您的表现做出可靠的判断——我不会凭空猜测您的性格或能力。完成一次练习后，我可以根据证据告诉您更多。'
+        : "There isn't enough Practice evidence yet for me to say anything reliable about your performance — I won't guess at your personality or ability. Complete a Practice session and I can tell you more, grounded in evidence."].filter(Boolean).join('\n\n');
+    }
+    const footer = zh ? '这些是根据已记录的练习证据得出的辅导观察，不是固定不变的性格判断。' : 'These are coaching observations based on recorded Practice evidence, not fixed personality judgments.';
+    return [selfLine, ...claimLines, footer].filter(Boolean).join('\n\n');
+  }
+
+  if (intent === 'reflect_progress') {
+    if (sessions.length < 2) {
+      return zh
+        ? `目前只有${sessions.length}次已完成的练习记录，还不足以比较进步趋势。完成更多次练习后，我可以做出更可靠的比较。`
+        : `There ${sessions.length === 1 ? 'is' : 'are'} only ${sessions.length} completed Practice session${sessions.length === 1 ? '' : 's'} recorded so far — not enough to compare a trend yet. Complete a few more sessions and I can make a more reliable comparison.`;
+    }
+    const prior = sessions[1];
+    const delta = (latest.scores?.overall || 0) - (prior.scores?.overall || 0);
+    const trendLine = delta > 0
+      ? (zh ? `与上一次相比，总分从${prior.scores?.overall || 0}提高到${latest.scores?.overall || 0}（+${delta}）。` : `Compared with your prior session, your overall score moved from ${prior.scores?.overall || 0} to ${latest.scores?.overall || 0} (+${delta}).`)
+      : delta < 0
+        ? (zh ? `与上一次相比，总分从${prior.scores?.overall || 0}变为${latest.scores?.overall || 0}（${delta}）。这不代表能力倒退，练习结果会因情境难度而波动。` : `Compared with your prior session, your overall score moved from ${prior.scores?.overall || 0} to ${latest.scores?.overall || 0} (${delta}). This doesn't mean you regressed — results vary with scenario difficulty.`)
+        : (zh ? `与上一次相比，总分维持在${latest.scores?.overall || 0}，暂时没有明显变化。` : `Compared with your prior session, your overall score held steady at ${latest.scores?.overall || 0} — no clear change yet.`);
+    const growthLine = growth ? (zh ? `目前仍在关注的方向：${localizedClaim(growth, true)}` : `Still a current focus area: ${growth.statement}`) : '';
+    return [trendLine, growthLine].filter(Boolean).join('\n\n');
+  }
+
+  if (intent === 'correct_record') {
+    return zh
+      ? '已收到您的意见——这是您的自我说明，我会把它和已记录的练习证据分开看待，不会自动覆盖已保存的记录。如果您想正式更正某一项具体的档案结论，可以前往“我的成长档案”页面，对该项结论使用“标记为不准确”功能，系统会记录您的更正说明。'
+      : 'Understood — I\'ve heard your correction. I\'ll keep it separate from the recorded Practice evidence rather than silently overwriting anything. If you want to formally correct a specific profile claim, open "My Profile" and use "Flag as inaccurate" on that claim — it records your note.';
+  }
+
+  // general_coaching fallback: Recognize -> ground in evidence -> coach -> one next action.
+  const recognize = zh ? '收到您的消息。' : 'Got it.';
+  const coaching = growth
+    ? (zh ? `辅导重点：${localizedClaim(growth, true)}` : `Coaching focus: ${growth.statement}`)
+    : strength
+      ? (zh ? `辅导重点：在这项证据基础上继续加强——${localizedClaim(strength, true)}` : `Coaching focus: build on this evidence—${strength.statement}`)
+      : (zh ? '辅导重点：先完成一次简短练习，让后续建议建立在可观察的证据上。' : 'Coaching focus: complete a short Practice so your guidance can be grounded in observable evidence.');
+  return `${recognize} ${evidenceLine}\n\n${coaching}\n\n${actionLine}`;
 }
 
 
@@ -816,13 +1004,17 @@ export default async function handler(req) {
       profiles.push(...await rosterShellProfiles(store, teamPrefix, existingProfileEmails));
       profiles.sort((a, b) => String(a.preferredName || a.learnerEmail).localeCompare(String(b.preferredName || b.learnerEmail)));
       const stored = await listJSON(store, managerChatPrefix(teamPrefix, actor));
+      const storedForLearner = stored.filter(item => normalizeEmail(item.learnerEmail) === requested);
       const events = requested
         ? (await listJSON(store, `${teamPrefix}/assignment-events/`))
           .filter(event => normalizeEmail(event.assignedTo) === requested)
           .map(event => assignmentEventMessage(event, 'manager'))
         : [];
+      // Finalized Manager opening (ROOM 4C): shown only when this specific
+      // learner's manager-chat thread has no prior messages yet, mirroring
+      // how initialCoachMessage works on the learner side.
       const messages = requested
-        ? [...stored.filter(item => normalizeEmail(item.learnerEmail) === requested), ...events]
+        ? [...(storedForLearner.length ? storedForLearner : [initialManagerMessage(url.searchParams.get('lang'), requested)]), ...events]
         : [];
       messages.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
       await writeAudit(store, teamPrefix, actor, 'manager_chat_roster', 'success', { requestedLearner: requested, resultCount: profiles.length });
