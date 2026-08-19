@@ -76,7 +76,8 @@ function renderAssignments(){
     const profile=cloudProfiles.find(p=>String(p.learnerEmail||'').toLowerCase()===learnerEmail);
     const learnerName=(profile&&profile.preferredName)||x.learner||learnerEmail;
     const messageHref='team-messages.html?pilot=1&learner='+encodeURIComponent(learnerEmail);
-    return '<div class="assignment-row"><div><b>'+esc(learnerName)+'</b><small>'+esc(learnerEmail)+' · '+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(currentLang==='zh'?(x.status==='Completed'?'已完成':x.status==='In Progress'?'进行中':'已指派'):(x.status||'Assigned'))+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span><a class="start-link" href="'+messageHref+'">'+t('Message Learner','联系 Learner')+'</a></div></div>';
+    const detailsButton=(completed&&x.resultSessionId)?'<button type="button" class="start-link" onclick="viewResult(\''+esc(x.resultSessionId)+'\')" style="background:#fff;color:#1a56db;border:1px solid #bfdbfe">'+t('View details','查看详情')+'</button>':'';
+    return '<div class="assignment-row"><div><b>'+esc(learnerName)+'</b><small>'+esc(learnerEmail)+' · '+esc(x.scenarioName)+' · '+esc(modeLabel(x.mode))+(x.dueDate?t(' · Due ',' · 截止日期 ')+esc(x.dueDate):'')+'</small></div><div class="assignment-actions"><span class="assignment-status '+(completed?'completed':'')+'">'+esc(currentLang==='zh'?(x.status==='Completed'?'已完成':x.status==='In Progress'?'进行中':'已指派'):(x.status||'Assigned'))+(completed&&x.score!=null?' · '+esc(x.score)+'/100':'')+'</span>'+detailsButton+'<a class="start-link" href="'+messageHref+'">'+t('Message Learner','联系 Learner')+'</a></div></div>';
   }).join('');
 }
 async function loadAssignmentScenarios(){
@@ -139,7 +140,7 @@ function renderResults(rows){
     const client=resolveClientName(x);
     const source=x.sourceLabel||t('Practice','练习');
     const transcript=Array.isArray(x.transcript)?x.transcript:[];
-    return '<article class="card"><div class="row"><div><h3><span class="identity">'+t('Client: ','客户：')+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">'+t('Learner: ','学员：')+esc(x.learner||x.name||t('Demo User','测试用户'))+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">'+t('Scenario: ','培训情境：')+esc(x.scenario||'')+(x.practiceMode?' · '+esc(modeLabel(x.practiceMode)):'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><a class="start-link" href="learner-profile.html?pilot=1&amp;learner='+encodeURIComponent(x.learner||x.learnerName||'')+'">'+t('Profile','学员档案')+'</a><button onclick="toggle('+i+')">'+t('View details','查看详情')+'</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">'+t('Empathy','同理心')+'<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">'+t('Knowledge','知识准确度')+'<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">'+t('Closing','推进与结尾')+'<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>'+t('Coach summary','教练总结')+'</h4><p>'+esc(x.summary||t('No summary saved.','没有保存教练总结。'))+'</p></div><div class="section"><h4>'+t('Transcript (','完整对话记录（Transcript）（')+transcript.length+t(' turns)',' 轮）')+'</h4><div class="transcript">'+(transcript.length?transcript.map(turn=>'<div class="turn '+(turn.speaker==='agent'?'agent':'client')+'"><b>'+esc(turn.speaker==='agent'?t('Learner','学员'):t('AI role-play partner','AI 情境角色'))+'</b>'+esc(turn.text)+'</div>').join(''):'<p class="meta">'+t('No transcript was saved for this older record.','这条较早的记录没有保存完整对话。')+'</p>')+'</div></div></div></article>';
+    return '<article class="card" id="result-'+esc(x.id||('idx-'+i))+'"><div class="row"><div><h3><span class="identity">'+t('Client: ','客户：')+esc(client)+'</span><span class="source">'+esc(source)+'</span></h3><div class="meta">'+t('Learner: ','学员：')+esc(x.learner||x.name||t('Demo User','测试用户'))+' · '+esc(x.industry||'')+' · '+esc(x.savedAt?new Date(x.savedAt).toLocaleString():'')+'</div><div class="meta">'+t('Scenario: ','培训情境：')+esc(x.scenario||'')+(x.practiceMode?' · '+esc(modeLabel(x.practiceMode)):'')+'</div></div><div class="score">'+esc(x.scores?.overall||0)+'/100</div><a class="start-link" href="learner-profile.html?pilot=1&amp;learner='+encodeURIComponent(x.learner||x.learnerName||'')+'">'+t('Profile','学员档案')+'</a><button onclick="toggle('+i+')">'+t('View details','查看详情')+'</button></div><div class="details" id="d'+i+'" hidden><div class="grid"><div class="metric">'+t('Empathy','同理心')+'<b>'+esc(x.scores?.empathy||0)+'</b></div><div class="metric">'+t('Knowledge','知识准确度')+'<b>'+esc(x.scores?.accuracy||0)+'</b></div><div class="metric">'+t('Closing','推进与结尾')+'<b>'+esc(x.scores?.closing||0)+'</b></div></div><div class="section"><h4>'+t('Coach summary','教练总结')+'</h4><p>'+esc(x.summary||t('No summary saved.','没有保存教练总结。'))+'</p></div><div class="section"><h4>'+t('Transcript (','完整对话记录（Transcript）（')+transcript.length+t(' turns)',' 轮）')+'</h4><div class="transcript">'+(transcript.length?transcript.map(turn=>'<div class="turn '+(turn.speaker==='agent'?'agent':'client')+'"><b>'+esc(turn.speaker==='agent'?t('Learner','学员'):t('AI role-play partner','AI 情境角色'))+'</b>'+esc(turn.text)+'</div>').join(''):'<p class="meta">'+t('No transcript was saved for this older record.','这条较早的记录没有保存完整对话。')+'</p>')+'</div></div></div></article>';
   }).join('');
 }
 function renderNextAction(){
@@ -166,6 +167,16 @@ function list(){
   renderNextAction();
 }
 function toggle(i){const el=document.getElementById('d'+i);el.hidden=!el.hidden}
+function viewResult(sessionId){
+  if(!sessionId)return;
+  const search=document.getElementById('search');
+  if(search.value){search.value='';list()}
+  const card=document.getElementById('result-'+sessionId);
+  if(!card){setAssignStatus(t('That Practice Result could not be found (it may be an older record).','找不到该练习结果（可能是较早的记录）。'),'error');return}
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+  const details=card.querySelector('.details');
+  if(details)details.hidden=false;
+}
 function generateQuickTest(){
   const name=prompt(t('Enter a test client name:','请输入测试客户姓名：'), t('Xiaodong','小东'));
   if(!name) return;
