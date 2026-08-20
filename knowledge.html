@@ -29,7 +29,9 @@
 <button class="upload-option" type="button" data-source-choice="meeting_transcript" data-focus-target="transcriptFile"><span>🗣️</span><span><b data-en="Zoom or meeting transcript" data-zh="Zoom或會議逐字稿">Zoom or meeting transcript</b><small data-en="Upload or paste the recorded meeting text." data-zh="上傳或貼上會議的文字記錄。">Upload or paste the recorded meeting text.</small></span></button>
 <button class="upload-option" type="button" data-source-choice="sop_script" data-focus-target="sourceContent"><span>📋</span><span><b data-en="Company procedures or sales scripts" data-zh="公司操作流程或銷售話術">Company procedures or sales scripts</b><small data-en="Turn approved procedures and scripts into Practice." data-zh="把已批准的流程和話術轉化為練習。">Turn approved procedures and scripts into Practice.</small></span></button>
 <button class="upload-option" type="button" data-source-choice="document_notes" data-focus-target="transcriptFile"><span>📝</span><span><b data-en="Training notes or text document" data-zh="培訓筆記或文字文件">Training notes or text document</b><small data-en="Paste notes or upload a supported text file." data-zh="貼上筆記或上傳支援的文字文件。">Paste notes or upload a supported text file.</small></span></button>
+<button class="upload-option" type="button" id="googleDriveImportBtn"><span>📁</span><span><b data-en="Import from Google Drive" data-zh="從 Google Drive 匯入">Import from Google Drive</b><small data-en="Choose one Google Doc or text file. You will review the imported text before saving." data-zh="選擇一份 Google 文件或文字文件，儲存前可先檢查匯入的文字。">Choose one Google Doc or text file. You will review the imported text before saving.</small></span></button>
 </div>
+<div class="status" id="googleDriveStatus" role="status" aria-live="polite"></div>
 <div class="upload-limit"><b data-en="Supported transcript files:" data-zh="支援的逐字稿文件：">Supported transcript files:</b> TXT, MD, VTT, SRT · <span data-en="up to 1 MB. Direct video upload and automatic transcription are not included in this Pilot." data-zh="最大1MB。本Pilot暫不包括直接上傳影片及自動轉錄。">up to 1 MB. Direct video upload and automatic transcription are not included in this Pilot.</span></div>
 </div>
 <form id="knowledgeForm">
@@ -143,6 +145,132 @@ function setFormStatus(message,kind){var el=document.getElementById('formStatus'
 document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 30,000'});
 document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>1048576){setFormStatus(tr('Transcript file must be 1 MB or smaller.','逐字稿文件必須為1MB或以下。'),'error');this.value='';return}try{var text=await file.text();document.getElementById('sourceContent').value=text.slice(0,30000);document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus(tr('Loaded: ','已載入：')+file.name+tr('. Review the text before saving.','。請在儲存前檢查文字。'),'ok')}catch(error){setFormStatus(tr('Transcript could not be read.','無法讀取逐字稿文件。'),'error')}});
 function focusSourceAction(id,action,message){setTimeout(function(){var card=document.querySelector('[data-source-card="'+CSS.escape(id)+'"]'),next=card&&card.querySelector('[data-action="'+action+'"]');if(!card)return;card.scrollIntoView({behavior:'smooth',block:'center'});if(next){next.focus();document.getElementById('flowStatus').textContent=message}},80)}
+
+// ROOM 4C — Google Drive Single-File Import Pilot.
+// Ingestion convenience only: picks exactly one file, imports its readable
+// text into the SAME #sourceContent field the manual paste/upload path
+// already uses, and stops. It never calls Save, Analyze, Approve, or
+// Assign itself - the manager still does every one of those explicitly,
+// through the existing unchanged buttons below.
+function setGoogleDriveStatus(message,kind){var el=document.getElementById('googleDriveStatus');el.textContent=message;el.className='status '+(kind||'')}
+var googleDriveConfig=null,googleTokenClient=null,googleAccessToken='',googlePickerApiLoaded=false,googleScriptsLoaded=false;
+function loadExternalScript(src){
+ return new Promise(function(resolve,reject){
+  var existing=document.querySelector('script[data-gdrive-src="'+src+'"]');
+  if(existing){if(existing.dataset.loaded==='1'){resolve()}else{existing.addEventListener('load',function(){resolve()});existing.addEventListener('error',function(){reject(new Error('load failed: '+src))})}return}
+  var script=document.createElement('script');
+  script.src=src;script.async=true;script.dataset.gdriveSrc=src;
+  script.onload=function(){script.dataset.loaded='1';resolve()};
+  script.onerror=function(){reject(new Error('load failed: '+src))};
+  document.head.appendChild(script);
+ });
+}
+async function ensureGoogleScriptsLoaded(){
+ if(googleScriptsLoaded)return;
+ try{
+  await Promise.all([loadExternalScript('https://accounts.google.com/gsi/client'),loadExternalScript('https://apis.google.com/js/api.js')]);
+  googleScriptsLoaded=true;
+ }catch(error){throw new Error(tr('Google sign-in library did not load. Check your network connection and try again.','Google 登入函式庫未能載入，請檢查網路連線後再試一次。'))}
+}
+function loadGooglePickerApi(){
+ return new Promise(function(resolve,reject){
+  if(googlePickerApiLoaded){resolve();return}
+  if(!window.gapi){reject(new Error(tr('Google Picker could not be loaded.','Google Picker 未能載入。')));return}
+  gapi.load('picker',{callback:function(){googlePickerApiLoaded=true;resolve()},onerror:function(){reject(new Error(tr('Google Picker could not be loaded.','Google Picker 未能載入。')))}});
+ });
+}
+async function fetchGoogleDriveConfig(){
+ if(googleDriveConfig)return googleDriveConfig;
+ var response=await fetch('/.netlify/functions/google-drive-config');
+ var data=await response.json().catch(function(){return {}});
+ if(!response.ok)throw new Error(data.error||tr('Google Drive import is not available right now.','Google Drive 匯入目前無法使用。'));
+ googleDriveConfig=data;
+ return data;
+}
+function requestGoogleAccessToken(clientId){
+ return new Promise(function(resolve,reject){
+  if(!window.google||!google.accounts||!google.accounts.oauth2){reject(new Error(tr('Google sign-in library did not load.','Google 登入函式庫未能載入。')));return}
+  if(!googleTokenClient){
+   googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:'https://www.googleapis.com/auth/drive.file',callback:function(){}});
+  }
+  googleTokenClient.callback=function(response){
+   if(!response||response.error||!response.access_token){reject(new Error(response&&response.error==='access_denied'?tr('Google authorization was cancelled.','已取消 Google 授權。'):tr('Google authorization failed.','Google 授權失敗。')));return}
+   googleAccessToken=response.access_token;resolve(response.access_token);
+  };
+  googleTokenClient.error_callback=function(){reject(new Error(tr('Google authorization was cancelled.','已取消 Google 授權。')))};
+  googleTokenClient.requestAccessToken({prompt:googleAccessToken?'':'consent'});
+ });
+}
+function openGooglePicker(accessToken,apiKey){
+ return new Promise(function(resolve){
+  var view=new google.picker.DocsView(google.picker.ViewId.DOCS).setIncludeFolders(true).setSelectFolderEnabled(true);
+  var picker=new google.picker.PickerBuilder().setOAuthToken(accessToken).setDeveloperKey(apiKey).addView(view).setCallback(function(data){
+   if(data.action===google.picker.Action.PICKED){resolve(data.docs&&data.docs[0])}
+   else if(data.action===google.picker.Action.CANCEL){resolve(null)}
+  }).build();
+  picker.setVisible(true);
+ });
+}
+var GDRIVE_TEXT_EXT=/\.(txt|md|markdown|vtt|srt)$/i;
+async function importPickedGoogleDriveFile(doc,accessToken){
+ if(!doc)return null;
+ if(doc.mimeType==='application/vnd.google-apps.folder'){
+  throw new Error(tr('Folder import is not yet enabled in this Pilot. Please choose one training file.','當前 Pilot 尚未開放整個資料夾匯入。請選擇一份培訓文件。'));
+ }
+ if(/^video\//.test(doc.mimeType||'')){
+  throw new Error(tr('This is a video file. Direct video transcription is not part of this Pilot yet — please choose a Google Doc or text-based training file.','這是一個影片檔案。本 Pilot 尚未支援直接影片轉錄，請選擇 Google 文件或純文字培訓文件。'));
+ }
+ var isGoogleDoc=doc.mimeType==='application/vnd.google-apps.document';
+ var isText=/^text\//.test(doc.mimeType||'')||GDRIVE_TEXT_EXT.test(doc.name||'');
+ if(!isGoogleDoc&&!isText){
+  throw new Error(tr('This file cannot yet be imported as readable training text. Please choose a Google Doc or text-based training file.','此文件目前無法作為可讀取的培訓文字匯入。請選擇 Google 文件或純文字培訓文件。'));
+ }
+ var url=isGoogleDoc
+  ?'https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(doc.id)+'/export?mimeType=text%2Fplain'
+  :'https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(doc.id)+'?alt=media';
+ var response;
+ try{response=await fetch(url,{headers:{authorization:'Bearer '+accessToken}})}
+ catch(networkError){throw new Error(tr('Network error while retrieving the file from Google Drive.','從 Google Drive 讀取文件時發生網路錯誤。'))}
+ if(response.status===401||response.status===403)throw new Error(tr('Permission denied for this Google Drive file.','沒有權限存取此 Google Drive 文件。'));
+ if(response.status===404)throw new Error(tr('This file is no longer available in Google Drive.','此文件在 Google Drive 中已不存在。'));
+ if(!response.ok)throw new Error(tr('Google Drive could not return this file right now.','Google Drive 目前無法回傳此文件。'));
+ var text=await response.text();
+ if(!text||!text.trim())throw new Error(tr('This file is empty.','此文件內容為空。'));
+ return {text:text.slice(0,30000),truncated:text.length>30000,name:doc.name||'',url:doc.url||'',mimeType:doc.mimeType||'',id:doc.id};
+}
+async function startGoogleDriveImport(){
+ var button=document.getElementById('googleDriveImportBtn');
+ button.disabled=true;setGoogleDriveStatus(tr('Connecting to Google Drive…','正在連接 Google Drive……'),'');
+ try{
+  var config=await fetchGoogleDriveConfig();
+  if(!config.enabled){setGoogleDriveStatus(tr('Google Drive import is not configured for this site yet. Ask your workspace owner to finish Google Cloud setup.','此網站尚未完成 Google Drive 匯入設定，請聯絡管理員完成 Google Cloud 設定。'),'error');return}
+  await ensureGoogleScriptsLoaded();
+  await loadGooglePickerApi();
+  setGoogleDriveStatus(tr('Choose one Google Drive file…','請選擇一份 Google Drive 文件……'),'');
+  var accessToken=await requestGoogleAccessToken(config.clientId);
+  var doc=await openGooglePicker(accessToken,config.apiKey);
+  if(!doc){setGoogleDriveStatus(tr('Google Drive selection was cancelled.','已取消 Google Drive 選擇。'),'');return}
+  setGoogleDriveStatus(tr('Importing “'+doc.name+'”…','正在匯入「'+doc.name+'」……'),'');
+  var imported=await importPickedGoogleDriveFile(doc,accessToken);
+  document.getElementById('sourceType').value='document_notes';
+  document.getElementById('sourceContent').value=imported.text;
+  document.getElementById('sourceContent').dispatchEvent(new Event('input'));
+  if(!document.getElementById('sourceTitle').value.trim()&&imported.name){
+   document.getElementById('sourceTitle').value=imported.name.replace(GDRIVE_TEXT_EXT,'').slice(0,240);
+  }
+  if(!document.getElementById('sourceUrl').value.trim()&&imported.url){
+   document.getElementById('sourceUrl').value=imported.url;
+  }
+  document.getElementById('sourceContent').scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(function(){document.getElementById('sourceContent').focus()},350);
+  setGoogleDriveStatus(imported.truncated
+   ?tr('Imported from Google Drive. This document exceeds the 30,000-character Pilot limit, so it was truncated — review the text before saving.','已從 Google Drive 匯入。此文件超過 30,000 字元的 Pilot 上限，已被截斷——請在儲存前檢查文字。')
+   :tr('Imported from Google Drive. Review the text below, confirm authorization, then Save secure draft.','已從 Google Drive 匯入。請在下方檢查文字、確認授權，然後儲存安全草稿。'),'ok');
+ }catch(error){
+  setGoogleDriveStatus((error&&error.message)||tr('Google Drive import failed.','Google Drive 匯入失敗。'),'error');
+ }finally{button.disabled=false}
+}
+document.getElementById('googleDriveImportBtn').addEventListener('click',startGoogleDriveImport);
 document.getElementById('knowledgeForm').addEventListener('submit',async function(event){event.preventDefault();var button=document.getElementById('saveSource');button.disabled=true;setFormStatus(tr('Saving secure draft…','正在儲存安全草稿……'),'');try{var payload={action:'create',title:document.getElementById('sourceTitle').value.trim(),sourceType:document.getElementById('sourceType').value,sourceUrl:document.getElementById('sourceUrl').value.trim(),content:document.getElementById('sourceContent').value.trim(),consentConfirmed:document.getElementById('sourceConsent').checked};var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify(payload)});companySources.unshift(data.source);this.reset();document.querySelectorAll('[data-source-choice]').forEach(function(item){item.classList.remove('selected')});document.getElementById('charCount').textContent='0 / 30,000';setFormStatus(tr('Secure draft saved. The next step is highlighted below.','安全草稿已儲存。下一步已在下方標示。'),'ok');renderSources();focusSourceAction(data.source.id,'analyze',tr('Step 1 complete. Choose Analyze with AI.','步驟1已完成。請選擇「AI分析」。'))}catch(error){setFormStatus(friendlyError(error),'error')}finally{button.disabled=false}});
 async function knowledgeAction(action,id,button){button.disabled=true;button.textContent=currentLang==='zh'?'處理中…':'Working…';try{var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:action,id:id})});companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources();if(action==='analyze')focusSourceAction(id,'approve',tr('Step 2 complete. Review the AI result, then approve it.','步驟2已完成。請檢查AI結果，然後批准。'));if(action==='approve')focusSourceAction(id,'assign',tr('Step 3 complete. The approved Practice is ready to assign.','步驟3已完成。已批准的練習可以指派。'))}catch(error){alert(friendlyError(error));button.disabled=false}}
 async function deleteSource(id){if(!confirm(currentLang==='zh'?'刪除此企業知識來源？此操作無法復原。':'Delete this company knowledge source? This cannot be undone.'))return;try{await PilotCloud.request('knowledge',{method:'DELETE',requiredRole:'manager',query:{id:id}});companySources=companySources.filter(function(x){return x.id!==id});renderSources()}catch(error){alert(friendlyError(error))}}
