@@ -30,6 +30,7 @@ input,button{font:inherit}input{padding:10px 12px;border:1px solid var(--line);b
 <main>
 <div class="notice" id="storageNotice"><b>Secure Pilot workspace:</b> loading team assignments, results, and transcripts from the authenticated cloud workspace.</div>
 <section class="next-action" id="nextAction"><div><small>Manager next action</small><h2>Loading team priorities…</h2><p>Checking assignments and evidence.</p></div><a href="#assign-panel">Continue</a></section>
+  <section class="assign" id="invite-panel" aria-labelledby="invite-title" hidden><h2 id="invite-title">Invite Learner</h2><p>Enter a learner's name and email to create a secure invitation. Copy the link and send it to them directly — no email delivery required.</p><div class="assign-grid" style="grid-template-columns:minmax(160px,1fr) minmax(220px,1.3fr) auto"><div><label for="inviteName">Learner name (optional)</label><input id="inviteName" type="text" maxlength="120" placeholder="Learner name"></div><div><label for="inviteEmail">Learner email</label><input id="inviteEmail" type="email" required placeholder="learner@example.com"></div><button id="createInvite" type="button">Create Invitation</button></div><div id="inviteStatus" class="assign-status" role="status" aria-live="polite"></div><div id="inviteLinkBox" hidden style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input id="inviteLinkText" type="text" readonly style="flex:1;min-width:240px;background:#f8fafc"><button id="copyInviteLink" type="button">Copy Invite Link</button></div><div id="pendingInvites"></div></section>
   <section class="assign" id="assign-panel" aria-labelledby="assign-title"><h2 id="assign-title">Assign Practice</h2><p>Choose an invited Learner email, curriculum scenario, and practice length. The Learner will receive the task in their Assignment Inbox.</p><div class="assign-grid"><div><label for="learnerEmail">Learner email</label><input id="learnerEmail" type="email" list="managerLearnerOptions" autocomplete="off" required placeholder="learner@example.com"><datalist id="managerLearnerOptions"></datalist></div><div><label for="assignScenario">Curriculum scenario</label><select id="assignScenario"><option value="">Loading scenarios…</option></select></div><div><label for="practiceMode">Practice length</label><select id="practiceMode"><option value="quick">Quick · 3–5 min</option><option value="standard">Standard · 8–10 min</option><option value="full">Full · 15–20 min</option></select></div><div><label for="dueDate">Due date (optional)</label><input id="dueDate" type="date"></div><button id="assignPractice" type="button">Assign Practice</button></div><div id="assignStatus" class="assign-status" role="status" aria-live="polite"></div></section>
 <section class="assignments" id="assignments" hidden><div class="section-heading"><div><h2>Current Assignments</h2><p>Track learner status and follow up through Team Messages. Learners start Practice from their own Assignment Inbox.</p></div><strong id="assignmentCount">0 assignments</strong></div><div id="assignmentList"></div></section>
 <div class="toolbar"><strong id="count">0 cases · 0 results</strong><div><input id="search" placeholder="Search case, client, or agent"><button id="quickTest" type="button">Quick Test Record</button><button id="refresh">Refresh</button></div></div>
@@ -196,6 +197,71 @@ function generateQuickTest(){
 }
 document.getElementById('quickTest').onclick=generateQuickTest;
 document.getElementById('assignPractice').onclick=assignPractice;
+// Invite Learner - a manager-only, PilotCloud-only feature (it provisions
+// real Identity accounts, which makes no sense in local/non-cloud mode).
+document.getElementById('invite-panel').hidden=!PilotCloud.enabled;
+function setInviteStatus(message,kind){const el=document.getElementById('inviteStatus');el.textContent=message;el.className='assign-status '+(kind||'')}
+function fallbackCopyText(text){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy')}catch(error){}
+  document.body.removeChild(ta);
+}
+function copyTextToClipboard(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(()=>fallbackCopyText(text))}
+  else{fallbackCopyText(text)}
+}
+function inviteLinkFor(token){return location.origin+'/pilot-invite-accept.html?token='+encodeURIComponent(token)}
+function renderPendingInvites(rows){
+  const root=document.getElementById('pendingInvites');
+  const pending=(rows||[]).filter(x=>x.status==='pending');
+  if(!pending.length){root.innerHTML='';return}
+  root.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px">'+t('Pending invitations','待接受的邀请')+'</div>'+pending.map(inv=>
+    '<div class="assignment-row"><div><b>'+esc(inv.name||inv.email)+'</b><small>'+esc(inv.email)+t(' · Expires ',' · 过期时间 ')+esc(new Date(inv.expiresAt).toLocaleDateString())+'</small></div><div class="assignment-actions"><button type="button" class="start-link copy-invite-link" data-link="'+esc(inviteLinkFor(inv.token))+'" style="background:#fff;color:#1a56db;border:1px solid #bfdbfe">'+t('Copy Link','复制链接')+'</button></div></div>'
+  ).join('');
+}
+document.getElementById('pendingInvites').addEventListener('click',event=>{
+  const button=event.target.closest('.copy-invite-link');
+  if(!button)return;
+  copyTextToClipboard(button.dataset.link);
+  const original=button.textContent;button.textContent=t('Copied!','已复制！');
+  setTimeout(()=>{button.textContent=original},1500);
+});
+async function loadInvites(){
+  if(!PilotCloud.enabled)return;
+  try{
+    const response=await fetch('/.netlify/functions/pilot-invite?action=list');
+    const data=await response.json().catch(()=>({}));
+    if(response.ok)renderPendingInvites(data.invites||[]);
+  }catch(error){/* the pending-invites list is a convenience; a failure here must not break the dashboard */}
+}
+async function createInvite(){
+  const nameInput=document.getElementById('inviteName');
+  const emailInput=document.getElementById('inviteEmail');
+  const email=emailInput.value.trim().toLowerCase();
+  const name=nameInput.value.trim();
+  if(!email||!emailInput.checkValidity()){setInviteStatus(t('Please enter a valid learner email.','请输入有效的学员邮箱。'),'error');emailInput.focus();return}
+  const button=document.getElementById('createInvite');
+  button.disabled=true;setInviteStatus(t('Creating invitation…','正在建立邀请…'),'');
+  try{
+    const response=await fetch('/.netlify/functions/pilot-invite?action=create',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,name})});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.error||t('Could not create the invitation.','无法建立邀请。'));
+    document.getElementById('inviteLinkText').value=inviteLinkFor(data.invite.token);
+    document.getElementById('inviteLinkBox').hidden=false;
+    setInviteStatus(data.reused?t('An invitation for this email is already pending — showing the existing link.','此邮箱已有待接受的邀请——已显示原有链接。'):t('Invitation created. Copy the link and send it to the learner.','邀请已建立。请复制链接并发送给学员。'),'ok');
+    nameInput.value='';emailInput.value='';
+    loadInvites();
+  }catch(error){setInviteStatus(error.message,'error')}
+  finally{button.disabled=false}
+}
+document.getElementById('createInvite').addEventListener('click',createInvite);
+document.getElementById('copyInviteLink').addEventListener('click',()=>{
+  copyTextToClipboard(document.getElementById('inviteLinkText').value);
+  const btn=document.getElementById('copyInviteLink');const original=btn.textContent;
+  btn.textContent=t('Copied!','已复制！');setTimeout(()=>{btn.textContent=original},1500);
+});
 async function refreshCloud(){
   if(!PilotCloud.enabled){renderAssignments();list();return}
   setAssignStatus(t('Refreshing secure Pilot data…','正在刷新安全试用数据…'),'');
@@ -215,6 +281,7 @@ async function refreshCloud(){
     document.getElementById('quickTest').hidden=true;
     document.getElementById('learnerEmail').placeholder='learner@example.com';
     renderAssignments();list();setAssignStatus(t('Pilot data is up to date.','试用数据已更新。'),'ok');
+    loadInvites();
   }catch(error){setAssignStatus(error.message,'error')}
 }
 document.getElementById('refresh').onclick=refreshCloud;
