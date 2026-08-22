@@ -10,7 +10,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
 import handler from '../netlify/functions/pilot-invite.mjs';
-import { __setUser, __seedExistingUser, __resetIdentityStub, __setOperatorTokenAvailable } from '../tests/stubs/netlify-identity.mjs';
+import { __setUser, __seedExistingUser, __resetIdentityStub, __setOperatorTokenAvailable, __failNextUpdateUser, __makeNextGetUserStale } from '../tests/stubs/netlify-identity.mjs';
 import { __resetAllStores } from '../tests/stubs/netlify-blobs.mjs';
 
 const BASE = 'https://pilot.example.com/.netlify/functions/pilot-invite';
@@ -124,12 +124,206 @@ describe('team isolation', () => {
     res = await call('POST', 'accept', { body: { token, password: 'correct horse battery' } });
     assert.equal(res.status, 201);
 
-    // Inspect what admin.createUser actually stored via the stub's own list().
+    // Inspect what actually landed via the stub's own admin.getUser() - the
+    // same shape (roles array, appMetadata) pilot-invite.mjs's own
+    // verification step reads, not the raw internal record.
     const { admin } = await import('../tests/stubs/netlify-identity.mjs');
     const created = (await admin.listUsers()).find(u => u.email === 'newlearner@example.com');
     assert.ok(created, 'account was created');
-    assert.deepEqual(created.app_metadata.roles.sort(), ['learner', 'team-founding-pilot'].sort());
-    assert.equal(created.app_metadata.team_id, 'founding-pilot');
+    assert.deepEqual(created.roles.sort(), ['learner', 'team-founding-pilot'].sort());
+    assert.equal(created.appMetadata.team_id, 'founding-pilot');
+  });
+});
+
+describe('provisioning: metadata is verified, not just sent (production evidence: createUser alone does not persist it)', () => {
+  test('accept attaches roles/team_id/name via updateUser and verifies via getUser before marking accepted', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'verified@example.com', name: 'Verified Learner' } })).json();
+
+    const res = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(res.status, 201);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    const account = (await admin.listUsers()).find(u => u.email === 'verified@example.com');
+    assert.deepEqual(account.roles.sort(), ['learner', 'team-founding-pilot'].sort());
+    assert.equal(account.appMetadata.team_id, 'founding-pilot');
+    assert.equal(account.userMetadata.full_name, 'Verified Learner', 'name is attached via updateUser, not lost like the createUser-only path that caused the production bug');
+
+    __setUser(manager);
+    const list = await (await call('GET', 'list')).json();
+    assert.equal(list.invites[0].status, 'accepted', 'only marked accepted after verification succeeded');
+  });
+});
+
+describe('partial-failure recovery (never strand a valid account, never re-call createUser for it)', () => {
+  test('createUser succeeds but updateUser fails: invite stays resumable, retry completes without a second createUser call', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'partial-a@example.com' } })).json();
+
+    __failNextUpdateUser();
+    const first = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(first.status, 502, 'the account exists but is not yet usable, so this is reported as a failure, not success');
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    assert.equal((await admin.listUsers()).length, 1, 'exactly one account exists after the failed first attempt - it was not rolled back or duplicated');
+
+    __setUser(manager);
+    const midList = await (await call('GET', 'list')).json();
+    assert.equal(midList.invites[0].status, 'pending', 'not marked accepted while metadata is unverified');
+
+    const second = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(second.status, 201, 'retry succeeds');
+    assert.equal((await admin.listUsers()).length, 1, 'retry resumed the same account instead of calling createUser again');
+    const account = (await admin.listUsers())[0];
+    assert.deepEqual(account.roles.sort(), ['learner', 'team-founding-pilot'].sort());
+  });
+
+  test('updateUser succeeds but the verification read is stale once: invite stays resumable, retry completes cleanly', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'partial-b@example.com' } })).json();
+
+    __makeNextGetUserStale();
+    const first = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(first.status, 502);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    assert.equal((await admin.listUsers()).length, 1, 'no duplicate account from the failed verification attempt');
+
+    const second = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(second.status, 201);
+    assert.equal((await admin.listUsers()).length, 1, 'retry resumed the same account instead of calling createUser again');
+  });
+
+  test('Identity fully provisions but the final Blobs write is lost: retry completes without touching Identity again', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'partial-c@example.com' } })).json();
+
+    const first = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(first.status, 201);
+
+    // Simulate the final "mark accepted" write never having taken effect,
+    // while the earlier acceptedUserId persist (from immediately after
+    // createUser succeeded) did - exactly the durable state a real partial
+    // Blobs failure at that specific point would leave behind.
+    const { getStore } = await import('../tests/stubs/netlify-blobs.mjs');
+    const store = getStore({ name: 'agentraining-pilot' });
+    const key = `invites/by-token/${created.invite.token}`;
+    const invite = await store.get(key);
+    assert.ok(invite.acceptedUserId, 'the user id was durably recorded before the (simulated) final write was lost');
+    invite.status = 'pending';
+    invite.acceptedAt = '';
+    await store.setJSON(key, invite);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    const accountId = invite.acceptedUserId;
+
+    const retry = await call('POST', 'accept', { body: { token: created.invite.token, password: 'a-different-password-this-time' } });
+    assert.equal(retry.status, 201);
+    assert.equal((await admin.listUsers()).length, 1, 'retry never called createUser again');
+    assert.equal((await admin.listUsers())[0].id, accountId, 'the same account was reused, not replaced');
+
+    __setUser(manager);
+    const list = await (await call('GET', 'list')).json();
+    assert.equal(list.invites[0].status, 'accepted');
+  });
+});
+
+describe('manager repair endpoint (recovers an already-created account whose metadata never verified)', () => {
+  test('repairs an existing broken account by re-running update+verify against its own recorded userId', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'broken@example.com', name: 'Broken Learner' } })).json();
+
+    // Simulate exactly the production bug: createUser succeeded, the
+    // acceptedUserId was durably recorded, but the account still ended up
+    // marked accepted with no metadata (the pre-fix behavior).
+    __failNextUpdateUser();
+    const failedAccept = await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    assert.equal(failedAccept.status, 502);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    const before = (await admin.listUsers()).find(u => u.email === 'broken@example.com');
+    assert.deepEqual(before.roles || [], [], 'account exists with no roles yet, matching the production evidence');
+
+    const repair = await call('POST', 'repair', { body: { email: 'broken@example.com' } });
+    assert.equal(repair.status, 200);
+    const repairData = await repair.json();
+    assert.equal(repairData.status, 'repaired');
+
+    const after = (await admin.listUsers()).find(u => u.email === 'broken@example.com');
+    assert.deepEqual(after.roles.sort(), ['learner', 'team-founding-pilot'].sort());
+    assert.equal(after.appMetadata.team_id, 'founding-pilot');
+    assert.equal(after.userMetadata.full_name, 'Broken Learner');
+    assert.equal((await admin.listUsers()).length, 1, 'no second account was created - repair only ever updates the existing one');
+
+    __setUser(manager);
+    const list = await (await call('GET', 'list')).json();
+    assert.equal(list.invites[0].status, 'accepted');
+  });
+
+  test('repair is idempotent - calling it again re-verifies without creating or duplicating anything', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'idempotent-repair@example.com' } })).json();
+    await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+
+    const first = await call('POST', 'repair', { body: { email: 'idempotent-repair@example.com' } });
+    assert.equal(first.status, 200);
+    const second = await call('POST', 'repair', { body: { email: 'idempotent-repair@example.com' } });
+    assert.equal(second.status, 200);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    assert.equal((await admin.listUsers()).length, 1);
+  });
+
+  test('repair requires manager auth and a single assigned team, same as create/list', async () => {
+    __setUser(null);
+    let res = await call('POST', 'repair', { body: { email: 'x@example.com' } });
+    assert.equal(res.status, 401);
+
+    __setUser(learnerRole);
+    res = await call('POST', 'repair', { body: { email: 'x@example.com' } });
+    assert.equal(res.status, 403);
+  });
+
+  test('repair refuses an invite with no acceptedUserId - never invents an id, never calls createUser', async () => {
+    __setUser(manager);
+    await call('POST', 'create', { body: { email: 'never-accepted@example.com' } });
+
+    const res = await call('POST', 'repair', { body: { email: 'never-accepted@example.com' } });
+    assert.equal(res.status, 409);
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    assert.equal((await admin.listUsers()).length, 0);
+  });
+
+  test('repair can never reach another team\'s invite, and never searches Identity by email - so an unrelated account is never touched', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'teamiso-repair@example.com' } })).json();
+    await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    const before = JSON.stringify(await admin.listUsers());
+
+    // A manager on a different team asking to repair the same email must not
+    // find it - byEmailKey is namespaced per-team, so this cannot resolve to
+    // team-founding-pilot's invite no matter what email is supplied.
+    __setUser(managerTeamB);
+    const res = await call('POST', 'repair', { body: { email: 'teamiso-repair@example.com' } });
+    assert.equal(res.status, 404);
+
+    const after = JSON.stringify(await admin.listUsers());
+    assert.equal(after, before, 'the account is byte-for-byte unchanged - a same-email request from an unrelated team never touched it');
+  });
+
+  test('repair never modifies an unrelated, pre-existing Identity account that has nothing to do with any invite', async () => {
+    __seedExistingUser('completely-unrelated@example.com');
+    __setUser(manager);
+
+    const res = await call('POST', 'repair', { body: { email: 'completely-unrelated@example.com' } });
+    assert.equal(res.status, 404, 'no invite exists for this email at all, so repair never even reaches an Identity call');
+
+    const { admin } = await import('../tests/stubs/netlify-identity.mjs');
+    const unrelated = (await admin.listUsers()).find(u => u.email === 'completely-unrelated@example.com');
+    assert.deepEqual(unrelated.roles || [], [], 'completely untouched');
   });
 });
 

@@ -14,6 +14,9 @@ p.lead{color:var(--muted);line-height:1.6;margin:0 0 20px}
 .lang{display:inline-flex;gap:4px;margin-bottom:16px}.lang button{border:1px solid var(--line);background:#fff;color:#64748b;border-radius:8px;padding:6px 9px;cursor:pointer}.lang button.active{background:#eff6ff;color:var(--blue);font-weight:800;border-color:#93c5fd}
 label{display:block;font-weight:700;font-size:12px;margin:14px 0 6px;color:#334155}
 input{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px 12px;font:inherit}
+.pwrap{display:flex;border:1px solid #cbd5e1;border-radius:9px;overflow:hidden}
+.pwrap input{border:0;flex:1;min-width:0}
+.pwrap button{border:0;border-left:1px solid #e2e8f0;background:#f8fafc;color:var(--blue);padding:0 11px;font-weight:700;cursor:pointer;white-space:nowrap}
 button.primary{width:100%;margin-top:20px;border:0;border-radius:9px;background:var(--blue);color:#fff;padding:13px;font-weight:800;cursor:pointer}
 button.primary:disabled{opacity:.55;cursor:not-allowed}
 .status{min-height:20px;margin-top:12px;font-size:13px;line-height:1.5}
@@ -84,14 +87,20 @@ function render() {
     ) + '</p>' +
     '<form id="acceptForm">' +
       '<label for="password">' + t('Password', '密码') + '</label>' +
-      '<input id="password" type="password" autocomplete="new-password" required minlength="8">' +
+      '<div class="pwrap"><input id="password" type="password" autocomplete="new-password" required minlength="8"><button type="button" class="pw-toggle" data-target="password">' + t('👁 Show', '👁 显示') + '</button></div>' +
       '<div class="hint">' + t('At least 8 characters.', '至少 8 个字符。') + '</div>' +
       '<label for="confirmPassword">' + t('Confirm password', '确认密码') + '</label>' +
-      '<input id="confirmPassword" type="password" autocomplete="new-password" required minlength="8">' +
+      '<div class="pwrap"><input id="confirmPassword" type="password" autocomplete="new-password" required minlength="8"><button type="button" class="pw-toggle" data-target="confirmPassword">' + t('👁 Show', '👁 显示') + '</button></div>' +
       '<button class="primary" id="acceptButton" type="submit">' + t('Activate my account', '启用我的账号') + '</button>' +
       '<div class="status" id="formStatus" role="status" aria-live="polite"></div>' +
     '</form>';
   document.getElementById('acceptForm').addEventListener('submit', onSubmit);
+  document.querySelectorAll('.pw-toggle').forEach(button => button.addEventListener('click', () => {
+    const input = document.getElementById(button.dataset.target);
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    button.textContent = showing ? t('👁 Show', '👁 显示') : t('🙈 Hide', '🙈 隐藏');
+  }));
 }
 
 function setStatus(message, kind) {

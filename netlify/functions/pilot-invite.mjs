@@ -24,6 +24,21 @@ import { getUser, verifyRequestOrigin, admin } from '@netlify/identity';
 // reports distinctly (see the real-environment-validation note in the
 // completion report) rather than failing silently.
 //
+// Provisioning (create -> update -> verify): production evidence showed
+// admin.createUser()'s own `data.app_metadata` / `data.user_metadata` are
+// NOT reliably persisted by the real Identity admin endpoint at creation
+// time - accounts were created with email/password correct but no roles and
+// no name. So metadata is attached with a separate, explicit
+// admin.updateUser() call right after creation, and re-fetched via
+// admin.getUser() to verify it actually landed before the invite is ever
+// marked accepted. The newly-created user's id is persisted to this
+// invite's own Blobs record immediately after createUser() succeeds -
+// before update/verify run - so a crash or failure at any later step is
+// safely resumable: a retry sees that id already on record and never calls
+// admin.createUser() a second time for this invite (which would otherwise
+// hit GoTrue's own "already exists" rejection and strand a perfectly valid,
+// already-created account). See updateAndVerify() below.
+//
 // Storage: reuses the existing "agentraining-pilot" Netlify Blobs store
 // (same store pilot-data.mjs and pilot-roster.mjs already use), under a new
 // "invites/" namespace. No new storage system.
@@ -127,6 +142,39 @@ async function writeInviteAudit(store, teamId, actorEmail, action, outcome, deta
   }
 }
 
+// The one true shape of what a learner account provisioned from this invite
+// should end up with - shared by the initial accept flow and the repair
+// endpoint below, so the two can never drift apart. Always derived from the
+// invite record (team, name), never from client input.
+function expectedIdentityMetadata(invite) {
+  return {
+    app_metadata: { roles: ['learner', `team-${invite.teamId}`], team_id: invite.teamId },
+    user_metadata: invite.name ? { full_name: invite.name } : {}
+  };
+}
+
+function isProvisioned(user, invite) {
+  const roles = Array.isArray(user?.roles) ? user.roles : [];
+  return roles.includes('learner')
+    && roles.includes(`team-${invite.teamId}`)
+    && user?.appMetadata?.team_id === invite.teamId;
+}
+
+// Attaches the expected roles/team_id/name to an Identity user that already
+// exists (just created, or recovered from a prior partial attempt) and
+// re-fetches the account to confirm the write actually took effect, per the
+// production evidence that a create-time payload alone cannot be trusted.
+// Only ever called with a userId this invite already durably owns - never
+// searches for or guesses at a user id.
+async function updateAndVerify(userId, invite) {
+  await admin.updateUser(userId, expectedIdentityMetadata(invite));
+  const verified = await admin.getUser(userId);
+  if (!isProvisioned(verified, invite)) {
+    throw new Error('Identity account metadata did not verify after update.');
+  }
+  return verified;
+}
+
 export default async function handler(req) {
   try {
     const url = new URL(req.url);
@@ -191,7 +239,7 @@ export default async function handler(req) {
       if (!token) return reply(400, { error: 'Missing invitation link.' });
       if (password.length < 8) return reply(400, { error: 'Choose a password with at least 8 characters.' });
 
-      const invite = await store.get(byTokenKey(token), { type: 'json' });
+      let invite = await store.get(byTokenKey(token), { type: 'json' });
       if (!invite) return reply(404, { error: 'This invitation link is invalid.' });
 
       // Re-opening an already-accepted invite is idempotent: never attempt
@@ -202,49 +250,89 @@ export default async function handler(req) {
       }
       if (isExpired(invite)) return reply(410, { error: 'This invitation link has expired. Ask your manager for a new one.' });
 
-      let created;
-      try {
-        // Roles are set here, at creation, not via a later update - so the
-        // very first JWT this account ever gets (on its first sign-in)
-        // already reflects app_metadata.roles / team_id correctly. There is
-        // no stale-token window to account for, because the account never
-        // existed with different (or no) roles before this point.
-        created = await admin.createUser({
-          email: invite.email,
-          password,
-          data: {
-            app_metadata: {
-              roles: ['learner', `team-${invite.teamId}`],
-              team_id: invite.teamId
-            },
-            user_metadata: invite.name ? { full_name: invite.name } : {}
+      let userId = invite.acceptedUserId || '';
+
+      if (!userId) {
+        // Genuinely new: nothing durably associated with this invite yet.
+        let created;
+        try {
+          created = await admin.createUser({ email: invite.email, password, data: expectedIdentityMetadata(invite) });
+        } catch (error) {
+          const msg = error?.message || '';
+          // GoTrue rejects a duplicate email itself - we NEVER call
+          // updateUser on an account we didn't just create (or already own
+          // via this invite's own acceptedUserId) in this flow, so an
+          // unrelated pre-existing account is never touched, let alone
+          // overwritten.
+          if (/already exist|already (been )?registered/i.test(msg)) {
+            return reply(409, { error: 'An account already exists for this email address. Please sign in instead, or contact your manager if this seems wrong.' });
           }
-        });
-      } catch (error) {
-        const msg = error?.message || '';
-        // GoTrue rejects a duplicate email itself - we NEVER call updateUser
-        // on an account we didn't just create in this same request, so an
-        // unrelated pre-existing account is never touched, let alone
-        // overwritten.
-        if (/already exist|already (been )?registered/i.test(msg)) {
-          return reply(409, { error: 'An account already exists for this email address. Please sign in instead, or contact your manager if this seems wrong.' });
+          if (/operator token|identity endpoint url/i.test(msg)) {
+            console.error('pilot-invite accept: Identity admin operations unavailable in this function context (missing operator token / endpoint) - Invite Learner cannot provision accounts until this is verified in a real deployment', error);
+            return reply(503, { error: 'Account creation is temporarily unavailable. Please contact your manager.' });
+          }
+          const status = Number(error?.status) || 0;
+          if (status >= 400 && status < 500) {
+            return reply(status, { error: msg || 'That password could not be accepted. Please try a different one.' });
+          }
+          console.error('pilot-invite accept: admin.createUser failed', error);
+          return reply(502, { error: 'Could not create the account right now. Please try again or ask your manager for a new invite link.' });
         }
-        if (/operator token|identity endpoint url/i.test(msg)) {
-          console.error('pilot-invite accept: Identity admin operations unavailable in this function context (missing operator token / endpoint) - Invite Learner cannot provision accounts until this is verified in a real deployment', error);
-          return reply(503, { error: 'Account creation is temporarily unavailable. Please contact your manager.' });
-        }
-        const status = Number(error?.status) || 0;
-        if (status >= 400 && status < 500) {
-          return reply(status, { error: msg || 'That password could not be accepted. Please try a different one.' });
-        }
-        console.error('pilot-invite accept: admin.createUser failed', error);
-        return reply(502, { error: 'Could not create the account right now. Please try again or ask your manager for a new invite link.' });
+        userId = created.id;
+        // Persist immediately, before update/verify run, so a failure from
+        // here on is safely resumable without ever calling createUser again.
+        invite = { ...invite, acceptedUserId: userId };
+        await saveInvite(store, invite);
       }
 
-      const accepted = { ...invite, status: 'accepted', acceptedAt: new Date().toISOString(), acceptedUserId: created.id };
+      try {
+        await updateAndVerify(userId, invite);
+      } catch (error) {
+        console.error('pilot-invite accept: metadata provisioning did not verify', error);
+        return reply(502, { error: 'Your account was created but is still finishing setup. Please try again in a moment.' });
+      }
+
+      const accepted = { ...invite, status: 'accepted', acceptedAt: new Date().toISOString(), acceptedUserId: userId };
       await saveInvite(store, accepted);
-      await writeInviteAudit(store, invite.teamId, invite.email, 'invite_accept', 'success', { inviteId: invite.id, userId: created.id });
+      await writeInviteAudit(store, invite.teamId, invite.email, 'invite_accept', 'success', { inviteId: invite.id, userId });
       return reply(201, { status: 'created', email: invite.email });
+    }
+
+    // ---- Manager-authenticated recovery: repair a learner account this
+    // invite already created, whose metadata verification never completed
+    // (e.g. the exact production gap above). Never creates an account,
+    // never searches Identity by email, and only ever acts on a userId this
+    // invite already durably owns within the caller's own team - so it can
+    // neither strand-fix nor touch anything it didn't already provision.
+    if (req.method === 'POST' && action === 'repair') {
+      verifyRequestOrigin(req);
+      const user = await getUser();
+      if (!user) return reply(401, { error: 'Please sign in to continue.' });
+      const actor = managerTeamContext(user);
+      if (!actor) return reply(403, { error: 'Manager access with a single assigned team is required.' });
+
+      const input = await req.json().catch(() => ({}));
+      const email = normalizeEmail(input.email);
+      if (!email) return reply(400, { error: 'Missing learner email.' });
+
+      // Scoped to the caller's own team by construction: this key can only
+      // ever resolve to an invite this manager's own team created.
+      const invite = await store.get(byEmailKey(actor.teamId, email), { type: 'json' });
+      if (!invite || invite.teamId !== actor.teamId) return reply(404, { error: 'No invitation found for this learner on your team.' });
+      if (!invite.acceptedUserId) return reply(409, { error: 'This invitation has no associated account yet to repair.' });
+
+      try {
+        await updateAndVerify(invite.acceptedUserId, invite);
+      } catch (error) {
+        console.error('pilot-invite repair: metadata provisioning did not verify', error);
+        return reply(502, { error: 'Could not verify the account just now. Please try again.' });
+      }
+
+      if (invite.status !== 'accepted') {
+        await saveInvite(store, { ...invite, status: 'accepted', acceptedAt: invite.acceptedAt || new Date().toISOString() });
+      }
+      await writeInviteAudit(store, actor.teamId, actor.email, 'invite_repair', 'success', { email, userId: invite.acceptedUserId });
+      return reply(200, { status: 'repaired', email: invite.email });
     }
 
     return reply(404, { error: 'Unknown invite operation.' });
