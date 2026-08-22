@@ -116,8 +116,27 @@ async function onSubmit(event) {
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || t('Could not activate your account.', '无法启用您的账号。'));
     if (data.status === 'already_accepted') { state = { loading: false, status: 'accepted', email: data.email }; render(); return; }
-    state = { loading: false, justAccepted: true, email: data.email };
-    render();
+
+    // The account was just created server-side via the Identity Admin API
+    // (admin.createUser), which gives the browser no session of its own -
+    // so without this, the learner would have to manually sign in again
+    // right after finishing setup. Use the already-loaded Identity widget
+    // to sign in with the exact credentials just submitted, then go
+    // straight to Pilot Home. If auto-login fails for any reason, the
+    // account itself is still created and fine either way - fall back to
+    // the normal "Account created" success state with its Sign In link.
+    setStatus(t('Account created. Signing you in…', '账号已建立，正在为您登录……'), '');
+    try {
+      window.netlifyIdentity.init();
+      const loggedIn = await window.netlifyIdentity.gotrue.login(data.email, password, true);
+      await loggedIn.jwt();
+      location.href = 'pilot.html?pilot=1';
+      return;
+    } catch (autoLoginError) {
+      state = { loading: false, justAccepted: true, email: data.email };
+      render();
+      return;
+    }
   } catch (error) {
     setStatus(error.message, 'error');
     button.disabled = false;

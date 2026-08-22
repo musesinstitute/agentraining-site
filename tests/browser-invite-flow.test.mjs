@@ -58,6 +58,62 @@ async function mockIdentityWidget(page) {
     route.fulfill({ status: 200, contentType: 'text/javascript', body: FAKE_WIDGET_JS }));
 }
 
+// Fake widget for pilot-invite-accept.html's post-creation auto-login: a
+// working (or deliberately failing) gotrue.login() that records what it was
+// called with. The call is recorded into sessionStorage (not just a JS
+// variable) because a successful login navigates the page away to
+// pilot.html - sessionStorage is the one thing that survives a same-origin
+// navigation so the test can still inspect what was actually submitted.
+function learnerWidgetScript(loginShouldSucceed) {
+  return `
+window.netlifyIdentity = (function () {
+  // A successful login navigates the page away to pilot.html, which loads
+  // this same fake widget script fresh - so "signed in" state has to
+  // survive that the same way the real widget does it: persisted to
+  // localStorage, not just an in-memory variable that would reset on
+  // every navigation.
+  function loadUser() {
+    try { const raw = localStorage.getItem('__fakeIdentityUser'); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+  }
+  function withJwt(user) {
+    return user ? Object.assign({ jwt: async () => 'fake-jwt-for-' + user.email, getUserData: async () => {} }, user) : null;
+  }
+  let currentUser = loadUser();
+  return {
+    init() {},
+    currentUser: () => withJwt(currentUser),
+    on() {}, open() {}, close() {},
+    logout() { currentUser = null; try { localStorage.removeItem('__fakeIdentityUser'); } catch (e) {} },
+    gotrue: {
+      login: async (email, password, remember) => {
+        try { sessionStorage.setItem('__autoLoginCall', JSON.stringify({ email, password, remember })); } catch (e) {}
+        ${loginShouldSucceed ? '' : "throw new Error('Invalid login credentials');"}
+        currentUser = { email, app_metadata: { roles: ['learner', 'team-founding-pilot'] } };
+        try { localStorage.setItem('__fakeIdentityUser', JSON.stringify(currentUser)); } catch (e) {}
+        return withJwt(currentUser);
+      }
+    }
+  };
+})();
+`;
+}
+async function mockLearnerLoginWidget(page, loginShouldSucceed) {
+  await page.route('https://identity.netlify.com/v1/netlify-identity-widget.js', route =>
+    route.fulfill({ status: 200, contentType: 'text/javascript', body: learnerWidgetScript(loginShouldSucceed) }));
+}
+async function mockPilotDataForLearner(page, email) {
+  await page.route('**/.netlify/functions/pilot-data**', route => {
+    const url = new URL(route.request().url());
+    const resource = url.searchParams.get('resource');
+    const body = resource === 'me' ? { email, roles: ['learner', 'team-founding-pilot'], teamId: 'founding-pilot' }
+      : resource === 'assignments' ? { assignments: [] }
+      : resource === 'sessions' ? { sessions: [] }
+      : resource === 'profiles' ? { profiles: [] }
+      : {};
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+  });
+}
+
 async function mockManagerSignedIn(page) {
   await page.addInitScript(({ jwt }) => {
     window.__testManagerUser = {
@@ -127,10 +183,12 @@ describe('Invite Learner - headless browser flow', () => {
     await page.close();
   });
 
-  test('Learner: opening the real accept page shows the invited email and lets them set a password', async () => {
+  test('Learner: invite -> set password -> account created -> auto-login -> redirected straight into Pilot Home', async () => {
     assert.ok(sharedInviteState, 'previous test created an invite to accept');
     const page = await browser.newPage();
 
+    await mockLearnerLoginWidget(page, true);
+    await mockPilotDataForLearner(page, sharedInviteState.email);
     await page.route('**/.netlify/functions/pilot-invite**', route => {
       const url = new URL(route.request().url());
       const action = url.searchParams.get('action');
@@ -155,12 +213,63 @@ describe('Invite Learner - headless browser flow', () => {
     await page.fill('#confirmPassword', 'a-strong-password-1');
     await page.click('#acceptButton');
 
+    // No CTA click needed this time - a successful auto-login should carry
+    // the learner straight into Pilot Home on its own.
+    await page.waitForURL(`${baseUrl}/pilot.html?pilot=1`, { timeout: 5000 });
+
+    const autoLoginCall = JSON.parse(await page.evaluate(() => sessionStorage.getItem('__autoLoginCall')));
+    assert.equal(autoLoginCall.email, sharedInviteState.email, 'auto-login used the invited account email');
+    assert.equal(autoLoginCall.password, 'a-strong-password-1', 'auto-login used the exact password the learner just submitted');
+    assert.equal(autoLoginCall.remember, true);
+
+    // Landing on pilot.html already signed in means the sign-in gate never
+    // appears and the authenticated header renders directly.
+    const gateVisible = await page.locator('#pilot-auth-gate').isVisible().catch(() => false);
+    assert.equal(gateVisible, false, 'the manual sign-in gate is never shown - auto-login already established the session');
+    await page.locator('#identity').waitFor({ state: 'visible', timeout: 5000 });
+    const identityText = await page.locator('#identity').innerText();
+    assert.equal(identityText, sharedInviteState.email, 'Pilot Home shows the auto-logged-in learner, confirming the session is real, not just a redirect');
+
+    await page.close();
+  });
+
+  test('Learner: if auto-login fails, account creation still succeeds and the Sign In fallback is shown', async () => {
+    const page = await browser.newPage();
+    const invite = { token: 'fallback-token-xyz', email: 'autologinfails@example.com', name: '' };
+
+    await mockLearnerLoginWidget(page, false);
+    await page.route('**/.netlify/functions/pilot-invite**', route => {
+      const url = new URL(route.request().url());
+      const action = url.searchParams.get('action');
+      if (action === 'lookup') {
+        route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'pending', email: invite.email, name: invite.name }) });
+      } else if (action === 'accept') {
+        route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ status: 'created', email: invite.email }) });
+      } else {
+        route.fulfill({ status: 404, contentType: 'application/json', body: '{"error":"unexpected"}' });
+      }
+    });
+
+    await page.goto(`${baseUrl}/pilot-invite-accept.html?token=${invite.token}`);
+    await page.locator('#acceptForm').waitFor({ state: 'visible', timeout: 5000 });
+    await page.fill('#password', 'a-strong-password-1');
+    await page.fill('#confirmPassword', 'a-strong-password-1');
+    await page.click('#acceptButton');
+
+    // Auto-login was attempted (and failed) - account creation must not be
+    // treated as failed because of that: the normal success state and its
+    // Sign In fallback link still need to appear, and we must stay on this
+    // page rather than being redirected anywhere.
     const cta = page.locator('a.cta');
     await cta.waitFor({ state: 'visible', timeout: 5000 });
     const href = await cta.getAttribute('href');
-    assert.equal(href, 'pilot.html?pilot=1', 'the post-accept CTA is a plain relative link into the existing sign-in flow, not an absolute/production-assumed URL');
+    assert.equal(href, 'pilot.html?pilot=1', 'the Sign In fallback is a plain relative link into the existing sign-in flow');
     const heading = await page.locator('h1').innerText();
     assert.match(heading, /Account created|账号已建立/);
+    assert.equal(page.url(), `${baseUrl}/pilot-invite-accept.html?token=${invite.token}`, 'a failed auto-login does not navigate the learner away');
+
+    const autoLoginCall = JSON.parse(await page.evaluate(() => sessionStorage.getItem('__autoLoginCall')));
+    assert.equal(autoLoginCall.email, invite.email, 'auto-login was attempted with the invited account email before falling back');
 
     await page.close();
   });
