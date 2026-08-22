@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accept Invitation — AgentTraining.ai</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<style>
+:root{--blue:#1a56db;--ink:#111827;--muted:#64748b;--bg:#f7f8fc;--line:#e2e8f0;--green:#047857;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.card{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:32px;box-shadow:0 20px 60px rgba(15,23,42,.12)}
+.logo{color:var(--blue);font-weight:800;font-size:20px;text-decoration:none;display:block;margin-bottom:18px}.logo span{color:#f59e0b}
+h1{margin:0 0 10px;font-size:22px}
+p.lead{color:var(--muted);line-height:1.6;margin:0 0 20px}
+.lang{display:inline-flex;gap:4px;margin-bottom:16px}.lang button{border:1px solid var(--line);background:#fff;color:#64748b;border-radius:8px;padding:6px 9px;cursor:pointer}.lang button.active{background:#eff6ff;color:var(--blue);font-weight:800;border-color:#93c5fd}
+label{display:block;font-weight:700;font-size:12px;margin:14px 0 6px;color:#334155}
+input{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px 12px;font:inherit}
+button.primary{width:100%;margin-top:20px;border:0;border-radius:9px;background:var(--blue);color:#fff;padding:13px;font-weight:800;cursor:pointer}
+button.primary:disabled{opacity:.55;cursor:not-allowed}
+.status{min-height:20px;margin-top:12px;font-size:13px;line-height:1.5}
+.status.error{color:var(--red)}.status.ok{color:var(--green)}
+.hint{color:var(--muted);font-size:12px;margin-top:6px}
+a.cta{display:block;text-align:center;margin-top:18px;background:var(--blue);color:#fff;text-decoration:none;font-weight:800;padding:13px;border-radius:9px}
+.empty{color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="card">
+<a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
+<span class="lang" aria-label="Language / 语言"><button id="langEn" type="button" class="active">EN</button><button id="langZh" type="button">中文</button></span>
+<div id="root"><p class="empty">Checking your invitation…</p></div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get('token') || '';
+let currentLang = 'en';
+const t = (en, zh) => currentLang === 'zh' ? zh : en;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const root = document.getElementById('root');
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+  render();
+}
+document.getElementById('langEn').addEventListener('click', () => setLang('en'));
+document.getElementById('langZh').addEventListener('click', () => setLang('zh'));
+
+let state = { loading: true };
+
+function render() {
+  if (state.loading) {
+    root.innerHTML = '<p class="empty">' + t('Checking your invitation…', '正在核对您的邀请……') + '</p>';
+    return;
+  }
+  if (state.error) {
+    root.innerHTML =
+      '<h1>' + t('Invitation not available', '邀请链接无法使用') + '</h1>' +
+      '<p class="lead">' + esc(state.error) + '</p>' +
+      '<a class="cta" href="pilot.html?pilot=1">' + t('Go to sign in', '前往登录') + '</a>';
+    return;
+  }
+  if (state.status === 'accepted' || state.justAccepted) {
+    root.innerHTML =
+      '<h1>' + t(state.justAccepted ? 'Account created' : 'Already set up', state.justAccepted ? '账号已建立' : '已完成设置') + '</h1>' +
+      '<p class="lead">' + t(
+        state.justAccepted
+          ? 'Your account is ready. Sign in with ' + esc(state.email) + ' to enter the Pilot workspace.'
+          : 'This invitation was already used to set up ' + esc(state.email) + '. Sign in to continue.',
+        state.justAccepted
+          ? '您的账号已建立。请使用 ' + esc(state.email) + ' 登录，进入 Pilot 工作区。'
+          : '此邀请链接已被用于设置 ' + esc(state.email) + '。请登录以继续。'
+      ) + '</p>' +
+      '<a class="cta" href="pilot.html?pilot=1">' + t('Sign in now', '立即登录') + '</a>';
+    return;
+  }
+  // pending: show the accept form
+  root.innerHTML =
+    '<h1>' + t('You’re invited', '您已受邀') + '</h1>' +
+    '<p class="lead">' + t(
+      'Set a password to activate your Pilot Learner account for <b>' + esc(state.email) + '</b>' + (state.name ? ' (' + esc(state.name) + ')' : '') + '.',
+      '请设置密码以启用您的 Pilot 学员账号：<b>' + esc(state.email) + '</b>' + (state.name ? '（' + esc(state.name) + '）' : '') + '。'
+    ) + '</p>' +
+    '<form id="acceptForm">' +
+      '<label for="password">' + t('Password', '密码') + '</label>' +
+      '<input id="password" type="password" autocomplete="new-password" required minlength="8">' +
+      '<div class="hint">' + t('At least 8 characters.', '至少 8 个字符。') + '</div>' +
+      '<label for="confirmPassword">' + t('Confirm password', '确认密码') + '</label>' +
+      '<input id="confirmPassword" type="password" autocomplete="new-password" required minlength="8">' +
+      '<button class="primary" id="acceptButton" type="submit">' + t('Activate my account', '启用我的账号') + '</button>' +
+      '<div class="status" id="formStatus" role="status" aria-live="polite"></div>' +
+    '</form>';
+  document.getElementById('acceptForm').addEventListener('submit', onSubmit);
+}
+
+function setStatus(message, kind) {
+  const el = document.getElementById('formStatus');
+  if (el) { el.textContent = message; el.className = 'status ' + (kind || ''); }
+}
+
+async function onSubmit(event) {
+  event.preventDefault();
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  if (password !== confirmPassword) { setStatus(t('Passwords do not match.', '两次输入的密码不一致。'), 'error'); return; }
+  const button = document.getElementById('acceptButton');
+  button.disabled = true;
+  setStatus(t('Activating your account…', '正在启用您的账号……'), '');
+  try {
+    const response = await fetch('/.netlify/functions/pilot-invite?action=accept', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token, password })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || t('Could not activate your account.', '无法启用您的账号。'));
+    if (data.status === 'already_accepted') { state = { loading: false, status: 'accepted', email: data.email }; render(); return; }
+    state = { loading: false, justAccepted: true, email: data.email };
+    render();
+  } catch (error) {
+    setStatus(error.message, 'error');
+    button.disabled = false;
+  }
+}
+
+async function loadInvite() {
+  if (!token) { state = { loading: false, error: t('This invitation link is missing its token.', '此邀请链接缺少必要的验证信息。') }; render(); return; }
+  try {
+    const response = await fetch('/.netlify/functions/pilot-invite?action=lookup&token=' + encodeURIComponent(token));
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || t('This invitation link is invalid.', '此邀请链接无效。'));
+    state = { loading: false, status: data.status, email: data.email, name: data.name };
+    render();
+  } catch (error) {
+    state = { loading: false, error: error.message };
+    render();
+  }
+}
+
+setLang(((navigator.language || '').toLowerCase().startsWith('zh')) ? 'zh' : 'en');
+loadInvite();
+</script>
+</body></html>
