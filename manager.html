@@ -250,7 +250,9 @@ async function createInvite(){
     if(!response.ok)throw new Error(data.error||t('Could not create the invitation.','无法建立邀请。'));
     document.getElementById('inviteLinkText').value=inviteLinkFor(data.invite.token);
     document.getElementById('inviteLinkBox').hidden=false;
-    setInviteStatus(data.reused?t('An invitation for this email is already pending — showing the existing link.','此邮箱已有待接受的邀请——已显示原有链接。'):t('Invitation created. Copy the link and send it to the learner.','邀请已建立。请复制链接并发送给学员。'),'ok');
+    // Copy Invite Link stays visible either way - it's the fallback if
+    // email delivery didn't go through, not just a convenience.
+    setInviteStatus(data.emailSent?t('Invitation created and emailed to '+email+'.','邀请已建立，并已发送邮件至 '+email+'。'):t('Invitation created. Email delivery was unavailable — copy the invitation link below and send it manually.','邀请已建立。邮件发送暂不可用——请复制下方邀请链接并手动发送给学员。'),data.emailSent?'ok':'');
     nameInput.value='';emailInput.value='';
     loadInvites();
   }catch(error){setInviteStatus(error.message,'error')}

@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import handler from '../netlify/functions/pilot-invite.mjs';
 import { __setUser, __seedExistingUser, __resetIdentityStub, __setOperatorTokenAvailable, __failNextUpdateUser, __makeNextGetUserStale } from '../tests/stubs/netlify-identity.mjs';
 import { __resetAllStores } from '../tests/stubs/netlify-blobs.mjs';
+import { __resetEmailStub, __setEmailMode, __getSentEmails } from '../tests/stubs/send-email.mjs';
 
 const BASE = 'https://pilot.example.com/.netlify/functions/pilot-invite';
 
@@ -40,6 +41,7 @@ const learnerRole = { id: 'l-1', email: 'not-a-manager@example.com', roles: ['le
 beforeEach(() => {
   __resetAllStores();
   __resetIdentityStub();
+  __resetEmailStub();
 });
 
 describe('auth gating', () => {
@@ -467,5 +469,120 @@ describe('operator token / real-environment dependency', () => {
     assert.equal(res.status, 503);
     const data = await res.json();
     assert.ok(!/operator token/i.test(data.error), 'internal detail is not leaked to the browser response');
+  });
+});
+
+describe('invitation email delivery (additive - can never invalidate or block a valid invitation)', () => {
+  test('a fresh invite sends the correct email to the correct address, with a link built from the real request origin', async () => {
+    __setUser(manager);
+    const res = await call('POST', 'create', { body: { email: 'emailme@example.com', name: 'Email Learner' } });
+    assert.equal(res.status, 201);
+    const data = await res.json();
+    assert.equal(data.emailSent, true);
+    assert.equal(data.emailError, undefined);
+
+    const sent = __getSentEmails();
+    assert.equal(sent.length, 1);
+    assert.equal(sent[0].to, 'emailme@example.com');
+    assert.match(sent[0].subject, /You're invited to AgentTraining\.ai Pilot/);
+    assert.match(sent[0].subject, /您已受邀加入 AgentTraining\.ai Pilot/, 'subject is bilingual, English then Chinese');
+    assert.equal(sent[0].replyTo, 'manager@example.com', 'reply-to is the inviting manager, not a new secret');
+
+    const expectedLink = `https://pilot.example.com/pilot-invite-accept.html?token=${data.invite.token}`;
+    assert.ok(sent[0].text.includes(expectedLink), 'plain-text body contains the real link');
+    assert.ok(sent[0].html.includes(expectedLink), 'html body contains the real link');
+    assert.ok(!sent[0].html.includes('agentraining.ai/pilot-invite-accept') && !sent[0].text.includes('agentraining.ai/pilot-invite-accept'), 'never hardcodes the production domain - the link is built from the request origin only');
+    assert.match(sent[0].text, /Activate your account/);
+    assert.match(sent[0].text, /启用您的账号/);
+  });
+
+  test('re-inviting a still-pending duplicate resends the email for the SAME token (this is the resend mechanism)', async () => {
+    __setUser(manager);
+    const first = await (await call('POST', 'create', { body: { email: 'resend@example.com' } })).json();
+    const second = await (await call('POST', 'create', { body: { email: 'resend@example.com' } })).json();
+
+    assert.equal(second.reused, true);
+    assert.equal(second.invite.token, first.invite.token);
+    assert.equal(second.emailSent, true);
+
+    const sent = __getSentEmails();
+    assert.equal(sent.length, 2, 'both the original create and the resend attempted delivery');
+    assert.ok(sent.every(e => e.text.includes(first.invite.token)), 'every send used the one real token, never a second one');
+  });
+
+  test('a provider failure never invalidates the invitation - it is still fully created and usable', async () => {
+    __setEmailMode('fail');
+    __setUser(manager);
+    const res = await call('POST', 'create', { body: { email: 'emailfails@example.com' } });
+    assert.equal(res.status, 201, 'invitation creation itself still succeeds');
+    const data = await res.json();
+    assert.equal(data.emailSent, false);
+    assert.equal(data.emailError, 'Could not send the invitation email automatically.');
+    assert.equal(__getSentEmails().length, 0);
+
+    // The invite is fully real and usable, exactly as if email had never
+    // been attempted at all.
+    const lookup = await call('GET', 'lookup', { query: { token: data.invite.token } });
+    assert.equal(lookup.status, 200);
+    const accept = await call('POST', 'accept', { body: { token: data.invite.token, password: 'correct horse battery' } });
+    assert.equal(accept.status, 201);
+  });
+
+  test('missing email configuration never invalidates the invitation, and is reported distinctly', async () => {
+    __setEmailMode('not_configured');
+    __setUser(manager);
+    const res = await call('POST', 'create', { body: { email: 'notconfigured@example.com' } });
+    assert.equal(res.status, 201);
+    const data = await res.json();
+    assert.equal(data.emailSent, false);
+    assert.equal(data.emailError, 'Email delivery is not configured yet.');
+    assert.equal(__getSentEmails().length, 0);
+
+    const accept = await call('POST', 'accept', { body: { token: data.invite.token, password: 'correct horse battery' } });
+    assert.equal(accept.status, 201, 'the invitation still works end-to-end with no email configured at all');
+  });
+
+  test('an invalid email never triggers an email attempt', async () => {
+    __setUser(manager);
+    const res = await call('POST', 'create', { body: { email: 'not-an-email' } });
+    assert.equal(res.status, 400);
+    assert.equal(__getSentEmails().length, 0);
+  });
+
+  test('lookup, accept, list, and repair never send an invitation email', async () => {
+    __setUser(manager);
+    const created = await (await call('POST', 'create', { body: { email: 'noemailscope@example.com' } })).json();
+    __resetEmailStub(); // clear the one email the create step above legitimately sent
+
+    await call('GET', 'lookup', { query: { token: created.invite.token } });
+    await call('GET', 'list');
+    await call('POST', 'accept', { body: { token: created.invite.token, password: 'correct horse battery' } });
+    await call('POST', 'repair', { body: { email: 'noemailscope@example.com' } });
+
+    assert.equal(__getSentEmails().length, 0, 'none of these actions ever call sendEmail');
+  });
+
+  test('invite_email audit records the correct outcome: sent, failed, and skipped_not_configured', async () => {
+    __setUser(manager);
+    await call('POST', 'create', { body: { email: 'audit-sent@example.com' } });
+
+    __setEmailMode('fail');
+    await call('POST', 'create', { body: { email: 'audit-failed@example.com' } });
+
+    __setEmailMode('not_configured');
+    await call('POST', 'create', { body: { email: 'audit-skipped@example.com' } });
+
+    const { getStore } = await import('../tests/stubs/netlify-blobs.mjs');
+    const store = getStore({ name: 'agentraining-pilot' });
+    const { blobs } = await store.list({ prefix: 'teams/founding-pilot/audit/' });
+    const events = (await Promise.all(blobs.map(entry => store.get(entry.key)))).filter(e => e.action === 'invite_email');
+    const outcomes = events.map(e => e.outcome).sort();
+    assert.deepEqual(outcomes, ['failed', 'sent', 'skipped_not_configured'].sort());
+
+    // Never logs the token or the rendered body into the audit trail.
+    events.forEach(event => {
+      const serialized = JSON.stringify(event);
+      assert.ok(!serialized.includes('pilot-invite-accept.html'), 'audit details never include the invitation link/token');
+    });
   });
 });

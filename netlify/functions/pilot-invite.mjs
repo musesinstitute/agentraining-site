@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin, admin } from '@netlify/identity';
+import { sendEmail, EmailNotConfiguredError } from './lib/send-email.mjs';
 
 // Invite Learner (feature/invite-learner).
 //
@@ -47,6 +48,15 @@ import { getUser, verifyRequestOrigin, admin } from '@netlify/identity';
 // caller's own verified Identity role (a single "team-{id}" role, exactly
 // like pilot-roster.mjs's contextFor()) - never from client input. A manager
 // can only create/list invites for their own team.
+//
+// Email delivery (additive, never blocking): after an invite is durably
+// saved, `create` also attempts to email it via Resend (see
+// lib/send-email.mjs) using the exact same link Copy Invite Link builds -
+// constructed here from the request's own origin, never a hardcoded domain.
+// The send lives in its own try/catch: a missing API key or a provider
+// outage can only ever affect the `emailSent`/`emailError` fields on the
+// response, never the invite itself, which is already fully valid and
+// copy-link-able by the time email is attempted.
 
 const STORE_NAME = 'agentraining-pilot';
 const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -142,6 +152,95 @@ async function writeInviteAudit(store, teamId, actorEmail, action, outcome, deta
   }
 }
 
+function escHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+// Single bilingual (English then Chinese) invitation email. Built entirely
+// from the invite record and the caller-supplied link - never from any
+// other client input, and never includes anything beyond what
+// pilot-invite-accept.html itself already shows the learner.
+function buildInviteEmail(invite, link) {
+  const greetingEn = invite.name || 'there';
+  const greetingZh = invite.name || '您好';
+  const managerEmail = invite.invitedBy || '';
+  const expiresAt = new Date(invite.expiresAt).toLocaleDateString();
+  const subject = "You're invited to AgentTraining.ai Pilot / 您已受邀加入 AgentTraining.ai Pilot";
+
+  const text = [
+    `Hi ${greetingEn},`,
+    '',
+    `${managerEmail} has invited you to join AgentTraining.ai Pilot as a learner.`,
+    '',
+    'Activate your account:',
+    link,
+    '',
+    'Use this secure link to set your password and enter your Pilot workspace.',
+    `The invitation expires on ${expiresAt}.`,
+    '',
+    "If you weren't expecting this invitation, you can safely ignore this email.",
+    '',
+    '— AgentTraining.ai',
+    '',
+    '----------',
+    '',
+    `${greetingZh}，`,
+    '',
+    `${managerEmail} 邀请您以学员身份加入 AgentTraining.ai Pilot。`,
+    '',
+    '启用您的账号：',
+    link,
+    '',
+    '请通过此安全链接设置密码并进入您的 Pilot 学员工作区。',
+    `邀请链接将于 ${expiresAt} 过期。`,
+    '',
+    '如果您并未预期收到此邀请，可以忽略本邮件。',
+    '',
+    '— AgentTraining.ai'
+  ].join('\n');
+
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#111827;max-width:520px;margin:auto">
+<p>Hi ${escHtml(greetingEn)},</p>
+<p>${escHtml(managerEmail)} has invited you to join AgentTraining.ai Pilot as a learner.</p>
+<p><a href="${escHtml(link)}" style="display:inline-block;background:#1a56db;color:#fff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:8px">Activate your account</a></p>
+<p>Use this secure link to set your password and enter your Pilot workspace.<br>The invitation expires on ${escHtml(expiresAt)}.</p>
+<p>If you weren't expecting this invitation, you can safely ignore this email.</p>
+<p>— AgentTraining.ai</p>
+<hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0">
+<p>${escHtml(greetingZh)}，</p>
+<p>${escHtml(managerEmail)} 邀请您以学员身份加入 AgentTraining.ai Pilot。</p>
+<p><a href="${escHtml(link)}" style="display:inline-block;background:#1a56db;color:#fff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:8px">启用您的账号</a></p>
+<p>请通过此安全链接设置密码并进入您的 Pilot 学员工作区。<br>邀请链接将于 ${escHtml(expiresAt)} 过期。</p>
+<p>如果您并未预期收到此邀请，可以忽略本邮件。</p>
+<p>— AgentTraining.ai</p>
+</div>`;
+
+  return { subject, html, text };
+}
+
+// Attempts to email the invite; never throws past this function. The
+// invite is already fully created and valid by the time this runs, so the
+// only thing an outcome here can affect is the emailSent/emailError fields
+// on the create response and the invite_email audit trail - never the
+// invitation itself. Logs only the provider's error message, never the
+// token, never the rendered email body.
+async function attemptInviteEmail(store, invite, link) {
+  try {
+    const { subject, html, text } = buildInviteEmail(invite, link);
+    await sendEmail({ to: invite.email, subject, html, text, replyTo: invite.invitedBy || undefined });
+    await writeInviteAudit(store, invite.teamId, invite.invitedBy, 'invite_email', 'sent', { inviteId: invite.id });
+    return { emailSent: true };
+  } catch (error) {
+    if (error instanceof EmailNotConfiguredError) {
+      await writeInviteAudit(store, invite.teamId, invite.invitedBy, 'invite_email', 'skipped_not_configured', { inviteId: invite.id });
+      return { emailSent: false, emailError: 'Email delivery is not configured yet.' };
+    }
+    console.error('pilot-invite create: invitation email failed to send', error?.message || error);
+    await writeInviteAudit(store, invite.teamId, invite.invitedBy, 'invite_email', 'failed', { inviteId: invite.id });
+    return { emailSent: false, emailError: 'Could not send the invitation email automatically.' };
+  }
+}
+
 // The one true shape of what a learner account provisioned from this invite
 // should end up with - shared by the initial accept flow and the repair
 // endpoint below, so the two can never drift apart. Always derived from the
@@ -194,18 +293,26 @@ export default async function handler(req) {
       const name = cleanText(input.name, 120);
       if (!email || !EMAIL_RE.test(email)) return reply(400, { error: 'Enter a valid learner email address.' });
 
+      const origin = url.origin;
+
       const existing = await store.get(byEmailKey(actor.teamId, email), { type: 'json' });
       if (existing && existing.status === 'pending' && !isExpired(existing)) {
         // Duplicate invite: reuse the still-valid pending invite instead of
-        // minting a second live token for the same person.
+        // minting a second live token for the same person. Re-sending the
+        // email here is the resend mechanism - a manager who thinks the
+        // learner didn't get it just clicks Create Invitation again.
         await writeInviteAudit(store, actor.teamId, actor.email, 'invite_create', 'reused_pending', { email });
-        return reply(200, { invite: publicInviteView(existing), reused: true });
+        const link = `${origin}/pilot-invite-accept.html?token=${encodeURIComponent(existing.token)}`;
+        const emailResult = await attemptInviteEmail(store, existing, link);
+        return reply(200, { invite: publicInviteView(existing), reused: true, ...emailResult });
       }
 
       const invite = createInviteRecord(actor.teamId, email, name, actor.email);
       await saveInvite(store, invite);
       await writeInviteAudit(store, actor.teamId, actor.email, 'invite_create', 'success', { email, inviteId: invite.id });
-      return reply(201, { invite: publicInviteView(invite), reused: false });
+      const link = `${origin}/pilot-invite-accept.html?token=${encodeURIComponent(invite.token)}`;
+      const emailResult = await attemptInviteEmail(store, invite, link);
+      return reply(201, { invite: publicInviteView(invite), reused: false, ...emailResult });
     }
 
     if (req.method === 'GET' && action === 'list') {
