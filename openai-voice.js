@@ -2,10 +2,15 @@
   const params = new URLSearchParams(window.location.search);
   if (params.get('pilot') !== '1') return;
 
+  const RECORDER_TIMESLICE_MS = 250;
+  const MIN_RECORDING_MS = 350;
+  const MIN_AUDIO_BYTES = 512;
+
   let recorder = null;
   let stream = null;
   let chunks = [];
   let busy = false;
+  let recordingStartedAt = 0;
 
   function isZh() {
     const urlLang = new URLSearchParams(window.location.search).get('lang');
@@ -48,7 +53,7 @@
     return btoa(binary);
   }
 
-  async function transcribe(blob) {
+  async function transcribe(blob, metadata) {
     if (!window.PilotCloud?.enabled) throw new Error('PilotCloud is not ready.');
     const user = await window.PilotCloud.ready();
     const token = user?.token?.access_token || await user.jwt();
@@ -64,7 +69,9 @@
       body: JSON.stringify({
         audioBase64,
         mimeType: blob.type || 'audio/webm',
-        language: isZh() ? 'zh' : 'en'
+        language: isZh() ? 'zh' : 'en',
+        recordingDurationMs: metadata?.durationMs || 0,
+        chunkCount: metadata?.chunkCount || 0
       })
     });
     const body = await response.json().catch(() => ({}));
@@ -80,6 +87,7 @@
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       chunks = [];
+      recordingStartedAt = performance.now();
       const preferred = [
         'audio/webm;codecs=opus',
         'audio/webm',
@@ -90,18 +98,27 @@
         if (event.data && event.data.size) chunks.push(event.data);
       };
       recorder.onstop = async () => {
+        const durationMs = Math.max(0, Math.round(performance.now() - recordingStartedAt));
         const mimeType = recorder?.mimeType || chunks[0]?.type || 'audio/webm';
         const blob = new Blob(chunks, { type: mimeType });
+        const chunkCount = chunks.length;
         stopStream();
-        if (!blob.size) {
+
+        if (!blob.size || chunkCount === 0) {
           setButton('idle');
           alert(isZh() ? '沒有錄到聲音，請再試一次。' : 'No audio was recorded. Please try again.');
           return;
         }
+        if (durationMs < MIN_RECORDING_MS || blob.size < MIN_AUDIO_BYTES) {
+          setButton('idle');
+          alert(isZh() ? '錄音時間太短，請說完整一句後再停止錄音。' : 'The recording was too short. Please say a complete sentence before stopping.');
+          return;
+        }
+
         busy = true;
         setButton('processing');
         try {
-          const text = await transcribe(blob);
+          const text = await transcribe(blob, { durationMs, chunkCount });
           const input = document.getElementById('chat-input');
           if (input && text) {
             const prefix = input.value.trim();
@@ -118,14 +135,17 @@
           busy = false;
           recorder = null;
           chunks = [];
+          recordingStartedAt = 0;
           setButton('idle');
         }
       };
-      recorder.start();
+      recorder.start(RECORDER_TIMESLICE_MS);
       setButton('recording');
     } catch (error) {
       stopStream();
       recorder = null;
+      chunks = [];
+      recordingStartedAt = 0;
       setButton('idle');
       console.error('Microphone access failed', error);
       alert(isZh() ? '無法使用麥克風。請允許此網站使用麥克風後再試。' : 'Microphone access failed. Please allow microphone access and try again.');
