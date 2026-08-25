@@ -41,7 +41,7 @@ function isPromptEcho(transcriptText, promptText) {
   return lcsLength(transcript, prompt) / prompt.length >= 0.6;
 }
 
-function detectAudioFormat(buffer, declaredMimeType) {
+function detectAudioFormat(buffer) {
   if (buffer.length >= 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WAVE') {
     return { mimeType: 'audio/wav', extension: 'wav', detected: 'wav' };
   }
@@ -60,12 +60,6 @@ function detectAudioFormat(buffer, declaredMimeType) {
   if (buffer.length >= 2 && buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0) {
     return { mimeType: 'audio/mpeg', extension: 'mp3', detected: 'mp3' };
   }
-
-  const declared = String(declaredMimeType || '').toLowerCase();
-  if (declared.includes('webm')) return { mimeType: 'audio/webm', extension: 'webm', detected: 'declared-webm' };
-  if (declared.includes('mp4') || declared.includes('m4a')) return { mimeType: 'audio/mp4', extension: 'mp4', detected: 'declared-mp4' };
-  if (declared.includes('wav')) return { mimeType: 'audio/wav', extension: 'wav', detected: 'declared-wav' };
-  if (declared.includes('mpeg') || declared.includes('mp3')) return { mimeType: 'audio/mpeg', extension: 'mp3', detected: 'declared-mp3' };
   return null;
 }
 
@@ -100,10 +94,10 @@ export default async function handler(req) {
     if (audioBuffer.length < MIN_AUDIO_BYTES) return reply(400, { error: 'The recording was too short or incomplete. Please try again.' });
     if (audioBuffer.length > MAX_AUDIO_BYTES) return reply(413, { error: 'The recording is too large. Please record a shorter turn.' });
 
-    const format = detectAudioFormat(audioBuffer, declaredMimeType);
+    const format = detectAudioFormat(audioBuffer);
     if (!format) {
       console.warn('pilot voice rejected unsupported audio container', { bytes: audioBuffer.length, declaredMimeType, recordingDurationMs, chunkCount });
-      return reply(400, { error: 'The recording format was not recognized. Please try again.' });
+      return reply(400, { error: 'The recording appears corrupted or uses an unsupported audio format. Please try again.' });
     }
 
     console.info('pilot voice upload', {
