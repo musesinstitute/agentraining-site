@@ -25,5 +25,11 @@ jobs:
         run: npm ci
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+      - name: Resolve Playwright Chromium path
+        shell: bash
+        run: |
+          CHROMIUM_PATH="$(node -e "const { chromium } = require('playwright'); process.stdout.write(chromium.executablePath())")"
+          echo "PLAYWRIGHT_CHROMIUM=$CHROMIUM_PATH" >> "$GITHUB_ENV"
+          test -x "$CHROMIUM_PATH"
       - name: Run full test suite
         run: npm test
