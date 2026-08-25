@@ -99,7 +99,7 @@ describe('transcription returns real speech, never the priming prompt', () => {
   });
   test('Chinese OpenAI prompt is a bare term list', async () => {
     queueOpenAiResponse('anything');
-    await handler(req(normalBody({ language: 'zh' }));
+    await handler(req(normalBody({ language: 'zh' })));
     const prompt = openAiCall().init.body.get('prompt');
     assert.ok(!/这是一段/.test(prompt));
     assert.ok(!/请准确辨识/.test(prompt));
