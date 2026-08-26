@@ -22,6 +22,22 @@ export default async (_request: Request, context: any) => {
      const panel=form.closest('.panel'); if(panel) panel.insertBefore(card,panel.firstElementChild?.nextSibling||panel.firstChild);
      card.querySelector('.begin').addEventListener('click',()=>{input.value=t('I’d like to introduce myself. Please get to know me one question at a time.','我想先介绍一下自己。请一次问我一个问题，慢慢了解我。');input.focus();card.scrollIntoView({behavior:'smooth',block:'nearest'});});
    }
+   if(!isManager && window.PilotCloud && !window.__learnerAiGatewayInstalled){
+     window.__learnerAiGatewayInstalled=true;
+     const originalRequest=window.PilotCloud.request.bind(window.PilotCloud);
+     window.PilotCloud.request=async(name,options={})=>{
+       if(name==='coach-messages' && String(options.method||'GET').toUpperCase()==='POST'){
+         let body={};try{body=JSON.parse(options.body||'{}')}catch{}
+         const message=String(body.content||'').trim();
+         if(!message)throw new Error(t('Message is required.','请输入消息。'));
+         const res=await fetch('/api/ai-chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({role:'learner',lang:zh()?'zh':'en',message})});
+         let data={};try{data=await res.json()}catch{}
+         if(!res.ok)throw new Error(data.error||t('AI conversation failed.','AI 对话暂时无法完成。'));
+         return {userMessage:data.userMessage,assistantMessage:data.assistantMessage};
+       }
+       return originalRequest(name,options);
+     };
+   }
    if(document.getElementById('voiceDictate'))return;
    const btn=document.createElement('button');btn.type='button';btn.id='voiceDictate';btn.className='voice-dictate';btn.textContent='🎙 '+t('Speak','语音输入');
    const send=form.querySelector('button[type="submit"]');form.insertBefore(btn,send);
