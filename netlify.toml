@@ -13,6 +13,10 @@
   function = "pilot-cloud-roster-patch"
   path = "/pilot-cloud.js"
 
+[[edge_functions]]
+  function = "pilot-first-impression"
+  path = "/pilot.html"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
