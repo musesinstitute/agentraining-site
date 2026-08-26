@@ -1,108 +1,24 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
-
-const STORE_NAME = 'agentraining-pilot';
-const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
-
-function reply(status, body) { return new Response(JSON.stringify(body), { status, headers: jsonHeaders }); }
-function cleanText(value, max = 6000) { return String(value ?? '').trim().slice(0, max); }
-function safeSegment(value, fallback) { const segment = cleanText(value, 100).toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, ''); return segment || fallback; }
-function normalizeEmail(value) { return cleanText(value, 320).toLowerCase(); }
-function normalizeHistory(value) { if (!Array.isArray(value)) return []; return value.slice(-16).map(item => ({ role: item?.role === 'assistant' ? 'assistant' : 'user', content: cleanText(item?.content, 6000) })).filter(item => item.content); }
-function chatMessage(role, content, extras = {}) { return { id: crypto.randomUUID(), role, content: cleanText(content, 6000), createdAt: new Date().toISOString(), engine: 'ai-chat-v1', ...extras }; }
-async function listJSON(store, prefix) { const { blobs } = await store.list({ prefix }); const rows = await Promise.all(blobs.map(entry => store.get(entry.key, { type: 'json' }))); return rows.filter(Boolean); }
-
-function systemPrompt(role, lang) {
-  const zh = lang === 'zh';
-  const manager = role === 'manager';
-  return [
-    manager ? (zh ? '你是主管的长期 AI 副驾驶和管理成长伙伴。' : 'You are the manager’s long-term AI Copilot and management growth partner.') : (zh ? '你是学员的私人 AI 教练和成长伙伴。' : 'You are the learner’s Personal AI Coach and growth partner.'),
-    zh ? '产品哲学：以人为本，关系优先，在真正相关的时候再进入训练。' : 'Product philosophy: People first. Relationship first. Training when relevant.',
-    zh ? '先理解用户本人和当前问题，再提供帮助。不要把用户当作菜单、数据对象或培训任务。' : 'Understand the person and their current need before offering help. Never treat the user like a menu, data object, or training task.',
-    zh ? '进行自然、多轮、连续的对话。直接回应用户刚刚说的话，并使用最近对话保持上下文。' : 'Have a natural, continuous, multi-turn conversation. Directly answer what the user just said and use recent conversation history to preserve context.',
-    manager ? (zh ? '主管进入对话时绝不要求先选择学员。可以先认识主管：怎么称呼、负责什么工作或团队、最近最关心什么、管理上有什么困难。一次自然地问一个问题。' : 'Never require a manager to select a learner before talking. First get to know the manager naturally: how to address them, their work or team, what matters most right now, and their management challenges. Ask one natural question at a time.') : (zh ? '第一次认识学员时，可以自然了解怎么称呼、目前做什么、最关心什么、有什么目标或困扰。一次只问一个自然的问题，不要像填写表格。' : 'When first meeting a learner, naturally learn how to address them, what they do, what matters to them, and their goals or challenges. Ask one natural question at a time; do not behave like a form.'),
-    manager ? (zh ? '只有当主管主动谈到某位学员、团队成员、练习结果、工作证据或训练安排时，才使用所提供的学员工作证据。绝不访问或推断学员的私人 Coach Chat。' : 'Only use supplied learner work evidence when the manager brings up a learner, team member, Practice result, work evidence, or training decision. Never access or infer content from a learner’s private Coach Chat.') : (zh ? '如果用户只是打招呼、介绍自己、谈压力、困扰、目标或一般工作问题，不要强行跳到练习分数、证据或任务。只有明确相关时才使用练习上下文。' : 'If the user is greeting you, introducing themselves, discussing stress, challenges, goals, or a general work issue, do not force the conversation into Practice scores, evidence, or assignments. Use Practice context only when clearly relevant.'),
-    zh ? '如果用户明确同意逐步建立成长档案，可以在对话中记住其主动提供的信息；不要编造用户没有说过的事情。' : 'If the user explicitly agrees to gradually build a growth profile, remember information they voluntarily provide; never invent facts they did not share.',
-    zh ? '不要声称具有主观意识。回复温暖、专业、自然；需要深入时可以深入，不要为了简短而打断有价值的交流。' : 'Do not claim subjective consciousness. Be warm, professional, and natural; go deeper when useful rather than cutting off valuable conversation merely to be brief.'
-  ].join('\n');
-}
-
-function evidenceContext(value, lang) {
-  if (!value || typeof value !== 'object') return '';
-  const safe = JSON.stringify(value).slice(0, 16000);
-  if (!safe || safe === '{}') return '';
-  return lang === 'zh' ? `\n\n以下是仅在用户当前话题真正相关时才使用的授权工作上下文。不要主动把对话拉到这里，也不要把它当作私人信息：\n${safe}` : `\n\nThe following is authorized work context to use only when genuinely relevant to the current topic. Do not proactively steer the conversation into it and do not treat it as private personal information:\n${safe}`;
-}
-
-function extractOutputText(payload) {
-  if (typeof payload?.output_text === 'string' && payload.output_text.trim()) return payload.output_text.trim();
-  const parts = []; for (const item of payload?.output || []) for (const content of item?.content || []) if (content?.type === 'output_text' && content?.text) parts.push(content.text);
-  return parts.join('\n').trim();
-}
-
-async function authorizedManagerContext(store, teamId, learnerEmail) {
-  if (!learnerEmail) return null;
-  const teamPrefix = `teams/${teamId}`;
-  const profiles = await listJSON(store, `${teamPrefix}/profiles/`);
-  const profile = profiles.find(row => normalizeEmail(row.learnerEmail) === learnerEmail) || null;
-  const sessions = (await listJSON(store, `${teamPrefix}/sessions/`)).filter(row => normalizeEmail(row.learner || row.learnerEmail) === learnerEmail).sort((a,b)=>String(b.savedAt||b.createdAt).localeCompare(String(a.savedAt||a.createdAt))).slice(0,5);
-  const assignments = (await listJSON(store, `${teamPrefix}/assignments/`)).filter(row => normalizeEmail(row.assignedTo) === learnerEmail).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,8);
-  return { learnerEmail, profile, recentSessions: sessions, assignments, privacy: 'Authorized work and Practice evidence only. Private Learner Coach Chat is excluded.' };
-}
-
-export default async function handler(req) {
-  try {
-    if (req.method !== 'POST') return reply(405, { error: 'POST required.' });
-    verifyRequestOrigin(req);
-    const user = await getUser();
-    if (!user) return reply(401, { error: 'Please sign in to continue.' });
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) return reply(503, { error: 'AI conversation is not configured yet. OPENAI_API_KEY is missing on the server.' });
-
-    const input = await req.json();
-    const role = input.role === 'manager' ? 'manager' : 'learner';
-    const lang = input.lang === 'zh' ? 'zh' : 'en';
-    const message = cleanText(input.message, 6000);
-    if (!message) return reply(400, { error: 'Message is required.' });
-
-    const metadata = user.appMetadata || {};
-    const roles = Array.isArray(metadata.roles) ? metadata.roles.map(x=>String(x).toLowerCase()) : [];
-    if (role === 'manager' && !roles.includes('manager') && metadata.role !== 'manager') return reply(403, { error: 'Manager access is required.' });
-
-    const teamId = safeSegment(metadata.team_id, 'founding-pilot');
-    const userId = safeSegment(user.id, role);
-    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
-    const prefix = role === 'manager' ? `teams/${teamId}/manager-ai/${userId}/` : `teams/${teamId}/private-coach/${userId}/`;
-
-    const stored = await listJSON(store, prefix);
-    stored.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));
-    const durableHistory = normalizeHistory(stored.filter(item => item.engine === 'ai-chat-v1'));
-    const suppliedHistory = normalizeHistory(input.history);
-    const history = durableHistory.length ? durableHistory : suppliedHistory;
-
-    let context = input.context && typeof input.context === 'object' ? input.context : null;
-    let learnerEmail = '';
-    if (role === 'manager') {
-      learnerEmail = normalizeEmail(input.learnerEmail);
-      const workContext = await authorizedManagerContext(store, teamId, learnerEmail);
-      context = workContext || context;
-    }
-
-    const visibility = role === 'manager' ? 'manager_only' : 'learner_only';
-    const userMessage = chatMessage('user', message, { visibility, learnerEmail: learnerEmail || undefined });
-    await store.setJSON(`${prefix}${userMessage.createdAt}-${userMessage.id}`, userMessage, { onlyIfNew: true });
-
-    const model = process.env.OPENAI_CHAT_MODEL || 'gpt-5.4-mini';
-    const response = await fetch('https://api.openai.com/v1/responses', {
-      method:'POST', headers:{'content-type':'application/json','authorization':`Bearer ${apiKey}`},
-      body:JSON.stringify({ model, instructions: systemPrompt(role, lang) + evidenceContext(context, lang), input:[...history.map(item=>({role:item.role,content:item.content})),{role:'user',content:message}], max_output_tokens:900 })
-    });
-    const payload = await response.json();
-    if (!response.ok) { console.error('ai-chat OpenAI error', response.status, payload?.error?.message || payload); return reply(502,{error:payload?.error?.message||'AI conversation request failed.',userMessage}); }
-    const text = extractOutputText(payload);
-    if (!text) return reply(502,{error:'AI conversation returned no text.',userMessage});
-    const assistantMessage = chatMessage('assistant', text, { visibility, model, learnerEmail: learnerEmail || undefined });
-    await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`, assistantMessage, { onlyIfNew:true });
-    return reply(200,{text,model,role,lang,userMessage,assistantMessage,learnerEmail:learnerEmail||null,privacy:role==='manager'?'Private Learner Coach Chat was not accessed.':'Private learner conversation.'});
-  } catch(error) { console.error('ai-chat failed',error); return reply(error?.status||500,{error:error?.message||'AI conversation failed.'}); }
-}
+const STORE_NAME='agentraining-pilot',jsonHeaders={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
+const reply=(s,b)=>new Response(JSON.stringify(b),{status:s,headers:jsonHeaders});
+const cleanText=(v,m=6000)=>String(v??'').trim().slice(0,m);const normalizeEmail=v=>cleanText(v,320).toLowerCase();
+function safeSegment(v,f){return cleanText(v,100).toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||f}
+function normalizeHistory(v){return Array.isArray(v)?v.slice(-16).map(x=>({role:x?.role==='assistant'?'assistant':'user',content:cleanText(x?.content)})).filter(x=>x.content):[]}
+function chatMessage(role,content,extras={}){return{id:crypto.randomUUID(),role,content:cleanText(content),createdAt:new Date().toISOString(),engine:'ai-chat-v1',...extras}}
+async function listJSON(store,prefix){const{blobs}=await store.list({prefix});return(await Promise.all(blobs.map(x=>store.get(x.key,{type:'json'})))).filter(Boolean)}
+function systemPrompt(role,lang){const zh=lang==='zh',manager=role==='manager';return[
+manager?(zh?'你是主管的长期 AI 副驾驶和管理成长伙伴。':'You are the manager’s long-term AI Copilot and management growth partner.'):(zh?'你是学员的私人 AI 教练和成长伙伴。':'You are the learner’s Personal AI Coach and growth partner.'),
+zh?'产品哲学：以人为本，关系优先，在真正相关的时候再进入训练。':'Product philosophy: People first. Relationship first. Training when relevant.',
+zh?'进行自然、多轮、连续的对话，直接回应用户刚刚说的话。':'Have a natural, continuous, multi-turn conversation and directly answer what the user just said.',
+manager?(zh?'你就在 AgentTraining.ai 平台内部工作，不是站外聊天机器人。你可以使用下面提供的主管授权团队名单来帮助主管找到团队成员。不要说“我无法访问你的网站”或要求主管告诉你平台如何查人。':'You operate inside the AgentTraining.ai platform, not as an outside chatbot. You may use the authorized team roster supplied below to help the manager find team members. Never say you cannot access the website or ask the manager how the platform searches for people.'):'',
+manager?(zh?'主管不需要先选择学员才能聊天。如果主管想找某位成员，可以根据授权名单按姓名或邮箱帮助匹配；如果信息不足，只问一个自然的澄清问题。':'A manager never needs to select a learner before chatting. If they want to find a member, use the authorized roster to match by name or email; if information is insufficient, ask one natural clarification question.'):'',
+manager?(zh?'只有当主管明确讨论某位成员、练习结果或训练安排时，才使用该成员的授权工作证据。绝不访问、引用或推断学员私人 Coach Chat。':'Only use a member’s authorized work evidence when the manager is specifically discussing that member, Practice results, or training. Never access, quote, or infer a learner’s private Coach Chat.'):(zh?'不要把普通聊天强行拉到练习、评分或任务。':'Do not force ordinary conversation into Practice, scores, or assignments.'),
+zh?'第一次认识用户时一次自然地问一个问题。不要像填写表格。不要编造用户没有说过的事情。':'When getting to know the user, ask one natural question at a time. Do not behave like a form and never invent facts.',
+zh?'回复温暖、专业、自然；需要深入时可以深入。':'Be warm, professional, and natural; go deeper when useful.'
+].filter(Boolean).join('\n')}
+function evidenceContext(v,lang){if(!v||typeof v!=='object')return'';const safe=JSON.stringify(v).slice(0,20000);if(!safe||safe==='{}')return'';return lang==='zh'?`\n\n以下是当前主管有权使用的平台上下文。团队名单可用于帮助主管找人；具体成员的工作证据只在相关时使用。私人 Coach Chat 不在其中：\n${safe}`:`\n\nThe following is platform context authorized for this manager. The roster may be used to help find team members; member work evidence should be used only when relevant. Private Coach Chat is excluded:\n${safe}`}
+function extractOutputText(p){if(typeof p?.output_text==='string'&&p.output_text.trim())return p.output_text.trim();const a=[];for(const i of p?.output||[])for(const c of i?.content||[])if(c?.type==='output_text'&&c?.text)a.push(c.text);return a.join('\n').trim()}
+async function managerRoster(store,teamId){const profiles=await listJSON(store,`teams/${teamId}/profiles/`);return profiles.map(p=>({learnerEmail:normalizeEmail(p.learnerEmail),preferredName:cleanText(p.preferredName||p.name||'',120),role:cleanText(p.role||'',80)})).filter(p=>p.learnerEmail).slice(0,100)}
+async function memberContext(store,teamId,email){if(!email)return null;const root=`teams/${teamId}`;const profiles=await listJSON(store,`${root}/profiles/`);const profile=profiles.find(x=>normalizeEmail(x.learnerEmail)===email)||null;const sessions=(await listJSON(store,`${root}/sessions/`)).filter(x=>normalizeEmail(x.learner||x.learnerEmail)===email).sort((a,b)=>String(b.savedAt||b.createdAt).localeCompare(String(a.savedAt||a.createdAt))).slice(0,5);const assignments=(await listJSON(store,`${root}/assignments/`)).filter(x=>normalizeEmail(x.assignedTo)===email).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,8);return{learnerEmail:email,profile,recentSessions:sessions,assignments}}
+export default async function handler(req){try{if(req.method!=='POST')return reply(405,{error:'POST required.'});verifyRequestOrigin(req);const user=await getUser();if(!user)return reply(401,{error:'Please sign in to continue.'});const apiKey=process.env.OPENAI_API_KEY;if(!apiKey)return reply(503,{error:'AI conversation is not configured yet. OPENAI_API_KEY is missing on the server.'});const input=await req.json(),role=input.role==='manager'?'manager':'learner',lang=input.lang==='zh'?'zh':'en',message=cleanText(input.message);if(!message)return reply(400,{error:'Message is required.'});const metadata=user.appMetadata||{},roles=Array.isArray(metadata.roles)?metadata.roles.map(x=>String(x).toLowerCase()):[];if(role==='manager'&&!roles.includes('manager')&&!roles.includes('admin')&&metadata.role!=='manager')return reply(403,{error:'Manager access is required.'});const teamId=safeSegment(metadata.team_id,'founding-pilot'),userId=safeSegment(user.id,role),store=getStore({name:STORE_NAME,consistency:'strong'}),prefix=role==='manager'?`teams/${teamId}/manager-ai/${userId}/`:`teams/${teamId}/private-coach/${userId}/`;const stored=await listJSON(store,prefix);stored.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));const durable=normalizeHistory(stored.filter(x=>x.engine==='ai-chat-v1')),supplied=normalizeHistory(input.history),history=durable.length?durable:supplied;let learnerEmail='',context=input.context&&typeof input.context==='object'?input.context:{};if(role==='manager'){learnerEmail=normalizeEmail(input.learnerEmail);const roster=await managerRoster(store,teamId),member=await memberContext(store,teamId,learnerEmail);context={authorizedTeamRoster:roster,selectedMember:member,privacy:'Authorized roster/work evidence only. Private Learner Coach Chat is excluded.'}}const visibility=role==='manager'?'manager_only':'learner_only',userMessage=chatMessage('user',message,{visibility,learnerEmail:learnerEmail||undefined});await store.setJSON(`${prefix}${userMessage.createdAt}-${userMessage.id}`,userMessage,{onlyIfNew:true});const model=process.env.OPENAI_CHAT_MODEL||'gpt-5.4-mini',response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'content-type':'application/json','authorization':`Bearer ${apiKey}`},body:JSON.stringify({model,instructions:systemPrompt(role,lang)+evidenceContext(context,lang),input:[...history.map(x=>({role:x.role,content:x.content})),{role:'user',content:message}],max_output_tokens:900})}),payload=await response.json();if(!response.ok)return reply(502,{error:payload?.error?.message||'AI conversation request failed.',userMessage});const text=extractOutputText(payload);if(!text)return reply(502,{error:'AI conversation returned no text.',userMessage});const assistantMessage=chatMessage('assistant',text,{visibility,model,learnerEmail:learnerEmail||undefined});await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`,assistantMessage,{onlyIfNew:true});return reply(200,{text,model,role,lang,userMessage,assistantMessage,learnerEmail:learnerEmail||null,privacy:role==='manager'?'Private Learner Coach Chat was not accessed.':'Private learner conversation.'})}catch(error){console.error('ai-chat failed',error);return reply(error?.status||500,{error:error?.message||'AI conversation failed.'})}}
