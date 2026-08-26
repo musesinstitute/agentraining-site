@@ -21,6 +21,14 @@
   function = "pilot-first-impression"
   path = "/pilot"
 
+[[edge_functions]]
+  function = "ai-relationship-onboarding"
+  path = "/coach-chat.html"
+
+[[edge_functions]]
+  function = "ai-relationship-onboarding"
+  path = "/manager-chat.html"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
