@@ -17,6 +17,10 @@
   function = "pilot-first-impression"
   path = "/pilot.html"
 
+[[edge_functions]]
+  function = "pilot-first-impression"
+  path = "/pilot"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
