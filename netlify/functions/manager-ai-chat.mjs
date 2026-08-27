@@ -17,6 +17,14 @@ export default async function handler(req) {
   catch { input = {}; }
   input.role = 'manager';
 
+  // A member explicitly mentioned in the manager's current utterance must outrank
+  // a stale member left selected in the UI. Dictation often inserts/removes spaces
+  // or slightly misspells an email, so let ai-chat's roster-aware fuzzy resolver
+  // handle the current mention instead of pinning the request to the old selection.
+  const spoken = String(input.message || '').toLowerCase().replace(/\s+/g, '');
+  const hasMemberLikeEmail = /[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/.test(spoken);
+  if (hasMemberLikeEmail) delete input.learnerEmail;
+
   const rewritten = new Request(req.url, {
     method: 'POST',
     headers: req.headers,
