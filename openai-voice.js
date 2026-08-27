@@ -2,178 +2,22 @@
   const params = new URLSearchParams(window.location.search);
   if (params.get('pilot') !== '1') return;
 
-  const RECORDER_TIMESLICE_MS = 250;
-  const MIN_RECORDING_MS = 350;
+  const MIN_RECORDING_MS = 500;
   const MIN_AUDIO_BYTES = 512;
-
-  let recorder = null;
-  let stream = null;
-  let chunks = [];
-  let busy = false;
-  let recordingStartedAt = 0;
-
-  function isZh() {
-    const urlLang = new URLSearchParams(window.location.search).get('lang');
-    const saved = sessionStorage.getItem('agentraining_lang');
-    return (urlLang || saved || navigator.language || '').toLowerCase().startsWith('zh');
-  }
-
-  function setButton(state) {
-    const btn = document.getElementById('mic-btn');
-    if (!btn) return;
-    btn.classList.toggle('recording', state === 'recording');
-    btn.disabled = state === 'processing';
-    if (state === 'recording') {
-      btn.textContent = '🔴';
-      btn.title = isZh() ? '正在錄音，點一下停止' : 'Recording — tap to stop';
-    } else if (state === 'processing') {
-      btn.textContent = '…';
-      btn.title = isZh() ? '正在辨識語音' : 'Transcribing speech';
-    } else {
-      btn.textContent = '🎤';
-      btn.title = isZh() ? 'OpenAI 語音輸入' : 'OpenAI voice input';
-    }
-  }
-
-  function stopStream() {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      stream = null;
-    }
-  }
-
-  async function blobToBase64(blob) {
-    const buffer = await blob.arrayBuffer();
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    const chunkSize = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-    }
-    return btoa(binary);
-  }
-
-  async function transcribe(blob, metadata) {
-    if (!window.PilotCloud?.enabled) throw new Error('PilotCloud is not ready.');
-    const user = await window.PilotCloud.ready();
-    const token = user?.token?.access_token || await user.jwt();
-    if (!token) throw new Error(isZh() ? '登入憑證不存在，請重新登入。' : 'No sign-in token is available. Please sign in again.');
-    const audioBase64 = await blobToBase64(blob);
-    const response = await fetch('/.netlify/functions/openai-transcribe', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        audioBase64,
-        mimeType: blob.type || 'audio/webm',
-        language: isZh() ? 'zh' : 'en',
-        recordingDurationMs: metadata?.durationMs || 0,
-        chunkCount: metadata?.chunkCount || 0
-      })
-    });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(body.error || `Transcription failed (${response.status}).`);
-    return String(body.text || '').trim();
-  }
-
-  async function startRecording() {
-    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-      alert(isZh() ? '此瀏覽器不支援錄音功能，請使用最新版 Chrome、Safari 或 Edge。' : 'This browser does not support audio recording. Please use a current Chrome, Safari, or Edge browser.');
-      return;
-    }
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      chunks = [];
-      recordingStartedAt = performance.now();
-      const preferred = [
-        'audio/webm;codecs=opus',
-        'audio/webm',
-        'audio/mp4'
-      ].find(type => MediaRecorder.isTypeSupported?.(type));
-      recorder = preferred ? new MediaRecorder(stream, { mimeType: preferred }) : new MediaRecorder(stream);
-      recorder.ondataavailable = event => {
-        if (event.data && event.data.size) chunks.push(event.data);
-      };
-      recorder.onstop = async () => {
-        const durationMs = Math.max(0, Math.round(performance.now() - recordingStartedAt));
-        const mimeType = recorder?.mimeType || chunks[0]?.type || 'audio/webm';
-        const blob = new Blob(chunks, { type: mimeType });
-        const chunkCount = chunks.length;
-        stopStream();
-
-        if (!blob.size || chunkCount === 0) {
-          setButton('idle');
-          alert(isZh() ? '沒有錄到聲音，請再試一次。' : 'No audio was recorded. Please try again.');
-          return;
-        }
-        if (durationMs < MIN_RECORDING_MS || blob.size < MIN_AUDIO_BYTES) {
-          setButton('idle');
-          alert(isZh() ? '錄音時間太短，請說完整一句後再停止錄音。' : 'The recording was too short. Please say a complete sentence before stopping.');
-          return;
-        }
-
-        busy = true;
-        setButton('processing');
-        try {
-          const text = await transcribe(blob, { durationMs, chunkCount });
-          const input = document.getElementById('chat-input');
-          if (input && text) {
-            const prefix = input.value.trim();
-            input.value = prefix ? `${prefix} ${text}` : text;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.focus();
-          } else if (!text) {
-            alert(isZh() ? '沒有辨識到清楚的語音，請再試一次。' : 'No clear speech was detected. Please try again.');
-          }
-        } catch (error) {
-          console.error('OpenAI voice transcription failed', error);
-          alert(isZh() ? `語音辨識失敗：${error.message}` : `Voice transcription failed: ${error.message}`);
-        } finally {
-          busy = false;
-          recorder = null;
-          chunks = [];
-          recordingStartedAt = 0;
-          setButton('idle');
-        }
-      };
-      recorder.start(RECORDER_TIMESLICE_MS);
-      setButton('recording');
-    } catch (error) {
-      stopStream();
-      recorder = null;
-      chunks = [];
-      recordingStartedAt = 0;
-      setButton('idle');
-      console.error('Microphone access failed', error);
-      alert(isZh() ? '無法使用麥克風。請允許此網站使用麥克風後再試。' : 'Microphone access failed. Please allow microphone access and try again.');
-    }
-  }
-
-  async function toggleMicOpenAI() {
-    if (busy) return;
-    if (recorder && recorder.state === 'recording') {
-      recorder.stop();
-      return;
-    }
-    await startRecording();
-  }
-
-  function install() {
-    window.toggleMic = toggleMicOpenAI;
-    setButton('idle');
-    const hint = document.getElementById('input-hint');
-    if (hint && !hint.dataset.openaiVoice) {
-      hint.dataset.openaiVoice = '1';
-      hint.textContent += isZh() ? ' · 🎤 OpenAI 語音辨識' : ' · 🎤 OpenAI speech recognition';
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', install, { once: true });
-  } else {
-    install();
-  }
+  let recorder=null,stream=null,chunks=[],busy=false,recordingStartedAt=0;
+  function isZh(){const u=new URLSearchParams(location.search).get('lang'),s=sessionStorage.getItem('agentraining_lang');return(u||s||navigator.language||'').toLowerCase().startsWith('zh')}
+  function setButton(state){const btn=document.getElementById('mic-btn');if(!btn)return;btn.classList.toggle('recording',state==='recording');btn.disabled=state==='processing';if(state==='recording'){btn.innerHTML='🔴 <span>'+(isZh()?'停止':'Stop')+'</span>';btn.title=isZh()?'正在錄音，點一下停止':'Recording — tap to stop'}else if(state==='processing'){btn.textContent='…';btn.title=isZh()?'正在辨識語音':'Transcribing speech'}else{btn.innerHTML='🎤 <span id="voiceLabel">'+(isZh()?'語音輸入':'Voice input')+'</span>';btn.title=isZh()?'OpenAI 語音輸入':'OpenAI voice input'}}
+  function stopStream(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+  async function blobToBase64(blob){const bytes=new Uint8Array(await blob.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary)}
+  async function transcribe(blob,metadata){if(!window.PilotCloud?.enabled)throw new Error('PilotCloud is not ready.');const token=await window.PilotCloud.token();const response=await fetch('/.netlify/functions/openai-transcribe',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json',authorization:`Bearer ${token}`},body:JSON.stringify({audioBase64:await blobToBase64(blob),mimeType:blob.type||recorder?.mimeType||'application/octet-stream',language:isZh()?'zh':'en',recordingDurationMs:metadata.durationMs,chunkCount:metadata.chunkCount})});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||`Transcription failed (${response.status}).`);return String(body.text||'').trim()}
+  function chooseMimeType(){const candidates=['audio/mp4;codecs=mp4a.40.2','audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'];return candidates.find(type=>{try{return MediaRecorder.isTypeSupported(type)}catch(e){return false}})||''}
+  async function startRecording(){if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){alert(isZh()?'此瀏覽器不支援錄音功能，請使用最新版 Chrome、Safari 或 Edge。':'This browser does not support audio recording.');return}try{stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true}});chunks=[];recordingStartedAt=performance.now();const preferred=chooseMimeType();recorder=preferred?new MediaRecorder(stream,{mimeType:preferred}):new MediaRecorder(stream);recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};recorder.onerror=e=>console.error('MediaRecorder error',e);recorder.onstop=async()=>{const durationMs=Math.max(0,Math.round(performance.now()-recordingStartedAt)),mimeType=recorder?.mimeType||chunks[0]?.type||preferred||'application/octet-stream',blob=new Blob(chunks,{type:mimeType}),chunkCount=chunks.length;stopStream();if(!blob.size||!chunkCount){setButton('idle');alert(isZh()?'沒有錄到聲音，請再試一次。':'No audio was recorded. Please try again.');return}if(durationMs<MIN_RECORDING_MS||blob.size<MIN_AUDIO_BYTES){setButton('idle');alert(isZh()?'錄音時間太短，請說完整一句後再停止錄音。':'The recording was too short. Please say a complete sentence.');return}busy=true;setButton('processing');try{const text=await transcribe(blob,{durationMs,chunkCount});const input=document.getElementById('chat-input');if(input&&text){const prefix=input.value.trim();input.value=prefix?`${prefix} ${text}`:text;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()}else if(!text)alert(isZh()?'沒有辨識到清楚的語音，請再試一次。':'No clear speech was detected. Please try again.')}catch(error){console.error('OpenAI voice transcription failed',error);alert(isZh()?`語音辨識失敗：${error.message}`:`Voice transcription failed: ${error.message}`)}finally{busy=false;recorder=null;chunks=[];recordingStartedAt=0;setButton('idle')}};
+      // Important: do not use a timeslice here. Some browsers emit individually playable fragments
+      // whose concatenation does not begin with a valid container header. A single stop() flush gives
+      // us one complete WebM/MP4/Ogg file for the transcription endpoint.
+      recorder.start();setButton('recording')
+    }catch(error){stopStream();recorder=null;chunks=[];recordingStartedAt=0;setButton('idle');console.error('Microphone access failed',error);alert(isZh()?'無法使用麥克風。請允許此網站使用麥克風後再試。':'Microphone access failed. Please allow microphone access and try again.')}}
+  async function toggleMicOpenAI(){if(busy)return;if(recorder&&recorder.state==='recording'){try{recorder.requestData()}catch(e){}recorder.stop();return}await startRecording()}
+  function install(){window.toggleMic=toggleMicOpenAI;setButton('idle')}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
