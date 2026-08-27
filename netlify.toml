@@ -33,6 +33,10 @@
   function = "knowledge-enterprise-upload"
   path = "/knowledge.html"
 
+[[edge_functions]]
+  function = "knowledge-enterprise-upload"
+  path = "/knowledge"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
