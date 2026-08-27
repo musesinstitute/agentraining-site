@@ -18,23 +18,25 @@ export default async function handler(req) {
   const compact = spoken.replace(/\s+/g, '');
   const hasLiteralEmail = /[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/.test(compact);
   const hasDictatedEmail = /\b(?:at|@)\s*(?:gmail|outlook|hotmail|yahoo)\s*(?:\.\s*|dot\s*)?com\b/i.test(spoken) || /gmail\.com|outlook\.com|hotmail\.com|yahoo\.com/i.test(spoken);
+
+  // A member named in the current turn must outrank a stale UI selection.
   if (hasLiteralEmail || hasDictatedEmail) delete input.learnerEmail;
 
-  // Manager chat is durable, so earlier assistant turns can contain statements made
-  // before evidence plumbing was fixed (for example, "recentSessions is unavailable").
-  // The current server-side evidence injected by ai-chat is authoritative and must
-  // override those stale conversational claims.
-  const originalMessage = String(input.message || '');
-  input.message = `${originalMessage}\n\n[Manager evidence rule: Answer this request from the CURRENT server-injected resolvedMember and selectedMember.recentSessions. Current platform evidence overrides any earlier assistant statement that records were unavailable. If recentSessions contains records, use their savedAt, scenario, scores, strengths, tips, and summary directly; do not ask the manager to paste them.]`;
+  // IMPORTANT: do not append internal evidence instructions to input.message.
+  // ai-chat.mjs already injects the authorized Manager evidence into the system
+  // instructions. Mutating input.message caused the internal rule to appear in
+  // the visible transcript and be stored as if the Manager had typed it.
 
   const rewritten = new Request(req.url, {
     method: 'POST',
     headers: req.headers,
     body: JSON.stringify(input)
   });
+
   const response = await aiChat(rewritten);
   const body = await response.json().catch(() => ({}));
   body.dataVersion = 'manager-evidence-v3';
+
   return new Response(JSON.stringify(body), {
     status: response.status,
     headers: {
