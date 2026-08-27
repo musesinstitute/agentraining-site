@@ -11,19 +11,18 @@ export default async function handler(req) {
     });
   }
 
-  // Force the role server-side; the browser cannot accidentally fall back to learner mode.
   let input;
   try { input = await req.clone().json(); }
   catch { input = {}; }
   input.role = 'manager';
 
-  // A member explicitly mentioned in the manager's current utterance must outrank
-  // a stale member left selected in the UI. Dictation often inserts/removes spaces
-  // or slightly misspells an email, so let ai-chat's roster-aware fuzzy resolver
-  // handle the current mention instead of pinning the request to the old selection.
-  const spoken = String(input.message || '').toLowerCase().replace(/\s+/g, '');
-  const hasMemberLikeEmail = /[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/.test(spoken);
-  if (hasMemberLikeEmail) delete input.learnerEmail;
+  // Current-turn member mentions outrank a stale UI selection. Dictation often
+  // renders an address as "name at gmail.com" rather than name@gmail.com.
+  const spoken = String(input.message || '').toLowerCase();
+  const compact = spoken.replace(/\s+/g, '');
+  const hasLiteralEmail = /[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/.test(compact);
+  const hasDictatedEmail = /\b(?:at|@)\s*(?:gmail|outlook|hotmail|yahoo)\s*(?:\.\s*|dot\s*)?com\b/i.test(spoken) || /gmail\.com|outlook\.com|hotmail\.com|yahoo\.com/i.test(spoken);
+  if (hasLiteralEmail || hasDictatedEmail) delete input.learnerEmail;
 
   const rewritten = new Request(req.url, {
     method: 'POST',
@@ -35,6 +34,10 @@ export default async function handler(req) {
   body.dataVersion = 'manager-evidence-v2';
   return new Response(JSON.stringify(body), {
     status: response.status,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-agentraining-manager-ai': 'manager-evidence-v2' }
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+      'x-agentraining-manager-ai': 'manager-evidence-v2'
+    }
   });
 }
