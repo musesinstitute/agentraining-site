@@ -1,29 +1,411 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
-const STORE_NAME='agentraining-pilot',jsonHeaders={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
-const reply=(s,b)=>new Response(JSON.stringify(b),{status:s,headers:jsonHeaders});
-const cleanText=(v,m=6000)=>String(v??'').trim().slice(0,m),normalizeEmail=v=>cleanText(v,320).toLowerCase();
-function safeSegment(v,f){return cleanText(v,100).toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||f}
-function normalizeHistory(v){return Array.isArray(v)?v.slice(-16).map(x=>({role:x?.role==='assistant'?'assistant':'user',content:cleanText(x?.content)})).filter(x=>x.content):[]}
-function chatMessage(role,content,extras={}){return{id:crypto.randomUUID(),role,content:cleanText(content),createdAt:new Date().toISOString(),engine:'ai-chat-v1',...extras}}
-async function listJSON(store,prefix){const{blobs}=await store.list({prefix});return(await Promise.all(blobs.map(x=>store.get(x.key,{type:'json'})))).filter(Boolean)}
-function systemPrompt(role,lang){const zh=lang==='zh',manager=role==='manager';return[
-manager?(zh?'你是主管的长期 AI 副驾驶和管理成长伙伴。':'You are the manager’s long-term AI Copilot and management growth partner.'):(zh?'你是学员的私人 AI 教练和成长伙伴。':'You are the learner’s Personal AI Coach and growth partner.'),
-zh?'产品哲学：以人为本，关系优先，在真正相关的时候再进入训练。':'Product philosophy: People first. Relationship first. Training when relevant.',
-zh?'进行自然、多轮、连续的对话，直接回应用户刚刚说的话。':'Have a natural, continuous, multi-turn conversation and directly answer what the user just said.',
-manager?(zh?'你就在 AgentTraining.ai 平台内部。下面的 teamEvidenceIndex 是系统实际检索到的全团队 Practice 记录统计，不是推测。主管问谁记录最多时，直接按 practiceSessionCount 比较并回答，不要让主管自己逐个查。':'You operate inside AgentTraining.ai. teamEvidenceIndex below is an actual system retrieval of Practice records across the authorized team, not a guess. When asked who has the most evidence, compare practiceSessionCount directly instead of making the manager check members one by one.'):'',
-manager?(zh?'resolvedMember 是系统根据当前选择或主管本轮自然语言自动匹配出的成员。selectedMember.recentSessions 是该成员真实 Practice 记录。不要要求主管重新粘贴平台已经拥有的记录。':'resolvedMember is the member resolved by the system from the current selection or the manager’s natural-language mention. selectedMember.recentSessions contains that member’s actual Practice records. Never ask the manager to paste evidence the platform already has.'):'',
-manager?(zh?'判断有没有进步或进步快慢时，比较 recentSessions 的时间、场景和 overall/empathy/accuracy/closing 分数，以及 strengths/tips/summary。0 次明确说 0 次；1 次明确说只能描述本次表现、不能判断趋势；2 次以上才比较趋势。不要编造。':'For progress questions, compare recentSessions by date, scenario, overall/empathy/accuracy/closing scores, strengths, tips, and summaries. If there are 0 sessions, say 0; with 1, describe that session but do not claim a trend; with 2 or more, compare the trend. Never invent evidence.'):'',
-manager?(zh?'如果系统做了近似成员匹配，简短说明“我按 X 这位授权成员来查看”，然后直接使用他的真实证据回答。':'If the system used an approximate member match, briefly say you are checking the matched authorized member, then answer from the actual evidence.'):'',
-manager?(zh?'绝不访问、引用或推断学员私人 Coach Chat。':'Never access, quote, or infer a learner’s private Coach Chat.'):(zh?'不要把普通聊天强行拉到练习、评分或任务。':'Do not force ordinary conversation into Practice, scores, or assignments.'),
-zh?'回复温暖、专业、自然。':'Be warm, professional, and natural.'
-].filter(Boolean).join('\n')}
-function evidenceContext(v,lang){if(!v||typeof v!=='object')return'';const safe=JSON.stringify(v).slice(0,50000);return lang==='zh'?`\n\n主管授权的平台上下文（真实检索结果；私人 Coach Chat 不在其中）：\n${safe}`:`\n\nAuthorized manager platform context (actual retrieval; Private Coach Chat excluded):\n${safe}`}
-function extractOutputText(p){if(typeof p?.output_text==='string'&&p.output_text.trim())return p.output_text.trim();const a=[];for(const i of p?.output||[])for(const c of i?.content||[])if(c?.type==='output_text'&&c?.text)a.push(c.text);return a.join('\n').trim()}
-async function managerRoster(store,teamId){const profiles=await listJSON(store,`teams/${teamId}/profiles/`),roster=await listJSON(store,`teams/${teamId}/roster/`),byEmail=new Map();for(const p of profiles){const email=normalizeEmail(p.learnerEmail);if(email)byEmail.set(email,{learnerEmail:email,preferredName:cleanText(p.preferredName||p.name||email,120)})}for(const r of roster){const email=normalizeEmail(r.email);if(r.isLearner&&email&&!byEmail.has(email))byEmail.set(email,{learnerEmail:email,preferredName:email})}return[...byEmail.values()].slice(0,100)}
-function compactSession(s){return{id:s.id,savedAt:s.savedAt,scenario:s.scenario,practiceMode:s.practiceMode,scores:s.scores,strengths:s.strengths,tips:s.tips,summary:s.summary,assignmentId:s.assignmentId,sourceType:s.sourceType,sourceLabel:s.sourceLabel}}
-function editDistance(a,b){a=String(a);b=String(b);const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));for(let i=0;i<=a.length;i++)d[i][0]=i;for(let j=0;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
-function resolveMember(message,requested,roster){const exact=normalizeEmail(requested);if(exact&&roster.some(r=>r.learnerEmail===exact))return{email:exact,method:'selected'};const raw=String(message||'').toLowerCase(),collapsed=raw.replace(/\s+/g,'');for(const r of roster){if(raw.includes(r.learnerEmail)||collapsed.includes(r.learnerEmail))return{email:r.learnerEmail,method:'exact_mention'}}const at=collapsed.match(/[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/g)||[];if(!at.length)return{email:exact||'',method:exact?'unverified_selected':'none'};let best=null;for(const mention of at)for(const r of roster){const dist=editDistance(mention,r.learnerEmail),ratio=dist/Math.max(mention.length,r.learnerEmail.length);if(!best||ratio<best.ratio)best={email:r.learnerEmail,method:'fuzzy_mention',mentioned:mention,distance:dist,ratio}}return best&&best.ratio<=0.28?best:{email:exact||'',method:'none'}}
-async function teamEvidence(store,teamId,roster){const sessions=await listJSON(store,`teams/${teamId}/sessions/`),map=new Map(roster.map(r=>[r.learnerEmail,{learnerEmail:r.learnerEmail,preferredName:r.preferredName,practiceSessionCount:0,oldestObservedAt:null,latestObservedAt:null}]));for(const s of sessions){const email=normalizeEmail(s.learner||s.learnerEmail);if(!map.has(email))continue;const row=map.get(email),when=s.savedAt||s.createdAt||null;row.practiceSessionCount++;if(when&&(!row.oldestObservedAt||when<row.oldestObservedAt))row.oldestObservedAt=when;if(when&&(!row.latestObservedAt||when>row.latestObservedAt))row.latestObservedAt=when}return{sessions,index:[...map.values()].sort((a,b)=>b.practiceSessionCount-a.practiceSessionCount||String(a.learnerEmail).localeCompare(String(b.learnerEmail)))}
-async function memberContext(store,teamId,email,allSessions){if(!email)return null;const root=`teams/${teamId}`,profiles=await listJSON(store,`${root}/profiles/`),profile=profiles.find(x=>normalizeEmail(x.learnerEmail)===email)||null,sessions=(allSessions||await listJSON(store,`${root}/sessions/`)).filter(x=>normalizeEmail(x.learner||x.learnerEmail)===email).sort((a,b)=>String(a.savedAt||a.createdAt).localeCompare(String(b.savedAt||b.createdAt))).slice(-12).map(compactSession),assignments=(await listJSON(store,`${root}/assignments/`)).filter(x=>normalizeEmail(x.assignedTo||x.learner)===email).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,8).map(a=>({id:a.id,scenarioName:a.scenarioName,mode:a.mode,dueDate:a.dueDate,status:a.status,createdAt:a.createdAt}));return{learnerEmail:email,profile:profile?{preferredName:profile.preferredName,claims:profile.claims,goals:profile.goals,updatedAt:profile.updatedAt}:null,recentSessions:sessions,assignments,evidenceSummary:{practiceSessionCount:sessions.length,oldestObservedAt:sessions[0]?.savedAt||null,latestObservedAt:sessions[sessions.length-1]?.savedAt||null}}}
-export default async function handler(req){try{if(req.method!=='POST')return reply(405,{error:'POST required.'});verifyRequestOrigin(req);const user=await getUser();if(!user)return reply(401,{error:'Please sign in to continue.'});const apiKey=process.env.OPENAI_API_KEY;if(!apiKey)return reply(503,{error:'AI conversation is not configured yet.'});const input=await req.json(),role=input.role==='manager'?'manager':'learner',lang=input.lang==='zh'?'zh':'en',message=cleanText(input.message);if(!message)return reply(400,{error:'Message is required.'});const metadata=user.appMetadata||{},roles=Array.isArray(metadata.roles)?metadata.roles.map(x=>String(x).toLowerCase()):[];if(role==='manager'&&!roles.includes('manager')&&!roles.includes('admin')&&metadata.role!=='manager')return reply(403,{error:'Manager access is required.'});const teamId=safeSegment(metadata.team_id,'founding-pilot'),userId=safeSegment(user.id,role),store=getStore({name:STORE_NAME,consistency:'strong'}),prefix=role==='manager'?`teams/${teamId}/manager-ai/${userId}/`:`teams/${teamId}/private-coach/${userId}/`,stored=await listJSON(store,prefix);stored.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));const durable=normalizeHistory(stored.filter(x=>x.engine==='ai-chat-v1')),supplied=normalizeHistory(input.history),history=durable.length?durable:supplied;let learnerEmail='',context={};if(role==='manager'){const roster=await managerRoster(store,teamId),team=await teamEvidence(store,teamId,roster),resolved=resolveMember(message,input.learnerEmail,roster);learnerEmail=resolved.email;const member=await memberContext(store,teamId,learnerEmail,team.sessions);context={authorizedTeamRoster:roster,teamEvidenceIndex:team.index,resolvedMember:resolved,selectedMember:member,privacy:'Authorized roster/work evidence only. Private Learner Coach Chat is excluded.'}}const visibility=role==='manager'?'manager_only':'learner_only',userMessage=chatMessage('user',message,{visibility,learnerEmail:learnerEmail||undefined});await store.setJSON(`${prefix}${userMessage.createdAt}-${userMessage.id}`,userMessage,{onlyIfNew:true});const model=process.env.OPENAI_CHAT_MODEL||'gpt-5.4-mini',response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'content-type':'application/json','authorization':`Bearer ${apiKey}`},body:JSON.stringify({model,instructions:systemPrompt(role,lang)+evidenceContext(context,lang),input:[...history.map(x=>({role:x.role,content:x.content})),{role:'user',content:message}],max_output_tokens:900})}),payload=await response.json();if(!response.ok)return reply(502,{error:payload?.error?.message||'AI conversation request failed.',userMessage});const text=extractOutputText(payload);if(!text)return reply(502,{error:'AI conversation returned no text.',userMessage});const assistantMessage=chatMessage('assistant',text,{visibility,model,learnerEmail:learnerEmail||undefined});await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`,assistantMessage,{onlyIfNew:true});return reply(200,{text,model,role,lang,userMessage,assistantMessage,learnerEmail:learnerEmail||null,resolvedMember:context.resolvedMember||null,evidenceSummary:context?.selectedMember?.evidenceSummary||null,teamEvidenceIndex:role==='manager'?context.teamEvidenceIndex:undefined,privacy:role==='manager'?'Private Learner Coach Chat was not accessed.':'Private learner conversation.'})}catch(error){console.error('ai-chat failed',error);return reply(error?.status||500,{error:error?.message||'AI conversation failed.'})}}
+
+const STORE_NAME = 'agentraining-pilot';
+const jsonHeaders = {
+  'content-type': 'application/json; charset=utf-8',
+  'cache-control': 'no-store'
+};
+
+function reply(status, body) {
+  return new Response(JSON.stringify(body), { status, headers: jsonHeaders });
+}
+
+function cleanText(value, max = 6000) {
+  return String(value ?? '').trim().slice(0, max);
+}
+
+function normalizeEmail(value) {
+  return cleanText(value, 320).toLowerCase();
+}
+
+function safeSegment(value, fallback) {
+  const segment = cleanText(value, 100)
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return segment || fallback;
+}
+
+function normalizeHistory(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .slice(-16)
+    .map(item => ({
+      role: item?.role === 'assistant' ? 'assistant' : 'user',
+      content: cleanText(item?.content)
+    }))
+    .filter(item => item.content);
+}
+
+function chatMessage(role, content, extras = {}) {
+  return {
+    id: crypto.randomUUID(),
+    role,
+    content: cleanText(content),
+    createdAt: new Date().toISOString(),
+    engine: 'ai-chat-v1',
+    ...extras
+  };
+}
+
+async function listJSON(store, prefix) {
+  const { blobs } = await store.list({ prefix });
+  const rows = await Promise.all(
+    blobs.map(entry => store.get(entry.key, { type: 'json' }))
+  );
+  return rows.filter(Boolean);
+}
+
+function systemPrompt(role, lang) {
+  const zh = lang === 'zh';
+  const manager = role === 'manager';
+  return [
+    manager
+      ? (zh ? '你是主管的长期 AI 副驾驶和管理成长伙伴。' : 'You are the manager’s long-term AI Copilot and management growth partner.')
+      : (zh ? '你是学员的私人 AI 教练和成长伙伴。' : 'You are the learner’s Personal AI Coach and growth partner.'),
+    zh ? '产品哲学：以人为本，关系优先，在真正相关的时候再进入训练。' : 'Product philosophy: People first. Relationship first. Training when relevant.',
+    zh ? '进行自然、多轮、连续的对话，直接回应用户刚刚说的话。' : 'Have a natural, continuous, multi-turn conversation and directly answer what the user just said.',
+    manager ? (zh
+      ? '你就在 AgentTraining.ai 平台内部。teamEvidenceIndex 是系统实际检索到的全团队 Practice 记录统计。主管问谁记录最多时，直接按 practiceSessionCount 比较并回答。'
+      : 'You operate inside AgentTraining.ai. teamEvidenceIndex is an actual retrieval of Practice records across the authorized team. When asked who has the most evidence, compare practiceSessionCount directly.') : '',
+    manager ? (zh
+      ? 'resolvedMember 是系统根据当前选择或主管自然语言自动匹配出的成员。selectedMember.recentSessions 是该成员真实 Practice 记录。不要要求主管重新粘贴平台已有数据。'
+      : 'resolvedMember is the member resolved from the current selection or the manager’s natural-language mention. selectedMember.recentSessions contains that member’s actual Practice records. Never ask the manager to paste data the platform already has.') : '',
+    manager ? (zh
+      ? '判断进步时：0 次明确说 0 次；1 次只能描述本次表现，不能判断趋势；2 次以上才比较时间、场景、overall/empathy/accuracy/closing、strengths、tips、summary。不要编造。'
+      : 'For progress questions: with 0 sessions say 0; with 1 describe that session but do not claim a trend; with 2 or more compare dates, scenarios, overall/empathy/accuracy/closing, strengths, tips, and summaries. Never invent evidence.') : '',
+    manager ? (zh
+      ? '绝不访问、引用或推断学员私人 Coach Chat。'
+      : 'Never access, quote, or infer a learner’s private Coach Chat.') : '',
+    zh ? '回复温暖、专业、自然。' : 'Be warm, professional, and natural.'
+  ].filter(Boolean).join('\n');
+}
+
+function evidenceContext(value, lang) {
+  if (!value || typeof value !== 'object') return '';
+  const safe = JSON.stringify(value).slice(0, 50000);
+  return lang === 'zh'
+    ? `\n\n主管授权的平台上下文（真实检索结果；私人 Coach Chat 不在其中）：\n${safe}`
+    : `\n\nAuthorized manager platform context (actual retrieval; Private Coach Chat excluded):\n${safe}`;
+}
+
+function extractOutputText(payload) {
+  if (typeof payload?.output_text === 'string' && payload.output_text.trim()) {
+    return payload.output_text.trim();
+  }
+  const parts = [];
+  for (const item of payload?.output || []) {
+    for (const content of item?.content || []) {
+      if (content?.type === 'output_text' && content?.text) parts.push(content.text);
+    }
+  }
+  return parts.join('\n').trim();
+}
+
+async function managerRoster(store, teamId) {
+  const profiles = await listJSON(store, `teams/${teamId}/profiles/`);
+  const roster = await listJSON(store, `teams/${teamId}/roster/`);
+  const byEmail = new Map();
+
+  for (const profile of profiles) {
+    const email = normalizeEmail(profile.learnerEmail);
+    if (email) {
+      byEmail.set(email, {
+        learnerEmail: email,
+        preferredName: cleanText(profile.preferredName || profile.name || email, 120)
+      });
+    }
+  }
+
+  for (const row of roster) {
+    const email = normalizeEmail(row.email);
+    if (row.isLearner && email && !byEmail.has(email)) {
+      byEmail.set(email, { learnerEmail: email, preferredName: email });
+    }
+  }
+
+  return [...byEmail.values()].slice(0, 100);
+}
+
+function compactSession(session) {
+  return {
+    id: session.id,
+    savedAt: session.savedAt,
+    scenario: session.scenario,
+    practiceMode: session.practiceMode,
+    scores: session.scores,
+    strengths: session.strengths,
+    tips: session.tips,
+    summary: session.summary,
+    assignmentId: session.assignmentId,
+    sourceType: session.sourceType,
+    sourceLabel: session.sourceLabel
+  };
+}
+
+function editDistance(a, b) {
+  a = String(a);
+  b = String(b);
+  const d = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i += 1) d[i][0] = i;
+  for (let j = 0; j <= b.length; j += 1) d[0][j] = j;
+  for (let i = 1; i <= a.length; i += 1) {
+    for (let j = 1; j <= b.length; j += 1) {
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i][j - 1] + 1,
+        d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+    }
+  }
+  return d[a.length][b.length];
+}
+
+function resolveMember(message, requested, roster) {
+  const selected = normalizeEmail(requested);
+  if (selected && roster.some(row => row.learnerEmail === selected)) {
+    return { email: selected, method: 'selected' };
+  }
+
+  const raw = String(message || '').toLowerCase();
+  const collapsed = raw.replace(/\s+/g, '');
+
+  for (const row of roster) {
+    if (raw.includes(row.learnerEmail) || collapsed.includes(row.learnerEmail)) {
+      return { email: row.learnerEmail, method: 'exact_mention' };
+    }
+  }
+
+  const mentions = collapsed.match(/[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,}/g) || [];
+  if (!mentions.length) {
+    return { email: selected || '', method: selected ? 'unverified_selected' : 'none' };
+  }
+
+  let best = null;
+  for (const mention of mentions) {
+    for (const row of roster) {
+      const distance = editDistance(mention, row.learnerEmail);
+      const ratio = distance / Math.max(mention.length, row.learnerEmail.length);
+      if (!best || ratio < best.ratio) {
+        best = { email: row.learnerEmail, method: 'fuzzy_mention', mentioned: mention, distance, ratio };
+      }
+    }
+  }
+
+  return best && best.ratio <= 0.28
+    ? best
+    : { email: selected || '', method: 'none' };
+}
+
+async function teamEvidence(store, teamId, roster) {
+  const sessions = await listJSON(store, `teams/${teamId}/sessions/`);
+  const map = new Map(
+    roster.map(row => [row.learnerEmail, {
+      learnerEmail: row.learnerEmail,
+      preferredName: row.preferredName,
+      practiceSessionCount: 0,
+      oldestObservedAt: null,
+      latestObservedAt: null
+    }])
+  );
+
+  for (const session of sessions) {
+    const email = normalizeEmail(session.learner || session.learnerEmail);
+    if (!map.has(email)) continue;
+    const row = map.get(email);
+    const when = session.savedAt || session.createdAt || null;
+    row.practiceSessionCount += 1;
+    if (when && (!row.oldestObservedAt || when < row.oldestObservedAt)) row.oldestObservedAt = when;
+    if (when && (!row.latestObservedAt || when > row.latestObservedAt)) row.latestObservedAt = when;
+  }
+
+  return {
+    sessions,
+    index: [...map.values()].sort((a, b) =>
+      b.practiceSessionCount - a.practiceSessionCount ||
+      String(a.learnerEmail).localeCompare(String(b.learnerEmail))
+    )
+  };
+}
+
+async function memberContext(store, teamId, email, allSessions) {
+  if (!email) return null;
+  const root = `teams/${teamId}`;
+  const profiles = await listJSON(store, `${root}/profiles/`);
+  const profile = profiles.find(row => normalizeEmail(row.learnerEmail) === email) || null;
+
+  const sessions = (allSessions || await listJSON(store, `${root}/sessions/`))
+    .filter(row => normalizeEmail(row.learner || row.learnerEmail) === email)
+    .sort((a, b) => String(a.savedAt || a.createdAt).localeCompare(String(b.savedAt || b.createdAt)))
+    .slice(-12)
+    .map(compactSession);
+
+  const assignments = (await listJSON(store, `${root}/assignments/`))
+    .filter(row => normalizeEmail(row.assignedTo || row.learner) === email)
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, 8)
+    .map(row => ({
+      id: row.id,
+      scenarioName: row.scenarioName,
+      mode: row.mode,
+      dueDate: row.dueDate,
+      status: row.status,
+      createdAt: row.createdAt
+    }));
+
+  return {
+    learnerEmail: email,
+    profile: profile ? {
+      preferredName: profile.preferredName,
+      claims: profile.claims,
+      goals: profile.goals,
+      updatedAt: profile.updatedAt
+    } : null,
+    recentSessions: sessions,
+    assignments,
+    evidenceSummary: {
+      practiceSessionCount: sessions.length,
+      oldestObservedAt: sessions[0]?.savedAt || null,
+      latestObservedAt: sessions[sessions.length - 1]?.savedAt || null
+    }
+  };
+}
+
+export default async function handler(req) {
+  try {
+    if (req.method !== 'POST') return reply(405, { error: 'POST required.' });
+    verifyRequestOrigin(req);
+
+    const user = await getUser();
+    if (!user) return reply(401, { error: 'Please sign in to continue.' });
+
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) return reply(503, { error: 'AI conversation is not configured yet.' });
+
+    const input = await req.json();
+    const role = input.role === 'manager' ? 'manager' : 'learner';
+    const lang = input.lang === 'zh' ? 'zh' : 'en';
+    const message = cleanText(input.message);
+    if (!message) return reply(400, { error: 'Message is required.' });
+
+    const metadata = user.appMetadata || {};
+    const roles = Array.isArray(metadata.roles)
+      ? metadata.roles.map(item => String(item).toLowerCase())
+      : [];
+
+    if (
+      role === 'manager' &&
+      !roles.includes('manager') &&
+      !roles.includes('admin') &&
+      metadata.role !== 'manager'
+    ) {
+      return reply(403, { error: 'Manager access is required.' });
+    }
+
+    const teamId = safeSegment(metadata.team_id, 'founding-pilot');
+    const userId = safeSegment(user.id, role);
+    const store = getStore({ name: STORE_NAME, consistency: 'strong' });
+    const prefix = role === 'manager'
+      ? `teams/${teamId}/manager-ai/${userId}/`
+      : `teams/${teamId}/private-coach/${userId}/`;
+
+    const stored = await listJSON(store, prefix);
+    stored.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+    const durable = normalizeHistory(stored.filter(row => row.engine === 'ai-chat-v1'));
+    const supplied = normalizeHistory(input.history);
+    const history = durable.length ? durable : supplied;
+
+    let learnerEmail = '';
+    let context = {};
+
+    if (role === 'manager') {
+      const roster = await managerRoster(store, teamId);
+      const team = await teamEvidence(store, teamId, roster);
+      const resolved = resolveMember(message, input.learnerEmail, roster);
+      learnerEmail = resolved.email;
+      const member = await memberContext(store, teamId, learnerEmail, team.sessions);
+      context = {
+        authorizedTeamRoster: roster,
+        teamEvidenceIndex: team.index,
+        resolvedMember: resolved,
+        selectedMember: member,
+        privacy: 'Authorized roster/work evidence only. Private Learner Coach Chat is excluded.'
+      };
+    }
+
+    const visibility = role === 'manager' ? 'manager_only' : 'learner_only';
+    const userMessage = chatMessage('user', message, {
+      visibility,
+      learnerEmail: learnerEmail || undefined
+    });
+
+    await store.setJSON(
+      `${prefix}${userMessage.createdAt}-${userMessage.id}`,
+      userMessage,
+      { onlyIfNew: true }
+    );
+
+    const model = process.env.OPENAI_CHAT_MODEL || 'gpt-5.4-mini';
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model,
+        instructions: systemPrompt(role, lang) + evidenceContext(context, lang),
+        input: [
+          ...history.map(item => ({ role: item.role, content: item.content })),
+          { role: 'user', content: message }
+        ],
+        max_output_tokens: 900
+      })
+    });
+
+    const payload = await response.json();
+    if (!response.ok) {
+      return reply(502, {
+        error: payload?.error?.message || 'AI conversation request failed.',
+        userMessage
+      });
+    }
+
+    const text = extractOutputText(payload);
+    if (!text) return reply(502, { error: 'AI conversation returned no text.', userMessage });
+
+    const assistantMessage = chatMessage('assistant', text, {
+      visibility,
+      model,
+      learnerEmail: learnerEmail || undefined
+    });
+
+    await store.setJSON(
+      `${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`,
+      assistantMessage,
+      { onlyIfNew: true }
+    );
+
+    return reply(200, {
+      text,
+      model,
+      role,
+      lang,
+      userMessage,
+      assistantMessage,
+      learnerEmail: learnerEmail || null,
+      resolvedMember: context.resolvedMember || null,
+      evidenceSummary: context?.selectedMember?.evidenceSummary || null,
+      teamEvidenceIndex: role === 'manager' ? context.teamEvidenceIndex : undefined,
+      privacy: role === 'manager'
+        ? 'Private Learner Coach Chat was not accessed.'
+        : 'Private learner conversation.'
+    });
+  } catch (error) {
+    console.error('ai-chat failed', error);
+    return reply(error?.status || 500, {
+      error: error?.message || 'AI conversation failed.'
+    });
+  }
+}
