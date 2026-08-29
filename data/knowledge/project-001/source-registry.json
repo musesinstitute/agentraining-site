@@ -1,0 +1,68 @@
+{
+  "_purpose": "Room 4D — Project 001 (Insurance License Exam). Metadata-only registry of source material batches. This file tracks WHERE questions/knowledge came from and how trustworthy that source is; it does not contain question content itself (see question-schema.json for the question data shape). Do not commit the underlying PDFs here unless they are already intentionally part of the repository — register the placeholder entry first, import content later.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "batches": [
+    {
+      "batchId": "PROJECT001-SOURCE-BATCH-001",
+      "description": "Initial batch of insurance license exam question-bank PDFs supplied for Project 001.",
+      "sources": [
+        {
+          "sourceId": "S001",
+          "title": "执照题1.pdf",
+          "type": "exam-question-bank",
+          "language": "zh",
+          "pageCount": null,
+          "batchId": "PROJECT001-SOURCE-BATCH-001",
+          "importStatus": "not-imported",
+          "verificationStatus": "unverified",
+          "notes": "Placeholder registered per D-001A (Room 4D Project 001). PDF not yet committed to the repository; this entry is metadata only, pending import."
+        },
+        {
+          "sourceId": "S002",
+          "title": "执照题2中文.pdf",
+          "type": "exam-question-bank",
+          "language": "zh",
+          "pageCount": null,
+          "batchId": "PROJECT001-SOURCE-BATCH-001",
+          "importStatus": "not-imported",
+          "verificationStatus": "unverified",
+          "notes": "Placeholder registered per D-001A (Room 4D Project 001). PDF not yet committed to the repository; this entry is metadata only, pending import."
+        },
+        {
+          "sourceId": "S003",
+          "title": "执照题3.pdf",
+          "type": "exam-question-bank",
+          "language": "zh",
+          "pageCount": null,
+          "batchId": "PROJECT001-SOURCE-BATCH-001",
+          "importStatus": "not-imported",
+          "verificationStatus": "unverified",
+          "notes": "Placeholder registered per D-001A (Room 4D Project 001). PDF not yet committed to the repository; this entry is metadata only, pending import."
+        },
+        {
+          "sourceId": "S004",
+          "title": "执照题4.pdf",
+          "type": "exam-question-bank",
+          "language": "zh",
+          "pageCount": null,
+          "batchId": "PROJECT001-SOURCE-BATCH-001",
+          "importStatus": "not-imported",
+          "verificationStatus": "unverified",
+          "notes": "Placeholder registered per D-001A (Room 4D Project 001). PDF not yet committed to the repository; this entry is metadata only, pending import."
+        },
+        {
+          "sourceId": "S005",
+          "title": "执照题6(1).pdf",
+          "type": "exam-question-bank",
+          "language": "zh",
+          "pageCount": null,
+          "batchId": "PROJECT001-SOURCE-BATCH-001",
+          "importStatus": "not-imported",
+          "verificationStatus": "unverified",
+          "notes": "Placeholder registered per D-001A (Room 4D Project 001). Filename numbering (6) does not match batch sequence (S005); preserved as-is for traceability back to the original file. PDF not yet committed to the repository; this entry is metadata only, pending import."
+        }
+      ]
+    }
+  ]
+}

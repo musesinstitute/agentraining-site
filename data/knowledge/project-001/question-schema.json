@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentraining.ai/schema/room-4d/project-001/question.json",
+  "title": "Room 4D Project 001 — Question",
+  "description": "Schema for a single exam-style question in the Project 001 (Insurance License Exam) question bank. This is a data-shape contract, not stored question data — imported/authored questions should validate against it. Source-provided answers and human-verified answers are tracked as two distinct fields on purpose: never treat an imported PDF's marked answer as authoritative without a verification step.",
+  "type": "object",
+  "required": [
+    "questionId",
+    "knowledgePointIds",
+    "domainId",
+    "questionText",
+    "choices",
+    "sourceAnswer",
+    "verifiedAnswer",
+    "verificationStatus",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "questionId": {
+      "type": "string",
+      "description": "Permanent, stable question ID. Never reused or renumbered. Suggested format: Q-<sourceId>-<sequence>, e.g. Q-S001-0007.",
+      "pattern": "^Q-[A-Z0-9-]+$"
+    },
+    "knowledgePointIds": {
+      "type": "array",
+      "description": "One or more knowledge-point IDs (from knowledge-points.json) this question assesses. A question may test more than one point.",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "domainId": {
+      "type": "string",
+      "description": "Primary domain ID (from domains.json) this question belongs to. Should match the domainId of its knowledgePointIds.",
+      "pattern": "^K[0-9]{2}$"
+    },
+    "questionText": {
+      "type": "string",
+      "description": "The question stem, in its primary language."
+    },
+    "choices": {
+      "type": "array",
+      "description": "Answer choices. For multiple choice this is typically 4 entries; other question types may use fewer/more.",
+      "items": {
+        "type": "object",
+        "required": ["key", "text"],
+        "properties": {
+          "key": { "type": "string", "description": "Choice label, e.g. 'A', 'B', 'C', 'D'." },
+          "text": { "type": "string" }
+        }
+      },
+      "minItems": 1
+    },
+    "sourceAnswer": {
+      "type": ["string", "null"],
+      "description": "The answer as marked/selected in the original source material (e.g. a PDF's printed answer key or a human's circled choice). NOT assumed correct — see verifiedAnswer. Null if the source provided no marked answer."
+    },
+    "verifiedAnswer": {
+      "type": ["string", "null"],
+      "description": "The answer confirmed correct through human or authoritative review. Null until verification has actually happened — do not copy sourceAnswer here automatically. This is the field the platform should trust for scoring once verificationStatus reflects that."
+    },
+    "answerExplanation": {
+      "type": "string",
+      "description": "Explanation of why the verified answer is correct."
+    },
+    "wrongAnswerExplanations": {
+      "type": "object",
+      "description": "Map of choice key -> explanation of why that specific wrong choice is incorrect (supports diagnosing the exact misconception behind a wrong answer).",
+      "additionalProperties": { "type": "string" }
+    },
+    "difficulty": {
+      "type": "integer",
+      "description": "Relative difficulty, 1 (easiest) to 5 (hardest).",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language of questionText/choices. BCP-47 style, e.g. 'en', 'zh'.",
+      "enum": ["en", "zh", "bilingual"]
+    },
+    "sourceId": {
+      "type": ["string", "null"],
+      "description": "ID of the source document this question was imported from (from source-registry.json), e.g. 'S001'. Null for originally-authored questions with no source PDF."
+    },
+    "sourcePage": {
+      "type": ["integer", "string", "null"],
+      "description": "Page number (or range/label) within the source document."
+    },
+    "sourceQuestionNumber": {
+      "type": ["string", "integer", "null"],
+      "description": "The question's original number/label within its source document, for traceability back to the PDF."
+    },
+    "sourceNotes": {
+      "type": "string",
+      "description": "Free-text notes about the source context of this question (e.g. formatting quirks, ambiguity in the scan, OCR issues)."
+    },
+    "humanAnnotations": {
+      "type": "array",
+      "description": "Human markings found on the source material for this question — stars, underlines, highlighted words, selected answers, margin notes — preserved rather than discarded, since they may later become AI teaching/coaching assets.",
+      "items": { "$ref": "#/definitions/humanAnnotation" }
+    },
+    "memoryAids": {
+      "type": "array",
+      "description": "Mnemonic devices or memory aids associated with this question or its knowledge point(s), captured from source material or added later.",
+      "items": { "$ref": "#/definitions/memoryAid" }
+    },
+    "bilingualNotes": {
+      "type": "array",
+      "description": "Paired-language notes (e.g. a Chinese explanation of an English term) found in or derived from the source material.",
+      "items": { "$ref": "#/definitions/bilingualNote" }
+    },
+    "verificationStatus": {
+      "type": "string",
+      "description": "How trustworthy this question's verifiedAnswer/content currently is.",
+      "enum": ["unverified", "source-confirmed", "authoritatively-verified", "needs-review", "outdated"]
+    },
+    "regulatorySensitivity": {
+      "type": "boolean",
+      "description": "True if this question touches regulatory, tax, or legal content that changes over time (e.g. contribution limits, licensing rules, tax code references) and therefore needs periodic re-verification even after being marked verified.",
+      "default": false
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this question record was created."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this question record was last modified."
+    }
+  },
+  "definitions": {
+    "humanAnnotation": {
+      "type": "object",
+      "required": ["type", "content"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["star", "underline", "highlight", "selected-answer", "margin-note", "other"]
+        },
+        "content": { "type": "string", "description": "The annotated text or a description of the mark." },
+        "language": { "type": "string" },
+        "sourceLocation": { "type": "string", "description": "Where on the page/document this annotation appears." }
+      }
+    },
+    "memoryAid": {
+      "type": "object",
+      "required": ["content"],
+      "properties": {
+        "content": { "type": "string" },
+        "language": { "type": "string" },
+        "appliesToKnowledgePointId": { "type": "string" }
+      }
+    },
+    "bilingualNote": {
+      "type": "object",
+      "required": ["primary", "translation"],
+      "properties": {
+        "primary": { "type": "string" },
+        "primaryLanguage": { "type": "string" },
+        "translation": { "type": "string" },
+        "translationLanguage": { "type": "string" }
+      }
+    }
+  }
+}
