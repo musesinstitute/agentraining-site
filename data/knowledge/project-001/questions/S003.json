@@ -1,0 +1,2350 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 1 controlled import pilot. Extracted questions from source S003. Every record's verifiedAnswer is null and verificationStatus is 'unverified' by design — sourceAnswer reflects a mark/checkmark visible in the original PDF, which is source evidence, not authoritative verification. See docs/room-4d/D-001B-IMPORT-REPORT.md.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "sourceId": "S003",
+  "pagesProcessed": 10,
+  "questionCount": 46,
+  "questions": [
+    {
+      "questionId": "Q-S003-001",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-LAW-OF-LARGE-NUMBERS-001"
+      ],
+      "questionText": "The more times an event is repeated, the more predictable the outcome becomes. This is an example of",
+      "choices": [
+        {
+          "key": "1",
+          "text": "the law of large numbers."
+        },
+        {
+          "key": "2",
+          "text": "standard deviation."
+        },
+        {
+          "key": "3",
+          "text": "average dispersion."
+        },
+        {
+          "key": "4",
+          "text": "normal variance."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 1 ('the law of large numbers') is starred as a must-know answer.",
+          "sourceLocation": "choice 1"
+        },
+        {
+          "type": "highlight",
+          "content": "Underlined in source: 'outcome becomes', 'the law of large numbers'.",
+          "sourceLocation": "question stem / choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-002",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-UNFAIR-TRADE-PRACTICES-001",
+        "K07-GUARANTY-ASSOCIATION-001"
+      ],
+      "questionText": "It is considered an unfair method of competition for an agent to advertise that the insurer the agent is appointed with is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "highly rated by A.M. Best Company."
+        },
+        {
+          "key": "2",
+          "text": "an admitted insurer in the state of California."
+        },
+        {
+          "key": "3",
+          "text": "a member of the Insurance Guarantee Association."
+        },
+        {
+          "key": "4",
+          "text": "fully authorized by certification to sell insurance."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 ('a member of the Insurance Guarantee Association') is starred.",
+          "sourceLocation": "choice 3"
+        },
+        {
+          "type": "highlight",
+          "content": "Underlined: 'unfair', 'agent' (both occurrences), 'Guarantee Association'.",
+          "sourceLocation": "question stem / choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-003",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-INSURANCE-COMMISSIONER-001",
+        "K07-LICENSING-001"
+      ],
+      "questionText": "According to the California Insurance Code, the Commissioner can disapprove a licensee's request to use a fictitious name for any of the following reasons EXCEPT that the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "name is the licensee's actual name."
+        },
+        {
+          "key": "2",
+          "text": "use of the name would be misleading."
+        },
+        {
+          "key": "3",
+          "text": "name is too similar to a name already filed."
+        },
+        {
+          "key": "4",
+          "text": "name implies that the licensee is an underwriter."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 1 (\"name is the licensee's actual name\") is starred.",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-004",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CALIFORNIA-INSURANCE-CODE-002"
+      ],
+      "questionText": "If an insurer must have its rates accepted by the Insurance Department prior to using them, the insurer would be operating in which of the following types of jurisdictions?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "File and use."
+        },
+        {
+          "key": "2",
+          "text": "Use and file."
+        },
+        {
+          "key": "3",
+          "text": "Prior approval."
+        },
+        {
+          "key": "4",
+          "text": "State mandated."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Mapped to new knowledge point K07-CALIFORNIA-INSURANCE-CODE-002 (rate-regulation filing systems), added in this task — no existing D-001A knowledge point covered rate-filing jurisdictions (file-and-use / use-and-file / prior approval / state-mandated). See D-001B-IMPORT-REPORT.md.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'insurer must have its rates', 'prior'.",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-005",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "questionText": "The required contents of a policy include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "risks insured against."
+        },
+        {
+          "key": "2",
+          "text": "parties to the contract."
+        },
+        {
+          "key": "3",
+          "text": "the probability of loss."
+        },
+        {
+          "key": "4",
+          "text": "the period during which the insurance is to continue."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-006",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-MANAGEMENT-001",
+        "K01-RISK-001"
+      ],
+      "questionText": "The purchase of an insurance policy may accomplish all of the following for the insured EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "a reduction of uncertainty."
+        },
+        {
+          "key": "2",
+          "text": "the elimination of the risk."
+        },
+        {
+          "key": "3",
+          "text": "a replacement of a large possible loss by a \"smaller certain loss\"."
+        },
+        {
+          "key": "4",
+          "text": "a reduction in worry/greater peace of mind."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (blue) next to choice 2: '硬背' (memorize by rote) and '可规避，可排除' (can be avoided/excluded) — a reminder that insurance reduces or transfers risk but never eliminates it outright.",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [
+        {
+          "content": "硬背 (rote-memorize): insurance never eliminates risk — it reduces uncertainty or replaces a large uncertain loss with a small certain one (the premium).",
+          "language": "zh"
+        }
+      ],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-007",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-LICENSING-001"
+      ],
+      "questionText": "It is a Federal offense for an insurance agent to do all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "falsify financial records."
+        },
+        {
+          "key": "2",
+          "text": "embezzle premium payments."
+        },
+        {
+          "key": "3",
+          "text": "misrepresent facts on an insurance application."
+        },
+        {
+          "key": "4",
+          "text": "willfully engage in the business of insurance with a felony conviction and without the consent of the Commissioner."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Approximate mapping: this tests a federal-law boundary (18 U.S.C. §1033-style offenses) rather than a California-specific licensing rule; K07-LICENSING-001 is the closest existing knowledge point. See schema gaps in D-001B-IMPORT-REPORT.md.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'Federal', 'agent', 'misrepresent facts on an insurance application'.",
+          "sourceLocation": "question stem / choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-008",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-MATERIALITY-001",
+        "K02-REPRESENTATION-001"
+      ],
+      "questionText": "What rule is used to determine the importance of a representation?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The law of adhesion."
+        },
+        {
+          "key": "2",
+          "text": "That of aleatory contracts."
+        },
+        {
+          "key": "3",
+          "text": "The materiality of concealment."
+        },
+        {
+          "key": "4",
+          "text": "The insurable interest standard."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-009",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-AGENT-001"
+      ],
+      "questionText": "A person authorized by and on behalf of an insurer who transacts life, disability or life and accident and health insurance is defined as a",
+      "choices": [
+        {
+          "key": "1",
+          "text": "broker."
+        },
+        {
+          "key": "2",
+          "text": "solicitor."
+        },
+        {
+          "key": "3",
+          "text": "life agent."
+        },
+        {
+          "key": "4",
+          "text": "life and disability analyst."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-010",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "Insurer expenses include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "taxes."
+        },
+        {
+          "key": "2",
+          "text": "policy premiums."
+        },
+        {
+          "key": "3",
+          "text": "agent commissions."
+        },
+        {
+          "key": "4",
+          "text": "home office operations."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Approximate mapping under K06-PREMIUM-DETERMINATION-001 (premiums as revenue vs. expense); no dedicated \"insurer expense categories\" knowledge point exists in the current map.",
+      "humanAnnotations": [
+        {
+          "type": "other",
+          "content": "An orange hexagon is hand-drawn next to choice 2; meaning not otherwise legible/explained in the source.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-011",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-UNFAIR-DISCRIMINATION-001",
+        "K07-CLAIMS-RULES-001"
+      ],
+      "questionText": "The California Code of Regulations governing claim settlement practices prohibits all of the following acts of unfair discrimination EXCEPT denial of claim based on",
+      "choices": [
+        {
+          "key": "1",
+          "text": "gender."
+        },
+        {
+          "key": "2",
+          "text": "income."
+        },
+        {
+          "key": "3",
+          "text": "reckless behavior."
+        },
+        {
+          "key": "4",
+          "text": "a physical handicap."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-012",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-MATERIALITY-001",
+        "K02-CONCEALMENT-001"
+      ],
+      "questionText": "What recourse does an insurer have if violation of a material warranty on the part of the insured is discovered?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Hearing by the Insurance Commissioner to determine the severity of the misrepresentation and to determine appropriate courses of action."
+        },
+        {
+          "key": "2",
+          "text": "Hearing by a court of law to determine the appropriate course of action the insurer may take."
+        },
+        {
+          "key": "3",
+          "text": "None, if discovered after the policy has been in force for 12 months."
+        },
+        {
+          "key": "4",
+          "text": "Rescission of the policy."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Soft/borderline mapping: this question tests breach of a material *warranty*, a concept distinct from (though related to) misrepresentation/concealment. The current 91-point map has no dedicated \"Warranty\" knowledge point; mapped to Materiality/Concealment as the closest existing fit rather than forcing a new point for a single question. Flagged in D-001B-IMPORT-REPORT.md as a candidate for a future knowledge point.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-013",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-MORAL-HAZARD-MORALE-HAZARD-001"
+      ],
+      "questionText": "The increase in the probability of a loss resulting from an insured's dishonest tendencies is known as",
+      "choices": [
+        {
+          "key": "1",
+          "text": "physical hazard."
+        },
+        {
+          "key": "2",
+          "text": "morale hazard."
+        },
+        {
+          "key": "3",
+          "text": "moral hazard."
+        },
+        {
+          "key": "4",
+          "text": "legal hazard."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (blue) next to choice 2: 'moral\"e\" 侥幸心理' (morale hazard = a carelessness / it-won't-happen-to-me attitude fostered by having insurance).",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        },
+        {
+          "type": "margin-note",
+          "content": "Handwritten (red) next to choice 3: 'moral 欺骗。dis honest / no honest' (moral hazard = dishonesty/deception — distinguishing it from morale hazard's mere carelessness).",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        },
+        {
+          "type": "highlight",
+          "content": "'dishonest' is underlined in red with a handwritten correction/emphasis 'nohonest' beside it.",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "moral hazard",
+          "primaryLanguage": "en",
+          "translation": "道德危险 / 欺骗性风险",
+          "translationLanguage": "zh",
+          "term": "moral hazard",
+          "note": "因不诚实/欺骗动机而增加损失概率（moral 欺骗）"
+        },
+        {
+          "primary": "morale hazard",
+          "primaryLanguage": "en",
+          "translation": "疏忽危险 / 侥幸心理",
+          "translationLanguage": "zh",
+          "term": "morale hazard",
+          "note": "因有保险而产生的漫不经心、侥幸心理，非蓄意欺骗"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-014",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-MEDICAL-INFORMATION-BUREAU-001"
+      ],
+      "questionText": "Who are the members of the Medical Information Bureau?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Hospitals."
+        },
+        {
+          "key": "2",
+          "text": "Physicians."
+        },
+        {
+          "key": "3",
+          "text": "Medical Bill Reviewers."
+        },
+        {
+          "key": "4",
+          "text": "Life and Health insurers."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten abbreviation note: 'MIB' next to 'Medical Information Bureau'.",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-015",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-CONCEALMENT-001",
+        "K02-REPRESENTATION-001"
+      ],
+      "questionText": "When are parties to a contract REQUIRED to communicate information solely based on personal judgment for a matter in question?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Only when the policy terms require it."
+        },
+        {
+          "key": "2",
+          "text": "Only when relevant."
+        },
+        {
+          "key": "3",
+          "text": "Only when asked."
+        },
+        {
+          "key": "4",
+          "text": "Never."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-016",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CALIFORNIA-INSURANCE-CODE-001"
+      ],
+      "questionText": "An insurer entitled to transact business by complying with the California Insurance Code is known as an",
+      "choices": [
+        {
+          "key": "1",
+          "text": "alien carrier."
+        },
+        {
+          "key": "2",
+          "text": "approved carrier."
+        },
+        {
+          "key": "3",
+          "text": "admitted carrier."
+        },
+        {
+          "key": "4",
+          "text": "accepted carrier."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-017",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-AGENT-001"
+      ],
+      "questionText": "The direct response distribution of insurance utilizes all of the following to promote the sale of insurance EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "internet advertising."
+        },
+        {
+          "key": "2",
+          "text": "television commercials."
+        },
+        {
+          "key": "3",
+          "text": "telephone call from an agent."
+        },
+        {
+          "key": "4",
+          "text": "brochures mailed to prospective clients."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Approximate mapping under K07-AGENT-001 (contrasts agent-mediated distribution against direct-response channels); no dedicated \"distribution channels\" knowledge point exists in the current map.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-018",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-UNDERWRITING-001",
+        "K06-RISK-CLASSIFICATION-001"
+      ],
+      "questionText": "The insurer's department with PRIMARY responsibility for the risk selection process is called:",
+      "choices": [
+        {
+          "key": "1",
+          "text": "actuarial."
+        },
+        {
+          "key": "2",
+          "text": "claims."
+        },
+        {
+          "key": "3",
+          "text": "marketing."
+        },
+        {
+          "key": "4",
+          "text": "underwriting."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (red) vocabulary note: 'insurer 保险公司 承保人' / 'insured 被保人 投保人' — distinguishing the insurer (company/underwriter) from the insured (policyholder).",
+          "language": "zh",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "insurer",
+          "primaryLanguage": "en",
+          "translation": "保险公司 / 承保人",
+          "translationLanguage": "zh",
+          "term": "insurer",
+          "note": ""
+        },
+        {
+          "primary": "insured",
+          "primaryLanguage": "en",
+          "translation": "被保人 / 投保人",
+          "translationLanguage": "zh",
+          "term": "insured",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-019",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "questionText": "All of the following qualify as Background Information as defined in Section 1729.2 of the California Insurance Code, EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A misdemeanor or felony conviction or a filing of felony criminal charges in state or federal court."
+        },
+        {
+          "key": "2",
+          "text": "Misdemeanor charges."
+        },
+        {
+          "key": "3",
+          "text": "An administrative action regarding a professional or occupational license."
+        },
+        {
+          "key": "4",
+          "text": "Any admission, or judicial finding or determination, or fraud, misappropriation or conversion of funds, misrepresentation, or breach of fiduciary duty."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-020",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-UNFAIR-TRADE-PRACTICES-001"
+      ],
+      "questionText": "Which of the following would an agent be guilty of for misrepresenting the amount of dividends a policy will pay?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A felony."
+        },
+        {
+          "key": "2",
+          "text": "A misdemeanor."
+        },
+        {
+          "key": "3",
+          "text": "An aleatoric breach."
+        },
+        {
+          "key": "4",
+          "text": "A fiduciary infraction."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-021",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "A contract that restores an injured party to the condition that was present before the loss is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "a futures contract."
+        },
+        {
+          "key": "2",
+          "text": "a personal contract."
+        },
+        {
+          "key": "3",
+          "text": "an indemnity agreement."
+        },
+        {
+          "key": "4",
+          "text": "a hold-harmless agreement."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-022",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ALEATORY-CONTRACT-001"
+      ],
+      "questionText": "All of the following statements about aleatory contracts are true EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "they may be interpreted as a form of gambling."
+        },
+        {
+          "key": "2",
+          "text": "there are cases where the insurer pays nothing."
+        },
+        {
+          "key": "3",
+          "text": "the insured and insurer contribute equally to the contract."
+        },
+        {
+          "key": "4",
+          "text": "if a loss occurs, the insured's premium is small in relation to the amount the insurer pays."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "A hand-drawn bracket connects choices 3 and 4, marking them as a contrasting pair (unequal exchange is the defining feature of an aleatory contract).",
+          "sourceLocation": "choices 3-4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-023",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-UNFAIR-DISCRIMINATION-001"
+      ],
+      "questionText": "What is it called when an insurer uses higher rates for an individual solely based on religion, race, or ethnic group?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Redlining."
+        },
+        {
+          "key": "2",
+          "text": "Categorizing."
+        },
+        {
+          "key": "3",
+          "text": "Social injustice."
+        },
+        {
+          "key": "4",
+          "text": "Unfair discrimination."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-024",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INSURER-ORGANIZATIONAL-TYPES-001"
+      ],
+      "questionText": "Which type of insurer is owned by its policyholders?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A fraternal society."
+        },
+        {
+          "key": "2",
+          "text": "A reciprocal exchange."
+        },
+        {
+          "key": "3",
+          "text": "A mutual insurer."
+        },
+        {
+          "key": "4",
+          "text": "A capital stock insurer."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "New knowledge point K01-INSURER-ORGANIZATIONAL-TYPES-001 added (with a new K01 topic, 'Insurer Organizational Types') because no existing knowledge point in the 91-point map covers insurer ownership/organizational structure (stock vs. mutual vs. reciprocal vs. fraternal). See D-001B-IMPORT-REPORT.md.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        },
+        {
+          "type": "margin-note",
+          "content": "Handwritten note '= insured' next to 'policyholders', equating the two terms.",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-025",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-AGENCY-AUTHORITY-001"
+      ],
+      "questionText": "Which of the following is an express power given to the agent in an agency agreement?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The authority to advertise."
+        },
+        {
+          "key": "2",
+          "text": "The authority to collect premiums."
+        },
+        {
+          "key": "3",
+          "text": "The authority to represent the insurer."
+        },
+        {
+          "key": "4",
+          "text": "The authority to bind the insurer to any risk at any time."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-026",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-SOLICITOR-001"
+      ],
+      "questionText": "An insurance solicitor is a person authorized to",
+      "choices": [
+        {
+          "key": "1",
+          "text": "sell life insurance."
+        },
+        {
+          "key": "2",
+          "text": "charge a service fee."
+        },
+        {
+          "key": "3",
+          "text": "act as a broker on behalf of an insurer."
+        },
+        {
+          "key": "4",
+          "text": "assist a broker or agent in selling insurance."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-027",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "questionText": "Section 1729.2 of the California Insurance Code requires insurance producer applications and licensees to notify the Insurance Commissioner in writing, within ___ days of changes in background information after an application has been submitted or a license has been issued.",
+      "choices": [
+        {
+          "key": "1",
+          "text": "15"
+        },
+        {
+          "key": "2",
+          "text": "20"
+        },
+        {
+          "key": "3",
+          "text": "30"
+        },
+        {
+          "key": "4",
+          "text": "45"
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-028",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "questionText": "Failure to report background changes within 30 days as required under Section 1729.2 of the California Insurance Code could subject a licensee or applicant to",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Suspension"
+        },
+        {
+          "key": "2",
+          "text": "Denial"
+        },
+        {
+          "key": "3",
+          "text": "Revocation of the license"
+        },
+        {
+          "key": "4",
+          "text": "All of the above"
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-029",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-HAZARD-001"
+      ],
+      "questionText": "Which of the following is a hazard?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A peril."
+        },
+        {
+          "key": "2",
+          "text": "A speculative risk."
+        },
+        {
+          "key": "3",
+          "text": "A large number of similar exposure units."
+        },
+        {
+          "key": "4",
+          "text": "A condition that may increase the likelihood of a loss occurring."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "An un-anchored red star is drawn near the question stem, not clearly tied to a single choice; emphasis appears to mark the question overall as important.",
+          "sourceLocation": "question stem area"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-030",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-RECORD-REQUIREMENTS-001"
+      ],
+      "questionText": "How often MUST an insurer file the National Association of Insurance Commissioners (NAIC) financial statement?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Monthly."
+        },
+        {
+          "key": "2",
+          "text": "Quarterly."
+        },
+        {
+          "key": "3",
+          "text": "Annually."
+        },
+        {
+          "key": "4",
+          "text": "Every three years."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Mapped to K07-RECORD-REQUIREMENTS-001 as the closest existing fit for a regulatory filing/reporting cadence question; no dedicated \"NAIC reporting\" knowledge point exists.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        },
+        {
+          "type": "margin-note",
+          "content": "Handwritten mnemonic: 'NA = An' (NAIC financial statement -> Annually).",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [
+        {
+          "content": "NA = An — NAIC financial statement is filed Annually.",
+          "language": "en"
+        }
+      ],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-031",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-PURE-RISK-VS-SPECULATIVE-RISK-001"
+      ],
+      "questionText": "Which of the following statements regarding risk is TRUE?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Only pure risks are insurable."
+        },
+        {
+          "key": "2",
+          "text": "Only speculative risks are insurable."
+        },
+        {
+          "key": "3",
+          "text": "Both pure and speculative risks are insurable."
+        },
+        {
+          "key": "4",
+          "text": "Neither pure nor speculative risks are insurable."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (blue) note: 'pure risk 只能丢失 / speculative risk 也许丢失，也许获得（赌博）' (pure risk can only lose; speculative risk may lose or may gain — gambling).",
+          "language": "zh",
+          "sourceLocation": "question stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "pure risk",
+          "primaryLanguage": "en",
+          "translation": "纯粹风险：只能丢失，没有获利可能",
+          "translationLanguage": "zh",
+          "term": "pure risk",
+          "note": "only a chance of loss, never gain"
+        },
+        {
+          "primary": "speculative risk",
+          "primaryLanguage": "en",
+          "translation": "投机风险：可能丢失，也可能获得（如赌博）",
+          "translationLanguage": "zh",
+          "term": "speculative risk",
+          "note": "chance of loss or gain, e.g. gambling — not insurable"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-032",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-REINSURANCE-001"
+      ],
+      "questionText": "Which is an agreement in which an insurer contracts with a third party to insure itself against losses from insurance policies it issues?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Adhesion"
+        },
+        {
+          "key": "2",
+          "text": "Avoidance"
+        },
+        {
+          "key": "3",
+          "text": "Indemnity"
+        },
+        {
+          "key": "4",
+          "text": "Reinsurance"
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-033",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-MANAGEMENT-001"
+      ],
+      "questionText": "Loss retention is an effective risk management technique when all of the following conditions exist EXCEPT the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "losses are highly predictable."
+        },
+        {
+          "key": "2",
+          "text": "probability of loss is unknown."
+        },
+        {
+          "key": "3",
+          "text": "worst possible loss is not serious."
+        },
+        {
+          "key": "4",
+          "text": "insured chooses to assume the losses involved."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-034",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-GUARANTY-ASSOCIATION-001",
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
+      "questionText": "According to the California Insurance Code, if an insurer's certificate of authority is revoked, the Commissioner can proceed with any of the following actions EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "taking possession of transaction records."
+        },
+        {
+          "key": "2",
+          "text": "using Guarantee Funds to pay salaries."
+        },
+        {
+          "key": "3",
+          "text": "confiscating the office premises."
+        },
+        {
+          "key": "4",
+          "text": "liquidating the business."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-035",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-GUARANTY-ASSOCIATION-001"
+      ],
+      "questionText": "Policies covered under the California Life and Health Insurance Guarantee Association include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "disability income."
+        },
+        {
+          "key": "2",
+          "text": "individual health."
+        },
+        {
+          "key": "3",
+          "text": "deferred annuities."
+        },
+        {
+          "key": "4",
+          "text": "self-funded group life."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-036",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CALIFORNIA-INSURANCE-CODE-001"
+      ],
+      "questionText": "The PRIMARY objectives of insurance regulation include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "rate regulation."
+        },
+        {
+          "key": "2",
+          "text": "consumer protection."
+        },
+        {
+          "key": "3",
+          "text": "solvency surveillance."
+        },
+        {
+          "key": "4",
+          "text": "interpret policy provisions."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-037",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-001"
+      ],
+      "questionText": "Risk can be defined as all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "uncertainty."
+        },
+        {
+          "key": "2",
+          "text": "the cause of loss."
+        },
+        {
+          "key": "3",
+          "text": "the chance of loss."
+        },
+        {
+          "key": "4",
+          "text": "the probability of an unexpected outcome."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [
+        {
+          "content": "Handwritten summary (blue), bracketing choices 3 and 4: \"Risk = chance of loss or uncertainty.\"",
+          "language": "en"
+        }
+      ],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-038",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "A contract in which one party promises to indemnify another against loss that arises from an unknown event is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "an insurance policy."
+        },
+        {
+          "key": "2",
+          "text": "a restoration policy."
+        },
+        {
+          "key": "3",
+          "text": "a retrocession agreement."
+        },
+        {
+          "key": "4",
+          "text": "a hold-harmless agreement."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-039",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-LICENSING-001"
+      ],
+      "questionText": "When a person charges an insured a fee to review the insured's existing life policy, what type of license does that person need?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A life agent."
+        },
+        {
+          "key": "2",
+          "text": "A personal lines agent."
+        },
+        {
+          "key": "3",
+          "text": "A life and disability analyst."
+        },
+        {
+          "key": "4",
+          "text": "A life or disability adjuster."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-040",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CLAIMS-RULES-001"
+      ],
+      "questionText": "Upon notification of a claim, a claimant must be given access to the California Fair Claims Settlement Practices Regulations by all of the following means EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "on-line at the Department of Insurance internet site."
+        },
+        {
+          "key": "2",
+          "text": "by interview appointment with the agent of record."
+        },
+        {
+          "key": "3",
+          "text": "a copy free of charge from the insurer."
+        },
+        {
+          "key": "4",
+          "text": "written notification from the insurer."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-041",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BROKER-001"
+      ],
+      "questionText": "According to the California Insurance Code, an \"insurance broker\" is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "authorized by an insurer to transact insurance."
+        },
+        {
+          "key": "2",
+          "text": "employed to assist an insurance agent in transacting insurance."
+        },
+        {
+          "key": "3",
+          "text": "hired by an insured to give advice about insurance transactions."
+        },
+        {
+          "key": "4",
+          "text": "compensated for transacting insurance on behalf of another person with an insurer."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-042",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "questionText": "As defined in the California Insurance Code, \"insurance\" is a",
+      "choices": [
+        {
+          "key": "1",
+          "text": "contract."
+        },
+        {
+          "key": "2",
+          "text": "gamble."
+        },
+        {
+          "key": "3",
+          "text": "peril."
+        },
+        {
+          "key": "4",
+          "text": "risk."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 1 is starred.",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-043",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CALIFORNIA-INSURANCE-CODE-001"
+      ],
+      "questionText": "When used in the California Insurance Code, the word \"may\" is intended to be",
+      "choices": [
+        {
+          "key": "1",
+          "text": "final."
+        },
+        {
+          "key": "2",
+          "text": "mandatory."
+        },
+        {
+          "key": "3",
+          "text": "optional."
+        },
+        {
+          "key": "4",
+          "text": "permissive."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-044",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "questionText": "If you have been convicted of a misdemeanor and that misdemeanor conviction is later expunged pursuant to California Penal Code Section 1203.4, which of the following is true?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Even though your misdemeanor conviction was expunged, you must still disclose your misdemeanor conviction on your individual application for an insurance license."
+        },
+        {
+          "key": "2",
+          "text": "Since your misdemeanor conviction was expunged, you do not need to disclose your misdemeanor conviction on your individual application for an insurance license."
+        },
+        {
+          "key": "3",
+          "text": "The California Department of Insurance only requires an applicant to disclose felony convictions."
+        },
+        {
+          "key": "4",
+          "text": "None of the above."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Handwritten emphasis marks 'Even.' and 'must' above the corresponding words in choice 1.",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-045",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-CONSIDERATION-001"
+      ],
+      "questionText": "All of the following are requirements of a contract EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "the contract must have legal purpose."
+        },
+        {
+          "key": "2",
+          "text": "there must be equal consideration between the parties."
+        },
+        {
+          "key": "3",
+          "text": "the parties to the contract must be legally competent."
+        },
+        {
+          "key": "4",
+          "text": "there must be an offer and acceptance of the contract terms."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S003-046",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-LICENSING-001"
+      ],
+      "questionText": "A person who acts, offers to act, or assumes to act in a capacity where a license is REQUIRED without having a valid license, is guilty of a",
+      "choices": [
+        {
+          "key": "1",
+          "text": "felony."
+        },
+        {
+          "key": "2",
+          "text": "fraud."
+        },
+        {
+          "key": "3",
+          "text": "misdemeanor."
+        },
+        {
+          "key": "4",
+          "text": "misrepresentation."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S003",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    }
+  ]
+}

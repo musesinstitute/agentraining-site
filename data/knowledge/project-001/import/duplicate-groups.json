@@ -1,0 +1,21 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 1. Groups of questions that test the same or overlapping knowledge, detected during import. Duplicates are never deleted — grouping them preserves the signal that a repeated concept may indicate exam importance.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "groups": [
+    {
+      "groupId": "DG-001",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S005-002",
+        "Q-S005-018"
+      ],
+      "sourceIds": [
+        "S005",
+        "S005"
+      ],
+      "reason": "Both questions share the identical stem \"From the choices below select the one which is false about Social Security (OASDHI):\" and three of four answer choices are worded identically (or near-identically) across the two versions. Each version's 4th/distinct choice ('fully funded' vs. 'benefits closely match contributions') is marked as the false statement in its own version — these are two different printed variants of the same stock exam question testing the same underlying false-statement-about-OASDHI concept, not a verbatim repeat."
+    }
+  ]
+}

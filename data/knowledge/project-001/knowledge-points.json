@@ -1549,6 +1549,40 @@
       "verifiedAt": null,
       "verifiedSource": null,
       "tags": []
+    },
+    {
+      "id": "K01-INSURER-ORGANIZATIONAL-TYPES-001",
+      "domainId": "K01",
+      "topic": "Insurer Organizational Types",
+      "title": "Insurer Organizational Types (Stock, Mutual, Reciprocal, Fraternal)",
+      "concept": "",
+      "learningObjective": "",
+      "difficulty": 1,
+      "examImportance": null,
+      "prerequisites": [],
+      "relatedKnowledgePoints": [],
+      "sourceRefs": ["S003"],
+      "verificationStatus": "unverified",
+      "verifiedAt": null,
+      "verifiedSource": null,
+      "tags": ["added-in-D-001B"]
+    },
+    {
+      "id": "K07-CALIFORNIA-INSURANCE-CODE-002",
+      "domainId": "K07",
+      "topic": "California Insurance Code",
+      "title": "Rate Regulation Systems (File-and-Use, Use-and-File, Prior Approval, State-Mandated)",
+      "concept": "",
+      "learningObjective": "",
+      "difficulty": 1,
+      "examImportance": null,
+      "prerequisites": [],
+      "relatedKnowledgePoints": [],
+      "sourceRefs": ["S003"],
+      "verificationStatus": "unverified",
+      "verifiedAt": null,
+      "verifiedSource": null,
+      "tags": ["added-in-D-001B"]
     }
   ]
 }

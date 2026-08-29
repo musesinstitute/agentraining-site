@@ -1,0 +1,756 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 1. Every extracted question needs at least one round of authoritative verification before verifiedAnswer/verificationStatus can be trusted for scoring; this queue tracks that work and its priority. No authoritative web verification was performed as part of D-001B (out of scope) — priorities are assigned purely from the risk signals visible in the source (regulatory sensitivity, conflicting/duplicate questions).",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "priorityLegend": {
+    "P0": "Conflicting, potentially dangerous, or potentially outdated — review first.",
+    "P1": "Regulatory/time-sensitive (law, tax, licensing, Social Security rules that change over time).",
+    "P2": "Ordinary answer verification — source-marked answer likely correct but not yet independently confirmed.",
+    "P3": "Editorial cleanup only (e.g. illegible/uncertain source text). None of this batch required P3."
+  },
+  "counts": {
+    "P0": 2,
+    "P1": 43,
+    "P2": 22,
+    "P3": 0
+  },
+  "queue": [
+    {
+      "questionId": "Q-S003-001",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-002",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-003",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-004",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-005",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-006",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-007",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-008",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-009",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-010",
+      "sourceId": "S003",
+      "domainId": "K06",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-011",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-012",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-013",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-014",
+      "sourceId": "S003",
+      "domainId": "K06",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-015",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-016",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-017",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-018",
+      "sourceId": "S003",
+      "domainId": "K06",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-019",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-020",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-021",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-022",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-023",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-024",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-025",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-026",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-027",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-028",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-029",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-030",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-031",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-032",
+      "sourceId": "S003",
+      "domainId": "K06",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-033",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-034",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-035",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-036",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-037",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-038",
+      "sourceId": "S003",
+      "domainId": "K01",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-039",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-040",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-041",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-042",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-043",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-044",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-045",
+      "sourceId": "S003",
+      "domainId": "K02",
+      "priority": "P2",
+      "reasons": [
+        "ordinary answer verification (source-marked answer not yet independently confirmed)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S003-046",
+      "sourceId": "S003",
+      "domainId": "K07",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-001",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-002",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P0",
+      "reasons": [
+        "multiple source questions conflict (see duplicate group DG-001)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-003",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-004",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-005",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-006",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-007",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-008",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-009",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-010",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-011",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-012",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-013",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-014",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-015",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-016",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-017",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-018",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P0",
+      "reasons": [
+        "multiple source questions conflict (see duplicate group DG-001)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-019",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-020",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    },
+    {
+      "questionId": "Q-S005-021",
+      "sourceId": "S005",
+      "domainId": "K08",
+      "priority": "P1",
+      "reasons": [
+        "regulatorySensitivity=true (law/tax/licensing/Social Security rule subject to change)",
+        "answer is handwritten/marked but unverified (sourceAnswer only, verifiedAnswer is null)"
+      ],
+      "notes": ""
+    }
+  ]
+}
