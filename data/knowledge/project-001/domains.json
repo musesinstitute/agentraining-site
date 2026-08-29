@@ -1,0 +1,162 @@
+{
+  "_purpose": "Room 4D — Project 001 (Insurance License Exam). Permanent domain map for the knowledge/curriculum architecture. Domain IDs and topic names are stable identifiers: knowledge-points.json references domains by id and groups points under these topic labels. Do not renumber or rename an existing domain id/topic once knowledge points depend on it — add a new one instead.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "domains": [
+    {
+      "id": "K01",
+      "order": 1,
+      "name": "Insurance Fundamentals",
+      "description": "Foundational risk and insurance concepts underlying every other domain.",
+      "topics": [
+        "Risk",
+        "Pure Risk vs Speculative Risk",
+        "Hazard",
+        "Moral Hazard / Morale Hazard",
+        "Law of Large Numbers",
+        "Indemnity",
+        "Loss Exposure",
+        "Risk Management"
+      ]
+    },
+    {
+      "id": "K02",
+      "order": 2,
+      "name": "Insurance Contracts",
+      "description": "Legal structure and doctrines that make an insurance policy a valid, enforceable contract.",
+      "topics": [
+        "Elements of a Contract",
+        "Offer and Acceptance",
+        "Consideration",
+        "Legal Purpose",
+        "Competent Parties",
+        "Aleatory Contract",
+        "Unilateral Contract",
+        "Adhesion",
+        "Representation",
+        "Concealment",
+        "Materiality",
+        "Insurable Interest",
+        "Agency Authority"
+      ]
+    },
+    {
+      "id": "K03",
+      "order": 3,
+      "name": "Life Insurance Products",
+      "description": "Product types and their common personal and business uses.",
+      "topics": [
+        "Term Life",
+        "Whole Life",
+        "Universal Life",
+        "Variable Life",
+        "Endowment",
+        "Joint Life",
+        "Survivorship",
+        "Family Policies",
+        "Business Uses of Life Insurance",
+        "Buy-Sell",
+        "Key Person"
+      ]
+    },
+    {
+      "id": "K04",
+      "order": 4,
+      "name": "Policy Provisions & Benefits",
+      "description": "Standard contract provisions, riders, and benefit mechanics found within a life insurance policy.",
+      "topics": [
+        "Beneficiaries",
+        "Grace Period",
+        "Reinstatement",
+        "Nonforfeiture",
+        "Settlement Options",
+        "Policy Dividends",
+        "Waiver of Premium",
+        "Accidental Death",
+        "Conversion",
+        "Free Look",
+        "Policy Loans",
+        "Cash Value",
+        "Riders"
+      ]
+    },
+    {
+      "id": "K05",
+      "order": 5,
+      "name": "Annuities, Retirement & Taxation",
+      "description": "Annuity structures, retirement accumulation/distribution mechanics, and their tax treatment.",
+      "topics": [
+        "Immediate vs Deferred Annuities",
+        "Qualified vs Nonqualified",
+        "Fixed vs Variable",
+        "Accumulation",
+        "Distribution",
+        "Tax Deferral",
+        "Cost Basis",
+        "Modified Endowment Contract",
+        "Retirement Plans",
+        "ESOP"
+      ]
+    },
+    {
+      "id": "K06",
+      "order": 6,
+      "name": "Underwriting & Insurance Operations",
+      "description": "How risks are evaluated, classified, and priced before and after policy issue.",
+      "topics": [
+        "Underwriting",
+        "Risk Classification",
+        "Standard / Preferred / Substandard Risk",
+        "Application",
+        "Medical Information Bureau",
+        "Attending Physician Statement",
+        "Consumer Reports",
+        "Adverse Selection",
+        "Premium Determination",
+        "Mortality Tables",
+        "Reinsurance"
+      ]
+    },
+    {
+      "id": "K07",
+      "order": 7,
+      "name": "California Insurance Law & Regulation",
+      "description": "California-specific licensing, conduct, and regulatory requirements governing agents and brokers.",
+      "topics": [
+        "Agent",
+        "Broker",
+        "Solicitor",
+        "Licensing",
+        "Appointment",
+        "Insurance Commissioner",
+        "California Insurance Code",
+        "Unfair Trade Practices",
+        "Unfair Discrimination",
+        "Fiduciary Duties",
+        "Background Information",
+        "Record Requirements",
+        "Guaranty Association",
+        "Policy Illustration Rules",
+        "Claims Rules"
+      ]
+    },
+    {
+      "id": "K08",
+      "order": 8,
+      "name": "Social Security & Retirement Benefits",
+      "description": "Federal Social Security program mechanics relevant to retirement and insurance planning.",
+      "topics": [
+        "Social Security Fundamentals",
+        "Quarters of Coverage",
+        "Fully Insured",
+        "Currently Insured",
+        "Retirement Benefits",
+        "Survivor Benefits",
+        "Disability Benefits",
+        "Blackout Period",
+        "Retirement Age",
+        "Social Security Funding"
+      ]
+    }
+  ]
+}
