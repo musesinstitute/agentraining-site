@@ -26,16 +26,6 @@ export default async (request: Request, context: any) => {
     : Array.isArray(payload?.roles) ? payload.roles : [];
   const teamRoles = roles.filter((role: unknown) => typeof role === 'string' && role.startsWith('team-'));
 
-  // Platform Admin sits above the team hierarchy (Platform Admin -> Manager
-  // -> Learner) and is not required to also hold a team-* role. Without this,
-  // a Platform Admin account provisioned with only the `admin` role (no
-  // team-*) would be hard-403'd here before Pilot Home ever loads, unable to
-  // reach even the `me` resource. The downstream pilot-data function remains
-  // the authoritative check and still scopes any team-specific reads.
-  if (roles.includes('admin')) {
-    return context.next();
-  }
-
   if (teamRoles.length !== 1) {
     return Response.json({
       error: teamRoles.length === 0

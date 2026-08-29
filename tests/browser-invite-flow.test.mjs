@@ -123,6 +123,30 @@ async function mockManagerSignedIn(page) {
   }, { jwt: fakeJwt() });
 }
 
+// Parametrized version of mockManagerSignedIn, for the Platform Admin
+// visibility tests below - same shape, any role list.
+async function mockSignedInAs(page, roles, email = 'manager@example.com') {
+  await page.addInitScript(({ roles, email }) => {
+    window.__testManagerUser = {
+      email, jwt: async () => 'fake-jwt', getUserData: async () => {},
+      app_metadata: { roles }
+    };
+  }, { roles, email });
+}
+
+async function mockPilotDataEmpty(page) {
+  await page.route('**/.netlify/functions/pilot-data**', route => {
+    const url = new URL(route.request().url());
+    const resource = url.searchParams.get('resource');
+    const body = resource === 'assignments' ? { assignments: [] }
+      : resource === 'sessions' ? { sessions: [] }
+      : resource === 'profiles' ? { profiles: [] }
+      : {};
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+  });
+  await page.route('**/.netlify/functions/pilot-invite**', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"invites":[]}' }));
+}
+
 let sharedInviteState = null; // set by the create-invite test, read by the accept-page test
 
 describe('Invite Learner - headless browser flow', () => {
@@ -311,6 +335,48 @@ describe('Invite Learner - headless browser flow', () => {
     await page.waitForFunction(() => document.getElementById('managerLearnerOptions').innerHTML.includes('newlearner@example.com'), { timeout: 5000 });
     const optionsHtml = await page.locator('#managerLearnerOptions').innerHTML();
     assert.match(optionsHtml, /newlearner@example\.com/, 'the newly-provisioned learner is visible to the Manager through the existing roster/profiles rendering, unmodified by this feature');
+
+    await page.close();
+  });
+
+  // Regression coverage for the actual failure Dr. Chen hit: the Platform
+  // Admin entry was added to pilot.html's Pilot Home dashboard, but a
+  // signed-in Manager who already knows their way around the Pilot lands
+  // on (or goes straight to) manager.html - "Manager Studio", where Invite
+  // Learner / Assign Practice / Current Assignments actually live - and
+  // that page never carried the entry at all, on any PR. These tests run
+  // against manager.html itself, not pilot.html, so a future change that
+  // "fixes" this on the wrong page fails loudly here.
+  test('Manager Studio: Platform Admin / Invite Manager panel is visible for an account with the admin role', async () => {
+    const page = await browser.newPage();
+    await mockIdentityWidget(page);
+    await mockSignedInAs(page, ['manager', 'admin', 'team-founding-pilot']);
+    await mockPilotDataEmpty(page);
+
+    await page.goto(`${baseUrl}/manager.html?pilot=1`);
+
+    const adminPanel = page.locator('#platform-admin-panel');
+    await assert.doesNotReject(adminPanel.waitFor({ state: 'visible', timeout: 5000 }), 'Platform Admin panel becomes visible on Manager Studio for an admin');
+    const href = await page.locator('#platform-admin-panel a').getAttribute('href');
+    assert.equal(href, 'platform-admin.html');
+
+    await page.close();
+  });
+
+  test('Manager Studio: Platform Admin / Invite Manager panel stays hidden for an ordinary Manager (no admin role)', async () => {
+    const page = await browser.newPage();
+    await mockIdentityWidget(page);
+    await mockSignedInAs(page, ['manager', 'team-founding-pilot']);
+    await mockPilotDataEmpty(page);
+
+    await page.goto(`${baseUrl}/manager.html?pilot=1`);
+
+    // Give refreshCloud() a chance to run and settle before asserting the
+    // negative - waiting on a real signal (the invite panel it always
+    // reveals for any manager) rather than a fixed timeout.
+    await page.locator('#invite-panel').waitFor({ state: 'visible', timeout: 5000 });
+    const hidden = await page.locator('#platform-admin-panel').isHidden();
+    assert.equal(hidden, true, 'an ordinary Manager never sees the Platform Admin panel on Manager Studio');
 
     await page.close();
   });
