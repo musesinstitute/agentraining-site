@@ -2,8 +2,14 @@
 
 **Phase 1: Controlled Import Pilot**
 
-Status: complete. Sources processed: **S003** and **S005** only, per the Phase 1
-scope limit. **S001, S002, and S004 were NOT imported** in this task.
+Status: complete, and reconciled. Sources processed: **S003** and **S005**
+only, per the Phase 1 scope limit. **S001, S002, and S004 were NOT
+imported** in this task. See **"Architecture Reconciliation"** at the end
+of this document for D-001B.1, which stress-tested the knowledge map
+against these 67 real questions and corrected several mappings below
+before large-scale import proceeds — sections above that D-001B.1 changed
+are marked with a pointer rather than rewritten, to keep an accurate
+history of what D-001B originally produced.
 
 ## Sources processed
 
@@ -165,6 +171,10 @@ instruction — this queue is a work list for a later verification phase.
 
 ## New knowledge points created
 
+*(Superseded in part by D-001B.1 — see "Architecture Reconciliation" below:
+`K07-CALIFORNIA-INSURANCE-CODE-002` described here was relocated to
+`K07-RATE-REGULATION-001`, and 2 further knowledge points were added.)*
+
 **2 new knowledge points** were added, both because the tested concept had
 no reasonable existing home in the 91-point D-001A map (per "do not force a
 clearly mismatched question into an existing knowledge point"):
@@ -186,6 +196,12 @@ Both additions are purely additive: no existing domain, topic, or knowledge
 point ID from D-001A was renamed, renumbered, or removed.
 
 ## Schema gaps discovered
+
+*(Superseded in part by D-001B.1 — see "Architecture Reconciliation" below:
+gaps #2 (Warranty) and #4 (Federal offenses) were resolved with new
+permanent knowledge points; gaps #3's two sub-cases were reviewed and each
+resolved differently — see the reconciliation section for the reasoning
+kept per-case.)*
 
 1. **`bilingualNote` needed richer fields.** D-001A's `question-schema.json`
    modeled a bilingual note as `{primary, primaryLanguage, translation,
@@ -258,3 +274,203 @@ sales-practice curriculum data (`data/curriculum/`, `data/cases-*.json`,
 production runtime dependency was added (`package.json` is unchanged). No
 UI was built. No external AI API was called. Nothing was deployed or
 merged.
+
+---
+
+## Architecture Reconciliation
+
+**Task: D-001B.1.** Before any large-scale import of S001/S002/S004, this
+task used the 67 real questions already extracted from S003/S005 to
+stress-test and reconcile the D-001A knowledge map: every soft/approximate
+mapping and every reported schema gap was individually re-examined, the two
+knowledge points added during D-001B extraction were checked for correct
+placement, and the map was corrected where the review found a genuine
+issue. No source wording, choices, or annotations were touched; no
+`sourceAnswer` was changed; no `verifiedAnswer` was set; no authoritative
+verification was performed.
+
+### Review of the 2 points added during D-001B extraction
+
+| Knowledge point | Verdict | Reasoning |
+|---|---|---|
+| `K01-INSURER-ORGANIZATIONAL-TYPES-001` | **Confirmed as-is** | Insurer ownership structure (stock / mutual / reciprocal / fraternal) is a genuinely distinct, universally-tested insurance-fundamentals concept. Domain (K01) and topic are correctly located; no change made. |
+| `K07-CALIFORNIA-INSURANCE-CODE-002` | **Relocated** → `K07-RATE-REGULATION-001` | The concept itself (rate-filing systems: file-and-use / use-and-file / prior approval / state-mandated) is genuinely distinct and correctly warranted a new point — but it had been nested under the generic "California Insurance Code" catch-all topic, which is D-001A's definitional/miscellaneous bucket (it already also holds 3 unrelated single facts — admitted-carrier definition, primary objectives of regulation, and the "may"-is-permissive interpretation rule). Rate regulation is a specific, self-contained regulatory mechanism, structurally more like K07's other dedicated-topic mechanisms (Guaranty Association, Policy Illustration Rules, Claims Rules) than like the generic code-definitions bucket. Relocated to its own new topic, "Rate Regulation," with a fresh ID. This ID had existed for one commit on this unmerged feature branch only (never referenced by production or by any other branch), so the rename was a safe, contained correction — `Q-S003-004` is the only question that referenced it, and its mapping was updated in place. |
+
+### Investigation of the 5 soft/approximate mappings and reported gaps
+
+| # | Question(s) | Concept | Verdict | Resulting knowledge point(s) |
+|---|---|---|---|---|
+| 1 | `Q-S003-012` | **Warranty** | **New permanent point created** | `K02-WARRANTY-001` (new topic "Warranty" under K02) |
+| 2 | `Q-S003-010` | **Insurer expense concepts** | **No new point — reviewed and accepted** | Kept: `K06-PREMIUM-DETERMINATION-001` |
+| 3 | `Q-S003-017` | **Insurance distribution channels** | **No new point — deferred, not accepted** | Kept: `K07-AGENT-001`, marked as an open watch item |
+| 4 | `Q-S003-007` | **Federal insurance offenses** | **New permanent point created** | `K07-FEDERAL-INSURANCE-OFFENSES-001` (new topic under K07), `K07-LICENSING-001` kept as a secondary reference |
+| 5 | `Q-S003-030` | NAIC financial statement filing cadence | **No new point — reviewed and accepted** | Kept: `K07-RECORD-REQUIREMENTS-001` |
+
+Reasoning for each, applying the rule *"do not create a knowledge point
+merely because one question uses a different phrase — only when it
+represents a genuinely distinct examinable concept"*:
+
+1. **Warranty — new point warranted.** Breach of a material *warranty* is
+   not the same doctrine as misrepresentation or concealment: a warranty is
+   a promise incorporated directly into the policy, and its breach lets the
+   insurer rescind *regardless of materiality* — the opposite of how
+   representation/concealment work, where materiality is exactly what
+   decides the outcome. Representation-vs-warranty is one of the standard,
+   recurring distinctions taught and tested on insurance license exams, so
+   this comfortably clears the "genuinely distinct" bar even on one
+   question's evidence. Added `K02-WARRANTY-001` (topic "Warranty", new,
+   under K02) with `prerequisites: ["K02-ELEMENTS-OF-A-CONTRACT-001"]` and
+   `relatedKnowledgePoints` linking it to `K02-REPRESENTATION-001`,
+   `K02-MATERIALITY-001`, and `K02-CONCEALMENT-001` — the concepts it is
+   classically contrasted against. `Q-S003-012` was remapped from
+   `[K02-MATERIALITY-001, K02-CONCEALMENT-001]` to `[K02-WARRANTY-001]`
+   exclusively.
+2. **Insurer expense concepts — not distinct enough on current evidence.**
+   The question tests one narrow fact (a policy premium is the insurer's
+   *revenue*, not one of its *expenses*) rather than a rich, multi-facet
+   concept family. This is exactly the "different phrase" case the rule
+   warns against manufacturing a permanent ID for. Kept mapped to
+   `K06-PREMIUM-DETERMINATION-001`; `sourceNotes` updated to record this as
+   a reviewed-and-accepted decision, not an open gap, with an explicit
+   note to revisit only if more insurer-expense/accounting questions
+   surface from S001/S002/S004.
+3. **Distribution channels — plausible, but insufficient evidence yet.**
+   Agent vs. broker vs. direct-response distribution is a real regulatory/
+   marketing topic on some exams, and could justify its own knowledge point
+   — but exactly one question in this batch touches it. Creating a
+   permanent ID on one question's evidence, before knowing whether it
+   recurs, risks exactly the "different phrase" over-creation the rule
+   guards against. Left mapped to `K07-AGENT-001`, but *unlike* case #2,
+   this is recorded as an explicitly **deferred** decision (not a settled
+   one) pending more evidence from the remaining sources.
+4. **Federal insurance offenses — new point warranted.** This question
+   tests federal (not California) law — insurance-crime prohibitions in the
+   style of 18 U.S.C. §1033 (felony-conviction bar, embezzlement, false
+   statements to regulators) — a distinct, nationally-recurring exam topic
+   separate from state licensing procedure. Added
+   `K07-FEDERAL-INSURANCE-OFFENSES-001` (topic "Federal Insurance
+   Offenses", new, under K07) with `prerequisites:
+   ["K07-LICENSING-001"]` and `relatedKnowledgePoints` to
+   `K07-LICENSING-001` and `K07-BACKGROUND-INFORMATION-001`. `Q-S003-007`
+   was remapped to `[K07-FEDERAL-INSURANCE-OFFENSES-001,
+   K07-LICENSING-001]` (kept as a secondary reference, since the felony-
+   conviction-plus-Commissioner-consent choice sits at the intersection of
+   both concepts).
+
+   **Domain-naming tension (unresolved, flagged below):** K07 is named
+   *"California Insurance Law & Regulation,"* but this new topic is
+   federal, not California-specific. It was placed in K07 anyway because
+   that is where the real exam tests it (alongside state licensing
+   content), and D-001A has no separate federal-law domain. This naming
+   mismatch is recorded as an open architecture question rather than
+   resolved unilaterally here.
+5. **NAIC filing cadence — not distinct enough on current evidence.** A
+   single fact (annual filing frequency) that fits comfortably inside the
+   already-existing, intentionally broader "Record Requirements" topic.
+   Kept mapped to `K07-RECORD-REQUIREMENTS-001`; `sourceNotes` updated to
+   record this as reviewed-and-accepted.
+
+### Other overly-broad mappings and multi-point mappings reviewed
+
+The generic **"California Insurance Code"** topic (`K07-CALIFORNIA-
+INSURANCE-CODE-001`) still carries 3 unrelated single facts (admitted-
+carrier definition, primary objectives of insurance regulation, and the
+"may"-is-permissive interpretation rule) after this reconciliation. Each
+was individually assessed against the same "genuinely distinct concept"
+bar and, on the evidence of one question each, none currently clears it.
+This is recorded as an **open watch item**, not a resolved gap: if
+S001/S002/S004 surface recurring questions on any one of these three
+facts, each should be re-evaluated for its own knowledge point at that
+point, following the same reasoning applied to Warranty and Federal
+Insurance Offenses above.
+
+**Multi-`knowledgePointIds` mappings** already present in the D-001B
+extraction (16 questions spanning two or three knowledge points, e.g.
+`Q-S003-008` → Materiality + Representation, `Q-S005-009` → Blackout
+Period + Survivor Benefits + Fully Insured) were reviewed and found
+appropriately scoped — each reflects a question genuinely testing more
+than one concept, not a mapping uncertainty being papered over with extra
+tags. No multi-point mapping was collapsed to a single point, and no
+single-point mapping needed to be split into multiple, beyond the two
+corrections described above (`Q-S003-007`, `Q-S003-012`).
+
+### Knowledge-graph enrichment (prerequisites / relatedKnowledgePoints)
+
+Beyond the edges added for the 2 new knowledge points above, **28
+`relatedKnowledgePoints` edges were added across 22 existing knowledge
+points**, added bidirectionally and purely additively (no existing edge
+removed) wherever two knowledge points were **actually observed
+co-occurring** on the same question across the 67-question set — this uses
+real exam evidence rather than guessing at a taxonomy. Examples: `K01-RISK-
+001` ↔ `K01-RISK-MANAGEMENT-001`; `K02-REPRESENTATION-001` ↔
+`K02-MATERIALITY-001` and ↔ `K02-CONCEALMENT-001`; `K07-INSURANCE-
+COMMISSIONER-001` ↔ `K07-LICENSING-001` and ↔ `K07-GUARANTY-ASSOCIATION-
+001`; `K06-UNDERWRITING-001` ↔ `K06-RISK-CLASSIFICATION-001`; and 6 pairs
+within the K08 Social Security domain (e.g. `K08-BLACKOUT-PERIOD-001` ↔
+`K08-SURVIVOR-BENEFITS-001` ↔ `K08-FULLY-INSURED-001`). No new
+`prerequisites` edges were added beyond the two new knowledge points' own
+(`K02-WARRANTY-001` → `K02-ELEMENTS-OF-A-CONTRACT-001`;
+`K07-FEDERAL-INSURANCE-OFFENSES-001` → `K07-LICENSING-001`) — asserting a
+strict learning-order dependency on existing D-001A points without stronger
+evidence felt like overreach for this reconciliation pass.
+
+### Reconciliation counts
+
+- **Original knowledge points (D-001A):** 91
+- **Points added during extraction (D-001B):** 2
+  (`K01-INSURER-ORGANIZATIONAL-TYPES-001`, `K07-CALIFORNIA-INSURANCE-CODE-002`)
+- **Additional points added during reconciliation (D-001B.1):** 2
+  (`K02-WARRANTY-001`, `K07-FEDERAL-INSURANCE-OFFENSES-001`)
+- **Points relocated (not counted as new — same concept, corrected home) during reconciliation:** 1
+  (`K07-CALIFORNIA-INSURANCE-CODE-002` → `K07-RATE-REGULATION-001`)
+- **Final knowledge-point count:** **95** (91 + 2 + 2; the 1 relocation is a rename, not a net addition)
+- **New topics added:** 3 (`Warranty` under K02; `Federal Insurance Offenses` and `Rate Regulation` under K07) — all additive, no existing topic renamed or removed
+- **Soft/approximate mappings before reconciliation:** 5
+  (`Q-S003-007`, `Q-S003-010`, `Q-S003-012`, `Q-S003-017`, `Q-S003-030`)
+- **Soft/approximate mappings after reconciliation:** 1 open (`Q-S003-017`,
+  explicitly deferred pending more evidence) + 2 reviewed-and-accepted as
+  correctly-scoped narrow mappings, not open gaps (`Q-S003-010`,
+  `Q-S003-030`) — i.e., **0 mappings remain flagged as unresolved gaps**
+  requiring a decision; 1 remains an intentionally open watch item.
+- **Questions remapped:** 2 (`Q-S003-004` to the relocated
+  `K07-RATE-REGULATION-001`; `Q-S003-007` and `Q-S003-012` to the 2 new
+  points — `Q-S003-007` gained a point while keeping its existing
+  secondary reference, `Q-S003-012` was narrowed from 2 points to 1)
+- **Multi-point mappings introduced by this reconciliation:** 0 new
+  (the existing 16 multi-point questions from D-001B were reviewed and
+  left unchanged; `Q-S003-007` already had a second reference before and
+  after, `Q-S003-012` went from 2 points to 1)
+- **relatedKnowledgePoints edges added:** 28 (across 22 existing knowledge
+  points, all evidence-based from co-occurrence, all additive)
+- **Unresolved architecture gaps carried forward:**
+  1. The domain-naming tension between K07 ("California Insurance Law &
+     Regulation") and the newly-added, federally-scoped "Federal Insurance
+     Offenses" topic — flagged for a future architecture decision (broaden
+     K07's description, or split out a dedicated federal-law domain if
+     federal content grows with S001/S002/S004).
+  2. `Q-S003-017` (insurance distribution channels) remains an open,
+     explicitly-deferred watch item rather than either a permanent
+     knowledge point or a fully "accepted" mapping.
+  3. The generic "California Insurance Code" topic still holds 3 unrelated
+     single-fact mappings; each is individually watched for recurrence in
+     future imports rather than pre-emptively split.
+
+### Validation after reconciliation
+
+- `data/knowledge/project-001/knowledge-points.json`: all 95 knowledge
+  point IDs unique; every `domainId` resolves; every `relatedKnowledgePoints`
+  and `prerequisites` reference resolves to a real knowledge point ID with
+  no self-references (verified directly, and via `tests/knowledge-
+  architecture.test.mjs`).
+- `data/knowledge/project-001/questions/S003.json` /
+  `.../S005.json`: all 67 questions' `knowledgePointIds` resolve to a real
+  (post-reconciliation) knowledge point; no `sourceAnswer`, choice, question
+  text, or annotation was altered; no `verifiedAnswer` was set (all remain
+  `null`); no `verificationStatus` was changed (all remain `unverified`).
+- `npm test`: **99 pass / 1 fail** — the 1 failure
+  (`tests/browser-invite-flow.test.mjs`) is the same pre-existing, unrelated
+  failure confirmed on a clean `master` checkout in the D-001A/D-001B
+  rounds; not touched, per instructions not to fix unrelated repo failures.
+  All 39 Room 4D knowledge-architecture and question-bank assertions
+  (`tests/knowledge-architecture.test.mjs` +
+  `tests/knowledge-questionbank.test.mjs`) pass.

@@ -13,7 +13,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K01-RISK-MANAGEMENT-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -132,7 +134,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K01-RISK-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -285,7 +289,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K02-MATERIALITY-001",
+        "K02-CONCEALMENT-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -302,7 +309,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K02-REPRESENTATION-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -319,7 +328,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K02-REPRESENTATION-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -948,7 +959,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K06-RISK-CLASSIFICATION-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -965,7 +978,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K06-UNDERWRITING-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1186,7 +1201,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1220,7 +1237,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K07-GUARANTY-ASSOCIATION-001",
+        "K07-LICENSING-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1271,7 +1291,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K07-CLAIMS-RULES-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1339,7 +1361,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1373,7 +1397,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K07-UNFAIR-DISCRIMINATION-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1390,7 +1416,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-SOCIAL-SECURITY-FUNDING-001",
+        "K08-RETIREMENT-BENEFITS-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1407,7 +1436,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-CURRENTLY-INSURED-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1424,7 +1455,11 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-RETIREMENT-BENEFITS-001",
+        "K08-BLACKOUT-PERIOD-001",
+        "K08-SURVIVOR-BENEFITS-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1441,7 +1476,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-QUARTERS-OF-COVERAGE-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1458,7 +1495,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-FULLY-INSURED-001",
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1475,7 +1515,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-BLACKOUT-PERIOD-001",
+        "K08-FULLY-INSURED-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1509,7 +1552,10 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-SURVIVOR-BENEFITS-001",
+        "K08-FULLY-INSURED-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1543,7 +1589,9 @@
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
+      "relatedKnowledgePoints": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001"
+      ],
       "sourceRefs": [],
       "verificationStatus": "unverified",
       "verifiedAt": null,
@@ -1561,28 +1609,92 @@
       "examImportance": null,
       "prerequisites": [],
       "relatedKnowledgePoints": [],
-      "sourceRefs": ["S003"],
+      "sourceRefs": [
+        "S003"
+      ],
       "verificationStatus": "unverified",
       "verifiedAt": null,
       "verifiedSource": null,
-      "tags": ["added-in-D-001B"]
+      "tags": [
+        "added-in-D-001B"
+      ]
     },
     {
-      "id": "K07-CALIFORNIA-INSURANCE-CODE-002",
+      "id": "K07-RATE-REGULATION-001",
       "domainId": "K07",
-      "topic": "California Insurance Code",
+      "topic": "Rate Regulation",
       "title": "Rate Regulation Systems (File-and-Use, Use-and-File, Prior Approval, State-Mandated)",
       "concept": "",
       "learningObjective": "",
       "difficulty": 1,
       "examImportance": null,
       "prerequisites": [],
-      "relatedKnowledgePoints": [],
-      "sourceRefs": ["S003"],
+      "relatedKnowledgePoints": [
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
+      "sourceRefs": [
+        "S003"
+      ],
       "verificationStatus": "unverified",
       "verifiedAt": null,
       "verifiedSource": null,
-      "tags": ["added-in-D-001B"]
+      "tags": [
+        "added-in-D-001B",
+        "relocated-in-D-001B.1"
+      ]
+    },
+    {
+      "id": "K02-WARRANTY-001",
+      "domainId": "K02",
+      "topic": "Warranty",
+      "title": "Warranty (distinguished from Representation and Concealment)",
+      "concept": "",
+      "learningObjective": "",
+      "difficulty": 1,
+      "examImportance": null,
+      "prerequisites": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "relatedKnowledgePoints": [
+        "K02-REPRESENTATION-001",
+        "K02-MATERIALITY-001",
+        "K02-CONCEALMENT-001"
+      ],
+      "sourceRefs": [
+        "S003"
+      ],
+      "verificationStatus": "unverified",
+      "verifiedAt": null,
+      "verifiedSource": null,
+      "tags": [
+        "added-in-D-001B.1"
+      ]
+    },
+    {
+      "id": "K07-FEDERAL-INSURANCE-OFFENSES-001",
+      "domainId": "K07",
+      "topic": "Federal Insurance Offenses",
+      "title": "Federal Insurance Offenses (18 U.S.C. §1033-style federal crimes, distinct from CA state licensing law)",
+      "concept": "",
+      "learningObjective": "",
+      "difficulty": 1,
+      "examImportance": null,
+      "prerequisites": [
+        "K07-LICENSING-001"
+      ],
+      "relatedKnowledgePoints": [
+        "K07-LICENSING-001",
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "sourceRefs": [
+        "S003"
+      ],
+      "verificationStatus": "unverified",
+      "verifiedAt": null,
+      "verifiedSource": null,
+      "tags": [
+        "added-in-D-001B.1"
+      ]
     }
   ]
 }

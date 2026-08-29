@@ -169,7 +169,7 @@
       "questionId": "Q-S003-004",
       "domainId": "K07",
       "knowledgePointIds": [
-        "K07-CALIFORNIA-INSURANCE-CODE-002"
+        "K07-RATE-REGULATION-001"
       ],
       "questionText": "If an insurer must have its rates accepted by the Insurance Department prior to using them, the insurer would be operating in which of the following types of jurisdictions?",
       "choices": [
@@ -199,7 +199,7 @@
       "sourceId": "S003",
       "sourcePage": 1,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Mapped to new knowledge point K07-CALIFORNIA-INSURANCE-CODE-002 (rate-regulation filing systems), added in this task — no existing D-001A knowledge point covered rate-filing jurisdictions (file-and-use / use-and-file / prior approval / state-mandated). See D-001B-IMPORT-REPORT.md.",
+      "sourceNotes": "Mapped to K07-RATE-REGULATION-001. D-001B.1 reconciliation: this knowledge point was relocated from K07-CALIFORNIA-INSURANCE-CODE-002 to its own dedicated \"Rate Regulation\" topic — it is a specific, self-contained regulatory mechanism (file-and-use / use-and-file / prior approval / state-mandated), not a generic California Insurance Code definitional fact, and grouping it under the generic catch-all topic was an overly-broad placement.",
       "humanAnnotations": [
         {
           "type": "highlight",
@@ -212,7 +212,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": true,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.202Z"
     },
     {
       "questionId": "Q-S003-005",
@@ -323,6 +323,7 @@
       "questionId": "Q-S003-007",
       "domainId": "K07",
       "knowledgePointIds": [
+        "K07-FEDERAL-INSURANCE-OFFENSES-001",
         "K07-LICENSING-001"
       ],
       "questionText": "It is a Federal offense for an insurance agent to do all of the following EXCEPT",
@@ -353,7 +354,7 @@
       "sourceId": "S003",
       "sourcePage": 2,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Approximate mapping: this tests a federal-law boundary (18 U.S.C. §1033-style offenses) rather than a California-specific licensing rule; K07-LICENSING-001 is the closest existing knowledge point. See schema gaps in D-001B-IMPORT-REPORT.md.",
+      "sourceNotes": "D-001B.1 reconciliation: previously an approximate mapping to K07-LICENSING-001 only. This question tests a distinct, recurring exam concept — federal (not California-specific) insurance crimes under 18 U.S.C. §1033-style law — so a dedicated knowledge point (K07-FEDERAL-INSURANCE-OFFENSES-001) was added. K07-LICENSING-001 is retained as a secondary reference because choice 4 (felony conviction + consent of the Commissioner) sits at the intersection of federal eligibility law and state licensing.",
       "humanAnnotations": [
         {
           "type": "highlight",
@@ -366,7 +367,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": true,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.215Z"
     },
     {
       "questionId": "Q-S003-008",
@@ -495,7 +496,7 @@
       "sourceId": "S003",
       "sourcePage": 2,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Approximate mapping under K06-PREMIUM-DETERMINATION-001 (premiums as revenue vs. expense); no dedicated \"insurer expense categories\" knowledge point exists in the current map.",
+      "sourceNotes": "D-001B.1 reconciliation reviewed this mapping (K06-PREMIUM-DETERMINATION-001) and kept it: this question tests a single narrow fact (a policy premium is insurer revenue, not an insurer expense), not a rich standalone examinable concept, so it does not meet the bar for a new permanent knowledge point per the \"do not create a knowledge point merely because one question uses a different phrase\" rule. Revisit only if further sources surface more insurer-expense/accounting questions.",
       "humanAnnotations": [
         {
           "type": "other",
@@ -508,7 +509,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": false,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.215Z"
     },
     {
       "questionId": "Q-S003-011",
@@ -564,8 +565,7 @@
       "questionId": "Q-S003-012",
       "domainId": "K02",
       "knowledgePointIds": [
-        "K02-MATERIALITY-001",
-        "K02-CONCEALMENT-001"
+        "K02-WARRANTY-001"
       ],
       "questionText": "What recourse does an insurer have if violation of a material warranty on the part of the insured is discovered?",
       "choices": [
@@ -595,7 +595,7 @@
       "sourceId": "S003",
       "sourcePage": 3,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Soft/borderline mapping: this question tests breach of a material *warranty*, a concept distinct from (though related to) misrepresentation/concealment. The current 91-point map has no dedicated \"Warranty\" knowledge point; mapped to Materiality/Concealment as the closest existing fit rather than forcing a new point for a single question. Flagged in D-001B-IMPORT-REPORT.md as a candidate for a future knowledge point.",
+      "sourceNotes": "D-001B.1 reconciliation: previously soft-mapped to K02-MATERIALITY-001 + K02-CONCEALMENT-001. Breach of a material warranty is a genuinely distinct, classically-tested insurance-contract doctrine (a warranty is a promise incorporated into the policy itself; its breach allows rescission regardless of materiality, unlike misrepresentation/concealment) — a dedicated knowledge point (K02-WARRANTY-001) was added and this question remapped to it exclusively.",
       "humanAnnotations": [
         {
           "type": "star",
@@ -608,7 +608,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": false,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.215Z"
     },
     {
       "questionId": "Q-S003-013",
@@ -870,7 +870,7 @@
       "sourceId": "S003",
       "sourcePage": 4,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Approximate mapping under K07-AGENT-001 (contrasts agent-mediated distribution against direct-response channels); no dedicated \"distribution channels\" knowledge point exists in the current map.",
+      "sourceNotes": "D-001B.1 reconciliation reviewed this mapping (K07-AGENT-001) and left it in place, but as a DEFERRED watch item rather than an accepted final mapping: insurance distribution channels (agent vs. broker vs. direct response) are a plausible distinct regulatory/marketing topic, but this is the only question testing it so far. Per the \"do not create a knowledge point merely because one question uses a different phrase\" rule, a dedicated knowledge point was not created on the strength of a single question. Revisit if S001/S002/S004 surface more distribution-channel questions.",
       "humanAnnotations": [
         {
           "type": "star",
@@ -883,7 +883,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": false,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.215Z"
     },
     {
       "questionId": "Q-S003-018",
@@ -1525,7 +1525,7 @@
       "sourceId": "S003",
       "sourcePage": 6,
       "sourceQuestionNumber": null,
-      "sourceNotes": "Mapped to K07-RECORD-REQUIREMENTS-001 as the closest existing fit for a regulatory filing/reporting cadence question; no dedicated \"NAIC reporting\" knowledge point exists.",
+      "sourceNotes": "D-001B.1 reconciliation reviewed this mapping (K07-RECORD-REQUIREMENTS-001) and kept it: NAIC annual financial statement filing is one instance of the broader, already-existing \"Record Requirements\" topic, not a rich enough standalone concept (on the evidence of a single question) to warrant its own knowledge point.",
       "humanAnnotations": [
         {
           "type": "star",
@@ -1548,7 +1548,7 @@
       "verificationStatus": "unverified",
       "regulatorySensitivity": true,
       "createdAt": "2026-08-29T10:28:21.976Z",
-      "updatedAt": "2026-08-29T10:28:21.976Z"
+      "updatedAt": "2026-08-29T18:56:13.215Z"
     },
     {
       "questionId": "Q-S003-031",
