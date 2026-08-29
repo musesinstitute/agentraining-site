@@ -1,0 +1,1956 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 2 full import. Extracted questions from source S004. Every record's verifiedAnswer is null and verificationStatus is 'unverified' by design. See docs/room-4d/D-001B-IMPORT-REPORT.md.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "sourceId": "S004",
+  "pagesProcessed": 9,
+  "questionCount": 41,
+  "questions": [
+    {
+      "questionId": "Q-S004-001",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "Insurer policy expenses include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "taxes."
+        },
+        {
+          "key": "2",
+          "text": "premiums."
+        },
+        {
+          "key": "3",
+          "text": "agent commissions."
+        },
+        {
+          "key": "4",
+          "text": "home office operations."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-002 (nearDuplicate) with Q-S003-010: same underlying fact (a policy premium is insurer revenue, not an insurer expense), reworded stem and choice 2.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'Insurer policy expenses', 'EXCEPT', 'premiums'.",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-002",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-MATERIALITY-001",
+        "K02-REPRESENTATION-001"
+      ],
+      "questionText": "What rule is used to determine the importance of a representation?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The law of adhesion."
+        },
+        {
+          "key": "2",
+          "text": "That of aleatory contracts."
+        },
+        {
+          "key": "3",
+          "text": "The materiality of concealment."
+        },
+        {
+          "key": "4",
+          "text": "The insurable interest standard."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-003 (exactDuplicate) with Q-S003-008: identical stem and choices.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-003",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-MORAL-HAZARD-MORALE-HAZARD-001"
+      ],
+      "questionText": "Moral hazard can be defined as the increase",
+      "choices": [
+        {
+          "key": "1",
+          "text": "in frequency and severity of losses covered by insurance."
+        },
+        {
+          "key": "2",
+          "text": "of losses arising from legal precedents created by the courts."
+        },
+        {
+          "key": "3",
+          "text": "chance of a loss occurring due to the insured's carelessness."
+        },
+        {
+          "key": "4",
+          "text": "chance of a loss occurring due to an insured's dishonest tendencies."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-004 (conceptualDuplicate) with Q-S003-013: same moral-vs-morale-hazard concept, tested in the reverse direction (given the term, pick its definition, vs. given the effect, name the term). Choice 3 here is the morale-hazard distractor.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (blue): 'Moral = dishonest / no- honesrt' (sic, 'not honest') distinguishing moral hazard from mere carelessness (morale hazard, choice 3).",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Moral hazard = dishonest tendencies (not mere carelessness)",
+          "primaryLanguage": "en",
+          "translation": "Moral = 不诚实 / 欺骗",
+          "translationLanguage": "zh",
+          "term": "moral hazard",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-004",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-PURE-RISK-VS-SPECULATIVE-RISK-001"
+      ],
+      "questionText": "Which of the following statements regarding risk is TRUE?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Only pure risks are insurable."
+        },
+        {
+          "key": "2",
+          "text": "Only speculative risks are insurable."
+        },
+        {
+          "key": "3",
+          "text": "Both pure and speculative risks are insurable."
+        },
+        {
+          "key": "4",
+          "text": "Neither pure nor speculative risks are insurable."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-005 (exactDuplicate) with Q-S003-031: identical stem and choices.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (blue), repeat of the pure-vs-speculative risk mnemonic: 'Pure risk 只能丢失 / Speculative risk 可丢失，可能获得 / 去赌场'.",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "pure risk",
+          "primaryLanguage": "en",
+          "translation": "只能丢失",
+          "translationLanguage": "zh",
+          "term": "pure risk",
+          "note": ""
+        },
+        {
+          "primary": "speculative risk",
+          "primaryLanguage": "en",
+          "translation": "可丢失，可能获得（去赌场）",
+          "translationLanguage": "zh",
+          "term": "speculative risk",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-005",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-CONSIDERATION-001"
+      ],
+      "questionText": "Which of the following is a requirement of a contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "It must be in writing."
+        },
+        {
+          "key": "2",
+          "text": "There must be equal consideration between parties."
+        },
+        {
+          "key": "3",
+          "text": "There must be negotiation of the terms between parties."
+        },
+        {
+          "key": "4",
+          "text": "There must be an offer and acceptance of the contract terms."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-006 (conceptualDuplicate) with Q-S003-045: both test which fact is/is not a true contract requirement; different distractor sets and question framing (IS a requirement vs. EXCEPT), but both agree that \"equal consideration\" is not actually required.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'is a requirement of a contract'.",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-006",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "questionText": "According to the California Insurance Code, an insurance policy must specify all of the following EXCEPT the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "financial rating of the insurer."
+        },
+        {
+          "key": "2",
+          "text": "property or life being insured."
+        },
+        {
+          "key": "3",
+          "text": "risks insured against."
+        },
+        {
+          "key": "4",
+          "text": "policy period."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-007 (conceptualDuplicate) with Q-S003-005 and Q-S004-023 (page 7 of this same source): all three test \"required contents of a policy\" with different distractor sets; Q-S004-023 is a byte-identical repeat of Q-S003-005 specifically (see that record).",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'insurance policy must specify all of the following EXCEPT'.",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-007",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-CLAIMS-RULES-001"
+      ],
+      "questionText": "Upon notification of a claim, a claimant must be given access to the California Fair Claims Settlement Practices resolution by all of the following means EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "on-line at the Department of Insurance Internet site."
+        },
+        {
+          "key": "2",
+          "text": "by interview appointment with the agent of record."
+        },
+        {
+          "key": "3",
+          "text": "a copy free of charge from the insurer."
+        },
+        {
+          "key": "4",
+          "text": "written notification from the insurer."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-008 (nearDuplicate) with Q-S003-040: same choices, minor stem wording difference (\"resolution\" vs. \"Regulations\").",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten abbreviation 'CFCSP' written above the question.",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-008",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-MEDICAL-INFORMATION-BUREAU-001"
+      ],
+      "questionText": "Who are members of the Medical Information Bureau?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Hospitals."
+        },
+        {
+          "key": "2",
+          "text": "Physicians"
+        },
+        {
+          "key": "3",
+          "text": "Medical Bill Reviewers."
+        },
+        {
+          "key": "4",
+          "text": "Life and health insurers."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-009 (exactDuplicate) with Q-S003-014: identical stem and choices.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten abbreviation 'MIB' next to the question.",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-009",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-GUARANTY-ASSOCIATION-001",
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
+      "questionText": "According to the California Insurance Code, if an insurer's certificate of authority is revoked, the Commissioner can proceed with any of the following actions EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "taking possession of transaction records."
+        },
+        {
+          "key": "2",
+          "text": "using Guarantee Funds to pay salaries."
+        },
+        {
+          "key": "3",
+          "text": "confiscating the office premises."
+        },
+        {
+          "key": "4",
+          "text": "liquidating the business."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-010 (exactDuplicate) with Q-S003-034: identical stem and choices.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-010",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-UNILATERAL-CONTRACT-001"
+      ],
+      "questionText": "What is meant by referring to an insurance policy as a unilateral contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "One party may receive more than the other party."
+        },
+        {
+          "key": "2",
+          "text": "Only one party makes a legally enforceable promise."
+        },
+        {
+          "key": "3",
+          "text": "One party draws up the contract and the other accepts it."
+        },
+        {
+          "key": "4",
+          "text": "The obligation of one party depends on the performance of obligations by the other party."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to K02-UNILATERAL-CONTRACT-001 (a D-001A stub with no prior question).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-011",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "In insurance terminology, \"indemnity\" means",
+      "choices": [
+        {
+          "key": "1",
+          "text": "award."
+        },
+        {
+          "key": "2",
+          "text": "advance."
+        },
+        {
+          "key": "3",
+          "text": "make whole."
+        },
+        {
+          "key": "4",
+          "text": "over compensate."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-011 (conceptualDuplicate) - part of the broader \"indemnity principle\" cluster tested across S003/S004 (see Q-S003-021, Q-S003-038, Q-S004-021, Q-S004-022, Q-S004-023-indemnity... ). This particular record is a vocabulary-definition angle (\"indemnity\" = make whole) not seen elsewhere.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Odd handwritten annotation 'whole food' next to choice 3 ('make whole') - appears to be a mnemonic wordplay pairing 'whole' with 'whole food', not further explained in the source.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-012",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-INSURABLE-INTEREST-001",
+        "K01-PURE-RISK-VS-SPECULATIVE-RISK-001"
+      ],
+      "questionText": "All of the occurrences listed below are examples of an insurable event as defined by the California Insurance Code EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "a guest is injured by a fall from the insured's deck."
+        },
+        {
+          "key": "2",
+          "text": "an insured suffers a financial loss in the state lottery."
+        },
+        {
+          "key": "3",
+          "text": "an insured is sued for unintentional slander of another person."
+        },
+        {
+          "key": "4",
+          "text": "an insured is admitted to the hospital for delivery of a newborn."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "A state-lottery loss is speculative risk (a gamble), not a fortuitous insurable event - connects the Insurable Interest and Pure-vs-Speculative-Risk concepts.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-013",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-BACKGROUND-INFORMATION-001"
+      ],
+      "questionText": "All of the following qualify as \"background information\" as defined in Section 1729.2 of the California Insurance Code, EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "misdemeanor charges filed, not resulting in a conviction."
+        },
+        {
+          "key": "2",
+          "text": "an administrative action regarding a professional or occupational license."
+        },
+        {
+          "key": "3",
+          "text": "a misdemeanor or felony conviction or a filing of felony criminal charges in a state or federal court."
+        },
+        {
+          "key": "4",
+          "text": "any admission, or judicial finding or determination, of fraud, misappropriation or conversion of funds, misrepresentation, or breach of fiduciary duty."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-012 (nearDuplicate) with Q-S003-019: same 4 underlying facts about Section 1729.2 \"background information\", reordered, with the correct (excepted) choice reworded more precisely (\"misdemeanor charges filed, not resulting in a conviction\" vs. S003's \"Misdemeanor charges\").",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-014",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-CONCEALMENT-001"
+      ],
+      "questionText": "Unintentional concealment entitles the injured party to which course of action, if any?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Rescission of the contract."
+        },
+        {
+          "key": "2",
+          "text": "$250 fine to be paid to the injured party."
+        },
+        {
+          "key": "3",
+          "text": "Possible imprisonment to the party who concealed the information."
+        },
+        {
+          "key": "4",
+          "text": "None, due to the fact that the concealment was unintentional."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to K02-CONCEALMENT-001 in this source (distinct from S003 questions already mapped there).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-015",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-FIDUCIARY-DUTIES-001"
+      ],
+      "questionText": "An agent who is acting as an insurance agent, broker, solicitor, life agent, accident and health, or bail agent acts in which capacity when handling premiums or return premiums for an insured?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Fiduciary."
+        },
+        {
+          "key": "2",
+          "text": "Legal representative."
+        },
+        {
+          "key": "3",
+          "text": "Managing general agent."
+        },
+        {
+          "key": "4",
+          "text": "Natural person."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to K07-FIDUCIARY-DUTIES-001 (a D-001A stub with no prior question).",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 1 is starred.",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-016",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-CONCEALMENT-001",
+        "K02-REPRESENTATION-001"
+      ],
+      "questionText": "Which of the following information is not required to be communicated in a Life insurance contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Applicant's name."
+        },
+        {
+          "key": "2",
+          "text": "Occupation."
+        },
+        {
+          "key": "3",
+          "text": "Financial information."
+        },
+        {
+          "key": "4",
+          "text": "Personal judgment."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-013 (conceptualDuplicate) with Q-S003-015: same underlying fact (the duty to disclose does not extend to a party's own personal judgment/opinion), different question format (fill-in vs. EXCEPT-style with \"never\").",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-017",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-MANAGEMENT-001",
+        "K01-MORAL-HAZARD-MORALE-HAZARD-001"
+      ],
+      "questionText": "All of the following are benefits of insurance EXCEPT it",
+      "choices": [
+        {
+          "key": "1",
+          "text": "eliminates fraudulent losses."
+        },
+        {
+          "key": "2",
+          "text": "provides a source of investment funds."
+        },
+        {
+          "key": "3",
+          "text": "provides payment for the costs of covered losses."
+        },
+        {
+          "key": "4",
+          "text": "reduces the uncertainty created by many loss exposures."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Insurance does not eliminate fraudulent losses (it is in fact vulnerable to moral hazard/fraud) - connects Risk Management with the Moral Hazard concept.",
+      "humanAnnotations": [
+        {
+          "type": "highlight",
+          "content": "Underlined: 'benefits of insurance EXCEPT it eliminates fraudulent losses'.",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-018",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "What is the definition of premium?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Bonus paid by an agent to convince an insured to buy a policy."
+        },
+        {
+          "key": "2",
+          "text": "Money an insured pays an insurer to obtain the benefits provided in the policy."
+        },
+        {
+          "key": "3",
+          "text": "Money an insurer pays to an insured to obtain the benefits provided in the policy."
+        },
+        {
+          "key": "4",
+          "text": "Amount the insured pays per unit of coverage (e.g., $10 per $1,000 of coverage)."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First direct-definition question mapped to K06-PREMIUM-DETERMINATION-001.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Handwritten (red) vocabulary note: 'insured 被保人' / 'insurer 保险公司' (repeat of the vocabulary gloss seen elsewhere in this source set).",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "insured",
+          "primaryLanguage": "en",
+          "translation": "被保人",
+          "translationLanguage": "zh",
+          "term": "insured",
+          "note": ""
+        },
+        {
+          "primary": "insurer",
+          "primaryLanguage": "en",
+          "translation": "保险公司",
+          "translationLanguage": "zh",
+          "term": "insurer",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-019",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-RECORD-REQUIREMENTS-001",
+        "K07-INSURANCE-COMMISSIONER-001"
+      ],
+      "questionText": "What would a person be guilty of who refuses to deliver any books, records, or assets to the commissioner once a seizure order has been executed?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A felony."
+        },
+        {
+          "key": "2",
+          "text": "A misdemeanor."
+        },
+        {
+          "key": "3",
+          "text": "Misrepresentation."
+        },
+        {
+          "key": "4",
+          "text": "Contempt of court."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "New question connecting Record Requirements with the Insurance Commissioner's enforcement authority.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-020",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "Insureds are entitled to recover an amount NOT greater than the amount of their loss under the principle of",
+      "choices": [
+        {
+          "key": "1",
+          "text": "adhesion."
+        },
+        {
+          "key": "2",
+          "text": "indemnity."
+        },
+        {
+          "key": "3",
+          "text": "utmost good faith."
+        },
+        {
+          "key": "4",
+          "text": "warranty."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Part of the broader \"indemnity principle\" duplicate cluster (see duplicate-groups.json DG-011): tests indemnity as a loss-cap principle, a distinct facet from the vocabulary-definition and contract-definition angles tested elsewhere.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-021",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-LICENSING-001"
+      ],
+      "questionText": "As authorized by the California Insurance Code, the Insurance Commissioner has provided standards for names used by life insurance agents. Under these standards which, if any, of the following are automatically acceptable for Mary Brown, a holder of the CLU designation?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Mary Brown, CLU and Company."
+        },
+        {
+          "key": "2",
+          "text": "Brownies' Insurance Services."
+        },
+        {
+          "key": "3",
+          "text": "Mary Brown Insurance Company"
+        },
+        {
+          "key": "4",
+          "text": "Mary Brown Insurance Services."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "New question extending K07-LICENSING-001 with a fictitious-name-standards fact pattern (related in spirit to Q-S003-003, but a distinct specific fact).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-022",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-REINSURANCE-001"
+      ],
+      "questionText": "All of the following are characteristics of reinsurance EXCEPT it",
+      "choices": [
+        {
+          "key": "1",
+          "text": "increases underwriting capacity."
+        },
+        {
+          "key": "2",
+          "text": "stabilizes an insurer's profits."
+        },
+        {
+          "key": "3",
+          "text": "increases the unearned premium reserve."
+        },
+        {
+          "key": "4",
+          "text": "provides protection against a catastrophic loss."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-023",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "A contract of indemnity is one in which",
+      "choices": [
+        {
+          "key": "1",
+          "text": "one party is restored to the same financial position the party was in before the loss occurred."
+        },
+        {
+          "key": "2",
+          "text": "one party is obligated to assume the legal liability of another party."
+        },
+        {
+          "key": "3",
+          "text": "one party must adhere to the agreement as written by the other party."
+        },
+        {
+          "key": "4",
+          "text": "both parties are expected to act in complete honesty."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Part of the \"indemnity principle\" duplicate cluster (DG-011).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-024",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "Making an insured whole by restoring them to the same condition as before a loss is an example of",
+      "choices": [
+        {
+          "key": "1",
+          "text": "reinsurance."
+        },
+        {
+          "key": "2",
+          "text": "the retention of risk."
+        },
+        {
+          "key": "3",
+          "text": "fiduciary responsibility."
+        },
+        {
+          "key": "4",
+          "text": "the principle of indemnity."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Part of the \"indemnity principle\" duplicate cluster (DG-011).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-025",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-INDEMNITY-001"
+      ],
+      "questionText": "A contract in which one party promises to indemnify another against loss that arises from an unknown event is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "an insurance policy."
+        },
+        {
+          "key": "2",
+          "text": "a restoration policy."
+        },
+        {
+          "key": "3",
+          "text": "a retrocession agreement."
+        },
+        {
+          "key": "4",
+          "text": "a hold-harmless agreement."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-014 (exactDuplicate) with Q-S003-038: identical stem and choices. Also part of the broader \"indemnity principle\" cluster (DG-011).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-026",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-AGENCY-AUTHORITY-001"
+      ],
+      "questionText": "The acts that are reasonably necessary to the duties expressly authorized would be covered by an agent's",
+      "choices": [
+        {
+          "key": "1",
+          "text": "stipulated authority."
+        },
+        {
+          "key": "2",
+          "text": "ostensible authority."
+        },
+        {
+          "key": "3",
+          "text": "apparent authority."
+        },
+        {
+          "key": "4",
+          "text": "implied authority."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Adds \"implied authority\" as a second facet of K02-AGENCY-AUTHORITY-001, alongside the existing \"express power\" question (Q-S003-025).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-027",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-MANAGEMENT-001"
+      ],
+      "questionText": "Loss retention is an effective risk management technique when all of the following conditions exist EXCEPT the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "losses are highly predictable."
+        },
+        {
+          "key": "2",
+          "text": "probability of loss is unknown."
+        },
+        {
+          "key": "3",
+          "text": "worst possible loss is not serious."
+        },
+        {
+          "key": "4",
+          "text": "insured chooses to assume the losses involved."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-015 (exactDuplicate) with Q-S003-033: identical stem and choices.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-028",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "questionText": "As defined in the California Insurance Code, \"insurance\" is a",
+      "choices": [
+        {
+          "key": "1",
+          "text": "contract."
+        },
+        {
+          "key": "2",
+          "text": "gamble."
+        },
+        {
+          "key": "3",
+          "text": "peril."
+        },
+        {
+          "key": "4",
+          "text": "risk."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-016 (exactDuplicate) with Q-S003-042: identical stem and choices.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-029",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-REPRESENTATION-001",
+        "K02-WARRANTY-001"
+      ],
+      "questionText": "Unless it is merely a statement of an expectation or belief, a representation as to the future is considered which of the following?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Liability"
+        },
+        {
+          "key": "2",
+          "text": "Promise"
+        },
+        {
+          "key": "3",
+          "text": "Provision"
+        },
+        {
+          "key": "4",
+          "text": "Restriction"
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Dual-mapped to Representation and Warranty: a representation about a future event, if treated as a binding promise, functions like a warranty - this question is the clearest evidence yet that Representation and Warranty are taught as a contrasted pair, reinforcing the D-001B.1 decision to split Warranty into its own knowledge point.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-030",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-MANAGEMENT-001",
+        "K01-RISK-001"
+      ],
+      "questionText": "The purchase of an insurance policy may accomplish all of the following for the insured EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "a reduction of uncertainty."
+        },
+        {
+          "key": "2",
+          "text": "the elimination of the risk."
+        },
+        {
+          "key": "3",
+          "text": "a replacement of a large possible loss by a \"smaller certain loss\"."
+        },
+        {
+          "key": "4",
+          "text": "a reduction in worry/greater peace of mind."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-017 (exactDuplicate) with Q-S003-006: identical stem and choices.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-031",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-FUNDAMENTAL-VS-PARTICULAR-RISK-001"
+      ],
+      "questionText": "A situation in which there is a possibility of loss or a gain is a",
+      "choices": [
+        {
+          "key": "1",
+          "text": "pure risk."
+        },
+        {
+          "key": "2",
+          "text": "particular risk."
+        },
+        {
+          "key": "3",
+          "text": "speculative risk."
+        },
+        {
+          "key": "4",
+          "text": "fundamental risk."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Introduces 'particular risk' and 'fundamental risk' as new vocabulary not covered by the D-001A map's Pure-vs-Speculative pairing. See Knowledge Mapping section of the import report for the new knowledge point this required.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Repeat of the pure-vs-speculative bilingual mnemonic.",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "pure risk",
+          "primaryLanguage": "en",
+          "translation": "只能丢失",
+          "translationLanguage": "zh",
+          "term": "pure risk",
+          "note": ""
+        },
+        {
+          "primary": "speculative risk",
+          "primaryLanguage": "en",
+          "translation": "可丢失，可能获得（去赌场）",
+          "translationLanguage": "zh",
+          "term": "speculative risk",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-032",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-RECORD-REQUIREMENTS-001"
+      ],
+      "questionText": "When must insurance records of insurance agents and brokers be made available to the Insurance Commissioner?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Within 30 days of written request by the Commissioner."
+        },
+        {
+          "key": "2",
+          "text": "After the policy is issued."
+        },
+        {
+          "key": "3",
+          "text": "Annually and submitted with the proper paperwork."
+        },
+        {
+          "key": "4",
+          "text": "At all times."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 4 is starred.",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-033",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ELEMENTS-OF-A-CONTRACT-001"
+      ],
+      "questionText": "The required contents of a policy include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "risks insured against."
+        },
+        {
+          "key": "2",
+          "text": "parties to the contract."
+        },
+        {
+          "key": "3",
+          "text": "the probability of loss."
+        },
+        {
+          "key": "4",
+          "text": "the period during which the insurance is to continue."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-007 (exactDuplicate member) with Q-S003-005: identical stem and choices (see also Q-S004-006 on page 1 of this same source, a different/conceptually-related variant of this fact).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-034",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-UNFAIR-TRADE-PRACTICES-001",
+        "K07-UNFAIR-DISCRIMINATION-001"
+      ],
+      "questionText": "All of the following would be considered unfair trade practices EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "making a statement misrepresenting terms of any policy issued."
+        },
+        {
+          "key": "2",
+          "text": "committing any act of discrimination whether it be deemed fair or unfair."
+        },
+        {
+          "key": "3",
+          "text": "filing with any supervisor or other public official any false statement of financial condition of an insurer."
+        },
+        {
+          "key": "4",
+          "text": "making a statement before the public about any person in the conduct of his insurance business that is untrue."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Subtle: the CA Unfair Practices Act prohibits UNFAIR discrimination specifically, not all discrimination (legitimate risk-based classification is lawful) - the source marks choice 2 as the exception on that basis. Preserved as-is per source discipline; flagged for authoritative review given the subtlety (see verification queue).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-035",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-ALEATORY-CONTRACT-001"
+      ],
+      "questionText": "All of the following statements about aleatory contracts are true EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "they may be interpreted as a form of gambling."
+        },
+        {
+          "key": "2",
+          "text": "there are cases where the insurer pays nothing."
+        },
+        {
+          "key": "3",
+          "text": "the insured and insurer contribute equally to the contract."
+        },
+        {
+          "key": "4",
+          "text": "if a loss occurs, the insured's premium is small in relation to the amount the insurer pays."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-018 (exactDuplicate) with Q-S003-022: identical stem and choices.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-036",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-UNDERWRITING-001"
+      ],
+      "questionText": "The process by which an insurer decides whether to issue requested insurance is called",
+      "choices": [
+        {
+          "key": "1",
+          "text": "adverse selection."
+        },
+        {
+          "key": "2",
+          "text": "underwriting."
+        },
+        {
+          "key": "3",
+          "text": "application."
+        },
+        {
+          "key": "4",
+          "text": "competition."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-019 (conceptualDuplicate) with Q-S002-047 (process whereby insurers decide which customers to insure = underwriting): same underlying definition, cross-source.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-037",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-RISK-001"
+      ],
+      "questionText": "Risk can be defined as all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "uncertainty."
+        },
+        {
+          "key": "2",
+          "text": "the cause of loss."
+        },
+        {
+          "key": "3",
+          "text": "the chance of loss."
+        },
+        {
+          "key": "4",
+          "text": "the probability of an unexpected outcome."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-020 (exactDuplicate) with Q-S003-037: identical stem and choices.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-038",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-LOSS-EXPOSURE-001"
+      ],
+      "questionText": "Any situation that presents the possibility of a loss is known as",
+      "choices": [
+        {
+          "key": "1",
+          "text": "consideration."
+        },
+        {
+          "key": "2",
+          "text": "a covered loss."
+        },
+        {
+          "key": "3",
+          "text": "a loss exposure."
+        },
+        {
+          "key": "4",
+          "text": "medical loss ratio."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to K01-LOSS-EXPOSURE-001 (a D-001A stub with no prior question).",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-039",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-UNDERWRITING-001",
+        "K06-ADVERSE-SELECTION-001"
+      ],
+      "questionText": "What is the goal of the underwriting process?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "To compute the premium rates for insureds."
+        },
+        {
+          "key": "2",
+          "text": "To select only risks that will not incur losses."
+        },
+        {
+          "key": "3",
+          "text": "To avoid selecting a disproportionate number of bad risks."
+        },
+        {
+          "key": "4",
+          "text": "To ensure that the company pays any incurred losses promptly."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Connects Underwriting to Adverse Selection: the underwriting goal is explicitly framed as avoiding adverse selection.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-040",
+      "domainId": "K01",
+      "knowledgePointIds": [
+        "K01-LAW-OF-LARGE-NUMBERS-001",
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "Why is having a large number of similar exposure units important to insurers?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The greater the number insured, the more accurately the insurer can predict losses and set appropriate premiums."
+        },
+        {
+          "key": "2",
+          "text": "The greater the number insured, the more premium is collected to offset fixed costs."
+        },
+        {
+          "key": "3",
+          "text": "The greater the number insured, the greater the amount of premiums collected to help cover losses."
+        },
+        {
+          "key": "4",
+          "text": "The insurer increases its market share with every insured."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "A practical restatement of the Law of Large Numbers, applied to premium-setting - connects K01-LAW-OF-LARGE-NUMBERS-001 with K06-PREMIUM-DETERMINATION-001.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S004-041",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-AGENT-001"
+      ],
+      "questionText": "The direct response distribution of insurance utilizes all of the following to promote the sale of insurance EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "internet advertising."
+        },
+        {
+          "key": "2",
+          "text": "television commercials."
+        },
+        {
+          "key": "3",
+          "text": "telephone call from an agent."
+        },
+        {
+          "key": "4",
+          "text": "brochures mailed to prospective clients."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S004",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-021 (exactDuplicate) with Q-S003-017: identical stem and choices. This is now the 3rd occurrence of this exact question across the corpus (S003, and now S004) - still the SAME single fact repeated, not new evidence of a richer \"distribution channels\" concept, so the D-001B.1 decision to keep this deferred (not promote to a new knowledge point) stands unchanged.",
+      "humanAnnotations": [],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    }
+  ]
+}

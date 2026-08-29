@@ -37,9 +37,9 @@ const ALLOWED_VERIFICATION_STATUSES = [
   'outdated'
 ];
 
-// PHASE 1 of D-001B only processes these two sources - importing S001/S002/S004
-// is explicitly out of scope until a later phase.
-const PHASE_1_SOURCE_IDS = ['S003', 'S005'];
+// D-001B Phase 1 processed S003/S005 only; Phase 2 completed the import with
+// S001, S002, and S004. All 5 registered sources are now in scope.
+const IMPORTED_SOURCE_IDS = ['S001', 'S002', 'S003', 'S004', 'S005'];
 
 const questionFiles = readdirSync(path.join(DATA_DIR, 'questions')).filter((f) => f.endsWith('.json'));
 const sourceDocs = questionFiles.map((f) => ({ file: f, doc: loadJson('questions', f) }));
@@ -47,9 +47,9 @@ const allQuestions = sourceDocs.flatMap(({ doc }) => doc.questions);
 const allQuestionIds = new Set(allQuestions.map((q) => q.questionId));
 
 describe('question bank source files', () => {
-  test('only the Phase 1 sources (S003, S005) have been imported', () => {
+  test('all 5 registered sources (S001-S005) have been imported', () => {
     const importedSourceIds = sourceDocs.map(({ doc }) => doc.sourceId);
-    assert.deepEqual([...importedSourceIds].sort(), [...PHASE_1_SOURCE_IDS].sort());
+    assert.deepEqual([...importedSourceIds].sort(), [...IMPORTED_SOURCE_IDS].sort());
   });
 
   test("each source file's declared sourceId matches its filename", () => {
@@ -78,7 +78,7 @@ describe('question records', () => {
   test('every question references a registered, Phase-1 sourceId', () => {
     for (const q of allQuestions) {
       assert.ok(registeredSourceIds.has(q.sourceId), `${q.questionId} references unregistered sourceId ${q.sourceId}`);
-      assert.ok(PHASE_1_SOURCE_IDS.includes(q.sourceId), `${q.questionId} references a sourceId outside Phase 1 scope: ${q.sourceId}`);
+      assert.ok(IMPORTED_SOURCE_IDS.includes(q.sourceId), `${q.questionId} references a sourceId outside the imported set: ${q.sourceId}`);
     }
   });
 
@@ -153,9 +153,9 @@ describe('duplicate-groups.json', () => {
     }
   });
 
-  test('duplicateType is exactDuplicate or conceptualDuplicate', () => {
+  test('duplicateType is exactDuplicate, nearDuplicate, or conceptualDuplicate', () => {
     for (const group of duplicateGroups.groups) {
-      assert.ok(['exactDuplicate', 'conceptualDuplicate'].includes(group.duplicateType), `duplicate group ${group.groupId} has invalid duplicateType ${group.duplicateType}`);
+      assert.ok(['exactDuplicate', 'nearDuplicate', 'conceptualDuplicate'].includes(group.duplicateType), `duplicate group ${group.groupId} has invalid duplicateType ${group.duplicateType}`);
     }
   });
 });

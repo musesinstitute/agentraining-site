@@ -2,14 +2,16 @@
 
 **Phase 1: Controlled Import Pilot**
 
-Status: complete, and reconciled. Sources processed: **S003** and **S005**
-only, per the Phase 1 scope limit. **S001, S002, and S004 were NOT
-imported** in this task. See **"Architecture Reconciliation"** at the end
-of this document for D-001B.1, which stress-tested the knowledge map
-against these 67 real questions and corrected several mappings below
-before large-scale import proceeds — sections above that D-001B.1 changed
-are marked with a pointer rather than rewritten, to keep an accurate
-history of what D-001B originally produced.
+Status: complete, and reconciled. Sources processed in Phase 1: **S003** and
+**S005** only, per the Phase 1 scope limit. See **"Architecture
+Reconciliation"** below for D-001B.1, which stress-tested the knowledge map
+against these 67 real questions and corrected several mappings before
+large-scale import proceeded — sections below that D-001B.1 changed are
+marked with a pointer rather than rewritten, to keep an accurate history of
+what D-001B originally produced. **See "Phase 2 — Complete Source Import"
+at the end of this document for the completed import of S001, S002, and
+S004**, which supersedes the Phase-1-only scope described immediately
+below.
 
 ## Sources processed
 
@@ -474,3 +476,215 @@ evidence felt like overreach for this reconciliation pass.
   All 39 Room 4D knowledge-architecture and question-bank assertions
   (`tests/knowledge-architecture.test.mjs` +
   `tests/knowledge-questionbank.test.mjs`) pass.
+
+---
+
+## Phase 2 — Complete Source Import
+
+**Task: D-001B Phase 2.** Completed the source import by processing the
+three remaining registered sources — **S001** (执照题1.pdf), **S002**
+(执照题2中文.pdf), and **S004** (执照题4.pdf) — using the same controlled
+extraction methodology proven in Phase 1. All five registered sources
+(S001–S005) are now imported. No source wording, choices, or annotations
+were invented; no `sourceAnswer` was corrected; no `verifiedAnswer` was
+set; no authoritative web verification was performed.
+
+### Pre-flight architecture cleanup
+
+Before importing, domain **K07** was renamed from *"California Insurance
+Law & Regulation"* to **"Insurance Law & Regulation"**, with its
+description rewritten to explicitly cover California insurance law/
+regulation, licensing and conduct rules, **and** relevant federal insurance
+offenses/rules. The permanent domain id (`K07`) and every existing K07
+`topic` string and `knowledgePointId` are unchanged — this was a display
+name and description edit only, made because D-001B.1 had already added a
+federally-scoped topic ("Federal Insurance Offenses") under K07, which the
+old California-specific name no longer accurately described.
+
+### Sources discovered to be totally different in scope than S003/S005
+
+S001 and S004 turned out to cover **Life Insurance Products, Policy
+Provisions, Annuities, and Retirement** (domains K02/K03/K04/K05/K06/K07) —
+essentially disjoint subject matter from S003/S005's Insurance
+Fundamentals/Contracts/CA-Law and Social Security content. S002 covers the
+same subject matter as S001, and per the task brief's own warning, **turned
+out to contain substantial overlap with S001**: 46 of S002's 99 questions
+(its entire back half, pages 12–21) are near-verbatim exact reprints of
+S001 questions, differing only in annotation style (S001 uses underlines
+with separate Chinese text; S002 uses colored radio-button selections with
+parenthetical Chinese glosses). S004 similarly overlaps heavily with S003
+(Phase 1).
+
+### Per-source results
+
+| Source | Pages processed | Questions extracted | Mapping rate | Uncertain/illegible | Regulatory-sensitive | Duplicate participation | Annotations captured |
+|---|---|---|---|---|---|---|---|
+| S001 | 12 | 55 | 100% (55/55) | 0 | 12 | 54 of 55 | 61 |
+| S002 | 21 | 99 | 100% (99/99) | 0 | 20 | 68 of 99 | 97 |
+| S003 *(Phase 1)* | 10 | 46 | 100% (46/46) | 0 | 24 | 20 of 46 | 57 |
+| S004 | 9 | 41 | 100% (41/41) | 0 | 10 | 24 of 41 | 25 |
+| S005 *(Phase 1)* | 5 | 21 | 100% (21/21) | 0 | 21 | 2 of 21 | 42 |
+| **Total** | **57** | **262** | **100%** | **0** | **87** | **168 of 262** | **282** |
+
+"Mapping rate" counts every question that has at least one
+`knowledgePointIds` entry (100% throughout — no question was left
+unmapped); it does not distinguish a clean existing-point mapping from an
+approximate/soft one (see "Schema gaps" below for those). "Duplicate
+participation" counts questions that appear in at least one
+`duplicate-groups.json` entry. "Annotations captured" sums
+`humanAnnotations.length + memoryAids.length + bilingualNotes.length`
+across each source's questions. No question in any of the five sources was
+found illegible or textually uncertain — all five PDFs are clean, legible,
+typed-text-with-handwritten-annotation layouts.
+
+### Project totals
+
+- **Total source questions extracted (S001–S005): 262**
+  (S001: 55, S002: 99, S003: 46, S004: 41, S005: 21)
+- **Unique source records after collapsing exact duplicates only: 195**
+  (262 total minus 67 questions that are byte-identical reprints of
+  another question already counted — every one of the 262 is still
+  preserved as its own record per the "do not delete duplicates" rule;
+  this number answers "how many genuinely distinct exam items are there,
+  ignoring verbatim reprints")
+- **Exact duplicate groups: 66**
+- **Near/conceptual duplicate groups: 20** (7 `nearDuplicate` + 13
+  `conceptualDuplicate`)
+- **Total duplicate groups: 86**
+- **Verification queue: P0: 3 · P1: 84 · P2: 175 · P3: 0** (262 total —
+  every extracted question is queued, since none has an independently
+  verified answer)
+- **Final knowledge-point count: 102** (95 after D-001B.1 + 7 added in
+  Phase 2 — see below)
+- **New knowledge points added in Phase 2: 7**
+- **Unresolved architecture issues: 3** (see below)
+
+### Conflicting-answer cases (P0)
+
+- **`Q-S005-002` / `Q-S005-018`** — carried forward from Phase 1/D-001B.1
+  (see `DG-001`): two OASDHI "which statement is false" variants with
+  overlapping choices and different marked false statements.
+- **`Q-S004-034`** — "All of the following would be considered unfair trade
+  practices EXCEPT [committing any act of discrimination whether it be
+  deemed fair or unfair]." The marked answer rests on a subtle statutory
+  reading (the Unfair Practices Act prohibits *unfair* discrimination
+  specifically; legitimate risk-based classification is lawful), which is
+  defensible but genuinely contestable without a specific statutory
+  citation. Preserved as marked per source discipline; flagged P0 for
+  authoritative review rather than silently trusted or "corrected."
+
+No other case in this corpus showed two sources marking different answers
+to what is otherwise the same question (the 66 exact-duplicate groups, by
+definition, agree with themselves; the 20 near/conceptual groups test
+related-but-distinct specific facts, not the same fact with a conflicting
+answer).
+
+### Knowledge mapping and new knowledge points added in Phase 2
+
+All 262 questions mapped to at least one knowledge point. Recurring gaps
+were resolved consistently, following the same bar D-001B.1 established
+("a genuinely distinct examinable concept, not a wording variant"),
+rather than case-by-case:
+
+| # | New knowledge point | Domain / topic | Why the existing map was insufficient | Representative questionIds | Prerequisite / related |
+|---|---|---|---|---|---|
+| 1 | `K03-GROUP-LIFE-001` | K03 / **Group Life Insurance** (new topic) | Group life recurred richly (6+ distinct facts: master-contract parties, contributory basis, certificate of insurance holder, war/aviation exclusions, facility-of-payment for a minor beneficiary, group-vs-individual underwriting) across S001/S002, and none of K03's original 11 topics covered it. | `Q-S001-010`, `Q-S001-027`, `Q-S001-033`, `Q-S001-046`, `Q-S002-046`, `Q-S002-072` | related: `K06-UNDERWRITING-001` |
+| 2 | `K03-PERSONAL-USES-001` | K03 / **Personal Uses of Life Insurance** (new topic) | K03 already had "Business Uses of Life Insurance" as a topic but no symmetric "Personal Uses" counterpart, even though personal-use questions (immediate estate, human life value, NOT-a-personal-use) recurred 4+ times. | `Q-S001-001`, `Q-S001-014`, `Q-S001-053`, `Q-S002-012` | related: `K03-BUSINESS-USES-OF-LIFE-INSURANCE-001`, `K03-BUY-SELL-001` |
+| 3 | `K04-LEGAL-ACTIONS-001` | K04 / **Legal Actions Clause** (new topic) | A standard named policy provision (limits when a claimant may sue before a reasonable claim investigation), structurally parallel to Grace Period/Reinstatement/Nonforfeiture which already had dedicated K04 topics, but itself absent from the map. | `Q-S001-030`, `Q-S002-067` | related: `K07-CLAIMS-RULES-001` |
+| 4 | `K04-SUICIDE-CLAUSE-001` | K04 / **Suicide Clause** (new topic) | Same reasoning as Legal Actions: a standard named provision (protects against adverse selection) with no existing dedicated point. | `Q-S001-006`, `Q-S002-031` | related: `K06-ADVERSE-SELECTION-001` |
+| 5 | `K04-RIDERS-002` | K04 / **Riders** (existing topic, new sequence) | "Policy exclusions" (e.g. acts of war/aviation) are the conceptual opposite of riders and commonly taught contrasted with them; reused the existing "Riders" topic rather than adding a new one, consistent with how `K07-RATE-REGULATION-001` reused an existing topic in D-001B.1. | `Q-S001-033`, `Q-S002-086` | prerequisite/related: `K04-RIDERS-001` |
+| 6 | `K05-TAXATION-OF-LIFE-INSURANCE-PROCEEDS-001` | K05 / **Taxation of Life Insurance Proceeds** (new topic) | K05's domain name explicitly promises "Taxation" coverage, but no topic addressed life-insurance-proceeds taxation specifically (death-benefit income-tax exemption, the $50,000 employer-group-life threshold, and dividends as a non-taxable return of premium each recurred). | `Q-S001-032`, `Q-S001-054`, `Q-S002-008`, `Q-S002-036` | related: `K03-GROUP-LIFE-001`, `K04-POLICY-DIVIDENDS-001` |
+| 7 | `K01-FUNDAMENTAL-VS-PARTICULAR-RISK-001` | K01 / **Fundamental Risk vs Particular Risk** (new topic) | A single S004 question introduced "particular risk" and "fundamental risk" as answer choices alongside pure/speculative risk — a second, distinct risk-classification axis (society-wide vs. individual risk) not covered by the existing Pure-vs-Speculative topic. | `Q-S004-031` | related: `K01-PURE-RISK-VS-SPECULATIVE-RISK-001` |
+
+**Declined to create a new point for** (per "do not create a knowledge
+point merely because one question uses a different phrase"): an
+annuity/policy "replacement" or "conservation" concept (only 1–2 narrow,
+non-recurring facts across the corpus — mapped approximately to the
+closest existing point and flagged as a watch item); a "limit of
+liability = face amount" concept (mapped to `K04-CASH-VALUE-001`, single
+fact); direct-response "distribution channels" (now confirmed 3 times
+across S003/S004, but every occurrence is the *same* exact question
+repeated, not new evidence of a richer concept — the D-001B.1 "deferred"
+decision stands unchanged).
+
+### Schema gaps discovered in Phase 2
+
+No new field-level schema gaps were found in `question-schema.json` itself
+(the D-001B.1 `bilingualNote` extension already covers Phase 2's needs).
+The gaps found were all knowledge-map gaps, resolved via the 7 new points
+above.
+
+### Extraction limitations
+
+- Same underline-consolidation policy as Phase 1 (see above): plain
+  emphasis-only underlines were not each transcribed as a separate
+  annotation; annotations that added new information (Chinese glosses,
+  mnemonics, vocabulary notes) were preserved individually.
+- S002's Chinese annotations use a different visual convention than
+  S001/S003/S004/S005 (colored radio-button selection + a parenthetical
+  gloss immediately after the correct choice, rather than underlines with
+  separate Chinese text nearby) — represented as `selected-answer`-type
+  `humanAnnotations` entries rather than forcing them into the
+  `margin-note`/`highlight` shapes used for the other sources.
+- `answerExplanation` and `wrongAnswerExplanations` remain empty for all
+  262 questions, for the same reason as Phase 1 (the source marks an
+  answer but never prints a rationale).
+- Two of S001's twelve PDF pages initially failed to render through this
+  session's PDF-reading tool in one pass; both were confirmed present via
+  a direct high-resolution page-by-page re-render before extraction, and
+  all 12 pages' content is fully accounted for in the 55 extracted
+  questions.
+
+### Unresolved architecture issues carried forward
+
+1. **K07's name still centers "Insurance," not "Federal"** — the pre-flight
+   rename addresses the most acute mismatch (a federal topic living under
+   a California-named domain) but K07 now blends CA-specific and
+   federal-specific content under one domain. If federal-law content grows
+   substantially with any future source, splitting out a dedicated
+   federal-insurance-law domain remains a reasonable future step (carried
+   over from D-001B.1, now partially addressed).
+2. **The generic "California Insurance Code" topic** (`K07-CALIFORNIA-INSURANCE-CODE-001`)
+   still holds several unrelated single facts (admitted carrier, primary
+   objectives of regulation, "may" = permissive) — still a watch item, not
+   split, per the same single-question-doesn't-justify-a-new-point
+   discipline (carried over unchanged from D-001B.1).
+3. **Policy replacement / "conservation" / "unnecessary replacement"** is a
+   real, recurring-but-thin concept (4 questions across S001/S002) that sits
+   just below the bar for a new permanent point on current evidence. Worth
+   revisiting once/if a future source adds more replacement-specific
+   content.
+
+### Validation after Phase 2
+
+- All 262 question records validated: unique `questionId`s; every
+  `sourceId` is registered and matches an imported source; every
+  `domainId` and every `knowledgePointIds` entry resolves; every
+  `sourceAnswer` is one of that question's own choice keys;
+  `verifiedAnswer` is `null` and `verificationStatus` is `unverified` for
+  every record; `regulatorySensitivity` is boolean throughout; no source
+  record was removed (262 in, 262 out).
+- All 86 duplicate groups validated: every `questionId` resolves, every
+  group has ≥2 members, every `duplicateType` is one of
+  `exactDuplicate`/`nearDuplicate`/`conceptualDuplicate`.
+- Verification queue validated: all 262 questions appear exactly once;
+  every entry references a real `questionId`; reported `counts` match the
+  queue's actual contents.
+- `tests/knowledge-architecture.test.mjs` and
+  `tests/knowledge-questionbank.test.mjs` (extended in Phase 2 to expect
+  all 5 sources instead of just S003/S005, and to allow the new
+  `nearDuplicate` type) — **39/39 assertions pass**.
+- Full repo `npm test`: **99 pass / 1 fail** — the 1 failure
+  (`tests/browser-invite-flow.test.mjs`) is the same pre-existing,
+  unrelated failure reproduced on a clean `master` checkout in every prior
+  round of this project; not touched, per instructions not to fix
+  unrelated pre-existing failures.
+
+### Confirmation: no production functionality touched (Phase 2)
+
+All Phase 2 changes are confined to `data/knowledge/project-001/`,
+`docs/room-4d/`, and `tests/`. No file under `netlify/`, no top-level
+`.html` file, no Identity code, and no existing sales-practice curriculum
+data was read from or written to. No new production runtime dependency was
+added. No UI was built. No external AI API was called. Nothing was
+deployed, merged, or opened as a pull request.
