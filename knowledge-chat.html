@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Company Knowledge – AgentTraining.ai</title>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="pilot-cloud.js?v=20260821-guide1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root {
@@ -23,10 +24,13 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 .logo span{color:#f59e0b}
 .nav-right{display:flex;align-items:center;gap:10px}
 .nav-title{font-size:13px;color:var(--muted);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#identity-display{font-size:11px;color:var(--muted)}
 .btn-sm{border:1px solid var(--line);background:var(--white);color:#475569;border-radius:7px;
-  padding:6px 10px;cursor:pointer;font-size:12px;white-space:nowrap}
+  padding:6px 10px;cursor:pointer;font-size:12px;white-space:nowrap;text-decoration:none;display:inline-block}
 .btn-sm:hover{border-color:#93c5fd;color:var(--blue)}
+.lang-switch{display:flex;gap:4px}
+.lang-btn{border:1px solid var(--line);background:var(--white);color:#475569;border-radius:7px;
+  padding:6px 9px;cursor:pointer;font-size:12px;text-decoration:none}
+.lang-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd;font-weight:800}
 
 /* LIBRARY PANEL (left slide-in) */
 #library-panel{position:fixed;top:56px;left:0;bottom:0;width:300px;background:var(--white);
@@ -36,12 +40,17 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 .lib-header{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .lib-header h2{font-size:15px;font-weight:700}
 .lib-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1}
+.gov-note{display:none;margin:10px 10px 0;padding:10px 12px;background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:9px;font-size:11.5px;color:#1e40af;line-height:1.55}
+.gov-note a{color:#1741b8;font-weight:700}
 .lib-list{overflow-y:auto;flex:1;padding:10px}
 .lib-item{padding:12px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:6px}
 .lib-item:hover{background:#f8fafc;border-color:var(--line)}
 .lib-item.active{background:#eff6ff;border-color:#93c5fd}
 .lib-item-title{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lib-item-meta{font-size:11px;color:var(--muted)}
+.gov-link{display:block;margin-top:6px;font-size:11px;color:#1741b8;font-weight:700;text-decoration:none}
+.gov-link:hover{text-decoration:underline}
 .lib-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
 .lib-upload{margin:10px;padding:10px 14px;background:var(--blue);color:var(--white);
   border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;width:calc(100% - 20px)}
@@ -50,6 +59,11 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 /* OVERLAY */
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:15}
 #overlay.show{display:block}
+
+/* NOT-ENABLED NOTICE */
+#pilot-disabled-note{display:none;flex:1;align-items:center;justify-content:center;padding:60px 24px;
+  text-align:center;color:var(--muted);line-height:1.7}
+#pilot-disabled-note a{color:var(--blue);font-weight:700}
 
 /* MAIN WORKSPACE */
 #workspace{flex:1;display:flex;overflow:hidden;position:relative}
@@ -146,15 +160,6 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 #upload-error{color:var(--red);font-size:12px;margin-bottom:10px;display:none}
 #upload-progress{font-size:12px;color:var(--muted);margin-bottom:10px;display:none}
 
-/* AUTH GATE */
-#auth-gate{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;
-  align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:32px}
-#auth-gate.show{display:flex}
-#auth-gate h2{font-size:22px;font-weight:700}
-#auth-gate p{color:var(--muted);max-width:340px;line-height:1.6}
-#auth-gate button{background:var(--blue);color:var(--white);border:none;border-radius:9px;
-  padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer}
-
 /* STATUS BADGE */
 .status-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;text-transform:uppercase}
 .status-approved{background:#d1fae5;color:var(--green)}
@@ -165,35 +170,33 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
   #ai-panel{width:100%;border-right:none}
   #pdf-panel{display:none}
   #split-pane.visible{flex-direction:column}
+  .nav-title{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH GATE -->
-<div id="auth-gate" class="show">
-  <h2>Company Knowledge</h2>
-  <p>Sign in to access your team's training library.</p>
-  <button onclick="netlifyIdentity.open('login')">Sign In</button>
-</div>
-
 <!-- NAV -->
 <nav>
-  <a class="logo" href="pilot.html">Agent<span>Training</span>.ai</a>
+  <a class="logo" href="index.html">Agent<span>Training</span>.ai</a>
   <span class="nav-title" id="nav-doc-title">Company Knowledge Library</span>
   <div class="nav-right">
-    <span id="identity-display"></span>
+    <a class="btn-sm" href="pilot.html?pilot=1" id="pilot-home-link">Pilot Home</a>
+    <div class="lang-switch" aria-label="Language / 语言">
+      <a class="lang-btn" id="langEn" href="knowledge-chat.html?pilot=1&amp;lang=en">EN</a>
+      <a class="lang-btn" id="langZh" href="knowledge-chat.html?pilot=1&amp;lang=zh">中文</a>
+    </div>
     <button class="btn-sm" id="lib-toggle-btn" onclick="toggleLibrary()">☰ Library</button>
-    <button class="btn-sm" onclick="netlifyIdentity.logout().then(()=>location.reload())">Sign out</button>
   </div>
 </nav>
 
 <!-- LIBRARY PANEL -->
 <div id="library-panel">
   <div class="lib-header">
-    <h2>Training Library</h2>
+    <h2 id="lib-header-title">Training Library</h2>
     <button class="lib-close" onclick="toggleLibrary()">×</button>
   </div>
+  <div class="gov-note" id="gov-note"></div>
   <div class="lib-list" id="lib-list">
     <div class="lib-empty">Loading documents…</div>
   </div>
@@ -201,15 +204,18 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 </div>
 <div id="overlay" onclick="toggleLibrary()"></div>
 
+<!-- SHOWN WHEN NOT OPENED FROM THE AUTHENTICATED PILOT WORKSPACE -->
+<div id="pilot-disabled-note"></div>
+
 <!-- MAIN WORKSPACE -->
 <div id="workspace">
 
   <!-- EMPTY STATE -->
   <div id="empty-state">
     <div style="font-size:48px">📚</div>
-    <h2>Company Training Library</h2>
-    <p>Open a document from your library to start asking questions. AI answers are grounded in your company's actual product materials.</p>
-    <button class="open-lib-btn" onclick="toggleLibrary()">Open Library</button>
+    <h2 id="empty-state-title">Company Training Library</h2>
+    <p id="empty-state-desc">Open a document from your library to start asking questions. AI answers are grounded in your company's actual product materials.</p>
+    <button class="open-lib-btn" id="empty-state-btn" onclick="toggleLibrary()">Open Library</button>
   </div>
 
   <!-- SPLIT PANE -->
@@ -219,21 +225,15 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
     <div id="ai-panel">
       <div class="ai-top">
         <div>
-          <div class="ai-top-label">Asking about</div>
+          <div class="ai-top-label" id="ai-top-label">Asking about</div>
           <div class="ai-top-title" id="ai-doc-title">—</div>
         </div>
       </div>
-      <div class="quick-btns" id="quick-btns">
-        <button class="quick-btn" onclick="sendQuick('What are the key features of this product?')">Key features</button>
-        <button class="quick-btn" onclick="sendQuick('What are the most common client objections and how should I respond?')">Client objections</button>
-        <button class="quick-btn" onclick="sendQuick('Who is the ideal client for this product?')">Ideal client</button>
-        <button class="quick-btn" onclick="sendQuick('What should new agents know before selling this?')">New agent tips</button>
-        <button class="quick-btn" onclick="sendQuick('Give me 5 quiz questions to test my knowledge of this document.')">Quiz me</button>
-      </div>
+      <div class="quick-btns" id="quick-btns"></div>
       <div id="chat-messages">
-        <div class="msg ai">
-          <div class="bubble">Hi! I've read this document and I'm ready to answer your questions. Ask me anything about the product, coverage, client scenarios, or common objections. You can also ask me to quiz you.</div>
-          <div class="msg-time">AI · grounded in company document</div>
+        <div class="msg ai" id="welcome-msg">
+          <div class="bubble" id="welcome-bubble">Hi! I've read this document and I'm ready to answer your questions. Ask me anything about the product, coverage, client scenarios, or common objections. You can also ask me to quiz you.</div>
+          <div class="msg-time" id="welcome-time">AI · grounded in company document</div>
         </div>
       </div>
       <div id="chat-input-area">
@@ -242,7 +242,7 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
             onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
           <button id="send-btn" onclick="sendMessage()">↑</button>
         </div>
-        <div class="chat-hint">Answers are grounded in the document on the right</div>
+        <div class="chat-hint" id="chat-hint">Answers are grounded in the document on the right</div>
       </div>
     </div>
 
@@ -259,7 +259,7 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
       <div id="pdf-container">
         <div class="pdf-placeholder">
           <div class="icon">📄</div>
-          <p>PDF preview will appear here when you open a document uploaded as a PDF file.</p>
+          <p id="pdf-initial-placeholder">PDF preview will appear here when you open a document uploaded as a PDF file.</p>
         </div>
       </div>
     </div>
@@ -271,26 +271,26 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 <div id="upload-modal">
   <div class="modal-backdrop" onclick="closeUploadModal()"></div>
   <div class="modal">
-    <h3>Upload Company Document</h3>
+    <h3 id="upload-modal-title">Upload Company Document</h3>
     <div id="upload-error"></div>
     <div id="upload-progress"></div>
     <div class="form-field">
-      <label>Document title</label>
+      <label for="upload-title" id="upload-title-label">Document title</label>
       <input id="upload-title" type="text" placeholder="e.g. Allianz Life – IUL Product Guide 2025" maxlength="200">
     </div>
     <div class="form-field">
-      <label>Document type</label>
+      <label for="upload-type" id="upload-type-label">Document type</label>
       <select id="upload-type">
-        <option value="product_guide">Product Guide / Brochure</option>
-        <option value="underwriting">Underwriting Guide</option>
-        <option value="script">Sales Script / Call Guide</option>
-        <option value="faq">FAQ / Objection Handling</option>
-        <option value="training_notes">Training Notes</option>
-        <option value="company_knowledge">Other Company Material</option>
+        <option value="product_guide" id="opt-product_guide">Product Guide / Brochure</option>
+        <option value="underwriting" id="opt-underwriting">Underwriting Guide</option>
+        <option value="script" id="opt-script">Sales Script / Call Guide</option>
+        <option value="faq" id="opt-faq">FAQ / Objection Handling</option>
+        <option value="training_notes" id="opt-training_notes">Training Notes</option>
+        <option value="company_knowledge" id="opt-company_knowledge">Other Company Material</option>
       </select>
     </div>
     <div class="form-field">
-      <label>Upload PDF or paste text content</label>
+      <label for="file-input" id="upload-file-label">Upload PDF or paste text content</label>
       <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
         ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
         <input type="file" id="file-input" accept=".pdf,.txt,.md" onchange="handleFileSelect(event)">
@@ -298,50 +298,137 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
       </div>
     </div>
     <div class="form-field">
-      <label>Or paste text directly</label>
+      <label for="upload-content" id="upload-content-label">Or paste text directly</label>
       <textarea id="upload-content" placeholder="Paste the document text here…" style="min-height:100px"></textarea>
     </div>
     <div class="consent-row">
       <input type="checkbox" id="upload-consent">
-      <label for="upload-consent">I confirm this document is authorized by our organization for AI training use and does not contain personal client data.</label>
+      <label for="upload-consent" id="upload-consent-label">I confirm this document is authorized by our organization for AI training use and does not contain personal client data.</label>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
-      <button class="btn-primary" id="upload-submit" onclick="submitUpload()">Upload & Analyze</button>
+      <button class="btn-cancel" id="upload-cancel" onclick="closeUploadModal()">Cancel</button>
+      <button class="btn-primary" id="upload-submit" onclick="submitUpload()">Upload &amp; Analyze</button>
     </div>
   </div>
 </div>
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let currentUser = null;
-let isManager = false;
+let canManage = false;       // authoritative flag from the server (pilot-data "knowledge" GET)
 let currentDoc = null;       // { id, title, content, status, analysis }
 let chatHistory = [];        // { role, content }[]
 let pdfDoc = null;
 let pdfPage = 1;
-let pdfRendering = false;
 let pdfFileData = null;      // ArrayBuffer of uploaded PDF (for preview)
 let uploadFileBuffer = null; // ArrayBuffer for upload submission
+let currentLang = 'en';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+// Guarded: if the pdf.js CDN script fails to load (network hiccup, ad
+// blocker), this must not throw and take the whole inline script down with
+// it — PDF preview would just stay unavailable, but Library/chat still work.
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
 
-// ─── AUTH ─────────────────────────────────────────────────────────────────────
-netlifyIdentity.on('login', user => { currentUser = user; onLogin(); netlifyIdentity.close(); });
-netlifyIdentity.on('logout', () => { currentUser = null; showAuthGate(); });
-netlifyIdentity.on('init', user => { if (user) { currentUser = user; onLogin(); } else { showAuthGate(); } });
+// ─── LANGUAGE ─────────────────────────────────────────────────────────────────
+function t(en, zh) { return currentLang === 'zh' ? zh : en; }
+function setText(id, en, zh) { const el = document.getElementById(id); if (el) el.textContent = t(en, zh); }
 
-function showAuthGate() { document.getElementById('auth-gate').classList.add('show'); }
-function hideAuthGate() { document.getElementById('auth-gate').classList.remove('show'); }
+const QUICK_PROMPTS = [
+  { labelEn: 'Key features', labelZh: '主要特点', promptEn: 'What are the key features of this product?', promptZh: '这个产品有哪些主要特点？' },
+  { labelEn: 'Client objections', labelZh: '客户异议', promptEn: 'What are the most common client objections and how should I respond?', promptZh: '客户最常见的异议有哪些？我应该如何回应？' },
+  { labelEn: 'Ideal client', labelZh: '理想客户', promptEn: 'Who is the ideal client for this product?', promptZh: '这个产品最适合什么样的客户？' },
+  { labelEn: 'New agent tips', labelZh: '新代理提示', promptEn: 'What should new agents know before selling this?', promptZh: '新代理在销售这个产品前应该了解什么？' },
+  { labelEn: 'Quiz me', labelZh: '考考我', promptEn: 'Give me 5 quiz questions to test my knowledge of this document.', promptZh: '请给我 5 道测验题，测试我对这份文件的掌握程度。' }
+];
 
-async function onLogin() {
-  hideAuthGate();
-  const meta = currentUser.app_metadata || currentUser.appMetadata || {};
-  const roles = Array.isArray(meta.roles) ? meta.roles : (Array.isArray(currentUser.roles) ? currentUser.roles : []);
-  isManager = roles.includes('manager') || roles.includes('admin') || meta.role === 'manager';
-  document.getElementById('identity-display').textContent = currentUser.email || '';
-  if (isManager) document.getElementById('upload-trigger').style.display = 'block';
+function renderQuickButtons() {
+  const wrap = document.getElementById('quick-btns');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  QUICK_PROMPTS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn';
+    btn.textContent = t(p.labelEn, p.labelZh);
+    btn.onclick = () => sendQuick(t(p.promptEn, p.promptZh));
+    wrap.appendChild(btn);
+  });
+}
+
+function applyLang() {
+  document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+  document.getElementById('langEn').classList.toggle('active', currentLang === 'en');
+  document.getElementById('langZh').classList.toggle('active', currentLang === 'zh');
+
+  setText('pilot-home-link', 'Pilot Home', 'Pilot 首页');
+  setText('lib-toggle-btn', '☰ Library', '☰ 知识库');
+  setText('lib-header-title', 'Training Library', '企业知识库');
+  setText('upload-trigger', '+ Upload Company Document', '+ 上传企业文件');
+
+  if (!currentDoc) {
+    setText('nav-doc-title', 'Company Knowledge Library', '企业知识库');
+    setText('ai-doc-title', '—', '—');
+    setText('pdf-toolbar-title', 'Document', '文件');
+  }
+
+  setText('empty-state-title', 'Company Training Library', '企业培训知识库');
+  setText('empty-state-desc', "Open a document from your library to start asking questions. AI answers are grounded in your company's actual product materials.", '从知识库中打开一份文件即可开始提问。AI 的回答均依据企业真实的产品材料。');
+  setText('empty-state-btn', 'Open Library', '打开知识库');
+  setText('ai-top-label', 'Asking about', '正在询问');
+  setText('welcome-bubble', "Hi! I've read this document and I'm ready to answer your questions. Ask me anything about the product, coverage, client scenarios, or common objections. You can also ask me to quiz you.", '您好！我已经阅读了这份文件，随时可以回答您的问题。您可以询问产品特点、保障范围、客户情境或常见异议，也可以让我出题考考您。');
+  setText('welcome-time', 'AI · grounded in company document', 'AI · 依据企业文件回答');
+  setText('chat-hint', 'Answers are grounded in the document on the right', '回答内容依据右侧的文件');
+  const chatInput = document.getElementById('chat-input');
+  if (chatInput) chatInput.placeholder = t('Ask anything about this document…', '请就此文件提出任何问题……');
+  const pdfPlaceholder = document.getElementById('pdf-initial-placeholder');
+  if (pdfPlaceholder) pdfPlaceholder.textContent = t('PDF preview will appear here when you open a document uploaded as a PDF file.', '打开以 PDF 上传的文件后，预览将显示在此处。');
+
+  setText('upload-modal-title', 'Upload Company Document', '上传企业文件');
+  setText('upload-title-label', 'Document title', '文件标题');
+  setText('upload-type-label', 'Document type', '文件类型');
+  setText('opt-product_guide', 'Product Guide / Brochure', '产品手册 / 宣传资料');
+  setText('opt-underwriting', 'Underwriting Guide', '核保指南');
+  setText('opt-script', 'Sales Script / Call Guide', '销售话术 / 通话指南');
+  setText('opt-faq', 'FAQ / Objection Handling', '常见问题 / 异议处理');
+  setText('opt-training_notes', 'Training Notes', '培训笔记');
+  setText('opt-company_knowledge', 'Other Company Material', '其他企业材料');
+  setText('upload-file-label', 'Upload PDF or paste text content', '上传 PDF 或粘贴文字内容');
+  setText('upload-content-label', 'Or paste text directly', '或直接粘贴文字');
+  setText('upload-consent-label', 'I confirm this document is authorized by our organization for AI training use and does not contain personal client data.', '我确认本企业已授权此文件用于 AI 培训，且不包含客户个人资料。');
+  setText('upload-cancel', 'Cancel', '取消');
+  setText('upload-submit', 'Upload & Analyze', '上传并分析');
+  const dropLabel = document.getElementById('drop-label');
+  if (dropLabel && !dropLabel.dataset.fileSelected) dropLabel.textContent = t('Click to select PDF / TXT / MD — or drag and drop', '点击选择 PDF / TXT / MD 文件，或直接拖放');
+
+  renderQuickButtons();
+  renderGovNote();
+}
+
+// ─── PILOT INTEGRATION (auth, team scoping, manager role) ─────────────────────
+// This page is wired into the same authenticated Pilot workspace as every
+// other Pilot page: pilot-cloud.js (PilotCloud) owns Netlify Identity sign-in,
+// JWT refresh, and the ?pilot=1 gate. We never read roles out of the cached
+// Identity user object ourselves — "canManage" always comes from the server
+// (pilot-data's "knowledge" resource), which is the same authority
+// knowledge.html relies on, so a learner can never self-declare manager
+// access from the client.
+async function init() {
+  const params = new URLSearchParams(location.search);
+  const requestedLang = params.get('lang');
+  if (requestedLang === 'en' || requestedLang === 'zh') sessionStorage.setItem('agentraining_lang', requestedLang);
+  currentLang = requestedLang || sessionStorage.getItem('agentraining_lang') || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
+  applyLang();
+
+  if (!window.PilotCloud || !PilotCloud.enabled) {
+    document.getElementById('workspace').style.display = 'none';
+    document.getElementById('library-panel').style.display = 'none';
+    const note = document.getElementById('pilot-disabled-note');
+    note.style.display = 'flex';
+    note.innerHTML = '<div><p>' + t('Open this page from your authenticated Pilot workspace to use the Company Knowledge Library.', '请从已登录的试用工作区打开本页，以使用企业知识库。') +
+      '</p><p style="margin-top:12px"><a href="knowledge-chat.html?pilot=1">' + t('Open the authenticated Company Knowledge Library →', '开启需要登录的企业知识库 →') + '</a></p></div>';
+    return;
+  }
   await loadLibrary();
 }
 
@@ -354,18 +441,40 @@ function toggleLibrary() {
   document.getElementById('overlay').classList.toggle('show', libraryOpen);
 }
 
+function statusLabelFor(status) {
+  if (status === 'approved') return t('Approved', '已批准');
+  if (status === 'analyzed') return t('Manager review', '待主管审核');
+  return t('Draft', '草稿');
+}
+
+// Manager governance (Approve / Assign) intentionally stays in the existing
+// Knowledge Studio (knowledge.html) rather than being reimplemented here —
+// that page already owns the working Approve → Create Practice → Assign
+// Learner flow end to end (dialogs, learner picker, assignment creation).
+// This page only needs to hand managers off into it at the right moment.
+function renderGovNote() {
+  const note = document.getElementById('gov-note');
+  if (!note) return;
+  if (!canManage) { note.style.display = 'none'; return; }
+  note.style.display = 'block';
+  note.innerHTML = '<b>' + t('Manager workspace: ', '主管工作区：') + '</b>' +
+    t('Upload and analyze documents here. Approve and assign Practice in the ', '在此上传并分析文件。批准与指派练习请前往 ') +
+    '<a href="knowledge.html?pilot=1">' + t('Knowledge Studio', '知识工作台') + '</a>.';
+}
+
 async function loadLibrary() {
   const list = document.getElementById('lib-list');
-  list.innerHTML = '<div class="lib-empty">Loading…</div>';
+  list.innerHTML = '<div class="lib-empty">' + t('Loading…', '正在加载…') + '</div>';
   try {
-    const res = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', { method: 'GET' });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to load library.');
+    const data = await PilotCloud.request('knowledge');
+    canManage = data.canManage === true;
+    document.getElementById('upload-trigger').style.display = canManage ? 'block' : 'none';
+    renderGovNote();
     const sources = data.sources || [];
     if (!sources.length) {
-      list.innerHTML = '<div class="lib-empty">' + (isManager
-        ? 'No documents yet. Upload your first company training document.'
-        : 'No approved documents yet. Ask your manager to upload and approve training materials.') + '</div>';
+      list.innerHTML = '<div class="lib-empty">' + (canManage
+        ? t('No documents yet. Upload your first company training document.', '尚未加入企业知识。请上传第一份培训文件。')
+        : t('No approved documents yet. Ask your manager to upload and approve training materials.', '目前没有主管已批准的企业知识。请联系主管上传并批准培训材料。')) + '</div>';
       return;
     }
     list.innerHTML = '';
@@ -374,14 +483,20 @@ async function loadLibrary() {
       el.className = 'lib-item';
       el.dataset.id = src.id;
       const statusClass = src.status === 'approved' ? 'status-approved' : src.status === 'analyzed' ? 'status-analyzed' : 'status-draft';
-      const statusLabel = src.status === 'approved' ? 'Approved' : src.status === 'analyzed' ? 'Reviewed' : 'Draft';
+      let govLink = '';
+      if (canManage && src.status === 'approved') {
+        govLink = '<a class="gov-link" href="knowledge.html?pilot=1">' + t('Assign Practice →', '指派练习 →') + '</a>';
+      } else if (canManage) {
+        govLink = '<a class="gov-link" href="knowledge.html?pilot=1">' + t('Review & approve in Knowledge Studio →', '在知识工作台中审核并批准 →') + '</a>';
+      }
       el.innerHTML = `<div class="lib-item-title">${escHtml(src.title)}</div>
-        <div class="lib-item-meta"><span class="status-badge ${statusClass}">${statusLabel}</span> · ${relTime(src.updatedAt)}</div>`;
-      el.onclick = () => openDocument(src);
+        <div class="lib-item-meta"><span class="status-badge ${statusClass}">${escHtml(statusLabelFor(src.status))}</span> · ${relTime(src.updatedAt)}</div>${govLink}`;
+      el.querySelector('.lib-item-title').onclick = () => openDocument(src);
+      el.querySelector('.lib-item-meta').onclick = () => openDocument(src);
       list.appendChild(el);
     });
   } catch(e) {
-    list.innerHTML = `<div class="lib-empty" style="color:var(--red)">${escHtml(e.message)}</div>`;
+    list.innerHTML = `<div class="lib-empty" style="color:var(--red)">${escHtml(friendlyError(e.message))}</div>`;
   }
 }
 
@@ -401,7 +516,11 @@ async function openDocument(src) {
 
   // Reset chat
   const msgs = document.getElementById('chat-messages');
-  msgs.innerHTML = `<div class="msg ai"><div class="bubble">I've loaded <strong>${escHtml(src.title)}</strong>. Ask me anything — product features, client objections, underwriting rules, or say "Quiz me" to test your knowledge.</div><div class="msg-time">AI · grounded in company document</div></div>`;
+  const openMsg = t(
+    `I've loaded <strong>${escHtml(src.title)}</strong>. Ask me anything — product features, client objections, underwriting rules, or say "Quiz me" to test your knowledge.`,
+    `我已加载 <strong>${escHtml(src.title)}</strong>。您可以询问产品特点、客户异议、核保规则，或说“考考我”来测试您的知识。`
+  );
+  msgs.innerHTML = `<div class="msg ai"><div class="bubble">${openMsg}</div><div class="msg-time">${t('AI · grounded in company document', 'AI · 依据企业文件回答')}</div></div>`;
 
   // Close library on mobile
   if (window.innerWidth < 700) toggleLibrary();
@@ -418,12 +537,12 @@ function resetPdfViewer(src) {
   const container = document.getElementById('pdf-container');
   const preview = src.analysis?.summary
     ? `<div class="pdf-placeholder" style="align-items:flex-start;padding:20px;color:#ddd;text-align:left;max-width:600px">
-        <p style="font-size:11px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">AI Summary</p>
+        <p style="font-size:11px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">${t('AI Summary', 'AI 摘要')}</p>
         <p style="font-size:14px;line-height:1.7">${escHtml(src.analysis.summary)}</p>
-        ${src.analysis.keyPoints?.length ? '<p style="font-size:11px;color:#888;margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px">Key Points</p><ul style="font-size:13px;line-height:1.8;padding-left:18px">' + src.analysis.keyPoints.map(k => `<li>${escHtml(k)}</li>`).join('') + '</ul>' : ''}
-        <p style="font-size:11px;color:#666;margin-top:20px">To see the original PDF side-by-side, re-upload the file using the PDF viewer button below.</p>
+        ${src.analysis.keyPoints?.length ? '<p style="font-size:11px;color:#888;margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px">' + t('Key Points', '重点') + '</p><ul style="font-size:13px;line-height:1.8;padding-left:18px">' + src.analysis.keyPoints.map(k => `<li>${escHtml(k)}</li>`).join('') + '</ul>' : ''}
+        <p style="font-size:11px;color:#666;margin-top:20px">${t('To see the original PDF side-by-side, re-upload the file using the PDF viewer button below.', '若要并排查看原始 PDF，请使用下方的上传功能重新上传该文件。')}</p>
       </div>`
-    : `<div class="pdf-placeholder"><div class="icon">📄</div><p>Document loaded. Ask questions on the left — AI answers are grounded in the full document content.</p></div>`;
+    : `<div class="pdf-placeholder"><div class="icon">📄</div><p>${t('Document loaded. Ask questions on the left — AI answers are grounded in the full document content.', '文件已加载。请在左侧提问 —— AI 会依据完整文件内容作答。')}</p></div>`;
   container.innerHTML = preview;
 }
 
@@ -456,19 +575,25 @@ async function sendMessage() {
   const typing = appendTyping();
 
   try {
-    const res = await fetchAPI('/.netlify/functions/knowledge-chat', {
+    // Fresh short-lived JWT on every send (PilotCloud.token refreshes it if
+    // needed) rather than a cached Identity access_token, so a chat session
+    // left open past the token's expiry keeps working instead of failing
+    // with a stale-token 401.
+    const authToken = await PilotCloud.token();
+    const res = await fetch('/.netlify/functions/knowledge-chat', {
       method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + authToken },
       body: JSON.stringify({ knowledgeId: currentDoc.id, message, history: chatHistory.slice(-10) })
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     typing.remove();
-    if (!res.ok) throw new Error(data.error || 'Request failed.');
+    if (!res.ok) throw new Error(data.error || t('Request failed.', '请求失败。'));
     const text = data.text || '';
     appendMsg('ai', text);
     chatHistory.push({ role: 'assistant', content: text });
   } catch(e) {
     typing.remove();
-    appendMsg('ai', '⚠️ ' + e.message);
+    appendMsg('ai', '⚠️ ' + friendlyError(e.message));
   }
   document.getElementById('send-btn').disabled = false;
 }
@@ -477,7 +602,7 @@ function appendMsg(role, text) {
   const msgs = document.getElementById('chat-messages');
   const el = document.createElement('div');
   el.className = 'msg ' + role;
-  const time = role === 'ai' ? 'AI · grounded in company document' : 'You';
+  const time = role === 'ai' ? t('AI · grounded in company document', 'AI · 依据企业文件回答') : t('You', '您');
   el.innerHTML = `<div class="bubble">${escHtml(text)}</div><div class="msg-time">${time}</div>`;
   msgs.appendChild(el);
   msgs.scrollTop = msgs.scrollHeight;
@@ -507,7 +632,7 @@ async function renderAllPages() {
   if (!pdfDoc) return;
   const container = document.getElementById('pdf-container');
   container.innerHTML = '';
-  document.getElementById('pdf-page-info').textContent = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
+  document.getElementById('pdf-page-info').textContent = `${pdfDoc.numPages} ${t('page' + (pdfDoc.numPages !== 1 ? 's' : ''), '页')}`;
   for (let i = 1; i <= Math.min(pdfDoc.numPages, 30); i++) {
     const page = await pdfDoc.getPage(i);
     const scale = Math.min(container.clientWidth / page.getViewport({ scale: 1 }).width * 0.92, 1.8);
@@ -542,10 +667,13 @@ function closeUploadModal() {
   document.getElementById('upload-title').value = '';
   document.getElementById('upload-content').value = '';
   document.getElementById('upload-consent').checked = false;
-  document.getElementById('drop-label').textContent = 'Click to select PDF / TXT / MD — or drag and drop';
+  const dropLabel = document.getElementById('drop-label');
+  delete dropLabel.dataset.fileSelected;
+  dropLabel.textContent = t('Click to select PDF / TXT / MD — or drag and drop', '点击选择 PDF / TXT / MD 文件，或直接拖放');
   document.getElementById('upload-error').style.display = 'none';
   document.getElementById('upload-progress').style.display = 'none';
   uploadFileBuffer = null;
+  pdfFileData = null;
 }
 
 function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag'); }
@@ -555,7 +683,9 @@ function handleFileSelect(e) { processFile(e.target.files[0]); }
 
 async function processFile(file) {
   if (!file) return;
-  document.getElementById('drop-label').textContent = `📎 ${file.name}`;
+  const dropLabel = document.getElementById('drop-label');
+  dropLabel.textContent = `📎 ${file.name}`;
+  dropLabel.dataset.fileSelected = '1';
   const buffer = await file.arrayBuffer();
   if (file.name.endsWith('.pdf')) {
     uploadFileBuffer = buffer;
@@ -572,13 +702,33 @@ async function processFile(file) {
       // Also offer PDF preview
       pdfFileData = buffer;
     } catch(e) {
-      document.getElementById('upload-error').textContent = 'Could not extract text from PDF. Please paste the content manually.';
+      document.getElementById('upload-error').textContent = t('Could not extract text from PDF. Please paste the content manually.', '无法从 PDF 中提取文字，请手动粘贴内容。');
       document.getElementById('upload-error').style.display = 'block';
     }
   } else {
     const text = await file.text();
     document.getElementById('upload-content').value = text;
   }
+}
+
+// The generic pilot-data "knowledge" resource handles create/approve/delete
+// fine, but its "analyze" action calls the AI provider inline and can hit the
+// hosting gateway's timeout on slower documents — the same problem that was
+// already fixed for the Knowledge Studio (see
+// netlify/edge-functions/knowledge-enterprise-upload.ts, which rewrites
+// knowledge.html's client JS to call this same dedicated endpoint instead).
+// This page calls it directly rather than pilot-data's action:'analyze', so
+// it does not reintroduce that timeout risk.
+async function analyzeKnowledgeSource(id) {
+  const authToken = await PilotCloud.token('manager');
+  const res = await fetch('/.netlify/functions/knowledge-analyze', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + authToken },
+    body: JSON.stringify({ id })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || t('AI analysis could not finish. Please retry; your saved source is safe.', 'AI 分析未能完成，请重试；已保存的来源资料是安全的。'));
+  return data;
 }
 
 async function submitUpload() {
@@ -591,35 +741,29 @@ async function submitUpload() {
   const btn = document.getElementById('upload-submit');
 
   errEl.style.display = 'none';
-  if (!title) { errEl.textContent = 'Please enter a document title.'; errEl.style.display = 'block'; return; }
-  if (!content) { errEl.textContent = 'Please add document content (upload a file or paste text).'; errEl.style.display = 'block'; return; }
-  if (!consent) { errEl.textContent = 'Please confirm organizational authorization before uploading.'; errEl.style.display = 'block'; return; }
+  if (!title) { errEl.textContent = t('Please enter a document title.', '请输入文件标题。'); errEl.style.display = 'block'; return; }
+  if (!content) { errEl.textContent = t('Please add document content (upload a file or paste text).', '请添加文件内容（上传文件或粘贴文字）。'); errEl.style.display = 'block'; return; }
+  if (!consent) { errEl.textContent = t('Please confirm organizational authorization before uploading.', '请先确认企业授权后再上传。'); errEl.style.display = 'block'; return; }
 
   btn.disabled = true;
-  progressEl.textContent = 'Uploading and analyzing… this may take 15–30 seconds.';
+  progressEl.textContent = t('Uploading and analyzing… this may take 15–30 seconds.', '正在上传并分析……可能需要 15–30 秒。');
   progressEl.style.display = 'block';
 
   try {
-    // Step 1: create record
-    const createRes = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', {
+    // Step 1: create record (unchanged path — same as knowledge.html)
+    const createData = await PilotCloud.request('knowledge', {
       method: 'POST',
+      requiredRole: 'manager',
       body: JSON.stringify({ action: 'create', title, sourceType, content, consentConfirmed: true })
     });
-    const createData = await createRes.json();
-    if (!createRes.ok) throw new Error(createData.error || 'Upload failed.');
     const id = createData.source?.id;
-    if (!id) throw new Error('Upload failed: no document id returned.');
+    if (!id) throw new Error(t('Upload failed: no document id returned.', '上传失败：未返回文件编号。'));
 
-    // Step 2: analyze
-    progressEl.textContent = 'AI is reading and structuring the document…';
-    const analyzeRes = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', {
-      method: 'POST',
-      body: JSON.stringify({ action: 'analyze', id })
-    });
-    const analyzeData = await analyzeRes.json();
-    if (!analyzeRes.ok) throw new Error(analyzeData.error || 'AI analysis failed.');
+    // Step 2: analyze via the dedicated, timeout-safe endpoint
+    progressEl.textContent = t('AI is reading and structuring the document…', 'AI 正在阅读并整理文件……');
+    const analyzeData = await analyzeKnowledgeSource(id);
 
-    progressEl.textContent = '✅ Done! Refreshing library…';
+    progressEl.textContent = t('✅ Done! Refreshing library…', '✅ 完成！正在刷新知识库……');
     closeUploadModal();
     await loadLibrary();
 
@@ -631,7 +775,7 @@ async function submitUpload() {
       if (pdfFileData) setTimeout(() => loadPdfBuffer(pdfFileData), 600);
     }
   } catch(e) {
-    errEl.textContent = e.message;
+    errEl.textContent = friendlyError(e.message);
     errEl.style.display = 'block';
     progressEl.style.display = 'none';
     btn.disabled = false;
@@ -639,18 +783,6 @@ async function submitUpload() {
 }
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-async function fetchAPI(url, opts = {}) {
-  const token = netlifyIdentity.currentUser()?.token?.access_token;
-  return fetch(url, {
-    ...opts,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(opts.headers || {})
-    }
-  });
-}
-
 function escHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -659,12 +791,46 @@ function relTime(iso) {
   if (!iso) return '';
   const diff = Date.now() - new Date(iso).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 2) return 'just now';
-  if (m < 60) return `${m}m ago`;
+  if (m < 2) return t('just now', '刚刚');
+  if (m < 60) return t(`${m}m ago`, `${m} 分钟前`);
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return t(`${h}h ago`, `${h} 小时前`);
+  return t(`${Math.floor(h / 24)}d ago`, `${Math.floor(h / 24)} 天前`);
 }
+
+// Mirrors knowledge.html's friendlyError(): the backend (pilot-data,
+// knowledge-analyze, knowledge-chat) returns plain English error strings;
+// this maps the known ones to Chinese instead of leaving the UI half-English
+// when the page is set to 中文.
+function friendlyError(message) {
+  if (currentLang !== 'zh') return message || t('The operation could not be completed.', '操作未能完成。');
+  const map = {
+    'Please sign in to continue.': '请先登录后继续。',
+    'Document not found.': '找不到此文件。',
+    'This document has not been approved for team access yet.': '此文件尚未获得批准，无法供团队使用。',
+    'Manager access is required.': '此操作需要主管权限。',
+    'AI is not configured.': 'AI 尚未配置。',
+    'Message is required.': '请输入问题内容。',
+    'knowledgeId is required.': '缺少文件编号。',
+    'Please enter a document title.': '请输入文件标题。',
+    'Please add document content (upload a file or paste text).': '请添加文件内容（上传文件或粘贴文字）。',
+    'Please confirm organizational authorization before uploading.': '请先确认企业授权后再上传。',
+    'Knowledge source title is required.': '请填写企业知识标题。',
+    'Add an authorized transcript, training notes, or source link.': '请加入经授权的逐字稿、培训笔记或来源连结。',
+    'Confirm organizational authorization and AI processing consent.': '请确认企业已授权使用此材料及进行 AI 处理。',
+    'Add at least 80 characters of transcript or training notes before analysis.': 'AI 分析前，请至少加入 80 个字符的逐字稿或培训笔记。',
+    'AI analysis failed.': 'AI 分析未完成，请稍后再试。',
+    'AI analysis is temporarily slow. Please retry; your saved source is safe.': 'AI 分析暂时较慢，请重试；已保存的文件是安全的。',
+    'AI analysis was incomplete. Please retry.': 'AI 分析结果不完整，请重试。',
+    'AI analysis returned an unreadable response. Please retry.': 'AI 分析结果无法读取，请重试。',
+    'AI analysis could not finish. Please retry; your saved source is safe.': 'AI 分析未能完成，请重试；已保存的来源资料是安全的。',
+    'Upload failed: no document id returned.': '上传失败：未返回文件编号。',
+    'Request failed.': '请求失败。'
+  };
+  return map[message] || ('操作未完成：' + message);
+}
+
+init();
 </script>
 </body>
 </html>
