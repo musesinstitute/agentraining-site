@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Knowledge – AgentTraining.ai</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root {
+  --blue:#1a56db; --ink:#111827; --muted:#64748b;
+  --bg:#f7f8fc; --line:#e2e8f0; --white:#fff;
+  --green:#047857; --amber:#b45309; --red:#b91c1c;
+  --ai-bubble:#eff6ff; --user-bubble:#1a56db;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:14px Arial,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* NAV */
+nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.logo{color:var(--blue);font-size:18px;font-weight:800;text-decoration:none}
+.logo span{color:#f59e0b}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-title{font-size:13px;color:var(--muted);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#identity-display{font-size:11px;color:var(--muted)}
+.btn-sm{border:1px solid var(--line);background:var(--white);color:#475569;border-radius:7px;
+  padding:6px 10px;cursor:pointer;font-size:12px;white-space:nowrap}
+.btn-sm:hover{border-color:#93c5fd;color:var(--blue)}
+
+/* LIBRARY PANEL (left slide-in) */
+#library-panel{position:fixed;top:56px;left:0;bottom:0;width:300px;background:var(--white);
+  border-right:1px solid var(--line);z-index:20;transform:translateX(-100%);
+  transition:transform .2s ease;display:flex;flex-direction:column}
+#library-panel.open{transform:translateX(0)}
+.lib-header{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.lib-header h2{font-size:15px;font-weight:700}
+.lib-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;line-height:1}
+.lib-list{overflow-y:auto;flex:1;padding:10px}
+.lib-item{padding:12px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:6px}
+.lib-item:hover{background:#f8fafc;border-color:var(--line)}
+.lib-item.active{background:#eff6ff;border-color:#93c5fd}
+.lib-item-title{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lib-item-meta{font-size:11px;color:var(--muted)}
+.lib-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+.lib-upload{margin:10px;padding:10px 14px;background:var(--blue);color:var(--white);
+  border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;width:calc(100% - 20px)}
+.lib-upload:hover{background:#1741b8}
+
+/* OVERLAY */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:15}
+#overlay.show{display:block}
+
+/* MAIN WORKSPACE */
+#workspace{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* EMPTY STATE */
+#empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;color:var(--muted);text-align:center;padding:40px}
+#empty-state h2{font-size:22px;color:var(--ink);font-weight:700}
+#empty-state p{max-width:360px;line-height:1.6;font-size:14px}
+#empty-state .open-lib-btn{background:var(--blue);color:var(--white);border:none;border-radius:9px;
+  padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer}
+#empty-state .open-lib-btn:hover{background:#1741b8}
+
+/* SPLIT PANE */
+#split-pane{flex:1;display:none;overflow:hidden}
+#split-pane.visible{display:flex}
+
+/* AI PANEL */
+#ai-panel{width:42%;min-width:320px;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--white)}
+.ai-top{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ai-top-label{font-size:12px;color:var(--muted)}
+.ai-top-title{font-size:14px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick-btns{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;flex-shrink:0}
+.quick-btn{background:#f1f5f9;border:1px solid var(--line);border-radius:20px;padding:5px 11px;
+  font-size:12px;cursor:pointer;color:var(--ink);white-space:nowrap}
+.quick-btn:hover{background:#eff6ff;border-color:#93c5fd;color:var(--blue)}
+#chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;flex-direction:column;max-width:88%}
+.msg.user{align-self:flex-end;align-items:flex-end}
+.msg.ai{align-self:flex-start;align-items:flex-start}
+.bubble{padding:10px 14px;border-radius:14px;line-height:1.55;font-size:13px;white-space:pre-wrap;word-break:break-word}
+.msg.user .bubble{background:var(--user-bubble);color:var(--white);border-bottom-right-radius:4px}
+.msg.ai .bubble{background:var(--ai-bubble);color:var(--ink);border-bottom-left-radius:4px;border:1px solid #dbeafe}
+.msg-time{font-size:10px;color:var(--muted);margin-top:4px;padding:0 4px}
+.typing{display:flex;gap:5px;align-items:center;padding:12px 14px}
+.dot{width:7px;height:7px;border-radius:50%;background:#93c5fd;animation:bounce .9s infinite}
+.dot:nth-child(2){animation-delay:.15s}
+.dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+#chat-input-area{border-top:1px solid var(--line);padding:12px 14px;flex-shrink:0}
+#chat-form{display:flex;gap:8px;align-items:flex-end}
+#chat-input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font-size:13px;resize:none;font-family:inherit;outline:none;max-height:120px;min-height:40px;line-height:1.5}
+#chat-input:focus{border-color:#93c5fd;box-shadow:0 0 0 2px #dbeafe}
+#send-btn{background:var(--blue);color:var(--white);border:none;border-radius:9px;
+  padding:9px 14px;cursor:pointer;font-size:18px;line-height:1;flex-shrink:0;height:40px}
+#send-btn:hover{background:#1741b8}
+#send-btn:disabled{background:#93c5fd;cursor:not-allowed}
+.chat-hint{font-size:11px;color:var(--muted);margin-top:6px;text-align:center}
+
+/* PDF PANEL */
+#pdf-panel{flex:1;display:flex;flex-direction:column;background:#525659;overflow:hidden}
+.pdf-toolbar{background:#3c3f41;padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pdf-toolbar-label{color:#ccc;font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-nav{display:flex;align-items:center;gap:6px}
+.pdf-nav button{background:#555;color:#eee;border:none;border-radius:5px;padding:4px 9px;cursor:pointer;font-size:12px}
+.pdf-nav button:hover{background:#666}
+.pdf-nav span{color:#ccc;font-size:12px;white-space:nowrap}
+#pdf-container{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+#pdf-container canvas{max-width:100%;box-shadow:0 2px 12px rgba(0,0,0,.4);border-radius:3px;display:block}
+.pdf-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:12px;color:#999;text-align:center;padding:32px}
+.pdf-placeholder p{font-size:13px;line-height:1.6;max-width:260px}
+.pdf-placeholder .icon{font-size:48px;opacity:.4}
+
+/* UPLOAD MODAL */
+#upload-modal{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center}
+#upload-modal.show{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+.modal{position:relative;background:var(--white);border-radius:16px;padding:28px;width:90%;max-width:460px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+.form-field{margin-bottom:14px}
+.form-field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.form-field input,.form-field textarea,.form-field select{
+  width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 11px;
+  font-size:13px;font-family:inherit;outline:none}
+.form-field input:focus,.form-field textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 2px #dbeafe}
+.form-field textarea{resize:vertical;min-height:80px}
+.form-field .drop-zone{border:2px dashed var(--line);border-radius:10px;padding:24px;text-align:center;
+  cursor:pointer;color:var(--muted);font-size:13px;transition:border-color .15s}
+.form-field .drop-zone:hover,.form-field .drop-zone.drag{border-color:#93c5fd;background:#f0f9ff;color:var(--blue)}
+.form-field .drop-zone input[type=file]{display:none}
+.consent-row{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted);
+  background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:14px;line-height:1.5}
+.consent-row input{margin-top:2px;flex-shrink:0}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.btn-cancel{background:var(--white);border:1px solid var(--line);color:var(--ink);
+  border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px}
+.btn-primary{background:var(--blue);color:var(--white);border:none;border-radius:8px;
+  padding:9px 18px;cursor:pointer;font-size:13px;font-weight:700}
+.btn-primary:disabled{background:#93c5fd;cursor:not-allowed}
+#upload-error{color:var(--red);font-size:12px;margin-bottom:10px;display:none}
+#upload-progress{font-size:12px;color:var(--muted);margin-bottom:10px;display:none}
+
+/* AUTH GATE */
+#auth-gate{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;
+  align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:32px}
+#auth-gate.show{display:flex}
+#auth-gate h2{font-size:22px;font-weight:700}
+#auth-gate p{color:var(--muted);max-width:340px;line-height:1.6}
+#auth-gate button{background:var(--blue);color:var(--white);border:none;border-radius:9px;
+  padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer}
+
+/* STATUS BADGE */
+.status-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;text-transform:uppercase}
+.status-approved{background:#d1fae5;color:var(--green)}
+.status-analyzed{background:#fef3c7;color:var(--amber)}
+.status-draft{background:#f1f5f9;color:var(--muted)}
+
+@media(max-width:700px){
+  #ai-panel{width:100%;border-right:none}
+  #pdf-panel{display:none}
+  #split-pane.visible{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate" class="show">
+  <h2>Company Knowledge</h2>
+  <p>Sign in to access your team's training library.</p>
+  <button onclick="netlifyIdentity.open('login')">Sign In</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="pilot.html">Agent<span>Training</span>.ai</a>
+  <span class="nav-title" id="nav-doc-title">Company Knowledge Library</span>
+  <div class="nav-right">
+    <span id="identity-display"></span>
+    <button class="btn-sm" id="lib-toggle-btn" onclick="toggleLibrary()">☰ Library</button>
+    <button class="btn-sm" onclick="netlifyIdentity.logout().then(()=>location.reload())">Sign out</button>
+  </div>
+</nav>
+
+<!-- LIBRARY PANEL -->
+<div id="library-panel">
+  <div class="lib-header">
+    <h2>Training Library</h2>
+    <button class="lib-close" onclick="toggleLibrary()">×</button>
+  </div>
+  <div class="lib-list" id="lib-list">
+    <div class="lib-empty">Loading documents…</div>
+  </div>
+  <button class="lib-upload" id="upload-trigger" style="display:none" onclick="openUploadModal()">+ Upload Company Document</button>
+</div>
+<div id="overlay" onclick="toggleLibrary()"></div>
+
+<!-- MAIN WORKSPACE -->
+<div id="workspace">
+
+  <!-- EMPTY STATE -->
+  <div id="empty-state">
+    <div style="font-size:48px">📚</div>
+    <h2>Company Training Library</h2>
+    <p>Open a document from your library to start asking questions. AI answers are grounded in your company's actual product materials.</p>
+    <button class="open-lib-btn" onclick="toggleLibrary()">Open Library</button>
+  </div>
+
+  <!-- SPLIT PANE -->
+  <div id="split-pane">
+
+    <!-- LEFT: AI CHAT -->
+    <div id="ai-panel">
+      <div class="ai-top">
+        <div>
+          <div class="ai-top-label">Asking about</div>
+          <div class="ai-top-title" id="ai-doc-title">—</div>
+        </div>
+      </div>
+      <div class="quick-btns" id="quick-btns">
+        <button class="quick-btn" onclick="sendQuick('What are the key features of this product?')">Key features</button>
+        <button class="quick-btn" onclick="sendQuick('What are the most common client objections and how should I respond?')">Client objections</button>
+        <button class="quick-btn" onclick="sendQuick('Who is the ideal client for this product?')">Ideal client</button>
+        <button class="quick-btn" onclick="sendQuick('What should new agents know before selling this?')">New agent tips</button>
+        <button class="quick-btn" onclick="sendQuick('Give me 5 quiz questions to test my knowledge of this document.')">Quiz me</button>
+      </div>
+      <div id="chat-messages">
+        <div class="msg ai">
+          <div class="bubble">Hi! I've read this document and I'm ready to answer your questions. Ask me anything about the product, coverage, client scenarios, or common objections. You can also ask me to quiz you.</div>
+          <div class="msg-time">AI · grounded in company document</div>
+        </div>
+      </div>
+      <div id="chat-input-area">
+        <div id="chat-form">
+          <textarea id="chat-input" placeholder="Ask anything about this document…" rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button id="send-btn" onclick="sendMessage()">↑</button>
+        </div>
+        <div class="chat-hint">Answers are grounded in the document on the right</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PDF VIEWER -->
+    <div id="pdf-panel">
+      <div class="pdf-toolbar">
+        <span class="pdf-toolbar-label" id="pdf-toolbar-title">Document</span>
+        <div class="pdf-nav">
+          <button onclick="prevPage()">‹</button>
+          <span id="pdf-page-info">—</span>
+          <button onclick="nextPage()">›</button>
+        </div>
+      </div>
+      <div id="pdf-container">
+        <div class="pdf-placeholder">
+          <div class="icon">📄</div>
+          <p>PDF preview will appear here when you open a document uploaded as a PDF file.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /split-pane -->
+</div><!-- /workspace -->
+
+<!-- UPLOAD MODAL (manager only) -->
+<div id="upload-modal">
+  <div class="modal-backdrop" onclick="closeUploadModal()"></div>
+  <div class="modal">
+    <h3>Upload Company Document</h3>
+    <div id="upload-error"></div>
+    <div id="upload-progress"></div>
+    <div class="form-field">
+      <label>Document title</label>
+      <input id="upload-title" type="text" placeholder="e.g. Allianz Life – IUL Product Guide 2025" maxlength="200">
+    </div>
+    <div class="form-field">
+      <label>Document type</label>
+      <select id="upload-type">
+        <option value="product_guide">Product Guide / Brochure</option>
+        <option value="underwriting">Underwriting Guide</option>
+        <option value="script">Sales Script / Call Guide</option>
+        <option value="faq">FAQ / Objection Handling</option>
+        <option value="training_notes">Training Notes</option>
+        <option value="company_knowledge">Other Company Material</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Upload PDF or paste text content</label>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+        ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" id="file-input" accept=".pdf,.txt,.md" onchange="handleFileSelect(event)">
+        <span id="drop-label">Click to select PDF / TXT / MD — or drag and drop</span>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Or paste text directly</label>
+      <textarea id="upload-content" placeholder="Paste the document text here…" style="min-height:100px"></textarea>
+    </div>
+    <div class="consent-row">
+      <input type="checkbox" id="upload-consent">
+      <label for="upload-consent">I confirm this document is authorized by our organization for AI training use and does not contain personal client data.</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
+      <button class="btn-primary" id="upload-submit" onclick="submitUpload()">Upload & Analyze</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentUser = null;
+let isManager = false;
+let currentDoc = null;       // { id, title, content, status, analysis }
+let chatHistory = [];        // { role, content }[]
+let pdfDoc = null;
+let pdfPage = 1;
+let pdfRendering = false;
+let pdfFileData = null;      // ArrayBuffer of uploaded PDF (for preview)
+let uploadFileBuffer = null; // ArrayBuffer for upload submission
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+netlifyIdentity.on('login', user => { currentUser = user; onLogin(); netlifyIdentity.close(); });
+netlifyIdentity.on('logout', () => { currentUser = null; showAuthGate(); });
+netlifyIdentity.on('init', user => { if (user) { currentUser = user; onLogin(); } else { showAuthGate(); } });
+
+function showAuthGate() { document.getElementById('auth-gate').classList.add('show'); }
+function hideAuthGate() { document.getElementById('auth-gate').classList.remove('show'); }
+
+async function onLogin() {
+  hideAuthGate();
+  const meta = currentUser.app_metadata || currentUser.appMetadata || {};
+  const roles = Array.isArray(meta.roles) ? meta.roles : (Array.isArray(currentUser.roles) ? currentUser.roles : []);
+  isManager = roles.includes('manager') || roles.includes('admin') || meta.role === 'manager';
+  document.getElementById('identity-display').textContent = currentUser.email || '';
+  if (isManager) document.getElementById('upload-trigger').style.display = 'block';
+  await loadLibrary();
+}
+
+// ─── LIBRARY ──────────────────────────────────────────────────────────────────
+let libraryOpen = false;
+
+function toggleLibrary() {
+  libraryOpen = !libraryOpen;
+  document.getElementById('library-panel').classList.toggle('open', libraryOpen);
+  document.getElementById('overlay').classList.toggle('show', libraryOpen);
+}
+
+async function loadLibrary() {
+  const list = document.getElementById('lib-list');
+  list.innerHTML = '<div class="lib-empty">Loading…</div>';
+  try {
+    const res = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', { method: 'GET' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load library.');
+    const sources = data.sources || [];
+    if (!sources.length) {
+      list.innerHTML = '<div class="lib-empty">' + (isManager
+        ? 'No documents yet. Upload your first company training document.'
+        : 'No approved documents yet. Ask your manager to upload and approve training materials.') + '</div>';
+      return;
+    }
+    list.innerHTML = '';
+    sources.forEach(src => {
+      const el = document.createElement('div');
+      el.className = 'lib-item';
+      el.dataset.id = src.id;
+      const statusClass = src.status === 'approved' ? 'status-approved' : src.status === 'analyzed' ? 'status-analyzed' : 'status-draft';
+      const statusLabel = src.status === 'approved' ? 'Approved' : src.status === 'analyzed' ? 'Reviewed' : 'Draft';
+      el.innerHTML = `<div class="lib-item-title">${escHtml(src.title)}</div>
+        <div class="lib-item-meta"><span class="status-badge ${statusClass}">${statusLabel}</span> · ${relTime(src.updatedAt)}</div>`;
+      el.onclick = () => openDocument(src);
+      list.appendChild(el);
+    });
+  } catch(e) {
+    list.innerHTML = `<div class="lib-empty" style="color:var(--red)">${escHtml(e.message)}</div>`;
+  }
+}
+
+async function openDocument(src) {
+  currentDoc = src;
+  chatHistory = [];
+
+  // Update UI
+  document.getElementById('nav-doc-title').textContent = src.title;
+  document.getElementById('ai-doc-title').textContent = src.title;
+  document.getElementById('pdf-toolbar-title').textContent = src.title;
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('split-pane').classList.add('visible');
+
+  // Mark active in library
+  document.querySelectorAll('.lib-item').forEach(el => el.classList.toggle('active', el.dataset.id === src.id));
+
+  // Reset chat
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `<div class="msg ai"><div class="bubble">I've loaded <strong>${escHtml(src.title)}</strong>. Ask me anything — product features, client objections, underwriting rules, or say "Quiz me" to test your knowledge.</div><div class="msg-time">AI · grounded in company document</div></div>`;
+
+  // Close library on mobile
+  if (window.innerWidth < 700) toggleLibrary();
+
+  // Load PDF preview if content looks like it was extracted from PDF
+  // (We show the PDF panel with a helpful message; actual binary PDF rendering
+  //  requires the original file — we show the text content as fallback)
+  resetPdfViewer(src);
+}
+
+function resetPdfViewer(src) {
+  pdfDoc = null; pdfPage = 1; pdfFileData = null;
+  document.getElementById('pdf-page-info').textContent = '—';
+  const container = document.getElementById('pdf-container');
+  const preview = src.analysis?.summary
+    ? `<div class="pdf-placeholder" style="align-items:flex-start;padding:20px;color:#ddd;text-align:left;max-width:600px">
+        <p style="font-size:11px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">AI Summary</p>
+        <p style="font-size:14px;line-height:1.7">${escHtml(src.analysis.summary)}</p>
+        ${src.analysis.keyPoints?.length ? '<p style="font-size:11px;color:#888;margin:16px 0 8px;text-transform:uppercase;letter-spacing:.5px">Key Points</p><ul style="font-size:13px;line-height:1.8;padding-left:18px">' + src.analysis.keyPoints.map(k => `<li>${escHtml(k)}</li>`).join('') + '</ul>' : ''}
+        <p style="font-size:11px;color:#666;margin-top:20px">To see the original PDF side-by-side, re-upload the file using the PDF viewer button below.</p>
+      </div>`
+    : `<div class="pdf-placeholder"><div class="icon">📄</div><p>Document loaded. Ask questions on the left — AI answers are grounded in the full document content.</p></div>`;
+  container.innerHTML = preview;
+}
+
+// ─── CHAT ─────────────────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function sendQuick(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+async function sendMessage() {
+  if (!currentDoc) return;
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = ''; input.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+
+  appendMsg('user', message);
+  chatHistory.push({ role: 'user', content: message });
+
+  const typing = appendTyping();
+
+  try {
+    const res = await fetchAPI('/.netlify/functions/knowledge-chat', {
+      method: 'POST',
+      body: JSON.stringify({ knowledgeId: currentDoc.id, message, history: chatHistory.slice(-10) })
+    });
+    const data = await res.json();
+    typing.remove();
+    if (!res.ok) throw new Error(data.error || 'Request failed.');
+    const text = data.text || '';
+    appendMsg('ai', text);
+    chatHistory.push({ role: 'assistant', content: text });
+  } catch(e) {
+    typing.remove();
+    appendMsg('ai', '⚠️ ' + e.message);
+  }
+  document.getElementById('send-btn').disabled = false;
+}
+
+function appendMsg(role, text) {
+  const msgs = document.getElementById('chat-messages');
+  const el = document.createElement('div');
+  el.className = 'msg ' + role;
+  const time = role === 'ai' ? 'AI · grounded in company document' : 'You';
+  el.innerHTML = `<div class="bubble">${escHtml(text)}</div><div class="msg-time">${time}</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  return el;
+}
+
+function appendTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const el = document.createElement('div');
+  el.className = 'msg ai';
+  el.innerHTML = '<div class="bubble"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  return el;
+}
+
+// ─── PDF VIEWER ───────────────────────────────────────────────────────────────
+async function loadPdfBuffer(buffer) {
+  pdfFileData = buffer;
+  pdfDoc = await pdfjsLib.getDocument({ data: buffer }).promise;
+  pdfPage = 1;
+  document.getElementById('pdf-container').innerHTML = '';
+  await renderAllPages();
+}
+
+async function renderAllPages() {
+  if (!pdfDoc) return;
+  const container = document.getElementById('pdf-container');
+  container.innerHTML = '';
+  document.getElementById('pdf-page-info').textContent = `${pdfDoc.numPages} page${pdfDoc.numPages !== 1 ? 's' : ''}`;
+  for (let i = 1; i <= Math.min(pdfDoc.numPages, 30); i++) {
+    const page = await pdfDoc.getPage(i);
+    const scale = Math.min(container.clientWidth / page.getViewport({ scale: 1 }).width * 0.92, 1.8);
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    container.appendChild(canvas);
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+  }
+}
+
+async function prevPage() {
+  if (!pdfDoc || pdfPage <= 1) return;
+  pdfPage--;
+  const container = document.getElementById('pdf-container');
+  const canvases = container.querySelectorAll('canvas');
+  if (canvases[pdfPage - 1]) canvases[pdfPage - 1].scrollIntoView({ behavior: 'smooth' });
+}
+
+async function nextPage() {
+  if (!pdfDoc || pdfPage >= pdfDoc.numPages) return;
+  pdfPage++;
+  const container = document.getElementById('pdf-container');
+  const canvases = container.querySelectorAll('canvas');
+  if (canvases[pdfPage - 1]) canvases[pdfPage - 1].scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── UPLOAD MODAL ─────────────────────────────────────────────────────────────
+function openUploadModal() { document.getElementById('upload-modal').classList.add('show'); }
+function closeUploadModal() {
+  document.getElementById('upload-modal').classList.remove('show');
+  document.getElementById('upload-title').value = '';
+  document.getElementById('upload-content').value = '';
+  document.getElementById('upload-consent').checked = false;
+  document.getElementById('drop-label').textContent = 'Click to select PDF / TXT / MD — or drag and drop';
+  document.getElementById('upload-error').style.display = 'none';
+  document.getElementById('upload-progress').style.display = 'none';
+  uploadFileBuffer = null;
+}
+
+function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag'); }
+function handleDragLeave() { document.getElementById('drop-zone').classList.remove('drag'); }
+function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag'); processFile(e.dataTransfer.files[0]); }
+function handleFileSelect(e) { processFile(e.target.files[0]); }
+
+async function processFile(file) {
+  if (!file) return;
+  document.getElementById('drop-label').textContent = `📎 ${file.name}`;
+  const buffer = await file.arrayBuffer();
+  if (file.name.endsWith('.pdf')) {
+    uploadFileBuffer = buffer;
+    // Extract text via pdf.js for content
+    try {
+      const pdf = await pdfjsLib.getDocument({ data: buffer.slice(0) }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(s => s.str).join(' ') + '\n';
+      }
+      document.getElementById('upload-content').value = text.trim();
+      // Also offer PDF preview
+      pdfFileData = buffer;
+    } catch(e) {
+      document.getElementById('upload-error').textContent = 'Could not extract text from PDF. Please paste the content manually.';
+      document.getElementById('upload-error').style.display = 'block';
+    }
+  } else {
+    const text = await file.text();
+    document.getElementById('upload-content').value = text;
+  }
+}
+
+async function submitUpload() {
+  const title = document.getElementById('upload-title').value.trim();
+  const content = document.getElementById('upload-content').value.trim();
+  const sourceType = document.getElementById('upload-type').value;
+  const consent = document.getElementById('upload-consent').checked;
+  const errEl = document.getElementById('upload-error');
+  const progressEl = document.getElementById('upload-progress');
+  const btn = document.getElementById('upload-submit');
+
+  errEl.style.display = 'none';
+  if (!title) { errEl.textContent = 'Please enter a document title.'; errEl.style.display = 'block'; return; }
+  if (!content) { errEl.textContent = 'Please add document content (upload a file or paste text).'; errEl.style.display = 'block'; return; }
+  if (!consent) { errEl.textContent = 'Please confirm organizational authorization before uploading.'; errEl.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  progressEl.textContent = 'Uploading and analyzing… this may take 15–30 seconds.';
+  progressEl.style.display = 'block';
+
+  try {
+    // Step 1: create record
+    const createRes = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'create', title, sourceType, content, consentConfirmed: true })
+    });
+    const createData = await createRes.json();
+    if (!createRes.ok) throw new Error(createData.error || 'Upload failed.');
+    const id = createData.source?.id;
+    if (!id) throw new Error('Upload failed: no document id returned.');
+
+    // Step 2: analyze
+    progressEl.textContent = 'AI is reading and structuring the document…';
+    const analyzeRes = await fetchAPI('/.netlify/functions/pilot-data?resource=knowledge', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'analyze', id })
+    });
+    const analyzeData = await analyzeRes.json();
+    if (!analyzeRes.ok) throw new Error(analyzeData.error || 'AI analysis failed.');
+
+    progressEl.textContent = '✅ Done! Refreshing library…';
+    closeUploadModal();
+    await loadLibrary();
+
+    // Auto-open the new document
+    const newDoc = analyzeData.source;
+    if (newDoc) {
+      if (pdfFileData) newDoc._pdfBuffer = pdfFileData;
+      setTimeout(() => openDocument(newDoc), 400);
+      if (pdfFileData) setTimeout(() => loadPdfBuffer(pdfFileData), 600);
+    }
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+    progressEl.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+async function fetchAPI(url, opts = {}) {
+  const token = netlifyIdentity.currentUser()?.token?.access_token;
+  return fetch(url, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(opts.headers || {})
+    }
+  });
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function relTime(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 2) return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+</script>
+</body>
+</html>
