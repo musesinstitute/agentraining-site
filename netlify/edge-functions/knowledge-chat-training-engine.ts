@@ -46,7 +46,7 @@ export default async (_request: Request, context: any) => {
         var started=await qbRequest({action:'start',knowledgeId:knowledgeId,count:count,difficulty:difficulty});
         bank=started.questionBank;activeBankId=bank.id;activeKnowledgeId=knowledgeId;activeCount=count;activeDifficulty=difficulty;
       }
-      var target=bank.targetQuestions||count,maxAttempts=Math.ceil(target/20)+4,attempts=0;
+      var target=bank.targetQuestions||count,batchSize=bank.batchSize||5,maxAttempts=Math.ceil(target/batchSize)+4,attempts=0;
       while(bank&&bank.status!=='complete'&&attempts<maxAttempts){
         attempts++;
         var completed=bank.totalQuestions||0;
