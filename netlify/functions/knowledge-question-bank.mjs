@@ -4,6 +4,7 @@ import { getUser, verifyRequestOrigin } from '@netlify/identity';
 const STORE_NAME='agentraining-pilot';
 const jsonHeaders={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
 const BATCH_SIZE=5;
+const BATCH_TIMEOUT_MS=30000;
 
 function reply(status,body){return new Response(JSON.stringify(body),{status,headers:jsonHeaders})}
 function cleanText(value,max=500){return String(value??'').trim().slice(0,max)}
@@ -17,7 +18,7 @@ function dedupeQuestions(items){const seen=new Set();const out=[];for(const q of
 
 async function requireManager(req){verifyRequestOrigin(req);const user=await getUser(req);if(!user)throw Object.assign(new Error('Please sign in to continue.'),{status:401});const roles=Array.isArray(user.roles)?user.roles:[];if(!roles.includes('manager')&&!roles.includes('admin'))throw Object.assign(new Error('Manager access is required.'),{status:403});return{id:cleanText(user.id,100),email:normalizeEmail(user.email),teamId:safeSegment(user.appMetadata?.team_id,'founding-pilot')}}
 
-async function callBatch(record,{count,difficulty,startNumber,existingFingerprints,timeoutMs=12000}){
+async function callBatch(record,{count,difficulty,startNumber,existingFingerprints,timeoutMs=BATCH_TIMEOUT_MS}){
  const apiKey=process.env.OPENAI_API_KEY;if(!apiKey)throw Object.assign(new Error('Question Bank AI is not configured.'),{status:503});
  const model=process.env.OPENAI_KNOWLEDGE_MODEL||process.env.OPENAI_CHAT_MODEL||'gpt-5.4-mini';
  const source=compactSource(record.content,8000);
