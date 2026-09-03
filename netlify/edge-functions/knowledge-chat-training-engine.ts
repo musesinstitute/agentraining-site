@@ -5,54 +5,36 @@ export default async (_request: Request, context: any) => {
 
   let html = await response.text();
   const patch = `
+<style>
+.training-engine-actions{display:flex;gap:6px;align-items:center}.scenario-trigger-btn{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}.scenario-trigger-btn:hover{background:#6d28d9}#scenario-modal{display:none;position:fixed;inset:0;z-index:55;align-items:center;justify-content:center}#scenario-modal.show{display:flex}.scenario-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}.scenario-box{position:relative;background:#fff;border-radius:16px;padding:26px;width:92%;max-width:720px;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}.scenario-box h3{font-size:18px;margin-bottom:5px}.scenario-sub{font-size:13px;color:#64748b;margin-bottom:15px}.scenario-controls{display:flex;gap:10px;align-items:end;margin-bottom:14px}.scenario-controls label{display:block;font-size:12px;font-weight:700;color:#64748b;margin-bottom:5px}.scenario-controls select{border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px}.scenario-progress,.scenario-error{display:none;padding:10px 0;font-size:12px}.scenario-progress{color:#64748b}.scenario-error{color:#b91c1c}.scenario-card{border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin:10px 0;background:#fff}.scenario-card h4{font-size:14px;margin-bottom:6px}.scenario-meta{font-size:11px;color:#64748b;margin-bottom:8px}.scenario-card p{font-size:12.5px;line-height:1.55;margin:5px 0}.scenario-success{padding-left:18px;font-size:12px;line-height:1.5}.scenario-card-actions{display:flex;justify-content:flex-end;margin-top:10px}.scenario-select{background:#1a56db;color:#fff;border:none;border-radius:7px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}.scenario-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+</style>
 <script>
 (function(){
-  async function qbRequest(payload){
-    var token=await PilotCloud.token('manager');
-    var res=await fetch('/.netlify/functions/knowledge-question-bank',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
-    var data=await res.json().catch(function(){return {}});
-    if(!res.ok)throw new Error(data.error||t('Question Bank request failed.','题库请求失败。'));
-    return data;
+  function ensureScenarioUI(){
+    if(document.getElementById('scenario-modal'))return;
+    var qb=document.getElementById('qb-trigger-btn');
+    if(qb){var wrap=document.createElement('div');wrap.className='training-engine-actions';qb.parentNode.insertBefore(wrap,qb);wrap.appendChild(qb);var b=document.createElement('button');b.id='scenario-trigger-btn';b.className='scenario-trigger-btn';b.style.display='none';b.innerHTML='🎭 <span id="scenario-btn-label">Practice Scenarios</span>';b.onclick=openScenarioModal;wrap.appendChild(b)}
+    var modal=document.createElement('div');modal.id='scenario-modal';modal.innerHTML='<div class="scenario-backdrop"></div><div class="scenario-box"><h3 id="scenario-title">Generate Practice Scenarios</h3><div class="scenario-sub" id="scenario-sub">Create realistic practice situations grounded in this company document. Manager review is required before assignment.</div><div class="scenario-error" id="scenario-error"></div><div class="scenario-progress" id="scenario-progress"></div><div id="scenario-form" class="scenario-controls"><div><label id="scenario-count-label">Number of scenarios</label><select id="scenario-count"><option value="3">3</option><option value="5" selected>5</option><option value="8">8</option></select></div><button class="btn-primary" id="scenario-generate">Generate Scenarios</button></div><div id="scenario-results"></div><div class="scenario-footer"><button class="btn-cancel" id="scenario-close">Close</button></div></div>';document.body.appendChild(modal);
+    modal.querySelector('.scenario-backdrop').onclick=closeScenarioModal;document.getElementById('scenario-close').onclick=closeScenarioModal;document.getElementById('scenario-generate').onclick=generateScenarios;
   }
+  function localizeScenarioUI(){var z=currentLang==='zh';var set=function(id,en,zh){var e=document.getElementById(id);if(e)e.textContent=z?zh:en};set('scenario-btn-label','Practice Scenarios','实战情境');set('scenario-title','Generate Practice Scenarios','生成实战训练情境');set('scenario-sub','Create realistic practice situations grounded in this company document. Manager review is required before assignment.','根据这份企业文件生成真实训练情境。指派给学员前必须由主管审核。');set('scenario-count-label','Number of scenarios','情境数量');set('scenario-generate','Generate Scenarios','生成情境');set('scenario-close','Close','关闭')}
+  window.openScenarioModal=function(){if(!currentDoc||!canManage)return;ensureScenarioUI();localizeScenarioUI();document.getElementById('scenario-error').style.display='none';document.getElementById('scenario-modal').classList.add('show')};
+  window.closeScenarioModal=function(){var m=document.getElementById('scenario-modal');if(m)m.classList.remove('show')};
+  async function direct(endpoint,payload){var token=await PilotCloud.token('manager');var r=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});var d=await r.json().catch(function(){return {}});if(!r.ok)throw new Error(d.error||'Request failed.');return d}
+  window.generateScenarios=async function(){if(!currentDoc)return;var count=parseInt(document.getElementById('scenario-count').value)||5,err=document.getElementById('scenario-error'),prog=document.getElementById('scenario-progress'),btn=document.getElementById('scenario-generate');err.style.display='none';btn.disabled=true;prog.textContent=t('AI is creating source-grounded Practice Scenarios…','AI 正在根据企业文件生成实战训练情境……');prog.style.display='block';try{var d=await direct('/.netlify/functions/knowledge-practice-scenarios',{action:'generate',knowledgeId:currentDoc.id,count:count});renderScenarios(d.scenarioPack);prog.style.display='none'}catch(e){err.textContent=friendlyError(e.message);err.style.display='block';prog.style.display='none'}finally{btn.disabled=false}};
+  function renderScenarios(pack){var out=document.getElementById('scenario-results');out.innerHTML='';(pack.scenarios||[]).forEach(function(s){var card=document.createElement('div');card.className='scenario-card';var criteria=(s.successCriteria||[]).map(function(x){return '<li>'+escHtml(x)+'</li>'}).join('');card.innerHTML='<h4>'+escHtml(s.title)+'</h4><div class="scenario-meta">'+escHtml(s.difficulty||'')+(s.sourceReference?' · '+escHtml(s.sourceReference):'')+'</div><p><b>'+t('Situation:','情境：')+'</b> '+escHtml(s.situation)+'</p><p><b>'+t('Objective:','目标：')+'</b> '+escHtml(s.objective)+'</p><p><b>'+t('Client opens with:','客户开场：')+'</b> '+escHtml(s.clientOpening)+'</p>'+(criteria?'<ul class="scenario-success">'+criteria+'</ul>':'')+'<div class="scenario-card-actions"><button class="scenario-select">'+t('Select for Manager Review →','选择并进入主管审核 →')+'</button></div>';card.querySelector('.scenario-select').onclick=function(){promoteScenario(pack.id,s.id,this)};out.appendChild(card)})}
+  async function promoteScenario(packId,scenarioId,button){button.disabled=true;button.textContent=t('Preparing review…','正在准备审核……');try{var d=await direct('/.netlify/functions/knowledge-practice-scenarios',{action:'promote',knowledgeId:currentDoc.id,packId:packId,scenarioId:scenarioId});location.href=d.handoffUrl||('/knowledge.html?pilot=1')}catch(e){var err=document.getElementById('scenario-error');err.textContent=friendlyError(e.message);err.style.display='block';button.disabled=false;button.textContent=t('Select for Manager Review →','选择并进入主管审核 →')}}
 
-  window.generateQB=async function(){
-    if(!currentDoc)return;
-    var count=parseInt(document.getElementById('qb-count').value)||20;
-    var difficulty=document.getElementById('qb-difficulty').value;
-    var errEl=document.getElementById('qb-error');
-    var progressEl=document.getElementById('qb-progress');
-    var generateBtn=document.getElementById('qb-generate-btn');
-    var cancelBtn=document.getElementById('qb-cancel-btn');
-    errEl.style.display='none';generateBtn.disabled=true;cancelBtn.style.display='none';
-    progressEl.style.display='block';
-    progressEl.textContent=t('Preparing question bank…','正在准备题库……');
+  async function qbRequest(payload){return direct('/.netlify/functions/knowledge-question-bank',payload)}
+  window.generateQB=async function(){if(!currentDoc)return;var count=parseInt(document.getElementById('qb-count').value)||20,difficulty=document.getElementById('qb-difficulty').value,errEl=document.getElementById('qb-error'),progressEl=document.getElementById('qb-progress'),generateBtn=document.getElementById('qb-generate-btn'),cancelBtn=document.getElementById('qb-cancel-btn');errEl.style.display='none';generateBtn.disabled=true;cancelBtn.style.display='none';progressEl.style.display='block';progressEl.textContent=t('Preparing question bank…','正在准备题库……');try{var started=await qbRequest({action:'start',knowledgeId:currentDoc.id,count:count,difficulty:difficulty}),bank=started.questionBank;while(bank&&bank.status!=='complete'){var completed=bank.totalQuestions||0,target=bank.targetQuestions||count;progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' completed. Completed batches are saved automatically.','正在生成题库 — 已完成 '+completed+' / '+target+'。每批完成后都会自动保存。');var batch=await qbRequest({action:'generate_batch',knowledgeId:currentDoc.id,bankId:bank.id});bank=batch.questionBank}currentQB=bank;progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' saved.','题库已完成 — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' 已保存。');setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},450)}catch(e){errEl.textContent=friendlyError(e.message);errEl.style.display='block';progressEl.textContent=t('Generation paused. Completed batches remain saved. You can retry safely.','生成已暂停。已完成批次不会丢失，可以安全重试。');progressEl.style.display='block';generateBtn.disabled=false;cancelBtn.style.display=''}};
 
-    try{
-      var started=await qbRequest({action:'start',knowledgeId:currentDoc.id,count:count,difficulty:difficulty});
-      var bank=started.questionBank;
-      while(bank&&bank.status!=='complete'){
-        var completed=bank.totalQuestions||0,target=bank.targetQuestions||count;
-        progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' completed. Completed batches are saved automatically.','正在生成题库 — 已完成 '+completed+' / '+target+'。每批完成后都会自动保存。');
-        var batch=await qbRequest({action:'generate_batch',knowledgeId:currentDoc.id,bankId:bank.id});
-        bank=batch.questionBank;
-      }
-      currentQB=bank;
-      progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' saved.','题库已完成 — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' 已保存。');
-      setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},450);
-    }catch(e){
-      errEl.textContent=(currentLang==='zh'&&String(e.message||'').includes('completed batches are safe'))?'本批生成时间过长。已完成的题目已经保存，请再次点击“生成题目”继续。':friendlyError(e.message);
-      errEl.style.display='block';
-      progressEl.textContent=t('Generation paused. Completed batches remain saved. You can retry safely.','生成已暂停。已完成批次不会丢失，可以安全重试。');
-      progressEl.style.display='block';
-      generateBtn.disabled=false;cancelBtn.style.display='';
-    }
-  };
+  ensureScenarioUI();localizeScenarioUI();
+  var observer=new MutationObserver(function(){var q=document.getElementById('qb-trigger-btn'),s=document.getElementById('scenario-trigger-btn');if(s&&q)s.style.display=(canManage&&q.style.display!=='none')?'':'none'});var pane=document.getElementById('split-pane');if(pane)observer.observe(pane,{attributes:true,subtree:true,attributeFilter:['style','class']});
+  document.addEventListener('click',function(){setTimeout(function(){var q=document.getElementById('qb-trigger-btn'),s=document.getElementById('scenario-trigger-btn');if(s&&q)s.style.display=(canManage&&q.style.display!=='none')?'':'none'},0)},true);
 })();
 </script>`;
 
   html = html.replace('</body>', patch + '\n</body>');
-  const headers = new Headers(response.headers);
-  headers.delete('content-length');
-  headers.set('cache-control','no-store');
+  const headers = new Headers(response.headers);headers.delete('content-length');headers.set('cache-control','no-store');
   return new Response(html,{status:response.status,statusText:response.statusText,headers});
 };
