@@ -10,6 +10,9 @@ export default async (_request: Request, context: any) => {
 </style>
 <script>
 (function(){
+  var activeBankId=null,activeKnowledgeId=null,activeCount=null,activeDifficulty=null;
+  function clearActiveBank(){activeBankId=null;activeKnowledgeId=null;activeCount=null;activeDifficulty=null}
+
   function ensureScenarioUI(){
     if(document.getElementById('scenario-modal'))return;
     var qb=document.getElementById('qb-trigger-btn');
@@ -26,7 +29,46 @@ export default async (_request: Request, context: any) => {
   async function promoteScenario(packId,scenarioId,button){button.disabled=true;button.textContent=t('Preparing review…','正在准备审核……');try{var d=await direct('/.netlify/functions/knowledge-practice-scenarios',{action:'promote',knowledgeId:currentDoc.id,packId:packId,scenarioId:scenarioId});location.href=d.handoffUrl||('/knowledge.html?pilot=1')}catch(e){var err=document.getElementById('scenario-error');err.textContent=friendlyError(e.message);err.style.display='block';button.disabled=false;button.textContent=t('Select for Manager Review →','选择并进入主管审核 →')}}
 
   async function qbRequest(payload){return direct('/.netlify/functions/knowledge-question-bank',payload)}
-  window.generateQB=async function(){if(!currentDoc)return;var count=parseInt(document.getElementById('qb-count').value)||20,difficulty=document.getElementById('qb-difficulty').value,errEl=document.getElementById('qb-error'),progressEl=document.getElementById('qb-progress'),generateBtn=document.getElementById('qb-generate-btn'),cancelBtn=document.getElementById('qb-cancel-btn');errEl.style.display='none';generateBtn.disabled=true;cancelBtn.style.display='none';progressEl.style.display='block';progressEl.textContent=t('Preparing question bank…','正在准备题库……');try{var started=await qbRequest({action:'start',knowledgeId:currentDoc.id,count:count,difficulty:difficulty}),bank=started.questionBank;while(bank&&bank.status!=='complete'){var completed=bank.totalQuestions||0,target=bank.targetQuestions||count;progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' completed. Completed batches are saved automatically.','正在生成题库 — 已完成 '+completed+' / '+target+'。每批完成后都会自动保存。');var batch=await qbRequest({action:'generate_batch',knowledgeId:currentDoc.id,bankId:bank.id});bank=batch.questionBank}currentQB=bank;progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' saved.','题库已完成 — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' 已保存。');setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},450)}catch(e){errEl.textContent=friendlyError(e.message);errEl.style.display='block';progressEl.textContent=t('Generation paused. Completed batches remain saved. You can retry safely.','生成已暂停。已完成批次不会丢失，可以安全重试。');progressEl.style.display='block';generateBtn.disabled=false;cancelBtn.style.display=''}};
+  function sameActiveRequest(knowledgeId,count,difficulty){return !!activeBankId&&activeKnowledgeId===knowledgeId&&activeCount===count&&activeDifficulty===difficulty}
+
+  window.generateQB=async function(){
+    if(!currentDoc)return;
+    var knowledgeId=currentDoc.id,count=parseInt(document.getElementById('qb-count').value)||20,difficulty=document.getElementById('qb-difficulty').value,errEl=document.getElementById('qb-error'),progressEl=document.getElementById('qb-progress'),generateBtn=document.getElementById('qb-generate-btn'),cancelBtn=document.getElementById('qb-cancel-btn');
+    errEl.style.display='none';generateBtn.disabled=true;cancelBtn.style.display='none';progressEl.style.display='block';progressEl.textContent=t('Preparing question bank…','正在准备题库……');
+    try{
+      var bank;
+      if(sameActiveRequest(knowledgeId,count,difficulty)){
+        var status=await qbRequest({action:'status',knowledgeId:knowledgeId,bankId:activeBankId});
+        bank=status.questionBank;
+        progressEl.textContent=t('Resuming saved Question Bank — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' completed.','正在继续已保存的题库 — 已完成 '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+'。');
+      }else{
+        clearActiveBank();
+        var started=await qbRequest({action:'start',knowledgeId:knowledgeId,count:count,difficulty:difficulty});
+        bank=started.questionBank;activeBankId=bank.id;activeKnowledgeId=knowledgeId;activeCount=count;activeDifficulty=difficulty;
+      }
+      var target=bank.targetQuestions||count,maxAttempts=Math.ceil(target/20)+4,attempts=0;
+      while(bank&&bank.status!=='complete'&&attempts<maxAttempts){
+        attempts++;
+        var completed=bank.totalQuestions||0;
+        progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' completed. Completed batches are saved automatically.','正在生成题库 — 已完成 '+completed+' / '+target+'。每批完成后都会自动保存。');
+        var batch=await qbRequest({action:'generate_batch',knowledgeId:knowledgeId,bankId:bank.id});
+        bank=batch.questionBank;activeBankId=bank.id;
+      }
+      if(!bank||bank.status!=='complete')throw new Error(t('Generation paused after several attempts. Completed questions are saved; click Generate Questions again to resume.','多次尝试后生成已暂停。已完成题目已经保存；再次点击“生成题目”即可继续。'));
+      currentQB=bank;clearActiveBank();
+      progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' saved.','题库已完成 — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' 已保存。');
+      setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},450);
+    }catch(e){
+      errEl.textContent=friendlyError(e.message);errEl.style.display='block';
+      progressEl.textContent=t('Generation paused. Completed batches remain saved. Click Generate Questions again to resume this Question Bank.','生成已暂停。已完成批次不会丢失。再次点击“生成题目”即可继续这个题库。');
+      progressEl.style.display='block';generateBtn.disabled=false;cancelBtn.style.display='';
+    }
+  };
+
+  if(typeof window.resetQBModal==='function'){
+    var originalResetQBModal=window.resetQBModal;
+    window.resetQBModal=function(){clearActiveBank();return originalResetQBModal.apply(this,arguments)};
+  }
 
   ensureScenarioUI();localizeScenarioUI();
   var observer=new MutationObserver(function(){var q=document.getElementById('qb-trigger-btn'),s=document.getElementById('scenario-trigger-btn');if(s&&q)s.style.display=(canManage&&q.style.display!=='none')?'':'none'});var pane=document.getElementById('split-pane');if(pane)observer.observe(pane,{attributes:true,subtree:true,attributeFilter:['style','class']});
