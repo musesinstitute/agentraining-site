@@ -166,6 +166,52 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 .status-analyzed{background:#fef3c7;color:var(--amber)}
 .status-draft{background:#f1f5f9;color:var(--muted)}
 
+/* QUESTION BANK */
+.qb-trigger-btn{background:#047857;color:#fff;border:none;border-radius:8px;padding:6px 12px;
+  font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.qb-trigger-btn:hover{background:#065f46}
+#qb-modal{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center}
+#qb-modal.show{display:flex}
+.qb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+.qb-box{position:relative;background:var(--white);border-radius:16px;padding:28px;width:90%;max-width:520px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto}
+.qb-box h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.qb-box .qb-subtitle{font-size:13px;color:var(--muted);margin-bottom:18px}
+.qb-controls{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.qb-count-group,.qb-diff-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+.qb-count-group label,.qb-diff-group label{font-size:12px;font-weight:600;color:var(--muted)}
+.qb-count-group select,.qb-diff-group select{border:1px solid var(--line);border-radius:8px;
+  padding:8px 10px;font-size:13px;font-family:inherit;outline:none}
+.qb-count-group select:focus,.qb-diff-group select:focus{border-color:#93c5fd}
+.qb-actions{display:flex;gap:10px;justify-content:flex-end;margin-bottom:0}
+#qb-error{color:var(--red);font-size:12px;margin-bottom:10px;display:none}
+#qb-progress{font-size:13px;color:var(--muted);margin-bottom:12px;display:none;text-align:center;padding:12px}
+/* Question Bank Results */
+#qb-results{display:none}
+.qb-results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:gap}
+.qb-results-title{font-size:16px;font-weight:700}
+.qb-results-meta{font-size:12px;color:var(--muted)}
+.qb-export-btn{background:#f1f5f9;border:1px solid var(--line);border-radius:7px;padding:6px 12px;
+  font-size:12px;cursor:pointer;color:var(--ink)}
+.qb-export-btn:hover{background:#e2e8f0}
+.qb-question{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px}
+.qb-q-header{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.qb-q-num{font-size:11px;font-weight:700;color:var(--muted)}
+.qb-q-type{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;text-transform:uppercase}
+.qb-q-type.mcq{background:#dbeafe;color:#1e40af}
+.qb-q-type.truefalse{background:#fef3c7;color:#92400e}
+.qb-q-type.scenario{background:#d1fae5;color:#065f46}
+.qb-q-diff{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
+.qb-q-diff.Basic{background:#f1f5f9;color:var(--muted)}
+.qb-q-diff.Intermediate{background:#fef3c7;color:#92400e}
+.qb-q-diff.Advanced{background:#fee2e2;color:#991b1b}
+.qb-q-text{font-size:13px;font-weight:600;margin-bottom:8px;line-height:1.5}
+.qb-options{list-style:none;display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.qb-options li{font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid var(--line)}
+.qb-options li.correct{background:#d1fae5;border-color:#6ee7b7;font-weight:600;color:#065f46}
+.qb-explanation{font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px;margin-top:4px;line-height:1.5}
+.qb-show-answer{background:none;border:none;font-size:11px;color:var(--blue);cursor:pointer;padding:0;margin-bottom:6px}
+
 @media(max-width:700px){
   #ai-panel{width:100%;border-right:none}
   #pdf-panel{display:none}
@@ -224,10 +270,13 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
     <!-- LEFT: AI CHAT -->
     <div id="ai-panel">
       <div class="ai-top">
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="ai-top-label" id="ai-top-label">Asking about</div>
           <div class="ai-top-title" id="ai-doc-title">—</div>
         </div>
+        <button class="qb-trigger-btn" id="qb-trigger-btn" onclick="openQBModal()" style="display:none">
+          📝 <span id="qb-btn-label">Question Bank</span>
+        </button>
       </div>
       <div class="quick-btns" id="quick-btns"></div>
       <div id="chat-messages">
@@ -308,6 +357,62 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
     <div class="modal-actions">
       <button class="btn-cancel" id="upload-cancel" onclick="closeUploadModal()">Cancel</button>
       <button class="btn-primary" id="upload-submit" onclick="submitUpload()">Upload &amp; Analyze</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTION BANK MODAL -->
+<div id="qb-modal">
+  <div class="qb-backdrop" onclick="closeQBModal()"></div>
+  <div class="qb-box">
+    <h3 id="qb-modal-title">Generate Question Bank</h3>
+    <div class="qb-subtitle" id="qb-modal-subtitle">AI will generate questions based strictly on this document.</div>
+    <div id="qb-error"></div>
+    <div id="qb-progress"></div>
+
+    <!-- Controls -->
+    <div id="qb-form">
+      <div class="qb-controls">
+        <div class="qb-count-group">
+          <label id="qb-count-label">Number of questions</label>
+          <select id="qb-count">
+            <option value="20" id="qb-count-20">20 questions</option>
+            <option value="30" id="qb-count-30">30 questions</option>
+            <option value="50" id="qb-count-50">50 questions</option>
+            <option value="80" id="qb-count-80">80 questions</option>
+            <option value="100" id="qb-count-100">100 questions</option>
+          </select>
+        </div>
+        <div class="qb-diff-group">
+          <label id="qb-diff-label">Difficulty</label>
+          <select id="qb-difficulty">
+            <option value="Mixed" id="qb-diff-mixed">Mixed (recommended)</option>
+            <option value="Basic" id="qb-diff-basic">Basic — Recall</option>
+            <option value="Intermediate" id="qb-diff-intermediate">Intermediate — Application</option>
+            <option value="Advanced" id="qb-diff-advanced">Advanced — Scenarios</option>
+          </select>
+        </div>
+      </div>
+      <div class="qb-actions">
+        <button class="btn-cancel" onclick="closeQBModal()" id="qb-cancel-btn">Cancel</button>
+        <button class="btn-primary" onclick="generateQB()" id="qb-generate-btn">Generate Questions</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="qb-results">
+      <div class="qb-results-header">
+        <div>
+          <div class="qb-results-title" id="qb-results-title"></div>
+          <div class="qb-results-meta" id="qb-results-meta"></div>
+        </div>
+        <button class="qb-export-btn" id="qb-export-btn" onclick="exportQB()">⬇ Export</button>
+      </div>
+      <div id="qb-questions-list"></div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn-cancel" id="qb-close-btn" onclick="closeQBModal()">Close</button>
+        <button class="btn-primary" onclick="resetQBModal()" style="margin-left:8px" id="qb-regenerate-btn">Generate Again</button>
+      </div>
     </div>
   </div>
 </div>
@@ -400,6 +505,26 @@ function applyLang() {
   setText('upload-submit', 'Upload & Analyze', '上传并分析');
   const dropLabel = document.getElementById('drop-label');
   if (dropLabel && !dropLabel.dataset.fileSelected) dropLabel.textContent = t('Click to select PDF / TXT / MD — or drag and drop', '点击选择 PDF / TXT / MD 文件，或直接拖放');
+
+  setText('qb-btn-label', 'Question Bank', '生成题库');
+  setText('qb-modal-title', 'Generate Question Bank', '生成题库');
+  setText('qb-modal-subtitle', 'AI will generate questions based strictly on this document.', 'AI 将根据此文件生成培训题目，所有题目均有据可查。');
+  setText('qb-count-label', 'Number of questions', '题目数量');
+  setText('qb-count-20', '20 questions', '20 题');
+  setText('qb-count-30', '30 questions', '30 题');
+  setText('qb-count-50', '50 questions', '50 题');
+  setText('qb-count-80', '80 questions', '80 题');
+  setText('qb-count-100', '100 questions', '100 题');
+  setText('qb-diff-label', 'Difficulty', '难度');
+  setText('qb-diff-mixed', 'Mixed (recommended)', '混合难度（推荐）');
+  setText('qb-diff-basic', 'Basic — Recall', '基础 — 记忆理解');
+  setText('qb-diff-intermediate', 'Intermediate — Application', '中级 — 实际应用');
+  setText('qb-diff-advanced', 'Advanced — Scenarios', '高级 — 情境应用');
+  setText('qb-cancel-btn', 'Cancel', '取消');
+  setText('qb-generate-btn', 'Generate Questions', '生成题目');
+  setText('qb-export-btn', '⬇ Export', '⬇ 导出');
+  setText('qb-close-btn', 'Close', '关闭');
+  setText('qb-regenerate-btn', 'Generate Again', '重新生成');
 
   renderQuickButtons();
   renderGovNote();
@@ -521,6 +646,13 @@ async function openDocument(src) {
     `我已加载 <strong>${escHtml(src.title)}</strong>。您可以询问产品特点、客户异议、核保规则，或说“考考我”来测试您的知识。`
   );
   msgs.innerHTML = `<div class="msg ai"><div class="bubble">${openMsg}</div><div class="msg-time">${t('AI · grounded in company document', 'AI · 依据企业文件回答')}</div></div>`;
+
+  // Show Question Bank button for managers (canManage is the authoritative,
+  // server-provided flag set in loadLibrary() — see note in renderGovNote()).
+  // The button's label text is already set by applyLang() at page load.
+  const qbBtn = document.getElementById('qb-trigger-btn');
+  if (qbBtn) qbBtn.style.display = canManage ? 'block' : 'none';
+  resetQBModal();
 
   // Close library on mobile
   if (window.innerWidth < 700) toggleLibrary();
@@ -825,9 +957,155 @@ function friendlyError(message) {
     'AI analysis returned an unreadable response. Please retry.': 'AI 分析结果无法读取，请重试。',
     'AI analysis could not finish. Please retry; your saved source is safe.': 'AI 分析未能完成，请重试；已保存的来源资料是安全的。',
     'Upload failed: no document id returned.': '上传失败：未返回文件编号。',
-    'Request failed.': '请求失败。'
+    'Request failed.': '请求失败。',
+    'Confirm organizational authorization first.': '请先确认企业授权。',
+    'Document content too short to generate questions.': '文件内容过短，无法生成题目。',
+    'AI question generation failed.': 'AI 生成题目失败。',
+    'AI returned an invalid format. Please try again.': 'AI 返回的格式无效，请重试。',
+    'Invalid question bank structure.': '题库结构无效。',
+    'Could not parse question bank. Please try again.': '无法解析题库，请重试。',
+    'Generation failed.': '生成失败。'
   };
   return map[message] || ('操作未完成：' + message);
+}
+
+// ─── QUESTION BANK ───────────────────────────────────────────────────────────
+let currentQB = null;
+
+function openQBModal() {
+  if (!currentDoc) return;
+  // Modal title/subtitle text is already set by applyLang() at page load —
+  // this page reloads on a language switch (nav lang links navigate to
+  // ?lang=en/zh) rather than live-toggling, so no re-localization is needed
+  // here.
+  document.getElementById('qb-modal').classList.add('show');
+}
+
+function closeQBModal() {
+  document.getElementById('qb-modal').classList.remove('show');
+}
+
+function resetQBModal() {
+  document.getElementById('qb-form').style.display = 'block';
+  document.getElementById('qb-results').style.display = 'none';
+  document.getElementById('qb-error').style.display = 'none';
+  document.getElementById('qb-progress').style.display = 'none';
+  document.getElementById('qb-generate-btn').disabled = false;
+  document.getElementById('qb-cancel-btn').style.display = '';
+  currentQB = null;
+}
+
+async function generateQB() {
+  if (!currentDoc) return;
+  const count = parseInt(document.getElementById('qb-count').value) || 20;
+  const difficulty = document.getElementById('qb-difficulty').value;
+  const errEl = document.getElementById('qb-error');
+  const progressEl = document.getElementById('qb-progress');
+  const generateBtn = document.getElementById('qb-generate-btn');
+  const cancelBtn = document.getElementById('qb-cancel-btn');
+
+  errEl.style.display = 'none';
+  generateBtn.disabled = true;
+  cancelBtn.style.display = 'none';
+  progressEl.textContent = t(
+    `AI is generating ${count} questions from this document. This may take 30–60 seconds…`,
+    `AI 正在根据文件生成 ${count} 道题目，请稍候（约 30–60 秒）……`
+  );
+  progressEl.style.display = 'block';
+
+  try {
+    // generate_questions is a manager-only pilot-data "knowledge" action
+    // (same resource/auth path as create/analyze/approve), so PilotCloud.request
+    // handles the fresh token + error unwrapping the same way submitUpload()'s
+    // create step does.
+    const data = await PilotCloud.request('knowledge', {
+      method: 'POST',
+      requiredRole: 'manager',
+      body: JSON.stringify({ action: 'generate_questions', id: currentDoc.id, count, difficulty })
+    });
+    currentQB = data.questionBank;
+    progressEl.style.display = 'none';
+    renderQBResults(currentQB);
+  } catch(e) {
+    progressEl.style.display = 'none';
+    errEl.textContent = friendlyError(e.message);
+    errEl.style.display = 'block';
+    generateBtn.disabled = false;
+    cancelBtn.style.display = '';
+  }
+}
+
+function renderQBResults(bank) {
+  document.getElementById('qb-form').style.display = 'none';
+  const resultsEl = document.getElementById('qb-results');
+  resultsEl.style.display = 'block';
+
+  document.getElementById('qb-results-title').textContent = bank.title;
+  document.getElementById('qb-results-meta').textContent =
+    `${bank.totalQuestions} questions · ${bank.difficulty} · ${new Date(bank.generatedAt).toLocaleDateString()}`;
+
+  const list = document.getElementById('qb-questions-list');
+  list.innerHTML = '';
+  (bank.questions || []).forEach((q, i) => {
+    const el = document.createElement('div');
+    el.className = 'qb-question';
+    const typeLabel = q.type === 'mcq' ? 'MCQ' : q.type === 'truefalse' ? 'T/F' : 'Scenario';
+    const diffClass = q.difficulty || 'Basic';
+
+    let optionsHTML = '';
+    if (q.type === 'truefalse') {
+      optionsHTML = `<ul class="qb-options">
+        <li class="${q.answer === true ? 'correct' : ''}">True</li>
+        <li class="${q.answer === false ? 'correct' : ''}">False</li>
+      </ul>`;
+    } else if (Array.isArray(q.options)) {
+      const correctLetter = typeof q.answer === 'string' ? q.answer.charAt(0).toUpperCase() : '';
+      optionsHTML = `<ul class="qb-options" id="opts-${i}" style="display:none">` +
+        q.options.map(opt => {
+          const letter = opt.charAt(0).toUpperCase();
+          return `<li class="${letter === correctLetter ? 'correct' : ''}">${escHtml(opt)}</li>`;
+        }).join('') + '</ul>';
+    }
+
+    el.innerHTML = `
+      <div class="qb-q-header">
+        <span class="qb-q-num">Q${q.id || i+1}</span>
+        <span class="qb-q-type ${q.type}">${typeLabel}</span>
+        <span class="qb-q-diff ${diffClass}">${diffClass}</span>
+      </div>
+      <div class="qb-q-text">${escHtml(q.question)}</div>
+      ${q.type !== 'truefalse' ? `<button class="qb-show-answer" onclick="toggleOpts(${i})">Show options & answer ▾</button>` : ''}
+      ${optionsHTML}
+      <div class="qb-explanation">💡 ${escHtml(q.explanation || '')}</div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function toggleOpts(i) {
+  const el = document.getElementById(`opts-${i}`);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+  el.style.flexDirection = 'column';
+}
+
+function exportQB() {
+  if (!currentQB) return;
+  const lines = [`# ${currentQB.title}`, `Difficulty: ${currentQB.difficulty} | ${currentQB.totalQuestions} Questions`, `Generated: ${new Date(currentQB.generatedAt).toLocaleString()}`, ''];
+  (currentQB.questions || []).forEach((q, i) => {
+    lines.push(`Q${q.id || i+1} [${q.type?.toUpperCase()}][${q.difficulty}]`);
+    lines.push(q.question);
+    if (Array.isArray(q.options)) q.options.forEach(o => lines.push('  ' + o));
+    if (q.type === 'truefalse') { lines.push('  A. True'); lines.push('  B. False'); }
+    lines.push(`Answer: ${q.answer}`);
+    lines.push(`Explanation: ${q.explanation || ''}`);
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (currentQB.title || 'question-bank').replace(/[^a-z0-9]/gi, '-') + '.txt';
+  a.click();
 }
 
 init();
