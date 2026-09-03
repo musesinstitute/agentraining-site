@@ -1,0 +1,1216 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B (Phase 1 + Phase 2). Groups of questions that test the same or overlapping knowledge, detected during import across all 5 sources (S001-S005). Duplicates are never deleted — grouping them preserves the signal that a repeated concept may indicate exam importance. Per the Phase 2 task brief, S001 and S002 contain substantial overlap (46 near-verbatim exact duplicates alone).",
+  "projectId": "PROJECT-001",
+  "version": 2,
+  "groups": [
+    {
+      "groupId": "DG-001",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S005-002",
+        "Q-S005-018"
+      ],
+      "sourceIds": [
+        "S005"
+      ],
+      "reason": "Both questions share the identical stem \"From the choices below select the one which is false about Social Security (OASDHI):\" and three of four answer choices are worded identically (or near-identically) across the two versions. Each version's distinct choice ('fully funded' vs. 'benefits closely match contributions') is marked as the false statement in its own version - two different printed variants of the same stock exam question testing the same underlying false-statement-about-OASDHI concept."
+    },
+    {
+      "groupId": "DG-002",
+      "duplicateType": "nearDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S004-001",
+        "Q-S003-010"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Same underlying fact (a policy premium is insurer revenue, not an insurer expense); reworded stem and choice 2 (\"premiums\" vs. \"policy premiums\")."
+    },
+    {
+      "groupId": "DG-003",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-002",
+        "Q-S003-008"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (\"What rule is used to determine the importance of a representation?\")."
+    },
+    {
+      "groupId": "DG-004",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S004-003",
+        "Q-S003-013"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Same moral-vs-morale-hazard concept tested in the reverse direction: given the term pick its definition (S004) vs. given the effect name the term (S003)."
+    },
+    {
+      "groupId": "DG-005",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-004",
+        "Q-S003-031"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (\"Which of the following statements regarding risk is TRUE?\")."
+    },
+    {
+      "groupId": "DG-006",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S004-005",
+        "Q-S003-045"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Both test which fact is/is not a true contract requirement, with different distractor sets and framing (IS-a-requirement vs. EXCEPT), but both agree \"equal consideration\" is not actually required."
+    },
+    {
+      "groupId": "DG-007",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-006",
+        "Q-S003-005",
+        "Q-S004-033"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "All three test \"required contents of a policy\" with different distractor sets; Q-S004-033 is a byte-identical repeat of Q-S003-005 specifically, while Q-S004-006 is a conceptually-related variant with a different distractor set (\"financial rating of the insurer\" as the exception)."
+    },
+    {
+      "groupId": "DG-008",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-007",
+        "Q-S003-040"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Same choices; minor stem wording difference (\"California Fair Claims Settlement Practices resolution\" vs. \"...Regulations\")."
+    },
+    {
+      "groupId": "DG-009",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-008",
+        "Q-S003-014"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (\"Who are members of the Medical Information Bureau?\")."
+    },
+    {
+      "groupId": "DG-010",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-009",
+        "Q-S003-034"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (Commissioner's actions after a revoked certificate of authority)."
+    },
+    {
+      "groupId": "DG-011",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S003-021",
+        "Q-S003-038",
+        "Q-S004-011",
+        "Q-S004-020",
+        "Q-S004-023",
+        "Q-S004-024",
+        "Q-S004-025"
+      ],
+      "sourceIds": [
+        "S003",
+        "S004"
+      ],
+      "reason": "The \"indemnity principle\" tested 7 different ways across S003/S004 (contract-that-restores-to-pre-loss-position, vocabulary definition of \"indemnity\", the loss-cap rule, the formal contract-of-indemnity definition, \"making whole\" restated, and the insurance-policy-as-indemnity-contract definition). Within this cluster, Q-S003-038 and Q-S004-025 are byte-identical to each other. Repetition across 7 variants is a strong signal of exam importance."
+    },
+    {
+      "groupId": "DG-012",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-013",
+        "Q-S003-019"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Same 4 underlying facts about Section 1729.2 \"background information\", reordered, with the correct (excepted) choice reworded more precisely in S004."
+    },
+    {
+      "groupId": "DG-013",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S004-016",
+        "Q-S003-015"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Same underlying fact (the duty to disclose does not extend to a party's own personal judgment/opinion), different question format (fill-in-the-blank vs. EXCEPT-style with \"never\")."
+    },
+    {
+      "groupId": "DG-014",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-027",
+        "Q-S003-033"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (loss retention as a risk management technique)."
+    },
+    {
+      "groupId": "DG-015",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-028",
+        "Q-S003-042"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (\"insurance\" defined as a contract under the CA Insurance Code)."
+    },
+    {
+      "groupId": "DG-016",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-030",
+        "Q-S003-006"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (purchase of insurance accomplishes... EXCEPT elimination of risk)."
+    },
+    {
+      "groupId": "DG-017",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-035",
+        "Q-S003-022"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (aleatory contracts... EXCEPT equal contribution)."
+    },
+    {
+      "groupId": "DG-018",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S004-036",
+        "Q-S002-047"
+      ],
+      "sourceIds": [
+        "S004",
+        "S002"
+      ],
+      "reason": "Same underwriting definition (\"the process by which an insurer decides whether/which customers to insure\") from two sources."
+    },
+    {
+      "groupId": "DG-019",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-037",
+        "Q-S003-037"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (risk defined as... EXCEPT the cause of loss)."
+    },
+    {
+      "groupId": "DG-020",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S004-041",
+        "Q-S003-017"
+      ],
+      "sourceIds": [
+        "S004",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (direct response distribution... EXCEPT telephone call from an agent) - now the 3rd extraction of this exact question (also appears verbatim in S003)."
+    },
+    {
+      "groupId": "DG-021",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-010",
+        "Q-S001-008"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same fact (waiver of premium triggered by total disability); definition-application framing (S002) vs. direct-trigger framing (S001)."
+    },
+    {
+      "groupId": "DG-022",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S002-002",
+        "Q-S001-003"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same fact (a participating policy shares insurer surplus via dividends); name-the-policy-type framing (S002) vs. define-the-term framing (S001)."
+    },
+    {
+      "groupId": "DG-023",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S002-009",
+        "Q-S001-017"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same non-medical-insurance concept; direct-definition framing (S002) vs. an EXCEPT-style application testing a subtlety (S001)."
+    },
+    {
+      "groupId": "DG-024",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S002-018",
+        "Q-S001-035"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same deferred-vs-immediate-annuity distinction, from different angles (what differs vs. which has the longer accumulation period)."
+    },
+    {
+      "groupId": "DG-025",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-021",
+        "Q-S001-025"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same fact (grace period prevents unintentional lapse); definition framing (S002) vs. identification framing (S001)."
+    },
+    {
+      "groupId": "DG-026",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-033",
+        "Q-S001-013"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same fact (a renewable term policy lets the insured renew at a higher premium, regardless of health); direct-naming framing (S002) vs. fill-in-the-blank framing (S001)."
+    },
+    {
+      "groupId": "DG-027",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S002-041",
+        "Q-S001-007"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Both concern Variable Life's investment-linked nature: benefits fluctuate with investment results (S002) vs. insured chooses where cash-value assets are invested (S001) - related but distinct specific facts."
+    },
+    {
+      "groupId": "DG-028",
+      "duplicateType": "nearDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-026",
+        "Q-S001-023"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Same 30-day senior free-look/return rule; S002 specifies the age threshold (60) directly where S001 tests it via a distractor about the age definition of \"senior\"."
+    },
+    {
+      "groupId": "DG-029",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "medium",
+      "questionIds": [
+        "Q-S002-003",
+        "Q-S002-051"
+      ],
+      "sourceIds": [
+        "S002"
+      ],
+      "reason": "\"Mortgage redemption\" and \"decreasing term\" insurance are treated as the same underlying product concept (a policy whose face amount matches a declining mortgage balance) - both appear within S002 itself."
+    },
+    {
+      "groupId": "DG-030",
+      "duplicateType": "conceptualDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-008",
+        "Q-S001-054"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "The same $50,000 employer-provided-group-life tax threshold, stated from complementary angles (\"$50,000 is exempt from tax\" vs. \"above $50,000 is taxable as income\")."
+    },
+    {
+      "groupId": "DG-031",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-015",
+        "Q-S002-054"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What is the penalty tax imposed on amounts received from a modified en...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-032",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-002",
+        "Q-S002-055"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The policyowner, age 50, has been paying the premiums on his whole lif...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-033",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-052",
+        "Q-S002-056"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What is the limit of liability in a life insurance policy?\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-034",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-053",
+        "Q-S002-057"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"In financial planning, the human life value concept is based on an ind...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-035",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-014",
+        "Q-S002-058"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which of the following is NOT one of the common personal uses for life...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-036",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-016",
+        "Q-S002-059"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"A beneficiary wants to let the death benefit accumulate and receive on...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-037",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-022",
+        "Q-S002-060"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The conversion privilege allows a terminating employee to convert\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-038",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-017",
+        "Q-S002-061"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The use of non-medical life insurance accomplishes all of the followin...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-039",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-013",
+        "Q-S002-062"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"If a term life insurance policy is renewable, the renewal provision us...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-040",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-045",
+        "Q-S002-063"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What is the difference between a conditional premium receipt and a bin...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-041",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-037",
+        "Q-S002-064"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"How does the cost recovery rule apply when a life insurance policy is ...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-042",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-055",
+        "Q-S002-065"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which government regulation prevents retirement plans from favoring hi...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-043",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-010",
+        "Q-S002-066"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"In a group life insurance policy, who are the parties to the master co...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-044",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-030",
+        "Q-S002-067"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which policy provision protects an insurer against a lawsuit before th...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-045",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-050",
+        "Q-S002-068"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which of the following is a correct statement about the premium paymen...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-046",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-041",
+        "Q-S002-069"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which statement is TRUE regarding employer contributions to qualified ...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-047",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-008",
+        "Q-S002-070"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"A life insurance policy's waiver of premium takes effect if an insured\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-048",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-049",
+        "Q-S002-071"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"All of the following are contained in a mortality table EXCEPT\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-049",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-027",
+        "Q-S002-072"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"A group life policy is issued on a contributory basis. This means that...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-050",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-005",
+        "Q-S002-073"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Creditors have rights to life insurance policy proceeds when the benef...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-051",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-007",
+        "Q-S002-074"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which policy allows the insured to choose where the assets backing the...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-052",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-029",
+        "Q-S002-075"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which distribution from an annuity would be subject to a penalty tax?\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-053",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-028",
+        "Q-S002-076"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Underwriters classify insurance risks as any of the following EXCEPT\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-054",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-001",
+        "Q-S002-077"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What does the statement \"Life insurance creates an immediate estate\" m...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-055",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-019",
+        "Q-S002-078"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"When does an individual have an insurable interest in the life of anot...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-056",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-025",
+        "Q-S002-079"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which policy provision protects the policyowner from unintentional lap...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-057",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-054",
+        "Q-S002-080"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The cost of employer-provided group life insurance above $50,000 is\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-058",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-031",
+        "Q-S002-081"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"From lowest to highest, which is the CORRECT order of initial premiums...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-059",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-042",
+        "Q-S002-082"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which policy pays the face amount if the insured survives to the end o...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-060",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-012",
+        "Q-S002-083"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"A husband and wife have a disabled child who is financially dependent ...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-061",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-047",
+        "Q-S002-084"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The adjustments that insurers make to the cash value account in a univ...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-062",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-004",
+        "Q-S002-085"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Who MUST sign a statement acknowledging that a life insurance policy i...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-063",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-033",
+        "Q-S002-086"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Under a group life insurance policy, acts of war and aviation are exam...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-064",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-046",
+        "Q-S002-087"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Under which group term life provision does an insurer make payments to...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-065",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-034",
+        "Q-S002-088"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What is REQUIRED when an application reveals conditions that require m...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-066",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-035",
+        "Q-S002-089"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What factor determines the difference between deferred and immediate a...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-067",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-044",
+        "Q-S002-090"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"An insurer's request for an attending physician's report MUST be accom...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-068",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-051",
+        "Q-S002-091"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Which of the following statements about policy dividends is TRUE?\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-069",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-024",
+        "Q-S002-092"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Life insurers must include all of the following in their financial sta...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-070",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-003",
+        "Q-S002-093"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"A participating life insurance policy is defined as a contract that\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-071",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-039",
+        "Q-S002-094"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The accidental death benefit rider is also known as\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-072",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-023",
+        "Q-S002-095"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The California Insurance Code requirements regarding the return of lif...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-073",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-020",
+        "Q-S002-096"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Under which policy provisions can a policy be surrendered for its net ...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-074",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-011",
+        "Q-S002-097"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"The components of determining policy premiums include all of the follo...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-075",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-043",
+        "Q-S002-098"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"Common life insurance policy riders include all of the following EXCEP...\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-076",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S001-026",
+        "Q-S002-099"
+      ],
+      "sourceIds": [
+        "S001",
+        "S002"
+      ],
+      "reason": "Identical stem and choices (\"What is an ESOP?\"), reprinted in S002 with a different annotation style (colored radio buttons + parenthetical Chinese gloss vs. S001's underline + separate Chinese text)."
+    },
+    {
+      "groupId": "DG-077",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-001",
+        "Q-S001-048"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (family policy covering children... EXCEPT)."
+    },
+    {
+      "groupId": "DG-078",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-004",
+        "Q-S001-021"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (10-year certain annuity, installment refund, 60 remaining payments)."
+    },
+    {
+      "groupId": "DG-079",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-011",
+        "Q-S001-036"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (characteristic of nonqualified annuities - tax-deferred earnings)."
+    },
+    {
+      "groupId": "DG-080",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-012",
+        "Q-S001-001",
+        "Q-S002-085"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "\"Life insurance creates an immediate estate\" tested identically 3 times across this corpus (S001 once, S002 twice) - a strong exam-importance signal."
+    },
+    {
+      "groupId": "DG-081",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-017",
+        "Q-S003-020"
+      ],
+      "sourceIds": [
+        "S002",
+        "S003"
+      ],
+      "reason": "Identical stem and choices (misrepresenting dividends = a misdemeanor), cross-batch with Phase 1 source S003."
+    },
+    {
+      "groupId": "DG-082",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-025",
+        "Q-S001-038"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (buy-sell agreements guarantee a market for a business share)."
+    },
+    {
+      "groupId": "DG-083",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-030",
+        "Q-S001-040"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (annuity replacement with a surrender charge and no greater benefit = an unnecessary replacement)."
+    },
+    {
+      "groupId": "DG-084",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-031",
+        "Q-S001-006"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (suicide clause protects against adverse selection)."
+    },
+    {
+      "groupId": "DG-085",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-036",
+        "Q-S001-032"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (death benefits generally exempt from federal income tax)."
+    },
+    {
+      "groupId": "DG-086",
+      "duplicateType": "exactDuplicate",
+      "confidence": "high",
+      "questionIds": [
+        "Q-S002-045",
+        "Q-S001-009"
+      ],
+      "sourceIds": [
+        "S002",
+        "S001"
+      ],
+      "reason": "Identical stem and choices (joint life policy pays only on the first death)."
+    }
+  ]
+}
