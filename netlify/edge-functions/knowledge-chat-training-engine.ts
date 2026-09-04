@@ -46,21 +46,26 @@ export default async (_request: Request, context: any) => {
         var started=await qbRequest({action:'start',knowledgeId:knowledgeId,count:count,difficulty:difficulty});
         bank=started.questionBank;activeBankId=bank.id;activeKnowledgeId=knowledgeId;activeCount=count;activeDifficulty=difficulty;
       }
-      var target=bank.targetQuestions||count,batchSize=bank.batchSize||5,maxAttempts=Math.ceil(target/batchSize)+4,attempts=0;
-      while(bank&&bank.status!=='complete'&&attempts<maxAttempts){
+      var target=bank.targetQuestions||count,batchSize=bank.batchSize||5,maxAttempts=Math.min(60,Math.ceil(target/batchSize)*5+5),attempts=0,noProgressRounds=0,lastCompleted=bank.totalQuestions||0;
+      while(bank&&bank.status!=='complete'&&attempts<maxAttempts&&noProgressRounds<5){
         attempts++;
-        var completed=bank.totalQuestions||0;
-        progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' completed. Completed batches are saved automatically.','正在生成题库 — 已完成 '+completed+' / '+target+'。每批完成后都会自动保存。');
+        var completed=bank.totalQuestions||0,rejected=(bank.quality&&bank.quality.rejected)||0;
+        progressEl.textContent=t('Generating Question Bank — '+completed+' / '+target+' accepted'+(rejected?' · '+rejected+' rejected by Quality Gate':'')+'.','正在生成题库 — 已通过 '+completed+' / '+target+(rejected?' · Quality Gate 已淘汰 '+rejected+' 题':'')+'。');
         var batch=await qbRequest({action:'generate_batch',knowledgeId:knowledgeId,bankId:bank.id});
         bank=batch.questionBank;activeBankId=bank.id;
+        var nowCompleted=bank.totalQuestions||0;if(nowCompleted>lastCompleted){noProgressRounds=0;lastCompleted=nowCompleted}else noProgressRounds++;
       }
-      if(!bank||bank.status!=='complete')throw new Error(t('Generation paused after several attempts. Completed questions are saved; click Generate Questions again to resume.','多次尝试后生成已暂停。已完成题目已经保存；再次点击“生成题目”即可继续。'));
+      if(!bank||bank.status!=='complete'){
+        var qRejected=(bank&&bank.quality&&bank.quality.rejected)||0;
+        throw new Error(t('Generation paused because the Quality Gate rejected too many questions in a row. '+(bank?bank.totalQuestions||0:0)+' accepted questions are saved'+(qRejected?' and '+qRejected+' rejected questions were discarded':'')+'. Click Generate Questions again to continue refilling the bank.','由于 Quality Gate 连续淘汰了较多题目，生成已暂停。已保存 '+(bank?bank.totalQuestions||0:0)+' 道合格题'+(qRejected?'，并淘汰了 '+qRejected+' 道不合格题':'')+'。再次点击“生成题目”即可继续补足题库。'));
+      }
       currentQB=bank;clearActiveBank();
-      progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' saved.','题库已完成 — '+(bank.totalQuestions||0)+' / '+(bank.targetQuestions||count)+' 已保存。');
-      setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},450);
+      var finalRejected=(bank.quality&&bank.quality.rejected)||0,finalKP=(bank.coverage&&bank.coverage.knowledgePoints)||0;
+      progressEl.textContent=t('Question Bank complete — '+(bank.totalQuestions||0)+' accepted · '+finalKP+' knowledge points'+(finalRejected?' · '+finalRejected+' rejected':'')+'.','题库完成 — '+(bank.totalQuestions||0)+' 道合格题 · 覆盖 '+finalKP+' 个知识点'+(finalRejected?' · 淘汰 '+finalRejected+' 道不合格题':'')+'。');
+      setTimeout(function(){progressEl.style.display='none';renderQBResults(currentQB)},650);
     }catch(e){
       errEl.textContent=friendlyError(e.message);errEl.style.display='block';
-      progressEl.textContent=t('Generation paused. Completed batches remain saved. Click Generate Questions again to resume this Question Bank.','生成已暂停。已完成批次不会丢失。再次点击“生成题目”即可继续这个题库。');
+      progressEl.textContent=t('Generation paused. Accepted questions remain saved. Click Generate Questions again to continue this same Question Bank.','生成已暂停。已通过质量检查的题目不会丢失。再次点击“生成题目”即可继续同一个题库。');
       progressEl.style.display='block';generateBtn.disabled=false;cancelBtn.style.display='';
     }
   };
