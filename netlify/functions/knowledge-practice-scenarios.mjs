@@ -16,13 +16,19 @@ export default async(req)=>{
   const actor=await manager(req),input=await req.json().catch(()=>({})),knowledgeId=clean(input.knowledgeId||input.id,100),action=clean(input.action,40)||'generate',count=Math.min(Math.max(parseInt(input.count)||5,1),8);if(!knowledgeId)return reply(400,{error:'knowledgeId is required.'});
   const store=getStore({name:STORE_NAME,consistency:'strong'}),prefix=`teams/${actor.teamId}`,knowledgeKey=`${prefix}/knowledge/${knowledgeId}`,record=await store.get(knowledgeKey,{type:'json'});if(!record)return reply(404,{error:'Knowledge source not found.'});if(!record.consentConfirmed)return reply(400,{error:'Confirm organizational authorization first.'});
 
+  if(action==='review'){
+   const practiceDraft=record?.analysis?.practiceDraft;
+   if(!practiceDraft?.title)return reply(404,{error:'No selected Practice Scenario is waiting for manager review.'});
+   return reply(200,{source:{id:record.id,title:clean(record.title,240),status:record.status},scenario:practiceDraft});
+  }
+
   if(action==='promote'){
    const packId=clean(input.packId,100),scenarioId=clean(input.scenarioId,100);if(!packId||!scenarioId)return reply(400,{error:'packId and scenarioId are required.'});
    const packKey=`${prefix}/practice-scenario-packs/${packId}`,pack=await store.get(packKey,{type:'json'});if(!pack||pack.knowledgeId!==knowledgeId)return reply(404,{error:'Practice Scenario pack not found.'});const scenario=(pack.scenarios||[]).find(x=>x.id===scenarioId);if(!scenario)return reply(404,{error:'Practice Scenario not found.'});
    const priorAnalysis=record.analysis||{},practiceDraft={title:clean(scenario.title,240),situation:clean(scenario.situation,1600),objective:clean(scenario.objective,1000),clientName:clean(scenario.clientName,120)||'Practice Client',clientOpening:clean(scenario.clientOpening,1000),successCriteria:Array.isArray(scenario.successCriteria)?scenario.successCriteria.slice(0,6).map(x=>clean(x,500)).filter(Boolean):[],difficulty:clean(scenario.difficulty,40),sourceReference:clean(scenario.sourceReference,300),scenarioPackId:packId,scenarioId:scenario.id,generatedAt:pack.generatedAt,status:'manager_review_required'};
-   const updated={...record,analysis:{...priorAnalysis,practiceDraft},status:record.status==='approved'?'approved':'analyzed',updatedAt:new Date().toISOString()};await store.setJSON(knowledgeKey,updated);
+   const updated={...record,analysis:{...priorAnalysis,practiceDraft},status:'analyzed',updatedAt:new Date().toISOString()};await store.setJSON(knowledgeKey,updated);
    const nextPack={...pack,scenarios:(pack.scenarios||[]).map(x=>x.id===scenarioId?{...x,status:'selected_for_review'}:x),selectedScenarioId:scenarioId,updatedAt:new Date().toISOString()};await store.setJSON(packKey,nextPack);
-   return reply(200,{source:updated,scenario:practiceDraft,handoffUrl:`/knowledge.html?pilot=1&focus=${encodeURIComponent(knowledgeId)}`});
+   return reply(200,{source:updated,scenario:practiceDraft,handoffUrl:`/knowledge.html?pilot=1&scenario_review=1&focus=${encodeURIComponent(knowledgeId)}`});
   }
 
   if(action!=='generate')return reply(400,{error:'Unsupported action.'});
