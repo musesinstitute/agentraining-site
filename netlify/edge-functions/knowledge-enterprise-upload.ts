@@ -20,10 +20,6 @@ export default async (_request: Request, context: any) => {
     ''
   );
 
-  // The original knowledge analyze action runs inside the large pilot-data
-  // function and can hit the hosting gateway timeout while waiting for the AI
-  // provider. Keep create/approve/delete on the existing secure path, but send
-  // only Analyze through a small endpoint with an explicit upstream deadline.
   html = html.replace(
     "var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:action,id:id})});",
     "var data;if(action==='analyze'){var authToken=await PilotCloud.token('manager');var analyzeResponse=await fetch('/.netlify/functions/knowledge-analyze',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+authToken},body:JSON.stringify({id:id})});var analyzeBody=await analyzeResponse.json().catch(function(){return {}});if(!analyzeResponse.ok)throw new Error(analyzeBody.error||tr('AI analysis could not finish. Please retry; your saved source is safe.','AI分析未能完成。請重試；已儲存的來源資料是安全的。'));data=analyzeBody}else{data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:action,id:id})})}"
@@ -46,7 +42,7 @@ export default async (_request: Request, context: any) => {
 })();
 </script>`;
 
-  html = html.replace('</body>', enhancedUpload + '\n</body>');
+  html = html.replace('</body>', enhancedUpload + '\n<script src="/knowledge-manager-review.js?v=20260904-review1"></script>\n</body>');
   const headers = new Headers(response.headers);headers.delete('content-length');headers.set('cache-control','no-store');
   return new Response(html,{status:response.status,statusText:response.statusText,headers});
 };
