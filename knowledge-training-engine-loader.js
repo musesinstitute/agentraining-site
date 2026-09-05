@@ -15,7 +15,7 @@ if(typeof originalOpen==='function'&&!originalOpen.__kteBridge){
   window.openDocument=bridged;
 }
 var script=document.createElement('script');
-script.src='/knowledge-training-engine.js?v=20260904-depth1';
+script.src='/knowledge-training-engine.js?v=20260905-capacity1';
 script.defer=true;
 document.head.appendChild(script);
 })();
