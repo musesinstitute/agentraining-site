@@ -8,6 +8,7 @@
     window.addEventListener('DOMContentLoaded', () => { window.URLSearchParams = NativeURLSearchParams; sessionStorage.setItem('agentraining_ref','pilot'); sessionStorage.setItem('agentraining_name','Pilot User'); sessionStorage.setItem('agentraining_team','pilot'); document.getElementById('gate-welcome')?.style && (document.getElementById('gate-welcome').style.display='none'); document.getElementById('access-gate')?.style && (document.getElementById('access-gate').style.display='none'); }, {once:true});
   }
   let readyPromise, finishReady, switchHandled=false;
+  let coachAssignments=[];
   const requestedLang=params.get('lang'); if(requestedLang==='en'||requestedLang==='zh')sessionStorage.setItem('agentraining_lang',requestedLang);
   const currentLang=requestedLang||sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); const t=(en,zh)=>currentLang==='zh'?zh:en;
   function currentUser(){return window.netlifyIdentity&&window.netlifyIdentity.currentUser()} function roles(user){return user?.app_metadata?.roles||[]}
@@ -18,7 +19,53 @@
   function hideGate(){const g=document.getElementById('pilot-auth-gate');if(g)g.style.display='none'}
   async function ready(requiredRole){if(!enabled)return null;if(!window.netlifyIdentity)throw new Error(t('Pilot sign-in could not be loaded.','无法载入试用登录功能。'));if(!switchHandled&&params.get('switch')==='1'){switchHandled=true;window.netlifyIdentity.init();try{await window.netlifyIdentity.logout()}catch(e){}readyPromise=null;finishReady=null}if(!readyPromise){readyPromise=new Promise(resolve=>{window.netlifyIdentity.init();const finish=user=>{hideGate();mountAccountControls(user);resolve(user)};finishReady=finish;const u=currentUser();if(u)Promise.resolve(u.jwt()).then(()=>finish(u)).catch(()=>showGate(t('Please sign in again.','请重新登录。')));else showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'))})}const u=await readyPromise;if(requiredRole&&!roles(u).includes(requiredRole)&&!roles(u).includes('admin'))throw new Error(t('This page requires the '+requiredRole+' role.','此页面需要相应权限。'));return u}
   async function token(requiredRole){const user=await ready(requiredRole);if(!user||typeof user.jwt!=='function')throw new Error(t('Secure Pilot token is unavailable.','安全访问凭证不可用。'));return user.jwt()}
-  async function request(resource,options={}){const {requiredRole,query,...fetchOptions}=options;const authToken=await token(requiredRole);const q=new URLSearchParams({resource});Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});const response=await fetch('/.netlify/functions/pilot-data?'+q,{...fetchOptions,headers:{'content-type':'application/json',authorization:'Bearer '+authToken,...(fetchOptions.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));return body}
+  function isPreparePrompt(value){const s=String(value||'').toLowerCase();return /help me prepare|prepare (for|me)|practice preparation|准备.{0,10}(练习|任务|情境|场景|作业)|帮.{0,6}准备/.test(s)}
+  function activeCoachAssignment(){return [...coachAssignments].filter(x=>x&&x.status!=='Completed').sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')))[0]||null}
+  function assignmentPrepText(a,zh){
+    if(!a)return '';
+    const title=a.scenarioName||a.customScenario?.title||'Assigned Practice';
+    const source=a.sourceLabel||'the assigned company knowledge';
+    const objective=a.customScenario?.objective||'';
+    const criteria=Array.isArray(a.customScenario?.successCriteria)?a.customScenario.successCriteria.filter(Boolean).slice(0,4):[];
+    if(zh){
+      let out=`准备当前主管指定的练习——“${title}”。\n\n这次准备只依据当前 Assignment 的信息，不会把过去其他练习的分数当成本次表现。`;
+      out+=`\n\n相关资料：${source}`;
+      if(objective)out+=`\n练习目标：${objective}`;
+      if(criteria.length)out+=`\n\n本次应重点掌握：\n${criteria.map((x,i)=>`${i+1}) ${x}`).join('\n')}`;
+      out+=`\n\n您尚未完成这项练习，因此现在没有足够证据评价或给这项 Underwriting Practice 打分。完成后，我再根据这一次练习的实际证据提供反馈。`;
+      return out;
+    }
+    let out=`Preparation for your current manager-assigned Practice — “${title}.”\n\nThis preparation uses the current Assignment context only. I will not treat scores from unrelated past Practices as evidence for this assignment.`;
+    out+=`\n\nRelated source: ${source}`;
+    if(objective)out+=`\nPractice objective: ${objective}`;
+    if(criteria.length)out+=`\n\nFocus on:\n${criteria.map((x,i)=>`${i+1}) ${x}`).join('\n')}`;
+    out+=`\n\nYou have not completed this assigned Practice yet, so there is not enough evidence to evaluate or score your performance on it. After completion, I can coach you from the evidence produced by this specific Practice.`;
+    return out;
+  }
+  function applyCoachAssignmentGuardrail(resource,fetchOptions,body){
+    if(resource!=='coach-messages'||!body)return body;
+    const method=String(fetchOptions.method||'GET').toUpperCase();
+    if(Array.isArray(body.assignments))coachAssignments=body.assignments;
+    const current=activeCoachAssignment();
+    if(!current)return body;
+    if(method==='POST'){
+      let sent={};try{sent=JSON.parse(fetchOptions.body||'{}')}catch(e){}
+      if(isPreparePrompt(sent.content)&&body.assistantMessage){
+        const zh=/[\u3400-\u9fff]/.test(String(sent.content||''))||currentLang==='zh';
+        body.assistantMessage={...body.assistantMessage,content:assignmentPrepText(current,zh),contentZh:zh?assignmentPrepText(current,true):body.assistantMessage.contentZh,assignmentContextId:current.id};
+      }
+    } else if(Array.isArray(body.messages)){
+      const rows=body.messages;
+      for(let i=0;i<rows.length-1;i++){
+        if(rows[i]?.role==='user'&&isPreparePrompt(rows[i].content)&&rows[i+1]?.role==='assistant'){
+          const zh=/[\u3400-\u9fff]/.test(String(rows[i].content||''))||currentLang==='zh';
+          rows[i+1]={...rows[i+1],content:assignmentPrepText(current,zh),contentZh:zh?assignmentPrepText(current,true):rows[i+1].contentZh,assignmentContextId:current.id};
+        }
+      }
+    }
+    return body;
+  }
+  async function request(resource,options={}){const {requiredRole,query,...fetchOptions}=options;const authToken=await token(requiredRole);const q=new URLSearchParams({resource});Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});const response=await fetch('/.netlify/functions/pilot-data?'+q,{...fetchOptions,headers:{'content-type':'application/json',authorization:'Bearer '+authToken,...(fetchOptions.headers||{})}});let body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));body=applyCoachAssignmentGuardrail(resource,fetchOptions,body);return body}
   window.PilotCloud={enabled,ready,token,request,currentUser,signOut};
   if(enabled){const s=document.createElement('script');s.src='/openai-voice.js?v=20260817-openai1';s.defer=true;document.head.appendChild(s)}
 })();
