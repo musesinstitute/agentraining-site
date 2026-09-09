@@ -56,6 +56,11 @@
     const authToken=await token(requiredRole);
     const method=String(fetchOptions.method||'GET').toUpperCase();
     let sent={};if(method==='POST'&&fetchOptions.body){try{sent=JSON.parse(fetchOptions.body)}catch(e){}}
+    if(resource==='coach-messages'&&method==='POST'&&!coachAssignments.length){
+      const bootstrap=await fetch('/.netlify/functions/pilot-data?resource=coach-messages',{headers:{'content-type':'application/json',authorization:'Bearer '+authToken}});
+      const bootstrapBody=await bootstrap.json().catch(()=>({}));
+      if(bootstrap.ok&&Array.isArray(bootstrapBody.assignments))coachAssignments=bootstrapBody.assignments;
+    }
     const current=activeCoachAssignment();
     if(resource==='coach-messages'&&method==='POST'&&current?.sourceType==='company_knowledge'&&current?.sourceKnowledgeId){
       if(isPreparePrompt(sent.content)){
