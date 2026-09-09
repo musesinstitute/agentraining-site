@@ -21,6 +21,7 @@
   async function ready(requiredRole){if(!enabled)return null;if(!window.netlifyIdentity)throw new Error(t('Pilot sign-in could not be loaded.','无法载入试用登录功能。'));if(!switchHandled&&params.get('switch')==='1'){switchHandled=true;window.netlifyIdentity.init();try{await window.netlifyIdentity.logout()}catch(e){}readyPromise=null;finishReady=null}if(!readyPromise){readyPromise=new Promise(resolve=>{window.netlifyIdentity.init();const finish=user=>{hideGate();mountAccountControls(user);resolve(user)};finishReady=finish;const u=currentUser();if(u)Promise.resolve(u.jwt()).then(()=>finish(u)).catch(()=>showGate(t('Please sign in again.','请重新登录。')));else showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'))})}const u=await readyPromise;if(requiredRole&&!roles(u).includes(requiredRole)&&!roles(u).includes('admin'))throw new Error(t('This page requires the '+requiredRole+' role.','此页面需要相应权限。'));return u}
   async function token(requiredRole){const user=await ready(requiredRole);if(!user||typeof user.jwt!=='function')throw new Error(t('Secure Pilot token is unavailable.','安全访问凭证不可用。'));return user.jwt()}
   function isPreparePrompt(value){const s=String(value||'').toLowerCase();return /help me prepare|prepare (for|me)|practice preparation|准备.{0,10}(练习|任务|情境|场景|作业)|帮.{0,6}准备/.test(s)}
+  function isGenericCoachIntent(value){const s=String(value||'').toLowerCase();return /latest practice result|explain my latest|what should i practice next|most useful skill|为什么我得到这个分数|最近一次练习结果|下一步最应该练习|哪一项技能/.test(s)}
   function activeCoachAssignment(){return [...coachAssignments].filter(x=>x&&x.status!=='Completed').sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')))[0]||null}
   function assignmentPrepText(a,zh){
     if(!a)return '';
@@ -63,7 +64,8 @@
         const assistantMessage={role:'assistant',content:assignmentPrepText(current,zh),createdAt:new Date().toISOString(),assignmentContextId:current.id,sourceKnowledgeId:current.sourceKnowledgeId,groundedIn:'assignment_metadata'};
         return {userMessage,assistantMessage,assignments:coachAssignments,grounded:false,preparation:true};
       }
-      if(assignmentCoachContext?.assignmentId===current.id){
+      if(!isGenericCoachIntent(sent.content)){
+        assignmentCoachContext={assignmentId:current.id};
         return sourceGroundedCoach(authToken,current,String(sent.content||''));
       }
     }
@@ -74,7 +76,9 @@
     if(resource==='coach-messages'&&Array.isArray(body.assignments))coachAssignments=body.assignments;
     if(resource==='coach-messages'&&method==='GET'&&Array.isArray(body.messages)){
       const currentAssignment=activeCoachAssignment();
-      if(currentAssignment){
+      if(currentAssignment?.sourceType==='company_knowledge'&&currentAssignment?.sourceKnowledgeId){
+        assignmentCoachContext={assignmentId:currentAssignment.id};
+      }else if(currentAssignment){
         for(let i=body.messages.length-1;i>=0;i--){
           const row=body.messages[i];
           if(row?.assignmentContextId===currentAssignment.id||row?.sourceKnowledgeId===currentAssignment.sourceKnowledgeId){assignmentCoachContext={assignmentId:currentAssignment.id};break}
