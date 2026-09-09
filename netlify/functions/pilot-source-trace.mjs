@@ -32,13 +32,13 @@ function fingerprint(text) {
 
 export default async function handler(req) {
   try {
-    if (req.method !== 'GET') return reply(405, { error: 'GET required.' });
+    if (req.method !== 'POST') return reply(405, { error: 'POST required.' });
     verifyRequestOrigin(req);
     const user = await getUser();
     if (!user) return reply(401, { error: 'Please sign in to continue.' });
     const actor = actorFrom(user);
-    const url = new URL(req.url);
-    const assignmentId = clean(url.searchParams.get('assignmentId'), 100);
+    const body = await req.json().catch(() => ({}));
+    const assignmentId = clean(body.assignmentId, 100);
     if (!assignmentId) return reply(400, { error: 'assignmentId is required.' });
 
     const store = getStore({ name: STORE_NAME, consistency: 'strong' });
