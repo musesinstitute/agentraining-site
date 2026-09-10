@@ -34,6 +34,27 @@ node --import ./tests/register.mjs --test tests/coach-routing.test.mjs tests/kno
 
 ## Actual browser verification
 
-Post-deploy retest pending at the time of this implementation commit.
+Implementation commit: `a2a93d018c2a2402c8f1695bacd9684ac41fbc17`.
+Netlify Deploy Preview status: success.
+Test URL: https://deploy-preview-22--magical-platypus-ba1dfe.netlify.app/coach-chat.html?pilot=1
+
+All submissions below used the actual textarea and clicked the real Send button in the authenticated formal learner page. No direct endpoint calls or diagnostic-page shortcuts were used.
+
+| Acceptance | Deployed browser evidence | Result |
+| --- | --- | --- |
+| A: philosophy question | Typed exact question, clicked Send; visible user bubble and response (01:49:31 Pacific) | PASS |
+| B: source grounding | Banner Life, complete-picture explanation and “We underwrite individuals, not impairments.”; correct source and Verifier PASS | PASS |
+| C: Why is that important? | Visible sent message and continuous same-source underwriting reply (01:50:04) | PASS |
+| C: Give me an example. | Visible sent message and cigar-use underwriting example (01:50:28) | PASS |
+| D: composer layout | Actual screenshot shows textarea, Speak, Send in one row; explicit submit type; context selector in Assignment Inbox | PASS |
+| D: microphone denial recovery | Real Speak click returns not-allowed; error stays visible; Send re-enabled and subsequent text request succeeds | PASS |
+| D: live audio transcription | Cloud browser microphone is not permitted; no live audio transcript produced | BLOCKED / NOT VERIFIED |
+| E: typed generic request | Typed What should I practice next? while source context was selected; request succeeds with a Practice-evidence skill recommendation, Generic Coach label and no false source verification (01:51:17) | PASS |
+
+All three source answers displayed `Grounded in: Company Knowledge · underwriting-field-guide · Verifier: PASS · Path: pilot-coach-source` and contained no lending/lender/borrower/loan/commercial-lending/credit-score underwriting drift. Source assignment remained `5586b6bd-7ed7-4958-8404-2bcab8c9143a`. Model wording varies with retained conversation history; histories were not cleared to improve results.
+
+The browser-control service occasionally returned a short selector deadline while a model request was in flight; subsequent visible responses confirmed completion. This was not treated as proof that the application request failed.
+
+`master` was verified unchanged at `d418930375f847d1612796224fe962fe78d7dad7`. PR #22 was not merged. The prior grounding backend and router have no diff from `56f6745`; the new composer still builds explicit request context. Human acceptance remains required, particularly real microphone transcription on a microphone-enabled device.
 
 The baseline real Speak click invoked SpeechRecognition but received `not-allowed` in the cloud browser. Previously onend immediately hid that error. The repair retains the visible error and restores text controls; the speech recognition engine itself is unchanged. Live audio-to-text cannot be reported PASS without an available, permitted microphone.
