@@ -8,8 +8,6 @@
     window.addEventListener('DOMContentLoaded', () => { window.URLSearchParams = NativeURLSearchParams; sessionStorage.setItem('agentraining_ref','pilot'); sessionStorage.setItem('agentraining_name','Pilot User'); sessionStorage.setItem('agentraining_team','pilot'); document.getElementById('gate-welcome')?.style && (document.getElementById('gate-welcome').style.display='none'); document.getElementById('access-gate')?.style && (document.getElementById('access-gate').style.display='none'); }, {once:true});
   }
   let readyPromise, finishReady, switchHandled=false;
-  let coachAssignments=[];
-  let assignmentCoachContext=null;
   const requestedLang=params.get('lang'); if(requestedLang==='en'||requestedLang==='zh')sessionStorage.setItem('agentraining_lang',requestedLang);
   const currentLang=requestedLang||sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); const t=(en,zh)=>currentLang==='zh'?zh:en;
   function currentUser(){return window.netlifyIdentity&&window.netlifyIdentity.currentUser()} function roles(user){return user?.app_metadata?.roles||[]}
@@ -20,26 +18,33 @@
   function hideGate(){const g=document.getElementById('pilot-auth-gate');if(g)g.style.display='none'}
   async function ready(requiredRole){if(!enabled)return null;if(!window.netlifyIdentity)throw new Error(t('Pilot sign-in could not be loaded.','无法载入试用登录功能。'));if(!switchHandled&&params.get('switch')==='1'){switchHandled=true;window.netlifyIdentity.init();try{await window.netlifyIdentity.logout()}catch(e){}readyPromise=null;finishReady=null}if(!readyPromise){readyPromise=new Promise(resolve=>{window.netlifyIdentity.init();const finish=user=>{hideGate();mountAccountControls(user);resolve(user)};finishReady=finish;const u=currentUser();if(u)Promise.resolve(u.jwt()).then(()=>finish(u)).catch(()=>showGate(t('Please sign in again.','请重新登录。')));else showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'))})}const u=await readyPromise;if(requiredRole&&!roles(u).includes(requiredRole)&&!roles(u).includes('admin'))throw new Error(t('This page requires the '+requiredRole+' role.','此页面需要相应权限。'));return u}
   async function token(requiredRole){const user=await ready(requiredRole);if(!user||typeof user.jwt!=='function')throw new Error(t('Secure Pilot token is unavailable.','安全访问凭证不可用。'));return user.jwt()}
-  function isPreparePrompt(value){const s=String(value||'').toLowerCase();return /help me prepare|prepare (for|me)|practice preparation|准备.{0,10}(练习|任务|情境|场景|作业)|帮.{0,6}准备/.test(s)}
-  function isGenericCoachIntent(value){const s=String(value||'').toLowerCase();return /latest practice result|explain my latest|what should i practice next|most useful skill|为什么我得到这个分数|最近一次练习结果|下一步最应该练习|哪一项技能/.test(s)}
-  function activeCoachAssignment(){const active=[...coachAssignments].filter(x=>x&&x.status!=='Completed').sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));return active.find(x=>x.sourceType==='company_knowledge'&&x.sourceKnowledgeId)||active[0]||null}
-  function assignmentPrepText(a,zh){
-    if(!a)return '';
-    const title=a.scenarioName||a.customScenario?.title||'Assigned Practice';
-    const source=a.sourceLabel||'the assigned company knowledge';
-    const objective=a.customScenario?.objective||'';
-    const criteria=Array.isArray(a.customScenario?.successCriteria)?a.customScenario.successCriteria.filter(Boolean).slice(0,4):[];
-    assignmentCoachContext={assignmentId:a.id,title,source,objective,criteria,startedAt:Date.now()};
-    if(zh){let out=`准备当前主管指定的练习——“${title}”。\n\n这次准备只依据当前 Assignment 的信息，不会把过去其他练习的分数当成本次表现。`;out+=`\n\n相关资料：${source}`;if(objective)out+=`\n练习目标：${objective}`;if(criteria.length)out+=`\n\n本次应重点掌握：\n${criteria.map((x,i)=>`${i+1}) ${x}`).join('\n')}`;out+=`\n\n您尚未完成这项练习，因此现在没有足够证据评价或给这项 Underwriting Practice 打分。完成后，我再根据这一次练习的实际证据提供反馈。`;return out}
-    let out=`Preparation for your current manager-assigned Practice — “${title}.”\n\nThis preparation uses the current Assignment context only. I will not treat scores from unrelated past Practices as evidence for this assignment.`;out+=`\n\nRelated source: ${source}`;if(objective)out+=`\nPractice objective: ${objective}`;if(criteria.length)out+=`\n\nFocus on:\n${criteria.map((x,i)=>`${i+1}) ${x}`).join('\n')}`;out+=`\n\nYou have not completed this assigned Practice yet, so there is not enough evidence to evaluate or score your performance on it. After completion, I can coach you from the evidence produced by this specific Practice.`;return out;
-  }
-  async function sourceGroundedCoach(authToken,assignment,content){const response=await fetch('/.netlify/functions/pilot-coach-source',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+authToken},body:JSON.stringify({assignmentId:assignment.id,message:content})});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||t('Source-grounded Coach request failed ('+response.status+').','资料依据型 AI 教练请求失败（'+response.status+'）。'));return body}
-  async function request(resource,options={}){
-    const {requiredRole,query,...fetchOptions}=options;const authToken=await token(requiredRole);const method=String(fetchOptions.method||'GET').toUpperCase();let sent={};if(method==='POST'&&fetchOptions.body){try{sent=JSON.parse(fetchOptions.body)}catch(e){}}
-    if(resource==='coach-messages'&&method==='POST'&&!coachAssignments.length){const bootstrap=await fetch('/.netlify/functions/pilot-data?resource=coach-messages',{headers:{'content-type':'application/json',authorization:'Bearer '+authToken}});const bootstrapBody=await bootstrap.json().catch(()=>({}));if(bootstrap.ok&&Array.isArray(bootstrapBody.assignments))coachAssignments=bootstrapBody.assignments}
-    const current=activeCoachAssignment();
-    if(resource==='coach-messages'&&method==='POST'&&current?.sourceType==='company_knowledge'&&current?.sourceKnowledgeId){if(isPreparePrompt(sent.content)){const zh=/[\u3400-\u9fff]/.test(String(sent.content||''))||currentLang==='zh';const userMessage={role:'user',content:String(sent.content||''),createdAt:new Date().toISOString(),assignmentContextId:current.id};const assistantMessage={role:'assistant',content:assignmentPrepText(current,zh),createdAt:new Date().toISOString(),assignmentContextId:current.id,sourceKnowledgeId:current.sourceKnowledgeId,groundedIn:'assignment_metadata'};return {userMessage,assistantMessage,assignments:coachAssignments,grounded:false,preparation:true}}if(!isGenericCoachIntent(sent.content)){assignmentCoachContext={assignmentId:current.id};return sourceGroundedCoach(authToken,current,String(sent.content||''))}}
-    const q=new URLSearchParams({resource});Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});const response=await fetch('/.netlify/functions/pilot-data?'+q,{...fetchOptions,headers:{'content-type':'application/json',authorization:'Bearer '+authToken,...(fetchOptions.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));if(resource==='coach-messages'&&Array.isArray(body.assignments))coachAssignments=body.assignments;if(resource==='coach-messages'&&method==='GET'&&Array.isArray(body.messages)){const currentAssignment=activeCoachAssignment();if(currentAssignment?.sourceType==='company_knowledge'&&currentAssignment?.sourceKnowledgeId){assignmentCoachContext={assignmentId:currentAssignment.id}}else if(currentAssignment){for(let i=body.messages.length-1;i>=0;i--){const row=body.messages[i];if(row?.assignmentContextId===currentAssignment.id||row?.sourceKnowledgeId===currentAssignment.sourceKnowledgeId){assignmentCoachContext={assignmentId:currentAssignment.id};break}if(row?.role==='user'&&isPreparePrompt(row.content)){assignmentCoachContext={assignmentId:currentAssignment.id};break}}}}return body;
+  // Routing is determined by each request, never by cached assignment state or prompt keywords.
+  async function request(resource, options={}) {
+    const {requiredRole, query, ...fetchOptions}=options;
+    const authToken=await token(requiredRole);
+    const method=String(fetchOptions.method||'GET').toUpperCase();
+    let endpoint='/.netlify/functions/pilot-data';
+    let grounded=false, sent={};
+    if(resource==='coach-messages' && method==='POST') {
+      sent=JSON.parse(fetchOptions.body||'{}');
+      grounded=sent.coachMode==='company_knowledge';
+      if(grounded) {
+        if(!sent.assignmentId || !sent.sourceKnowledgeId) throw new Error('Select an assigned Company Knowledge source before asking.');
+        endpoint='/.netlify/functions/pilot-coach-source';
+        fetchOptions.body=JSON.stringify({assignmentId:sent.assignmentId,sourceKnowledgeId:sent.sourceKnowledgeId,message:sent.content});
+      } else if(sent.coachMode!=='generic' || sent.assignmentId || sent.sourceKnowledgeId) {
+        throw new Error('Coach context is missing or inconsistent. Reload the Coach page and select a context.');
+      }
+    }
+    const q=new URLSearchParams({resource});
+    Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});
+    const response=await fetch(endpoint+(grounded?'':'?'+q), {...fetchOptions,headers:{...fetchOptions.headers,'content-type':'application/json',authorization:'Bearer '+authToken}});
+    const body=await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));
+    if(grounded && (body.grounded!==true || body.assistantMessage?.groundedIn!=='company_knowledge' || body.assistantMessage?.assignmentContextId!==sent.assignmentId || body.assistantMessage?.sourceKnowledgeId!==sent.sourceKnowledgeId || !body.assistantMessage?.verification?.status)) {
+      throw new Error('The response did not confirm the selected source and verification. No answer was displayed.');
+    }
+    return body;
   }
   window.PilotCloud={enabled,ready,token,request,currentUser,signOut};if(enabled){const s=document.createElement('script');s.src='/openai-voice.js?v=20260817-openai1';s.defer=true;document.head.appendChild(s)}
 })();

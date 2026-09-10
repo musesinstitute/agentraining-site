@@ -36,22 +36,7 @@ export default async (_request: Request, context: any) => {
      const panel=form.closest('.panel'); if(panel) panel.insertBefore(card,panel.firstElementChild?.nextSibling||panel.firstChild);
      card.querySelector('.begin').addEventListener('click',()=>{input.value=isManager?t('I’d like to introduce myself, my team, and our goals. Please get to know our situation one question at a time.','我想先介绍一下我自己、我的团队和我们的目标。请一次问我一个问题，逐步了解我们的情况。'):t('I’d like to introduce myself. Please get to know me one question at a time.','我想先介绍一下自己。请一次问我一个问题，慢慢了解我。');input.focus();card.scrollIntoView({behavior:'smooth',block:'nearest'});});
    }
-   if(!isManager && window.PilotCloud && !window.__learnerAiGatewayInstalled){
-     window.__learnerAiGatewayInstalled=true;
-     const originalRequest=window.PilotCloud.request.bind(window.PilotCloud);
-     window.PilotCloud.request=async(name,options={})=>{
-       if(name==='coach-messages' && String(options.method||'GET').toUpperCase()==='POST'){
-         let body={};try{body=JSON.parse(options.body||'{}')}catch{}
-         const message=String(body.content||'').trim();
-         if(!message)throw new Error(t('Message is required.','请输入消息。'));
-         const res=await fetch('/api/ai-chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({role:'learner',lang:zh()?'zh':'en',message})});
-         let data={};try{data=await res.json()}catch{}
-         if(!res.ok)throw new Error(data.error||t('AI conversation failed.','AI 对话暂时无法完成。'));
-         return {userMessage:data.userMessage,assistantMessage:data.assistantMessage};
-       }
-       return originalRequest(name,options);
-     };
-   }
+   // Presentation only: Coach routing belongs to the explicit PilotCloud request contract.
    if(document.getElementById('voiceDictate')||document.getElementById('mic-btn'))return;
    const btn=document.createElement('button');btn.type='button';btn.id='voiceDictate';btn.className='voice-dictate';btn.textContent='🎙 '+t('Speak','语音输入');
    const send=form.querySelector('button[type="submit"]');form.insertBefore(btn,send);

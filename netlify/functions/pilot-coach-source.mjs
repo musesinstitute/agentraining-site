@@ -108,6 +108,7 @@ export default async function handler(req) {
     if (assignment.sourceType !== 'company_knowledge' || !assignment.sourceKnowledgeId) return reply(400, { error: 'This assignment is not linked to Company Knowledge.' });
 
     const knowledgeId = cleanText(assignment.sourceKnowledgeId, 100);
+    if (input.sourceKnowledgeId && cleanText(input.sourceKnowledgeId, 100) !== knowledgeId) return reply(409, { error: 'Assignment source has changed. Refresh your assignment before asking.' });
     const record = await store.get(`${teamPrefix}/knowledge/${knowledgeId}`, { type: 'json' });
     if (!record) return reply(404, { error: 'Assigned source document not found.' });
     if (record.status !== 'approved') return reply(403, { error: 'Assigned source document is not approved for learner access.' });
@@ -183,6 +184,8 @@ export default async function handler(req) {
 
     const userMessage = coachMessage('user', message, assignmentId, knowledgeId);
     const assistantMessage = coachMessage('assistant', safeText, assignmentId, knowledgeId);
+    assistantMessage.coachPath = 'pilot-coach-source';
+    assistantMessage.sourceLabel = `Company Knowledge · ${cleanText(record.title, 300)}`;
     assistantMessage.verification = { status: status || 'AMBIGUOUS', reason: cleanText(verdict.reason, 800) };
     await store.setJSON(`${prefix}${userMessage.createdAt}-${userMessage.id}`, userMessage, { onlyIfNew:true });
     await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`, assistantMessage, { onlyIfNew:true });
