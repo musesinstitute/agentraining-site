@@ -39,20 +39,22 @@ export default async (_request: Request, context: any) => {
    // Presentation only: Coach routing belongs to the explicit PilotCloud request contract.
    if(document.getElementById('voiceDictate')||document.getElementById('mic-btn'))return;
    const btn=document.createElement('button');btn.type='button';btn.id='voiceDictate';btn.className='voice-dictate';btn.textContent='🎙 '+t('Speak','语音输入');
-   const send=form.querySelector('button[type="submit"]');form.insertBefore(btn,send);
+   const send=form.querySelector('#sendButton')||form.querySelector('button[type="submit"]');form.insertBefore(btn,send);
    const status=document.createElement('div');status.className='voice-status';status.textContent=t('Listening… speak naturally. Your words will appear in the message box.','正在聆听…请自然说话，识别出的文字会出现在输入框中。');form.parentNode.insertBefore(status,form.nextSibling);
    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
    if(!SR){btn.addEventListener('click',()=>alert(t('Voice dictation is not supported by this browser yet. You can continue typing.','这个浏览器目前不支持语音听写，您仍然可以使用文字输入。')));return;}
-   let recognition=null;
+   let recognition=null,voiceError=false;
+   const voiceState=state=>{form.dataset.voiceState=state;form.dispatchEvent(new Event('coach-voice-state'));};
    btn.addEventListener('click',()=>{
      if(recognition){recognition.stop();return;}
+     voiceError=false;
      recognition=new SR();recognition.lang=zh()?'zh-CN':'en-US';recognition.interimResults=true;recognition.continuous=true;
      let base=input.value?input.value.trim()+' ':'';
-     recognition.onstart=()=>{btn.classList.add('listening');btn.textContent='■ '+t('Stop','停止');status.classList.add('show')};
+     recognition.onstart=()=>{voiceState('recording');status.textContent=t('Listening… speak naturally. Your words will appear in the message box.','正在聆听…请自然说话。');btn.classList.add('listening');btn.textContent='■ '+t('Stop','停止');status.classList.add('show')};
      recognition.onresult=e=>{let final='',interim='';for(let i=e.resultIndex;i<e.results.length;i++){const s=e.results[i][0].transcript;if(e.results[i].isFinal)final+=s;else interim+=s}if(final){base+=final+' ';input.value=base.trim()}else input.value=(base+interim).trim()};
-     recognition.onerror=e=>{status.textContent=t('Voice input stopped: ','语音输入已停止：')+e.error};
-     recognition.onend=()=>{recognition=null;btn.classList.remove('listening');btn.textContent='🎙 '+t('Speak','语音输入');status.classList.remove('show');input.focus()};
-     recognition.start();
+     recognition.onerror=e=>{voiceError=true;status.textContent=t('Voice input stopped: ','语音输入已停止：')+e.error+t('. Check microphone permission; you can still type and Send.','。请检查麦克风权限；您仍可输入文字并发送。');status.classList.add('show')};
+     recognition.onend=()=>{recognition=null;btn.classList.remove('listening');btn.textContent='🎙 '+t('Speak','语音输入');if(!voiceError)status.classList.remove('show');voiceState('idle');input.focus()};
+     try{voiceState('recording');recognition.start()}catch(error){recognition.onerror({error:error.message||'unavailable'});recognition.onend()}
    });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();

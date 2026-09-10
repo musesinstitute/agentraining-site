@@ -13,14 +13,16 @@ const assignment={id:'assignment-a',assignedTo:'learner@example.test',sourceType
 const questions=['How should I explain the holistic underwriting philosophy?','Why is that important?','Give me an example.'];
 const verified={role:'assistant',content:'Synthetic verified answer',groundedIn:'company_knowledge',sourceKnowledgeId:'source-a',assignmentContextId:'assignment-a',sourceLabel:assignment.sourceLabel,verification:{status:'PASS'}};
 const tick=()=>new Promise(r=>setImmediate(r));
-function harness({rows=[assignment],getError=false,postError=false,response=verified,edge=read('netlify/edge-functions/ai-relationship-onboarding.ts')}={}){
+function harness({voice=false,rows=[assignment],getError=false,postError=false,response=verified,edge=read('netlify/edge-functions/ai-relationship-onboarding.ts')}={}){
   const elements=new Map(), calls=[], events={};
-  function element(id){if(elements.has(id))return elements.get(id);const e={id,value:'',disabled:false,hidden:false,style:{},dataset:{},classList:{add(){},remove(){}},addEventListener(n,f){this[n]=f},appendChild(){},remove(){},focus(){},insertBefore(){},querySelector(selector){return element(id+' '+selector)},closest(){return null},scrollIntoView(){}};e.parentNode=e;elements.set(id,e);return e;}
-  element('voiceDictate'); // Voice DOM is orthogonal; execute Edge installer through its routing section.
-  const document={readyState:'loading',head:{appendChild(){}},body:{appendChild(){}},getElementById:element,querySelector(){return null},querySelectorAll(){return []},createElement:()=>element('new-'+Math.random()),addEventListener(n,f){(events[n]??=[]).push(f)}};
+  function element(id){if(elements.has(id))return elements.get(id);const e={id,value:'',disabled:false,hidden:false,style:{},dataset:{},classList:{values:new Set(),add(x){this.values.add(x)},remove(x){this.values.delete(x)}},addEventListener(n,f){this[n]=f},dispatchEvent(e){this[e.type]?.(e)},appendChild(){},remove(){},focus(){},insertBefore(){},querySelector(selector){return element(id+' '+selector)},closest(){return null},scrollIntoView(){}};e.parentNode=e;elements.set(id,e);return e;}
+  if(!voice)element('voiceDictate');
+  const speechInstances=[];
+  class SpeechRecognition{constructor(){speechInstances.push(this)} start(){this.onstart?.()} stop(){this.onend?.()}}
+  const document={readyState:'loading',head:{appendChild(){}},body:{appendChild(){}},getElementById:id=>{if(voice&&['voiceDictate','mic-btn'].includes(id))return [...elements.values()].find(e=>e.id===id)||null;return element(id)},querySelector(){return null},querySelectorAll(){return []},createElement:()=>element('new-'+Math.random()),addEventListener(n,f){(events[n]??=[]).push(f)}};
   const location={search:'?pilot=1',pathname:'/coach-chat.html',reload(){}};
   const user={email:'learner@example.test',app_metadata:{roles:['learner']},jwt:async()=>'synthetic-test-token'};
-  const context=vm.createContext({document,location,URLSearchParams,navigator:{language:'en'},sessionStorage:{getItem(){return null},setItem(){}},localStorage:{removeItem(){}},console,Date,setTimeout,clearTimeout});
+  const context=vm.createContext({document,location,URLSearchParams,navigator:{language:'en'},sessionStorage:{getItem(){return null},setItem(){}},localStorage:{removeItem(){}},console,Date,setTimeout,clearTimeout,Event,SpeechRecognition});
   context.window=context;context.addEventListener=document.addEventListener;context.netlifyIdentity={init(){},currentUser:()=>user};
   context.fetch=async(url,options={})=>{calls.push({url,options});const post=options.method==='POST';let body,status=200;
     if(url==='/api/ai-chat')body={assistantMessage:{role:'assistant',content:'lending decisions'},userMessage:{role:'user',content:questions[0]}};
@@ -32,7 +34,7 @@ function harness({rows=[assignment],getError=false,postError=false,response=veri
   const injected=edge.match(/const injection = String.raw`([\s\S]*?)`;/)?.[1];assert.ok(injected);
   for(const m of injected.matchAll(/<script>([\s\S]*?)<\/script>/g))vm.runInContext(m[1],context);
   for(const cb of events.DOMContentLoaded||[])cb();
-  return {context,calls,elements,send:q=>context.sendMessage(q)};
+  return {context,calls,elements,speechInstances,send:q=>context.sendMessage(q)};
 }
 
 test('reproduce original Edge override: formal send bypasses grounded router',async()=>{
@@ -80,4 +82,26 @@ test('grounded history stays learner/assignment scoped; failed verifier withhold
 test('old already-open Edge gateway cannot keep generating unscoped learner answers',async()=>{
   await seed();process.env.OPENAI_API_KEY='synthetic';
   for(const input of [{role:'learner',message:questions[0]},{role:'learner',message:questions[0],coachMode:'generic',sourceKnowledgeId:'source-a'}])assert.equal((await aiHandler(req(input,'ai-chat'))).status,409);
+});
+
+test('formal form submit event sends the typed draft',async()=>{
+  const h=harness();await tick();h.elements.get('messageInput').value=questions[0];h.elements.get('composer').submit({preventDefault(){}});await tick();
+  const posts=h.calls.filter(c=>c.options.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).message,questions[0]);
+});
+test('empty context disables Send with a visible reason and preserves draft',async()=>{
+  const h=harness();await tick();h.elements.get('coachContext').value='';h.elements.get('coachContext').change();
+  assert.equal(h.elements.get('sendButton').disabled,true);assert.match(h.elements.get('composerStatus').textContent,/Choose a coaching context/);
+});
+test('typed generic question uses generic even from an active Company Knowledge context',async()=>{
+  const h=harness({response:{role:'assistant',content:'Practice your next skill.',coachPath:'generic'}});await tick();await h.send('What should I practice next?');
+  assert.match(h.calls.find(c=>c.options.method==='POST').url,/pilot-data/);assert.equal(h.elements.get('coachContext').value,'generic');
+});
+test('SpeechRecognition controls transcribe to the draft, stop safely, and do not submit automatically',async()=>{
+  const h=harness({voice:true});await tick();const btn=[...h.elements.values()].find(e=>e.id==='voiceDictate');assert.ok(btn);btn.click();
+  assert.equal(h.elements.get('sendButton').disabled,true);const sr=h.speechInstances[0];const result=[{transcript:'How should I explain the holistic underwriting philosophy?'}];result.isFinal=true;sr.onresult({resultIndex:0,results:[result]});
+  assert.equal(h.elements.get('messageInput').value,questions[0]);assert.equal(h.calls.filter(c=>c.options.method==='POST').length,0);btn.click();assert.equal(h.elements.get('sendButton').disabled,false);
+});
+test('microphone denial remains visible and text Send recovers',async()=>{
+  const h=harness({voice:true});await tick();const btn=[...h.elements.values()].find(e=>e.id==='voiceDictate');btn.click();const sr=h.speechInstances[0];sr.onerror({error:'not-allowed'});sr.onend();
+  const status=[...h.elements.values()].find(e=>e.className==='voice-status');assert.match(status.textContent,/not-allowed/);assert.equal(status.classList.values.has('show'),true);assert.equal(h.elements.get('sendButton').disabled,false);await h.send(questions[0]);assert.equal(h.calls.filter(c=>c.options.method==='POST').length,1);
 });
