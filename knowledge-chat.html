@@ -1041,8 +1041,9 @@ function renderQBResults(bank) {
   resultsEl.style.display = 'block';
 
   document.getElementById('qb-results-title').textContent = bank.title;
+  const bankDate = bank.generatedAt || bank.updatedAt || bank.createdAt;
   document.getElementById('qb-results-meta').textContent =
-    `${bank.totalQuestions} questions · ${bank.difficulty} · ${new Date(bank.generatedAt).toLocaleDateString()}`;
+    `${bank.totalQuestions} questions · ${bank.difficulty} · ${bankDate ? new Date(bankDate).toLocaleDateString() : ''}`;
 
   const list = document.getElementById('qb-questions-list');
   list.innerHTML = '';
