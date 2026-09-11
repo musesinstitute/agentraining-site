@@ -627,6 +627,7 @@ async function loadLibrary() {
 
 async function openDocument(src) {
   currentDoc = src;
+  window.currentDoc = src;
   chatHistory = [];
 
   // Update UI

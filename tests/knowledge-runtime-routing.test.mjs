@@ -27,6 +27,7 @@ test('/knowledge exposes a clear Company Training Library Question Bank entry',(
 
 test('base Question Bank renderer uses a valid persisted-bank date fallback',()=>{
   const page=read('knowledge-chat.html');
+  assert.match(page,/currentDoc = src;\s+window\.currentDoc = src;/);
   assert.match(page,/bank\.generatedAt \|\| bank\.updatedAt \|\| bank\.createdAt/);
   assert.doesNotMatch(page,/\$\{new Date\(bank\.generatedAt\)\.toLocaleDateString\(\)\}/);
 });
