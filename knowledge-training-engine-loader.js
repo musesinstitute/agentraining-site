@@ -14,8 +14,7 @@ if(typeof originalOpen==='function'&&!originalOpen.__kteBridge){
   bridged.__kteBridge=true;
   window.openDocument=bridged;
 }
-var script=document.createElement('script');
-script.src='/knowledge-training-engine.js?v=20260905-capacity1';
-script.defer=true;
-document.head.appendChild(script);
+// The Edge function loads the engine in the next parser-ordered script tag.
+// Keeping this file bridge-only prevents a dynamic-script race where the
+// Question Bank modal can open before the recovery engine installs.
 })();
