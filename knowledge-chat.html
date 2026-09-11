@@ -7,6 +7,7 @@
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script src="pilot-cloud.js?v=20260821-guide1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="start-menu.css">
 <style>
 :root {
   --blue:#1a56db; --ink:#111827; --muted:#64748b;
@@ -235,6 +236,8 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
     <button class="btn-sm" id="lib-toggle-btn" onclick="toggleLibrary()">☰ Library</button>
   </div>
 </nav>
+<div id="start-menu-mount"></div>
+<script src="start-menu.js"></script>
 
 <!-- LIBRARY PANEL -->
 <div id="library-panel">
@@ -620,6 +623,15 @@ async function loadLibrary() {
       el.querySelector('.lib-item-meta').onclick = () => openDocument(src);
       list.appendChild(el);
     });
+    // Preserve document context when arriving from Company Knowledge
+    // (knowledge.html) via a per-document "Question Bank & Practice
+    // Scenarios" link (?knowledgeId=<id>) - open that document directly
+    // instead of leaving the learner to find it again in the library.
+    const requestedId = new URLSearchParams(location.search).get('knowledgeId');
+    if (requestedId) {
+      const requested = sources.find(s => s.id === requestedId);
+      if (requested) openDocument(requested);
+    }
   } catch(e) {
     list.innerHTML = `<div class="lib-empty" style="color:var(--red)">${escHtml(friendlyError(e.message))}</div>`;
   }
@@ -655,8 +667,9 @@ async function openDocument(src) {
   if (qbBtn) qbBtn.style.display = canManage ? 'block' : 'none';
   resetQBModal();
 
-  // Close library on mobile
-  if (window.innerWidth < 700) toggleLibrary();
+  // Close library on mobile (only if it was actually open - a document
+  // opened via a deep link, e.g. ?knowledgeId=, never opened the drawer).
+  if (window.innerWidth < 700 && libraryOpen) toggleLibrary();
 
   // Load PDF preview if content looks like it was extracted from PDF
   // (We show the PDF panel with a helpful message; actual binary PDF rendering
@@ -993,6 +1006,11 @@ function resetQBModal() {
   document.getElementById('qb-progress').style.display = 'none';
   document.getElementById('qb-generate-btn').disabled = false;
   document.getElementById('qb-cancel-btn').style.display = '';
+  // Clear any leftover partial/complete recovery banner (and its Resume
+  // button) from a prior document or prior generation attempt so it can't
+  // be mistaken for this document's/attempt's state.
+  const staleNotice = document.getElementById('qb-recovery-notice');
+  if (staleNotice) staleNotice.remove();
   currentQB = null;
 }
 
