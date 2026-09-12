@@ -13,6 +13,12 @@
 .upload-option[type="button"]{appearance:none;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}.upload-option[type="button"]:hover,.upload-option[type="button"]:focus-visible,.upload-option.selected{border-color:#60a5fa;background:#eff6ff;outline:0;box-shadow:0 0 0 2px #bfdbfe}
 .question-bank-entry{margin-top:14px;background:#fff;border:1px solid #93c5fd;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:18px}.question-bank-entry b{display:block;color:#1e40af;margin-bottom:4px}.question-bank-entry span{display:block;color:var(--muted);font-size:12px;line-height:1.5}.question-bank-entry .btn{white-space:nowrap}@media(max-width:620px){.question-bank-entry{align-items:flex-start;flex-direction:column}}
 .training-assets{margin-top:2px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.training-assets .btn{font-size:12px;padding:8px 11px}.qb-count{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+/* Brief highlight for a deep-linked destination (#upload / #question-bank /
+   #practice-scenarios) - a subtle pulse, not a redesign, and it auto-clears
+   itself (see highlightEl() in the script below). */
+.deep-link-highlight{animation:agentraining-deep-link-pulse 1.3s ease-out 2}
+@keyframes agentraining-deep-link-pulse{0%{box-shadow:0 0 0 0 rgba(26,86,219,.45)}100%{box-shadow:0 0 0 10px rgba(26,86,219,0)}}
+@media(prefers-reduced-motion:reduce){.deep-link-highlight{animation:none;outline:3px solid #93c5fd;outline-offset:2px}}
 </style>
 </head>
 <body>
@@ -71,7 +77,7 @@
 <div class="start-menu-mount" data-position="bottom"></div>
 <script src="start-menu.js"></script>
 <script>
-var currentLang='en', companySources=[], canManage=false;
+var currentLang='en', companySources=[], canManage=false, knowledgeLoaded=false;
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
 function tr(en,zh){return currentLang==='zh'?zh:en}
 function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。'};return map[message]||('操作未完成：'+message)}
@@ -178,18 +184,86 @@ document.getElementById('assignForm').addEventListener('submit',async function(e
  }catch(error){status.className='status error';status.textContent=error.message}finally{button.disabled=false}
 });
 async function loadKnowledge(){
- if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';return}
+ if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';knowledgeLoaded=true;handleDeepLinkHash();return}
  try{
   var me=await PilotCloud.request('me'),data=await PilotCloud.request('knowledge');canManage=data.canManage===true;companySources=data.sources||[];
   document.getElementById('secureNote').innerHTML='<b>'+(canManage?tr('Manager workspace:','Manager主管工作區：'):tr('Learner workspace:','學員工作區：'))+'</b> '+tr('Company knowledge is isolated to this authenticated team.','企業知識僅供本登入團隊使用，與其他團隊隔離。');
   document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。');
   document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources()
  }catch(error){document.getElementById('sourceLibrary').className='empty';document.getElementById('sourceLibrary').textContent=friendlyError(error)}
+ finally{knowledgeLoaded=true;handleDeepLinkHash()}
 }
 function setFormStatus(message,kind){var el=document.getElementById('formStatus');el.textContent=message;el.className='status '+(kind||'')}
 document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 30,000'});
 document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>1048576){setFormStatus(tr('Transcript file must be 1 MB or smaller.','逐字稿文件必須為1MB或以下。'),'error');this.value='';return}try{var text=await file.text();document.getElementById('sourceContent').value=text.slice(0,30000);document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus(tr('Loaded: ','已載入：')+file.name+tr('. Review the text before saving.','。請在儲存前檢查文字。'),'ok')}catch(error){setFormStatus(tr('Transcript could not be read.','無法讀取逐字稿文件。'),'error')}});
 function focusSourceAction(id,action,message){setTimeout(function(){var card=document.querySelector('[data-source-card="'+CSS.escape(id)+'"]'),next=card&&card.querySelector('[data-action="'+action+'"]');if(!card)return;card.scrollIntoView({behavior:'smooth',block:'center'});if(next){next.focus();document.getElementById('flowStatus').textContent=message}},80)}
+
+// ── Stable deep-link anchors for demo/WeChat/email links ───────────────────
+// #upload             -> the Add Source / Upload panel (manager only)
+// #question-bank       \_ both scroll to the same real entry point: this
+// #practice-scenarios  /  page only ever offers one combined "Question Bank
+//                          & Practice Scenarios" hand-off per document (see
+//                          renderSources()) - the two actually distinct
+//                          actions live inside knowledge-chat.html once a
+//                          document is open there. We never invent a
+//                          separate Practice Scenarios section here that
+//                          doesn't exist, and never bypass manager/approval
+//                          gating - we only scroll/highlight the correct
+//                          existing entry point, and preserve knowledgeId.
+function highlightEl(el){
+  if(!el)return;
+  el.classList.add('deep-link-highlight');
+  setTimeout(function(){el.classList.remove('deep-link-highlight')},2600);
+}
+function scrollAndHighlight(el){
+  if(!el)return false;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  highlightEl(el);
+  return true;
+}
+var deepLinkHandled=false;
+function handleDeepLinkHash(){
+  var hash=(location.hash||'').replace('#','');
+  if(!hash||deepLinkHandled)return;
+  if(hash==='upload'){
+    // Wait for canManage to be known so a manager whose data just hasn't
+    // loaded yet isn't shown the "Manager access required" message by
+    // mistake. guideFlow('add') already handles both the manager (scroll
+    // + focus the form) and non-manager (explain + point at secureNote)
+    // cases - reused as-is rather than duplicated here.
+    if(!knowledgeLoaded)return;
+    guideFlow('add');
+    deepLinkHandled=true;
+    return;
+  }
+  if(hash==='question-bank'||hash==='practice-scenarios'){
+    var knowledgeId=new URLSearchParams(location.search).get('knowledgeId');
+    if(knowledgeId){
+      var card=document.querySelector('[data-source-card="'+CSS.escape(knowledgeId)+'"]');
+      if(card){
+        deepLinkHandled=scrollAndHighlight(card.querySelector('.training-assets a')||card);
+        return;
+      }
+      if(!knowledgeLoaded)return; // sources still loading - retry below
+      // knowledgeId didn't match a source this account can see; fall
+      // through to the generic entry point rather than doing nothing.
+    }
+    deepLinkHandled=scrollAndHighlight(document.querySelector('.question-bank-entry'));
+  }
+}
+// Deep links arrive before PilotCloud/knowledge data finishes loading, so
+// handleDeepLinkHash() is also called right when that load settles (see
+// loadKnowledge()). This short poll is only a safety net for any other
+// timing gap (e.g. a slow paint) - it gives up after ~3s either way.
+(function pollDeepLink(){
+  handleDeepLinkHash();
+  if(deepLinkHandled)return;
+  var attempts=0,timer=setInterval(function(){
+    attempts++;
+    handleDeepLinkHash();
+    if(deepLinkHandled||attempts>20)clearInterval(timer);
+  },150);
+})();
 
 // ROOM 4C — Google Drive Single-File Import Pilot.
 // Ingestion convenience only: picks exactly one file, imports its readable
