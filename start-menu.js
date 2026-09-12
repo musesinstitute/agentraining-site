@@ -37,7 +37,10 @@ function learnerItems(){
 }
 // Manager order mirrors the same real destinations manager.html's own nav
 // already uses (Assignments/Results are anchors within that one page) -
-// no new manager pages are introduced.
+// no new manager pages are introduced. Practice is intentionally NOT a
+// primary Manager item (managers understand team/assign/results/comms,
+// not roleplay) - it stays reachable via View as Manager inside Practice
+// itself, and via a direct link, just not in this primary workflow menu.
 function managerItems(){
   return [
     {key:'home',icon:'🏠',label:t('Home','首页'),href:'pilot.html'+qs},
@@ -45,7 +48,6 @@ function managerItems(){
     {key:'team',icon:'👥',label:t('Team','团队'),href:'learner-profile.html'+qs},
     {key:'results',icon:'📊',label:t('Results','结果'),href:'manager.html'+qs+'#records'},
     {key:'knowledge',icon:'📚',label:t('Company Knowledge','企业知识库'),href:'knowledge.html'+qs},
-    {key:'practice',icon:'🎯',label:t('Practice','练习'),href:practiceHref},
     {key:'messages',icon:'💬',label:t('Messages','团队消息'),href:'team-messages.html'+qs}
   ];
 }
@@ -68,7 +70,7 @@ function activeKeyFor(isManager){
 }
 
 function buildNav(items,activeKey,bottom){
-  var lead=bottom?'<span class="sm-continue">'+t('Up next','下一步')+'</span>':'';
+  var lead=bottom?'<span class="sm-continue">'+t('Continue your learning workflow','继续您的学习流程')+'</span>':'';
   var links=items.map(function(item){
     return '<a class="sm-item'+(item.key===activeKey?' active':'')+'" href="'+item.href+'"'+(item.key===activeKey?' aria-current="page"':'')+'><span class="sm-icon">'+item.icon+'</span><span class="sm-label">'+item.label+'</span></a>';
   }).join('');

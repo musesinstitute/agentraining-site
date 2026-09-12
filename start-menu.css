@@ -27,13 +27,13 @@
 }
 .start-menu .sm-continue{
   font-size:11px;
-  font-weight:800;
+  font-weight:700;
   color:#64748b;
-  text-transform:uppercase;
-  letter-spacing:.4px;
   padding:0 8px 0 0;
   white-space:nowrap;
 }
+.start-menu-bottom .sm-inner{flex-wrap:wrap;row-gap:2px}
+.start-menu-bottom .sm-continue{flex-basis:100%;padding:2px 0 4px}
 .start-menu .sm-item{
   display:flex;
   align-items:center;
