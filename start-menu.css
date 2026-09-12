@@ -1,16 +1,22 @@
-/* Start Menu — shared learner-facing primary navigation strip.
-   Included on every learner page alongside each page's own existing
-   <nav> (logo / sign-out / lang switch). This is intentionally a second,
-   thin bar rather than a replacement so no existing page-specific nav
-   behavior (sign-out, lang links, Manager Studio links, etc.) is touched. */
-#start-menu{
+/* Start Menu — shared primary navigation strip (learner and manager).
+   Included on every learner-facing page alongside each page's own
+   existing <nav> (logo / sign-out / lang switch). This is intentionally
+   an additional bar rather than a replacement so no existing page's nav
+   markup/behavior was removed or altered. It can render at the top of a
+   page, the bottom, or both - same markup, same order. */
+.start-menu{
   flex-shrink:0;
   background:#fff;
   border-bottom:1px solid #e2e8f0;
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
 }
-#start-menu .sm-inner{
+.start-menu-bottom{
+  border-bottom:0;
+  border-top:1px solid #e2e8f0;
+  background:#f8fafc;
+}
+.start-menu .sm-inner{
   display:flex;
   align-items:center;
   gap:4px;
@@ -19,7 +25,16 @@
   padding:6px 5%;
   min-width:max-content;
 }
-#start-menu .sm-item{
+.start-menu .sm-continue{
+  font-size:11px;
+  font-weight:800;
+  color:#64748b;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  padding:0 8px 0 0;
+  white-space:nowrap;
+}
+.start-menu .sm-item{
   display:flex;
   align-items:center;
   gap:6px;
@@ -31,11 +46,13 @@
   border-radius:8px;
   white-space:nowrap;
 }
-#start-menu .sm-item:hover{background:#f1f5f9;color:#1e293b}
-#start-menu .sm-item.active{background:#eff6ff;color:#1d4ed8}
-#start-menu .sm-icon{font-size:14px;line-height:1}
+.start-menu .sm-item:hover{background:#f1f5f9;color:#1e293b}
+.start-menu .sm-item.active{background:#eff6ff;color:#1d4ed8}
+.start-menu-bottom .sm-item:hover{background:#eef2f7}
+.start-menu .sm-icon{font-size:14px;line-height:1}
 @media(max-width:700px){
-  #start-menu .sm-label{display:none}
-  #start-menu .sm-item{padding:8px 10px}
-  #start-menu .sm-icon{font-size:16px}
+  .start-menu .sm-label{display:none}
+  .start-menu .sm-item{padding:8px 10px}
+  .start-menu .sm-icon{font-size:16px}
+  .start-menu .sm-continue{display:none}
 }

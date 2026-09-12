@@ -13,13 +13,14 @@
 </head>
 <body>
 <nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div><a href="pilot.html?pilot=1">Pilot Home</a><a href="simulator.html?ref=demo&pilot=1">Practice</a><a href="coach-chat.html?pilot=1">My Coach</a><a href="team-messages.html?pilot=1">Team Messages</a><a href="manager.html?pilot=1">Manager</a><span class="lang-switch" aria-label="Language / 语言"><a class="lang-btn" id="langEn" href="learner-profile.html?pilot=1&amp;lang=en">EN</a><a class="lang-btn" id="langZh" href="learner-profile.html?pilot=1&amp;lang=zh">中文</a></span></div></nav>
-<div id="start-menu-mount"></div>
-<script src="start-menu.js"></script>
+<div class="start-menu-mount" data-position="top"></div>
 <header class="hero"><h1>Learner Success Profile</h1><p>An evidence-based, revisable view of demonstrated strengths, growth areas, and progress. It reflects work evidence—not a fixed personality judgment.</p></header>
 <main>
 <div class="notice"><b>Privacy boundary:</b> Managers can see authorized work-related evidence and training results. Private Coach Chat is not automatically exposed. Learners can dispute profile claims that appear inaccurate.</div>
 <div id="root" class="status">Loading secure learner intelligence…</div>
 </main>
+<div class="start-menu-mount" data-position="bottom"></div>
+<script src="start-menu.js"></script>
 <script>
 const params=new URLSearchParams(location.search);const requested=params.get('lang');if(requested==='en'||requested==='zh')sessionStorage.setItem('agentraining_lang',requested);const currentLang=requested||sessionStorage.getItem('agentraining_lang')||((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en');const t=(en,zh)=>currentLang==='zh'?zh:en;
 const staticZh={'Pilot Home':'试用首页','Practice':'练习','My Coach':'我的私人 AI 教练','Team Messages':'团队消息','Manager':'主管','Learner Success Profile':'学员成长档案','An evidence-based, revisable view of demonstrated strengths, growth areas, and progress. It reflects work evidence—not a fixed personality judgment.':'根据练习证据形成并可随时修正的优势、改进方向和进展记录。这反映的是工作表现，不是固定的人格判断。','Privacy boundary:':'隐私边界：','Managers can see authorized work-related evidence and training results. Private Coach Chat is not automatically exposed. Learners can dispute profile claims that appear inaccurate.':'主管可以查看已授权的工作练习证据和培训结果。私人 AI 教练对话不会自动公开。学员可以对不准确的档案记录提出异议。','Loading secure learner intelligence…':'正在载入安全的学员成长资料…'};
