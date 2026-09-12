@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grounded Coach Regression Test</title>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="pilot-cloud.js?v=grounding-test-1"></script>
+<style>
+body{font-family:Arial,sans-serif;background:#f8fafc;color:#0f172a;margin:0;padding:24px}.wrap{max-width:860px;margin:auto}.card{background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:18px;margin:14px 0}button{background:#1d4ed8;color:#fff;border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;margin:4px}.meta{font-size:13px;color:#475569}.ok{color:#047857;font-weight:700}.bad{color:#b91c1c;font-weight:700}pre{white-space:pre-wrap;background:#f1f5f9;padding:14px;border-radius:10px;line-height:1.5}.status{padding:10px 0;color:#475569}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Grounded Coach Regression Test</h1>
+<p>This page bypasses the generic Coach router and calls the source-grounded endpoint directly for the newest active Company Knowledge assignment.</p>
+<div class="card" id="assignment"><div class="status">Loading assignment…</div></div>
+<div class="card">
+  <button data-q="How should I explain the holistic underwriting philosophy?">1. Explain philosophy</button>
+  <button data-q="Why is that important?">2. Why important?</button>
+  <button data-q="Give me an example">3. Give example</button>
+  <div id="runStatus" class="status">Run the questions in order.</div>
+</div>
+<div class="card"><h3>Latest answer</h3><pre id="answer">—</pre><div id="verdict" class="meta"></div></div>
+</div>
+<script>
+let current=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+async function init(){
+  try{
+    await PilotCloud.ready();
+    const data=await PilotCloud.request('coach-messages');
+    const rows=(data.assignments||[]).filter(x=>x&&x.status!=='Completed'&&x.sourceType==='company_knowledge'&&x.sourceKnowledgeId).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+    current=rows[0]||null;
+    if(!current) throw new Error('No active Company Knowledge assignment found.');
+    document.getElementById('assignment').innerHTML='<b>'+esc(current.scenarioName||'Assignment')+'</b><div class="meta">Assignment ID: '+esc(current.id)+'<br>sourceKnowledgeId: '+esc(current.sourceKnowledgeId)+'<br>Source: '+esc(current.sourceLabel||'')+'</div>';
+  }catch(e){document.getElementById('assignment').innerHTML='<div class="bad">'+esc(e.message)+'</div>'}
+}
+async function ask(q){
+  if(!current)return;
+  const status=document.getElementById('runStatus'),answer=document.getElementById('answer'),verdict=document.getElementById('verdict');
+  status.textContent='Calling source-grounded Coach directly…'; answer.textContent='…'; verdict.textContent='';
+  try{
+    const token=await PilotCloud.token();
+    const res=await fetch('/.netlify/functions/pilot-coach-source',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify({assignmentId:current.id,message:q})});
+    const body=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(body.error||('HTTP '+res.status));
+    answer.textContent=body.assistantMessage?.content||'(no answer)';
+    const v=body.verification||{};
+    verdict.innerHTML='Verifier: <b class="'+(v.status==='PASS'?'ok':'bad')+'">'+esc(v.status||'unknown')+'</b>'+(v.reason?' — '+esc(v.reason):'');
+    status.textContent='Completed. This response came from pilot-coach-source directly.';
+  }catch(e){answer.textContent='';verdict.innerHTML='<span class="bad">'+esc(e.message)+'</span>';status.textContent='Request failed.'}
+}
+document.querySelectorAll('button[data-q]').forEach(b=>b.addEventListener('click',()=>ask(b.dataset.q)));
+init();
+</script>
+</body>
+</html>

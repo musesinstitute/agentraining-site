@@ -6,19 +6,30 @@
 <meta name="description" content="Turn authorized enterprise training knowledge into manager-approved coaching and Practice.">
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script src="pilot-cloud.js?v=20260821-guide1"></script>
+<link rel="stylesheet" href="start-menu.css">
 <style>
 :root{--blue:#1a56db;--blue2:#0f3ea8;--ink:#0f172a;--muted:#64748b;--bg:#f6f8fc;--card:#fff;--line:#dfe5ee;--green:#047857;--amber:#b45309;--red:#b91c1c;--purple:#6d28d9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}a{color:inherit}nav{height:64px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);gap:16px}.logo{font-size:20px;font-weight:900;color:var(--blue);text-decoration:none}.logo span{color:#f59e0b}.navlinks{display:flex;align-items:center;gap:16px;font-size:13px}.navlinks a{text-decoration:none;color:#475569}.navlinks a:hover{color:var(--blue)}.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.lang button{border:0;background:#fff;padding:6px 9px;color:#64748b;cursor:pointer}.lang button.active{background:#eff6ff;color:var(--blue);font-weight:800}.hero{padding:54px 5%;background:linear-gradient(135deg,#eff6ff 0%,#ecfdf5 55%,#faf5ff 100%)}.hero-inner{max-width:1180px;margin:auto}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #bfdbfe;background:#fff;color:var(--blue);border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:16px 0 12px;max-width:850px}.hero p{font-size:17px;color:#475569;line-height:1.65;max-width:820px;margin:0}.flow{max-width:1180px;margin:-24px auto 24px;padding:0 18px}.flow-card{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 36px rgba(15,23,42,.08);overflow:hidden}.flow-step{padding:18px;border-right:1px solid var(--line)}.flow-step:last-child{border:0}.flow-step b{display:block;color:var(--blue);margin-bottom:6px}.flow-step span{font-size:12px;color:var(--muted);line-height:1.5}.shell{max-width:1180px;margin:auto;padding:0 18px 60px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:32px 0 14px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted)}.secure-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;padding:13px 15px;color:#1e40af;line-height:1.55}.manager-panel{display:none;background:#fff;border:1px solid #bfdbfe;border-radius:16px;padding:22px;margin-top:18px}.manager-panel.visible{display:block}.manager-panel h3{font-size:20px;margin:0 0 6px}.manager-panel>p{color:var(--muted);margin:0 0 18px}.upload-guide{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 18px}.upload-guide h4{margin:0 0 5px;font-size:15px}.upload-guide>p{margin:0 0 12px;color:var(--muted);line-height:1.5}.upload-options{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.upload-option{display:flex;align-items:flex-start;gap:9px;background:#fff;border:1px solid #e2e8f0;border-radius:9px;padding:11px}.upload-option span:first-child{font-size:18px;line-height:1}.upload-option b{display:block;font-size:12px;margin-bottom:3px}.upload-option small{color:var(--muted);line-height:1.4}.upload-limit{margin-top:11px;padding:10px 12px;border-radius:8px;background:#eff6ff;color:#1e40af;font-size:12px;line-height:1.5}.form-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.field.full{grid-column:1/-1}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#334155}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px 12px;background:#fff;font:inherit;color:var(--ink)}.field textarea{min-height:180px;resize:vertical;line-height:1.55}.field small{display:block;color:var(--muted);margin-top:5px;line-height:1.45}.consent{display:flex;gap:10px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:12px;line-height:1.5;color:#7c2d12}.consent input{margin-top:3px}.button-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn:hover{background:var(--blue2)}.btn.secondary{background:#fff;color:var(--blue);border:1px solid #93c5fd}.btn.green{background:var(--green)}.btn.danger{background:#fff;color:var(--red);border:1px solid #fecaca}.btn:disabled{opacity:.55;cursor:not-allowed}.status{min-height:22px;margin-top:10px;font-size:13px}.status.ok{color:var(--green)}.status.error{color:var(--red)}.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.source-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}.source-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.source-card h3{font-size:18px;margin:0}.meta{font-size:11px;color:var(--muted);margin-top:4px}.pill{display:inline-block;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;background:#f1f5f9;color:#475569}.pill.analyzed{background:#fef3c7;color:#92400e}.pill.approved{background:#d1fae5;color:#065f46}.analysis{background:#f8fafc;border-radius:10px;padding:13px;line-height:1.55}.analysis h4{margin:0 0 6px;font-size:13px}.analysis p{margin:0;color:#334155}.analysis ul{margin:8px 0 0;padding-left:18px;color:#475569}.analysis li{margin:4px 0}.practice-draft{border-left:3px solid var(--purple);padding:9px 12px;background:#faf5ff;border-radius:0 9px 9px 0}.practice-draft b{display:block;color:var(--purple);margin-bottom:4px}.source-actions{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}.assign-dialog{width:min(560px,calc(100% - 28px));border:0;border-radius:16px;padding:0;box-shadow:0 28px 80px rgba(15,23,42,.28)}.assign-dialog::backdrop{background:rgba(15,23,42,.62)}.assign-dialog-inner{padding:24px}.assign-dialog h3{margin:0 0 6px;font-size:21px}.assign-dialog p{margin:0 0 18px;color:var(--muted);line-height:1.55}.assign-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.assign-grid .full{grid-column:1/-1}.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.empty{background:#fff;border:1px dashed #cbd5e1;border-radius:13px;padding:30px;text-align:center;color:var(--muted)}.platform{margin-top:40px}.stage{margin:18px 0}.stage-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.stage-head strong{font-size:17px}.stage-num{background:var(--blue);color:#fff;border-radius:99px;padding:5px 10px;font-size:11px}.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.lesson{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px}.lesson h4{margin:7px 0;font-size:15px}.lesson p{color:var(--muted);font-size:12px;line-height:1.5;margin:0}.lesson a{display:block;margin-top:12px;text-align:center;background:#eff6ff;color:var(--blue);font-weight:800;border-radius:8px;padding:8px;text-decoration:none;font-size:12px}.trust{margin-top:28px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:14px;color:#065f46;line-height:1.55;font-size:12px}@media(max-width:850px){.flow-card{grid-template-columns:1fr 1fr}.flow-step:nth-child(2){border-right:0}.flow-step:nth-child(-n+2){border-bottom:1px solid var(--line)}.source-grid,.lesson-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.upload-options{grid-template-columns:1fr}.navlinks>a:not(.pilot-link){display:none}.hero{padding:38px 5%}.flow-card,.source-grid,.lesson-grid,.form-grid{grid-template-columns:1fr}.flow-step{border-right:0;border-bottom:1px solid var(--line)!important}.field.full{grid-column:auto}.section-head{align-items:flex-start;flex-direction:column}.hero p{font-size:15px}}
 .flow-step{appearance:none;width:100%;border-top:0;border-bottom:0;background:#fff;text-align:left;font:inherit;cursor:pointer}.flow-step:hover,.flow-step:focus-visible{background:#eff6ff;outline:0;box-shadow:inset 0 0 0 2px #93c5fd}.flow-status{max-width:1180px;margin:0 auto 24px;padding:0 18px;min-height:20px;color:var(--blue);font-weight:700;line-height:1.5}
 .upload-option[type="button"]{appearance:none;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}.upload-option[type="button"]:hover,.upload-option[type="button"]:focus-visible,.upload-option.selected{border-color:#60a5fa;background:#eff6ff;outline:0;box-shadow:0 0 0 2px #bfdbfe}
+.question-bank-entry{margin-top:14px;background:#fff;border:1px solid #93c5fd;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:18px}.question-bank-entry b{display:block;color:#1e40af;margin-bottom:4px}.question-bank-entry span{display:block;color:var(--muted);font-size:12px;line-height:1.5}.question-bank-entry .btn{white-space:nowrap}@media(max-width:620px){.question-bank-entry{align-items:flex-start;flex-direction:column}}
+.training-assets{margin-top:2px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.training-assets .btn{font-size:12px;padding:8px 11px}.qb-count{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+/* Brief highlight for a deep-linked destination (#upload / #question-bank /
+   #practice-scenarios) - a subtle pulse, not a redesign, and it auto-clears
+   itself (see highlightEl() in the script below). */
+.deep-link-highlight{animation:agentraining-deep-link-pulse 1.3s ease-out 2}
+@keyframes agentraining-deep-link-pulse{0%{box-shadow:0 0 0 0 rgba(26,86,219,.45)}100%{box-shadow:0 0 0 10px rgba(26,86,219,0)}}
+@media(prefers-reduced-motion:reduce){.deep-link-highlight{animation:none;outline:3px solid #93c5fd;outline-offset:2px}}
 </style>
 </head>
 <body>
-<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="navlinks"><a href="pilot.html?pilot=1" class="pilot-link" data-en="Pilot Home" data-zh="Pilot首頁">Pilot Home</a><a href="studios.html?pilot=1" data-en="Four Studios" data-zh="四大工作室">Four Studios</a><a href="simulator.html?ref=demo&pilot=1" data-en="Practice" data-zh="練習">Practice</a><a href="team-messages.html?pilot=1" data-en="Team Messages" data-zh="團隊消息">Team Messages</a><div class="lang"><button id="enBtn" class="active" type="button">EN</button><button id="zhBtn" type="button">中文</button></div></div></nav>
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="navlinks"><a href="studios.html?pilot=1" class="pilot-link" data-en="Four Studios" data-zh="四大工作室">Four Studios</a><div class="lang"><button id="enBtn" class="active" type="button">EN</button><button id="zhBtn" type="button">中文</button></div></div></nav>
+<div class="start-menu-mount" data-position="top"></div>
 <header class="hero"><div class="hero-inner"><span class="badge" data-en="Company Knowledge Library" data-zh="企業知識庫">Company Knowledge Library</span><h1 data-en="Turn company knowledge into coached performance." data-zh="把企業知識轉化為可衡量的培訓成果。">Turn company knowledge into coached performance.</h1><p data-en="Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive." data-zh="把經授權的培訓材料帶入安全的團隊空間。AI負責整理、主管負責審核，學員得到聚焦的知識與練習，而不是另一個被動的內容檔案庫。">Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive.</p></div></header>
 <div class="flow"><div class="flow-card"><button class="flow-step" type="button" data-flow="add"><b data-en="1 · Add source" data-zh="1 · 加入來源">1 · Add source</b><span data-en="Click to add a video link, transcript, procedure, script, or notes." data-zh="點擊加入影片連結、逐字稿、公司流程、銷售話術或培訓筆記。">Click to add a video link, transcript, procedure, script, or notes.</span></button><button class="flow-step" type="button" data-flow="analyze"><b data-en="2 · AI analyzes" data-zh="2 · AI分析">2 · AI analyzes</b><span data-en="Click after saving a draft: summary, key points, audience, and quality." data-zh="儲存草稿後點擊：產生摘要、重點、適用對象與內容品質。">Click after saving a draft: summary, key points, audience, and quality.</span></button><button class="flow-step" type="button" data-flow="approve"><b data-en="3 · Manager approves" data-zh="3 · 主管批准">3 · Manager approves</b><span data-en="Click after AI analysis; human judgment stays in control." data-zh="AI分析完成後點擊；發布前始終由主管作出判斷。">Click after AI analysis; human judgment stays in control.</span></button><button class="flow-step" type="button" data-flow="assign"><b data-en="4 · Assign Practice" data-zh="4 · 指派練習">4 · Assign Practice</b><span data-en="Click after approval to turn knowledge into targeted role-play." data-zh="主管批准後點擊，把企業知識轉化為針對性角色扮演。">Click after approval to turn knowledge into targeted role-play.</span></button></div></div>
 <div class="flow-status" id="flowStatus" role="status" aria-live="polite" data-en="These four steps are clickable. Start with Add source." data-zh="以上四個步驟均可點擊。請從「加入來源」開始。">These four steps are clickable. Start with Add source.</div>
 <main class="shell">
 <div class="secure-note" id="secureNote" data-en="Open this page from your authenticated Pilot workspace to use the Company Knowledge Library. The platform curriculum remains available below." data-zh="请从已登录的试用工作区打开本页，使用企业知识库。下方平台课程仍可查看。">Open this page from your authenticated Pilot workspace to use the Company Knowledge Library. The platform curriculum remains available below.</div>
+<div class="question-bank-entry"><div><b data-en="Question Bank · Company Training Library" data-zh="题库 · 企业培训资料库">Question Bank · Company Training Library</b><span data-en="Open an approved company document, recover saved questions, or start a manager-controlled Question Bank." data-zh="打开已批准的企业文件、恢复已保存题目，或开始由主管控制的题库。">Open an approved company document, recover saved questions, or start a manager-controlled Question Bank.</span></div><a class="btn secondary" href="knowledge-chat.html?pilot=1" data-en="Open Question Bank →" data-zh="打开题库 →">Open Question Bank →</a></div>
 <section class="manager-panel" id="managerPanel">
 <h3 data-en="Add company knowledge" data-zh="加入企業知識">Add company knowledge</h3><p data-en="Add one authorized source at a time. AI will organize it only after you save the draft and choose Analyze." data-zh="每次加入一份經授權的企業材料。儲存草稿並選擇「AI分析」後，AI才會開始整理。">Add one authorized source at a time. AI will organize it only after you save the draft and choose Analyze.</p>
 <div class="upload-guide">
@@ -63,8 +74,10 @@
 <section class="platform"><div class="section-head"><div><h2 data-en="Platform Curriculum" data-zh="平台課程">Platform Curriculum</h2><p data-en="The existing 25-scenario Insurance & Health Foundation Curriculum remains available." data-zh="原有的25個保險與健康基礎課程情境繼續保留。">The existing 25-scenario Insurance & Health Foundation Curriculum remains available.</p></div></div><div id="curriculumMap" class="empty">Loading curriculum…</div></section>
 <div class="trust"><b data-en="Enterprise trust boundary:" data-zh="企業信任邊界：">Enterprise trust boundary:</b> <span data-en="Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included." data-zh="知識依登入團隊隔離。學員只能看到主管批准的分析，原始逐字稿不向學員展示，私人Learner Coach對話永不包含其中。">Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included.</span></div>
 </main>
+<div class="start-menu-mount" data-position="bottom"></div>
+<script src="start-menu.js"></script>
 <script>
-var currentLang='en', companySources=[], canManage=false;
+var currentLang='en', companySources=[], canManage=false, knowledgeLoaded=false;
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
 function tr(en,zh){return currentLang==='zh'?zh:en}
 function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。'};return map[message]||('操作未完成：'+message)}
@@ -85,8 +98,46 @@ function renderSources(){
   var sourceLink=source.sourceUrl?'<a href="'+esc(source.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentLang==='zh'?'查看授權來源':'Open authorized source')+'</a>':'';
   var analysisHtml=analysis.summary?'<div class="analysis"><h4>'+(currentLang==='zh'?'AI摘要 · 主管審核':'AI Summary · Manager Review')+'</h4><p>'+esc(analysis.summary)+'</p>'+(points.length?'<ul>'+points.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div>':'<div class="analysis"><p>'+(currentLang==='zh'?'尚未進行AI分析。':'AI analysis has not run yet.')+'</p></div>';
   var draftHtml=draft.title?'<div class="practice-draft"><b>'+(currentLang==='zh'?'Practice草案：':'Practice Draft: ')+esc(draft.title)+'</b><span>'+esc(draft.objective||draft.situation||'')+'</span></div>':'';
-  return '<article class="source-card" data-source-card="'+esc(source.id)+'"><div class="source-top"><div><h3>'+esc(source.title)+'</h3><div class="meta">'+esc(typeLabel(source.sourceType))+' · '+esc(new Date(source.updatedAt||source.createdAt).toLocaleDateString())+' '+sourceLink+'</div></div><span class="pill '+esc(source.status)+'">'+esc(statusLabel(source.status))+'</span></div>'+analysisHtml+draftHtml+'<div class="source-actions">'+actions+'</div></article>'
+  // Company Knowledge → Question Bank / Practice Scenarios hand-off: link
+  // into the existing Training Library (knowledge-chat.html) for THIS
+  // document, preserving context via knowledgeId. Reuses the existing
+  // library/document model (same "sources" the Training Library reads) -
+  // no new storage, no new generation path. Manager-gated to match the
+  // Question Bank button's own visibility rule there.
+  var trainingAssetsHtml=canManage?'<div class="training-assets"><a class="btn secondary" href="knowledge-chat.html?pilot=1&amp;knowledgeId='+encodeURIComponent(source.id)+'">'+(currentLang==='zh'?'📝 题库与实战情境 →':'📝 Question Bank &amp; Practice Scenarios →')+'</a><span class="qb-count" data-qb-count="'+esc(source.id)+'">'+(currentLang==='zh'?'正在检查题库…':'Checking Question Bank…')+'</span></div>':'';
+  return '<article class="source-card" data-source-card="'+esc(source.id)+'"><div class="source-top"><div><h3>'+esc(source.title)+'</h3><div class="meta">'+esc(typeLabel(source.sourceType))+' · '+esc(new Date(source.updatedAt||source.createdAt).toLocaleDateString())+' '+sourceLink+'</div></div><span class="pill '+esc(source.status)+'">'+esc(statusLabel(source.status))+'</span></div>'+analysisHtml+draftHtml+trainingAssetsHtml+'<div class="source-actions">'+actions+'</div></article>'
  }).join('');
+ loadQuestionBankBadges();
+}
+// Read-only enrichment: fetch each visible document's latest saved
+// Question Bank (if any) purely to show its question count on the card.
+// Uses the existing 'latest' action (same one knowledge-training-engine.js
+// already uses for recovery) - no generation, no writes, no new storage.
+// Best-effort: a failed/absent lookup just leaves a neutral label.
+var qbBadgeVersion=0;
+async function loadQuestionBankBadges(){
+ if(!canManage)return;
+ var version=++qbBadgeVersion;
+ await Promise.all(companySources.map(async function(source){
+  var el=document.querySelector('[data-qb-count="'+CSS.escape(source.id)+'"]');
+  if(!el)return;
+  try{
+   var token=await PilotCloud.token('manager');
+   var res=await fetch('/.netlify/functions/knowledge-question-bank-v2',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify({action:'latest',knowledgeId:source.id})});
+   if(version!==qbBadgeVersion)return;
+   if(res.status===404){el.textContent=currentLang==='zh'?'尚未生成题库':'No Question Bank yet';return}
+   var data=await res.json(),bank=data&&data.questionBank;
+   if(version!==qbBadgeVersion)return;
+   if(bank&&bank.totalQuestions){
+    var complete=bank.status==='complete'||bank.totalQuestions>=bank.targetQuestions;
+    el.textContent=currentLang==='zh'
+     ?(bank.totalQuestions+' 道题目'+(complete?'':'（生成中）'))
+     :(bank.totalQuestions+(bank.totalQuestions===1?' question':' questions')+(complete?'':' (in progress)'));
+   }else{
+    el.textContent=currentLang==='zh'?'尚未生成题库':'No Question Bank yet';
+   }
+  }catch(e){if(version===qbBadgeVersion)el.textContent=''}
+ }));
 }
 document.getElementById('sourceLibrary').addEventListener('click',function(event){var button=event.target.closest('button[data-action]');if(!button)return;var action=button.dataset.action,id=button.dataset.id;if(action==='delete'){deleteSource(id);return}if(action==='assign'){openAssignDialog(id);return}knowledgeAction(action,id,button)});
 function guideFlow(action){
@@ -133,18 +184,86 @@ document.getElementById('assignForm').addEventListener('submit',async function(e
  }catch(error){status.className='status error';status.textContent=error.message}finally{button.disabled=false}
 });
 async function loadKnowledge(){
- if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';return}
+ if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';knowledgeLoaded=true;handleDeepLinkHash();return}
  try{
   var me=await PilotCloud.request('me'),data=await PilotCloud.request('knowledge');canManage=data.canManage===true;companySources=data.sources||[];
   document.getElementById('secureNote').innerHTML='<b>'+(canManage?tr('Manager workspace:','Manager主管工作區：'):tr('Learner workspace:','學員工作區：'))+'</b> '+tr('Company knowledge is isolated to this authenticated team.','企業知識僅供本登入團隊使用，與其他團隊隔離。');
   document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。');
   document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources()
  }catch(error){document.getElementById('sourceLibrary').className='empty';document.getElementById('sourceLibrary').textContent=friendlyError(error)}
+ finally{knowledgeLoaded=true;handleDeepLinkHash()}
 }
 function setFormStatus(message,kind){var el=document.getElementById('formStatus');el.textContent=message;el.className='status '+(kind||'')}
 document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 30,000'});
 document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>1048576){setFormStatus(tr('Transcript file must be 1 MB or smaller.','逐字稿文件必須為1MB或以下。'),'error');this.value='';return}try{var text=await file.text();document.getElementById('sourceContent').value=text.slice(0,30000);document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus(tr('Loaded: ','已載入：')+file.name+tr('. Review the text before saving.','。請在儲存前檢查文字。'),'ok')}catch(error){setFormStatus(tr('Transcript could not be read.','無法讀取逐字稿文件。'),'error')}});
 function focusSourceAction(id,action,message){setTimeout(function(){var card=document.querySelector('[data-source-card="'+CSS.escape(id)+'"]'),next=card&&card.querySelector('[data-action="'+action+'"]');if(!card)return;card.scrollIntoView({behavior:'smooth',block:'center'});if(next){next.focus();document.getElementById('flowStatus').textContent=message}},80)}
+
+// ── Stable deep-link anchors for demo/WeChat/email links ───────────────────
+// #upload             -> the Add Source / Upload panel (manager only)
+// #question-bank       \_ both scroll to the same real entry point: this
+// #practice-scenarios  /  page only ever offers one combined "Question Bank
+//                          & Practice Scenarios" hand-off per document (see
+//                          renderSources()) - the two actually distinct
+//                          actions live inside knowledge-chat.html once a
+//                          document is open there. We never invent a
+//                          separate Practice Scenarios section here that
+//                          doesn't exist, and never bypass manager/approval
+//                          gating - we only scroll/highlight the correct
+//                          existing entry point, and preserve knowledgeId.
+function highlightEl(el){
+  if(!el)return;
+  el.classList.add('deep-link-highlight');
+  setTimeout(function(){el.classList.remove('deep-link-highlight')},2600);
+}
+function scrollAndHighlight(el){
+  if(!el)return false;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  highlightEl(el);
+  return true;
+}
+var deepLinkHandled=false;
+function handleDeepLinkHash(){
+  var hash=(location.hash||'').replace('#','');
+  if(!hash||deepLinkHandled)return;
+  if(hash==='upload'){
+    // Wait for canManage to be known so a manager whose data just hasn't
+    // loaded yet isn't shown the "Manager access required" message by
+    // mistake. guideFlow('add') already handles both the manager (scroll
+    // + focus the form) and non-manager (explain + point at secureNote)
+    // cases - reused as-is rather than duplicated here.
+    if(!knowledgeLoaded)return;
+    guideFlow('add');
+    deepLinkHandled=true;
+    return;
+  }
+  if(hash==='question-bank'||hash==='practice-scenarios'){
+    var knowledgeId=new URLSearchParams(location.search).get('knowledgeId');
+    if(knowledgeId){
+      var card=document.querySelector('[data-source-card="'+CSS.escape(knowledgeId)+'"]');
+      if(card){
+        deepLinkHandled=scrollAndHighlight(card.querySelector('.training-assets a')||card);
+        return;
+      }
+      if(!knowledgeLoaded)return; // sources still loading - retry below
+      // knowledgeId didn't match a source this account can see; fall
+      // through to the generic entry point rather than doing nothing.
+    }
+    deepLinkHandled=scrollAndHighlight(document.querySelector('.question-bank-entry'));
+  }
+}
+// Deep links arrive before PilotCloud/knowledge data finishes loading, so
+// handleDeepLinkHash() is also called right when that load settles (see
+// loadKnowledge()). This short poll is only a safety net for any other
+// timing gap (e.g. a slow paint) - it gives up after ~3s either way.
+(function pollDeepLink(){
+  handleDeepLinkHash();
+  if(deepLinkHandled)return;
+  var attempts=0,timer=setInterval(function(){
+    attempts++;
+    handleDeepLinkHash();
+    if(deepLinkHandled||attempts>20)clearInterval(timer);
+  },150);
+})();
 
 // ROOM 4C — Google Drive Single-File Import Pilot.
 // Ingestion convenience only: picks exactly one file, imports its readable

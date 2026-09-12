@@ -239,6 +239,9 @@ export default async function handler(req) {
     if (!apiKey) return reply(503, { error: 'AI conversation is not configured yet.' });
     const input = await req.json();
     const role = input.role === 'manager' ? 'manager' : 'learner';
+    if (role === 'learner' && (input.coachMode !== 'generic' || input.assignmentId || input.sourceKnowledgeId)) {
+      return reply(409, { error: 'Coach context is missing or source-bound. Reload Personal AI Coach and select the appropriate context.' });
+    }
     const lang = input.lang === 'zh' ? 'zh' : 'en';
     const message = cleanText(input.message);
     if (!message) return reply(400, { error: 'Message is required.' });
