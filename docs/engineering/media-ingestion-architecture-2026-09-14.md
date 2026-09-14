@@ -355,3 +355,147 @@ header.
 - Async transcription provider pricing (~$0.15–$0.46/hr): [AssemblyAI pricing](https://www.assemblyai.com/blog/speech-to-text-api-pricing), [Deepgram pricing](https://deepgram.com/pricing)
 
 Provider prices move. Re-verify before committing spend.
+
+---
+
+# Implementation record — Direct Video / Audio Upload MVP (2026-09-14, later session)
+
+The architecture above is now **implemented and credential-ready**. Every step
+of the designed flow exists as real production code with tests; nothing runs
+against a paid service yet because no credentials exist. No Cloudflare or
+transcription account was created, and nothing is hard-coded.
+
+## What was built
+
+```
+Browser ──1── POST media-upload-reserve (metadata only, manager-only)
+        ◀──── { mediaId, presigned PUT url, expires in 15 min }
+        ──2── PUT the file DIRECTLY to private R2 ─────────▶ object storage
+        ──3── POST media-upload-confirm { mediaId }
+                 │ HEADs the object itself (never trusts the client)
+                 │ verifies real stored size against the limit
+                 │ state: awaiting_upload → uploaded
+                 │ submits a signed 6-hour READ url to the provider
+                 │ state: → transcribing
+        ──4── provider webhook ──▶ media-transcription-webhook
+                 │ shared-secret header, constant-time compare
+                 │ fetches the transcript over an authenticated call
+                 │ state: → transcript_ready → processing → ready
+                 ▼
+        Company Knowledge DRAFT (knowledge-source-v2, full lineage)
+                 ▼
+        EXISTING UNCHANGED PIPELINE: AI Analysis → Question Bank →
+        Practice Scenarios → source-grounded Coach
+```
+
+| Piece | File | Notes |
+|---|---|---|
+| SigV4 signer | `netlify/functions/lib/aws-sigv4.mjs` | Hand-written, ~60 lines of `node:crypto`, **no dependency added**. Pinned by a known-answer test against AWS's own published example vector |
+| R2 storage adapter | `netlify/functions/lib/r2-storage.mjs` | Implements the existing provider-neutral contract: presigned PUT, presigned read, HEAD, DELETE. Private bucket, no public URL anywhere |
+| Transcription adapter | `netlify/functions/lib/transcription-provider.mjs` | Provider-neutral `submitTranscription` / `fetchTranscript` / `parseWebhook`; AssemblyAI is the first implementation behind it |
+| Persistence + hand-off | `netlify/functions/lib/media-records.mjs` | Team-scoped keys, audit trail, and the Company Knowledge record builder |
+| Reserve | `netlify/functions/media-upload-reserve.mjs` | Metadata only; issues the short-lived signed PUT |
+| Confirm | `netlify/functions/media-upload-confirm.mjs` | Server-verified; submits transcription |
+| Webhook | `netlify/functions/media-transcription-webhook.mjs` | Authenticated, idempotent, fails closed |
+| Status | `netlify/functions/media-status.mjs` | Capability report + per-media state |
+| Delete | `netlify/functions/media-delete.mjs` | Removes the private object, records and job index |
+| UI | `knowledge.html` | Direct XHR PUT with progress, real state display, gated on the capability report |
+
+## Limits and formats
+
+| | Value |
+|---|---|
+| Max media file | **500 MB** (`MEDIA_MAX_UPLOAD_BYTES` to change) — a one-hour 720p training video is typically 200–600 MB |
+| Accepted formats | MP4, MOV, WebM, MP3, M4A, WAV (browser type sniffing falls back to file extension) |
+| Upload ticket lifetime | 15 minutes |
+| Provider read ticket lifetime | 6 hours |
+| Transcript ceiling | the existing authoritative 500,000-character Company Knowledge limit — a transcript over it is **rejected, never truncated** |
+
+## Environment variables to configure (none exist yet)
+
+**Required for direct upload:**
+
+| Variable | Purpose |
+|---|---|
+| `R2_ACCOUNT_ID` | Cloudflare account id (forms the endpoint host) |
+| `R2_ACCESS_KEY_ID` | R2 API token access key id |
+| `R2_SECRET_ACCESS_KEY` | R2 API token secret — **server only, never sent to a browser** |
+| `R2_BUCKET_NAME` | The private media bucket |
+
+**Required for transcription:**
+
+| Variable | Purpose |
+|---|---|
+| `ASSEMBLYAI_API_KEY` | Transcription provider key |
+| `MEDIA_WEBHOOK_SECRET` | Shared secret this app sends to the provider and requires back on the webhook. Generate a long random value |
+
+**Optional:**
+
+| Variable | Default |
+|---|---|
+| `MEDIA_MAX_UPLOAD_BYTES` | `524288000` (500 MB) |
+| `R2_ENDPOINT` | `<R2_ACCOUNT_ID>.r2.cloudflarestorage.com` (override for jurisdiction-specific buckets) |
+| `R2_REGION` | `auto` |
+| `TRANSCRIPTION_PROVIDER` | `assemblyai` |
+| `ASSEMBLYAI_API_URL` | `https://api.assemblyai.com/v2` |
+| `MEDIA_WEBHOOK_BASE_URL` | the request origin (set it when Deploy Preview origins differ from the URL the provider must call back) |
+
+**Also required, and easy to miss: the R2 bucket needs a CORS policy** allowing
+`PUT` from the site origin with the `content-type` header, or the browser's
+direct upload fails with an opaque CORS error while every server-side test
+still passes. The bucket itself must stay private — CORS permits the signed
+PUT, it does not make objects public.
+
+## Safety properties, each covered by a test
+
+- **Nothing is ever base64-encoded through a function.** The browser PUTs the
+  `File` object itself to the signed URL; a test asserts the exact object
+  identity reaches `XMLHttpRequest.send` and that no function request body
+  contains base64.
+- **No fake feature.** With credentials absent, the capability report says so,
+  the UI keeps its "coming next" copy, the panel will not open, and reserve
+  returns 503 with the missing variable names — never an upload ticket.
+- **The client never controls state.** A client-supplied `state` or
+  `knowledgeId` is ignored; every transition is server-decided and an illegal
+  one throws 409. `uploaded → ready` is impossible.
+- **The server verifies the bytes.** Confirm HEADs the object; a missing object
+  is a 409 and an over-limit object is deleted and the record failed.
+- **A forged webhook cannot inject content.** The webhook body only names a
+  job; the transcript is always fetched over an authenticated call to the
+  provider.
+- **Duplicate webhook delivery is idempotent** — one transcript, one knowledge
+  source.
+- **A failed or empty transcription creates no Company Knowledge at all.**
+- **A transcript over 500,000 characters is rejected, not truncated**, and its
+  hash and length stay recorded on the job record so nothing vanishes silently.
+- **Tenant isolation is structural**: media is addressed by a team-prefixed
+  key, so another company's mediaId simply does not resolve.
+- **Private by design**: the browser never receives the storage key, and the
+  record has no public URL field. Deletion removes the object first.
+- **Source authority is unchanged**: the knowledge record's `content` is the
+  exact normalized transcript, created as a **draft** that a manager must still
+  analyze and approve. The AI summary remains derived output.
+
+## Status: CREDENTIAL-READY
+
+Everything runs end to end against stubbed storage and a stubbed provider. It
+has never run against real Cloudflare R2 or a real transcription provider,
+because no account exists. What that means precisely:
+
+- **Works today with no credentials:** every code path, verified by 49 new
+  tests — signing (against AWS's published vector), reservation, validation,
+  direct-upload ticketing, server-side verification, the state machine,
+  transcription submission, webhook authentication and idempotency, the
+  Company Knowledge hand-off, lineage, deletion, tenant isolation, and the UI's
+  honesty gate.
+- **Requires credentials:** actual bytes in a real bucket, a real transcript,
+  and confirmation of provider-specific behaviour (accepted containers, webhook
+  payload field names, retry semantics, signed-URL fetch window) — all flagged
+  in `lib/transcription-provider.mjs`.
+- **Still requires human Deploy Preview testing:** the browser→R2 CORS
+  round trip, a real one-hour video end to end, provider webhook delivery to a
+  Deploy Preview origin, and transcript quality for Mandarin and English
+  training content.
+
+Until a real upload has been observed end to end, the product must still not
+claim "upload your training videos and we transcribe them."

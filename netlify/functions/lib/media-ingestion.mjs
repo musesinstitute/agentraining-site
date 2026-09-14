@@ -135,7 +135,17 @@ export function mediaRecord({ id, teamId, kind, fileName, byteSize, contentType,
     byteSize: Number.isFinite(byteSize) ? Math.max(0, Math.floor(byteSize)) : 0,
     contentType: clean(contentType, 120),
     durationSeconds: Number.isFinite(durationSeconds) ? Math.max(0, Math.floor(durationSeconds)) : 0,
-    // Filled once the bytes actually land and are read back for hashing.
+    // Integrity anchors, both filled once the bytes actually land:
+    //   mediaEtag   - the storage provider's own content fingerprint for the
+    //                 stored object, available from a single HEAD at no cost.
+    //                 (For a single-part upload this is an MD5 digest: a
+    //                 fingerprint for provenance, not a security hash.)
+    //   mediaSha256 - a true content hash. Left empty unless something has
+    //                 actually streamed and hashed the object; it is never
+    //                 filled with a substitute value, because a lineage field
+    //                 that might be a different algorithm than it claims is
+    //                 worse than an empty one.
+    mediaEtag: '',
     mediaSha256: '',
     storageProvider: clean(storageProvider, 60),
     storageKey: clean(storageKey, 500),
@@ -195,6 +205,7 @@ export function mediaLineage({ media, job, knowledgeId, processingModel }, now =
     mediaId: clean(media?.id, 100),
     mediaFileName: clean(media?.fileName, 300),
     mediaSha256: clean(media?.mediaSha256, 64),
+    mediaEtag: clean(media?.mediaEtag, 128),
     transcriptId: clean(job?.id, 100),
     transcriptSha256: clean(job?.transcriptSha256, 64),
     knowledgeId: clean(knowledgeId, 100),
@@ -203,10 +214,17 @@ export function mediaLineage({ media, job, knowledgeId, processingModel }, now =
   };
 }
 
+// The media end of the chain may be anchored by either a true content hash or
+// the storage provider's object fingerprint - whichever was genuinely
+// obtained. Everything downstream of the transcript has no such excuse.
+const MEDIA_ANCHOR_FIELDS = ['mediaSha256', 'mediaEtag'];
+const STRICT_LINEAGE_FIELDS = LINEAGE_FIELDS.filter(field => !MEDIA_ANCHOR_FIELDS.includes(field));
+
 // Fail closed: downstream training output may only be presented as
 // source-grounded when the whole chain back to the authorized media is intact.
 export function lineageComplete(lineage) {
-  return LINEAGE_FIELDS.every(field => clean(lineage?.[field], 500).length > 0);
+  const anchored = MEDIA_ANCHOR_FIELDS.some(field => clean(lineage?.[field], 128).length > 0);
+  return anchored && STRICT_LINEAGE_FIELDS.every(field => clean(lineage?.[field], 500).length > 0);
 }
 
 export function transcriptIntegrity(transcriptText) {
@@ -290,4 +308,102 @@ export function planMediaIngestion({ byteSize, storageAdapter = null } = {}) {
   }
   if (size <= MAX_INLINE_MEDIA_BYTES) return { route: 'inline_function_upload', segmentationRequired: false, capability };
   return { route: 'unsupported_today', reason: 'exceeds_inline_function_limit', capability };
+}
+
+// ---------------------------------------------------------------------------
+// Direct-upload limits, accepted formats, and object keys
+// ---------------------------------------------------------------------------
+
+// Default maximum size for ONE media file uploaded directly to private object
+// storage. 500 MB comfortably covers a one-hour 720p training video (typically
+// 200-600 MB) while staying far inside a single presigned PUT (R2 allows up to
+// 5 GB single-part). Override per deployment with MEDIA_MAX_UPLOAD_BYTES.
+//
+// This is NOT the old ~4.5 MB inline-function ceiling: these bytes never pass
+// through a Netlify Function at all.
+export const DEFAULT_MAX_MEDIA_UPLOAD_BYTES = 500 * 1024 * 1024;
+// Anything smaller than this is a broken/empty selection, not a training video.
+export const MIN_MEDIA_UPLOAD_BYTES = 1024;
+
+export function maxMediaUploadBytes(env = process.env) {
+  const raw = Number(env?.MEDIA_MAX_UPLOAD_BYTES);
+  if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_MAX_MEDIA_UPLOAD_BYTES;
+  return Math.floor(raw);
+}
+
+// Accepted upload formats, mapped to the kind of media each is and the file
+// extension used for its storage object. An unlisted type is refused outright
+// rather than uploaded and discovered unusable later.
+export const ALLOWED_MEDIA_TYPES = Object.freeze({
+  'video/mp4': { kind: 'video', extension: '.mp4', label: 'MP4' },
+  'video/quicktime': { kind: 'video', extension: '.mov', label: 'MOV' },
+  'video/webm': { kind: 'video', extension: '.webm', label: 'WebM' },
+  'audio/mpeg': { kind: 'audio', extension: '.mp3', label: 'MP3' },
+  'audio/mp4': { kind: 'audio', extension: '.m4a', label: 'M4A' },
+  'audio/x-m4a': { kind: 'audio', extension: '.m4a', label: 'M4A' },
+  'audio/wav': { kind: 'audio', extension: '.wav', label: 'WAV' },
+  'audio/x-wav': { kind: 'audio', extension: '.wav', label: 'WAV' },
+  'audio/webm': { kind: 'audio', extension: '.webm', label: 'WebM audio' }
+});
+
+export const SUPPORTED_MEDIA_LABELS = Object.freeze([...new Set(Object.values(ALLOWED_MEDIA_TYPES).map(x => x.label))]);
+
+// Browsers disagree about a few of these (notably .mov and .m4a), so fall back
+// to the file extension when the declared type is empty or unrecognized.
+const EXTENSION_TYPES = Object.freeze({
+  '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm',
+  '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.wav': 'audio/wav'
+});
+
+export function resolveMediaType(contentType, fileName) {
+  const declared = String(contentType || '').toLowerCase().split(';')[0].trim();
+  if (ALLOWED_MEDIA_TYPES[declared]) return { contentType: declared, ...ALLOWED_MEDIA_TYPES[declared] };
+  const ext = (String(fileName || '').toLowerCase().match(/\.[a-z0-9]+$/) || [''])[0];
+  const mapped = EXTENSION_TYPES[ext];
+  if (mapped && ALLOWED_MEDIA_TYPES[mapped]) return { contentType: mapped, ...ALLOWED_MEDIA_TYPES[mapped] };
+  return null;
+}
+
+// Validates an upload request BEFORE any storage authorization is issued.
+// Returns { ok: true, ... } or { ok: false, error, code, status } - never a
+// partially-valid result, and never an approval for an unsupported file.
+export function validateMediaUploadRequest({ fileName, contentType, sizeBytes }, { maxBytes = DEFAULT_MAX_MEDIA_UPLOAD_BYTES } = {}) {
+  const name = String(fileName ?? '').trim();
+  if (!name) return { ok: false, status: 400, code: 'media_file_name_required', error: 'A media file name is required. / 请提供媒体文件名。' };
+
+  const resolved = resolveMediaType(contentType, name);
+  if (!resolved) {
+    return {
+      ok: false,
+      status: 415,
+      code: 'media_type_not_supported',
+      error: `This file type is not supported. Supported formats: ${SUPPORTED_MEDIA_LABELS.join(', ')}. / 不支持此文件格式。支持的格式：${SUPPORTED_MEDIA_LABELS.join('、')}。`
+    };
+  }
+
+  const size = Number(sizeBytes);
+  if (!Number.isFinite(size) || size < MIN_MEDIA_UPLOAD_BYTES) {
+    return { ok: false, status: 400, code: 'media_too_small', error: 'This file is empty or unreadable. / 此文件为空或无法读取。' };
+  }
+  if (size > maxBytes) {
+    const mb = n => Math.floor(n / (1024 * 1024)).toLocaleString('en-US');
+    return {
+      ok: false,
+      status: 413,
+      code: 'media_too_large',
+      error: `This media file is ${mb(size)} MB, over the current ${mb(maxBytes)} MB per-file limit. Nothing was uploaded. / 此媒体文件为 ${mb(size)} MB，超过当前每个文件 ${mb(maxBytes)} MB 的上限。系统没有上传该文件。`
+    };
+  }
+
+  return { ok: true, contentType: resolved.contentType, kind: resolved.kind, extension: resolved.extension, byteSize: Math.floor(size), fileName: name.slice(0, 300) };
+}
+
+// Private object key. Deliberately NOT derivable from the mediaId alone: an
+// unguessable token is mixed in, so knowing (or guessing) a media id is not
+// enough to address the object even if a signing key were ever exposed. The
+// original file name is not used in the key - only its extension - so nothing
+// about the customer's file naming leaks into storage paths.
+export function mediaObjectKey({ teamId, mediaId, token, extension }) {
+  const safe = value => String(value ?? '').replace(/[^A-Za-z0-9._-]+/g, '');
+  return `teams/${safe(teamId)}/media/${safe(mediaId)}/${safe(token)}${safe(extension)}`;
 }
