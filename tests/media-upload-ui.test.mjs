@@ -19,14 +19,14 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 
 const SIGNED_PUT_URL = 'https://test-account.r2.cloudflarestorage.com/bucket/teams/team-a/media/m1/token.mp4?X-Amz-Signature=abc';
 
-function harness({ capability, mediaStates = ['ready'] } = {}) {
+function harness({ capability, mediaStates = ['ready'], slowCapability = false } = {}) {
   const elements = new Map();
   const calls = [];
   const xhrs = [];
   function element(id) {
     if (elements.has(id)) return elements.get(id);
     const el = {
-      id, value: '', textContent: '', innerHTML: '', disabled: false, hidden: true, checked: false,
+      id, value: '', textContent: '', innerHTML: '', disabled: false, hidden: false, checked: false,
       files: [], style: {}, dataset: {}, attributes: {},
       classList: { values: new Set(), add(x) { this.values.add(x) }, remove(x) { this.values.delete(x) }, toggle(x, on) { on ? this.values.add(x) : this.values.delete(x) }, contains(x) { return this.values.has(x) } },
       setAttribute(name, value) { this.attributes[name] = value }, getAttribute(name) { return this.attributes[name] ?? null },
@@ -76,7 +76,10 @@ function harness({ capability, mediaStates = ['ready'] } = {}) {
       const state = mediaStates[Math.min(statusPolls++, mediaStates.length - 1)];
       return { ok: true, status: 200, json: async () => ({ media: { mediaId: 'm1', state, knowledgeId: state === 'ready' ? 'k1' : '', failureReason: state === 'failed' ? 'transcription_provider_failed' : '' } }) };
     }
-    if (u.includes('media-status')) return { ok: true, status: 200, json: async () => ({ capability }) };
+    if (u.includes('media-status')) {
+      if (slowCapability) return new Promise(() => {}); // never resolves
+      return { ok: true, status: 200, json: async () => ({ capability }) };
+    }
     if (u.includes('media-upload-reserve')) {
       return { ok: true, status: 201, json: async () => ({ media: { mediaId: 'm1', state: 'awaiting_upload' }, upload: { url: SIGNED_PUT_URL, method: 'PUT', headers: { 'content-type': 'video/mp4' } }, maxBytes: capability?.maxUploadBytes }) };
     }
@@ -112,35 +115,36 @@ const CONFIGURED = { directUploadAvailable: true, storageConfigured: true, trans
 // fixture must too.
 const UNCONFIGURED = { directUploadAvailable: false, storageConfigured: false, transcriptionConfigured: false, maxUploadBytes: 500 * 1024 * 1024, supportedFormats: ['MP4', 'MOV', 'WebM', 'MP3', 'M4A', 'WAV'], missingEnv: ['R2_ACCOUNT_ID'] };
 
-describe('media upload UI honesty gate', () => {
-  test('with nothing configured the panel still opens so a file can be checked, but upload is disabled', async () => {
-    // Regression guard for the real acceptance blocker: this used to bounce the
-    // manager down to the TRANSCRIPT file chooser (documents only), where a
-    // .webm file is greyed out and cannot be selected at all.
+describe('credentials-off behaviour (the live acceptance failure)', () => {
+  test('the Video/Audio panel stays visible and never redirects to the document chooser', async () => {
     const h = harness({ capability: UNCONFIGURED });
     await tick(); await tick();
-    h.element('mediaUploadPreviewBtn').click();
-    await tick();
-    assert.equal(h.element('mediaPanel').hidden, false, 'the media panel must open so the file chooser is reachable');
-    assert.equal(h.element('mediaUploadBtn').disabled, true, 'upload stays switched off until it can really work');
-    assert.equal(h.element('mediaConfigNote').hidden, false);
+    // Regression: this used to hide the panel and scroll the manager to the
+    // TRANSCRIPT chooser, which accepts documents only - so a real .webm could
+    // not be selected at all and the feature looked undeployed.
+    assert.notEqual(h.element('mediaPanel').hidden, true, 'the media path must stay on the page without credentials');
+    assert.equal(h.element('sourceType').value, '', 'it must not switch the document form on the manager\'s behalf');
+    assert.equal(h.element('mediaUploadBtn').disabled, true, 'but uploading stays off');
     assert.match(h.element('mediaConfigNote').textContent, /uploading is switched off/i);
-    assert.match(h.element('mediaConfigNote').textContent, /R2_ACCOUNT_ID/, 'names what is missing');
+    assert.match(h.element('mediaConfigNote').textContent, /R2_ACCOUNT_ID/, 'and says what is missing');
     assert.equal(h.calls.some(c => String(c.url || '').includes('media-upload-reserve')), false);
-    // The tile copy must describe what the click actually does.
-    assert.match(h.element('mediaUploadPreviewBtn').querySelector('b').getAttribute('data-en'), /not switched on yet/);
-    assert.match(h.element('mediaUploadPreviewBtn').querySelector('small').getAttribute('data-en'), /WebM/);
   });
 
-  test('an unconfigured workspace still accepts a .webm selection and refuses to pretend it uploaded', async () => {
+  test('a .webm can still be selected and validated with no credentials configured', async () => {
     const h = harness({ capability: UNCONFIGURED });
     await tick(); await tick();
-    h.element('mediaUploadPreviewBtn').click();
     const input = h.element('mediaFile');
     input.files = [WEBM_FILE];
     input.onchange.call(input);
     assert.match(h.element('mediaLimitNote').textContent, /Selected: Blue_Origin_launch\.webm/);
-    // Pressing upload anyway must say so plainly, and send nothing.
+    assert.match(h.element('mediaStatus').textContent, /accepted/i);
+  });
+
+  test('pressing Upload anyway says so plainly and sends nothing', async () => {
+    const h = harness({ capability: UNCONFIGURED });
+    await tick(); await tick();
+    h.element('mediaFile').files = [WEBM_FILE];
+    h.element('mediaFile').onchange.call(h.element('mediaFile'));
     h.element('mediaConsent').checked = true;
     h.element('mediaUploadBtn').click();
     for (let i = 0; i < 10; i++) await tick();
@@ -148,15 +152,16 @@ describe('media upload UI honesty gate', () => {
     assert.match(h.element('mediaStatus').textContent, /was not uploaded/i);
   });
 
-  test('with storage and transcription configured the tile becomes a real upload entry point', async () => {
+  test('upload is disabled before the capability probe has even answered', async () => {
+    const h = harness({ capability: CONFIGURED, slowCapability: true });
+    assert.equal(h.element('mediaUploadBtn').disabled, true, 'fail safe: off until proven configured');
+  });
+
+  test('with everything configured the Upload button becomes enabled', async () => {
     const h = harness({ capability: CONFIGURED });
     await tick(); await tick();
-    assert.equal(h.element('mediaUploadPreviewBtn').classList.contains('coming-soon'), false);
-    assert.match(h.element('mediaUploadPreviewBtn').querySelector('b').getAttribute('data-en'), /Upload training video or audio/);
-    assert.match(h.element('mediaUploadPreviewBtn').querySelector('small').getAttribute('data-en'), /500 MB per file/);
-    h.element('mediaUploadPreviewBtn').click();
-    await tick();
-    assert.equal(h.element('mediaPanel').hidden, false);
+    assert.equal(h.element('mediaUploadBtn').disabled, false);
+    assert.equal(h.element('mediaConfigNote').hidden, true);
   });
 });
 
@@ -240,7 +245,6 @@ describe('file selection accepts every claimed format (the real acceptance block
     test(`${label} is accepted and confirmed back to the manager by name`, async () => {
       const h = harness({ capability: CONFIGURED });
       await tick(); await tick();
-      h.element('mediaUploadPreviewBtn').click();
       const input = h.element('mediaFile');
       input.files = [file];
       input.onchange.call(input);
@@ -253,7 +257,6 @@ describe('file selection accepts every claimed format (the real acceptance block
   test('an unsupported file is refused immediately and cleared', async () => {
     const h = harness({ capability: CONFIGURED });
     await tick(); await tick();
-    h.element('mediaUploadPreviewBtn').click();
     const input = h.element('mediaFile');
     input.files = [{ name: 'installer.exe', size: 1024 * 1024, type: 'application/x-msdownload' }];
     input.value = 'installer.exe';

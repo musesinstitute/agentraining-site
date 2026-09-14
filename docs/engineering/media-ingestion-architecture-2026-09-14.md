@@ -545,3 +545,56 @@ file out. The honest-refusal gate added with the MVP had turned into a trap:
 **Guarded by** `tests/media-format-support.test.mjs`, which compares all four
 layers directly (UI claims, chooser `accept`, browser allowlist, server
 allowlist) and fails if they ever drift again.
+
+---
+
+## Acceptance finding #2: live UI still presented a document uploader (2026-09-14)
+
+**Reported:** on Deploy Preview #25, built from `0d853f7`, the page still showed
+"Supported company files: PDF, Word, PowerPoint, TXT, MD, VTT, SRT · up to
+10 MB per file" and nothing offering MP4/MOV/WebM/MP3/M4A/WAV.
+
+**The report was accurate, and the deploy was correct.** Reproducing the exact
+bytes a browser receives (repo `knowledge.html` → `knowledge-enterprise-upload`
+edge rewrite) showed the media markup and the full media `accept` list present
+and untouched by the edge function. Cache was not involved either — the edge
+serves this page `cache-control: no-store`.
+
+**Root cause: the Video/Audio path had no static existence.** On load the page
+showed a document-framed guide, a tile reading *"Upload video or audio — coming
+next"* with no format list, and the media panel `hidden` behind a click. The
+path's entire visible identity — its label, its supported formats, its "you can
+pick a file" affordance — was manufactured at runtime by `loadMediaCapability()`,
+an authenticated fetch to `media-status`. Any outcome other than that fetch
+succeeding left the page in generic "coming next" copy: **a shipped feature
+indistinguishable from one that was never deployed.** Worse, clicking the tile
+in that state scrolled the manager to the *transcript* chooser, which accepts
+documents only — so the `.webm` really could not be selected.
+
+**Why every test passed anyway:** each UI test drove the page through a harness
+with a capability object already stubbed in, then *programmatically clicked the
+tile*. No test asked what is on the page when it loads, with no JS-supplied
+capability and nothing clicked. The tests validated the mechanism; nobody
+validated the presentation.
+
+**Fixed by making presentation static and credential-independent:**
+
+1. `knowledge.html` now renders **two clearly separated, separately headed
+   paths**: *A · Upload company document or transcript* (PDF/Word/PowerPoint/
+   TXT/MD/VTT/SRT, 10 MB) and *B · Upload training video or audio*
+   (MP4/MOV/WebM/MP3/M4A/WAV, 500 MB).
+2. Path B is **always visible** — no tile, no click-to-reveal, no `hidden`. Its
+   format list and size limit are printed in the markup.
+3. The capability probe was demoted: it may enable/disable the Upload button and
+   refine the limit text. It can no longer decide whether the path or its
+   formats are visible. The page boots fail-safe — upload disabled until proven
+   configured.
+4. Clicking Video/Audio can never land in the document chooser; the redirect is
+   gone entirely.
+5. A build marker (`data-build` plus a visible "Media upload UI build …" line)
+   makes it possible to tell at a glance which build is live.
+
+**Guarded by** `tests/knowledge-upload-paths.test.mjs`, which asserts on the
+**post-edge, no-JavaScript HTML**: both paths present and distinct, WebM and MP4
+visible without scripting, the media panel not hidden, the edge function unable
+to target `#mediaFile`, and the document chooser never claiming media formats.

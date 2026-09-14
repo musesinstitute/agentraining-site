@@ -357,6 +357,16 @@ export const ALLOWED_MEDIA_TYPES = Object.freeze({
 
 export const SUPPORTED_MEDIA_LABELS = Object.freeze([...new Set(Object.values(ALLOWED_MEDIA_TYPES).map(x => x.label))]);
 
+// The container names to SHOW a manager. Same allowlist, minus the internal
+// "WebM audio"/"WebM" distinction, which is a codec detail no one uploading a
+// training recording needs. knowledge.html renders this list STATICALLY, so
+// the supported formats are on the page whether or not any script runs or any
+// credential exists - tests/media-format-support.test.mjs locks the two
+// together.
+export const MEDIA_DISPLAY_FORMATS = Object.freeze([
+  ...new Set(SUPPORTED_MEDIA_LABELS.map(label => label.replace(/ audio$/, '')))
+]);
+
 // Browsers disagree about a few of these (notably .mov, .m4a and .webm), and
 // some report an empty type entirely, so the file extension is an equal
 // second source of truth rather than a last resort.
