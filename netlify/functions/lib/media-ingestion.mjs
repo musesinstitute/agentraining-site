@@ -334,26 +334,47 @@ export function maxMediaUploadBytes(env = process.env) {
 // Accepted upload formats, mapped to the kind of media each is and the file
 // extension used for its storage object. An unlisted type is refused outright
 // rather than uploaded and discovered unusable later.
+// Real browsers and operating systems report the same file with different
+// MIME strings (and sometimes with none at all), so every variant a supported
+// file is genuinely seen as is listed here. This stays a controlled
+// allowlist - there is no wildcard and no "video/*" - so an arbitrary or
+// executable file is still refused.
 export const ALLOWED_MEDIA_TYPES = Object.freeze({
   'video/mp4': { kind: 'video', extension: '.mp4', label: 'MP4' },
+  'video/x-m4v': { kind: 'video', extension: '.mp4', label: 'MP4' },
   'video/quicktime': { kind: 'video', extension: '.mov', label: 'MOV' },
   'video/webm': { kind: 'video', extension: '.webm', label: 'WebM' },
   'audio/mpeg': { kind: 'audio', extension: '.mp3', label: 'MP3' },
+  'audio/mp3': { kind: 'audio', extension: '.mp3', label: 'MP3' },
   'audio/mp4': { kind: 'audio', extension: '.m4a', label: 'M4A' },
   'audio/x-m4a': { kind: 'audio', extension: '.m4a', label: 'M4A' },
   'audio/wav': { kind: 'audio', extension: '.wav', label: 'WAV' },
   'audio/x-wav': { kind: 'audio', extension: '.wav', label: 'WAV' },
+  'audio/wave': { kind: 'audio', extension: '.wav', label: 'WAV' },
+  'audio/vnd.wave': { kind: 'audio', extension: '.wav', label: 'WAV' },
   'audio/webm': { kind: 'audio', extension: '.webm', label: 'WebM audio' }
 });
 
 export const SUPPORTED_MEDIA_LABELS = Object.freeze([...new Set(Object.values(ALLOWED_MEDIA_TYPES).map(x => x.label))]);
 
-// Browsers disagree about a few of these (notably .mov and .m4a), so fall back
-// to the file extension when the declared type is empty or unrecognized.
-const EXTENSION_TYPES = Object.freeze({
+// Browsers disagree about a few of these (notably .mov, .m4a and .webm), and
+// some report an empty type entirely, so the file extension is an equal
+// second source of truth rather than a last resort.
+export const EXTENSION_TYPES = Object.freeze({
   '.mp4': 'video/mp4', '.m4v': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm',
   '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.wav': 'audio/wav'
 });
+
+// The exact value the media file input's `accept` attribute must carry: every
+// allowed MIME type AND every allowed extension. Both halves matter - a
+// chooser given only MIME types greys out files whose type the OS reports
+// differently (this is what blocked a real .webm acceptance test), and a
+// chooser given only extensions is unhelpful on systems that filter by type.
+// tests/media-format-support.test.mjs asserts knowledge.html matches this.
+export const MEDIA_ACCEPT_ATTRIBUTE = [
+  ...Object.keys(ALLOWED_MEDIA_TYPES),
+  ...Object.keys(EXTENSION_TYPES)
+].join(',');
 
 export function resolveMediaType(contentType, fileName) {
   const declared = String(contentType || '').toLowerCase().split(';')[0].trim();

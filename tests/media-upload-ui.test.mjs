@@ -104,20 +104,48 @@ function harness({ capability, mediaStates = ['ready'] } = {}) {
 }
 
 const FAKE_FILE = { name: 'training.mp4', size: 180 * 1024 * 1024, type: 'video/mp4' };
+// Shaped like the real Wikimedia Commons download that blocked acceptance.
+const WEBM_FILE = { name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: 'video/webm' };
 const CONFIGURED = { directUploadAvailable: true, storageConfigured: true, transcriptionConfigured: true, maxUploadBytes: 500 * 1024 * 1024, supportedFormats: ['MP4', 'MOV', 'WebM', 'MP3', 'M4A', 'WAV'], missingEnv: [] };
-const UNCONFIGURED = { directUploadAvailable: false, storageConfigured: false, transcriptionConfigured: false, maxUploadBytes: 500 * 1024 * 1024, supportedFormats: ['MP4'], missingEnv: ['R2_ACCOUNT_ID'] };
+// media-status reports the full supported-format list whether or not the
+// deployment is configured (see tests/media-upload-flow.test.mjs), so the
+// fixture must too.
+const UNCONFIGURED = { directUploadAvailable: false, storageConfigured: false, transcriptionConfigured: false, maxUploadBytes: 500 * 1024 * 1024, supportedFormats: ['MP4', 'MOV', 'WebM', 'MP3', 'M4A', 'WAV'], missingEnv: ['R2_ACCOUNT_ID'] };
 
 describe('media upload UI honesty gate', () => {
-  test('with nothing configured the page offers no upload and sends no upload request', async () => {
+  test('with nothing configured the panel still opens so a file can be checked, but upload is disabled', async () => {
+    // Regression guard for the real acceptance blocker: this used to bounce the
+    // manager down to the TRANSCRIPT file chooser (documents only), where a
+    // .webm file is greyed out and cannot be selected at all.
     const h = harness({ capability: UNCONFIGURED });
     await tick(); await tick();
     h.element('mediaUploadPreviewBtn').click();
     await tick();
-    assert.equal(h.element('mediaPanel').hidden, true, 'the upload panel must stay closed');
+    assert.equal(h.element('mediaPanel').hidden, false, 'the media panel must open so the file chooser is reachable');
+    assert.equal(h.element('mediaUploadBtn').disabled, true, 'upload stays switched off until it can really work');
+    assert.equal(h.element('mediaConfigNote').hidden, false);
+    assert.match(h.element('mediaConfigNote').textContent, /uploading is switched off/i);
+    assert.match(h.element('mediaConfigNote').textContent, /R2_ACCOUNT_ID/, 'names what is missing');
     assert.equal(h.calls.some(c => String(c.url || '').includes('media-upload-reserve')), false);
-    // It routes the manager to the path that genuinely works instead.
-    assert.equal(h.element('sourceType').value, 'video_transcript');
-    assert.match(h.element('formStatus').textContent, /not configured/i);
+    // The tile copy must describe what the click actually does.
+    assert.match(h.element('mediaUploadPreviewBtn').querySelector('b').getAttribute('data-en'), /not switched on yet/);
+    assert.match(h.element('mediaUploadPreviewBtn').querySelector('small').getAttribute('data-en'), /WebM/);
+  });
+
+  test('an unconfigured workspace still accepts a .webm selection and refuses to pretend it uploaded', async () => {
+    const h = harness({ capability: UNCONFIGURED });
+    await tick(); await tick();
+    h.element('mediaUploadPreviewBtn').click();
+    const input = h.element('mediaFile');
+    input.files = [WEBM_FILE];
+    input.onchange.call(input);
+    assert.match(h.element('mediaLimitNote').textContent, /Selected: Blue_Origin_launch\.webm/);
+    // Pressing upload anyway must say so plainly, and send nothing.
+    h.element('mediaConsent').checked = true;
+    h.element('mediaUploadBtn').click();
+    for (let i = 0; i < 10; i++) await tick();
+    assert.equal(h.xhrs.length, 0);
+    assert.match(h.element('mediaStatus').textContent, /was not uploaded/i);
   });
 
   test('with storage and transcription configured the tile becomes a real upload entry point', async () => {
@@ -193,5 +221,57 @@ describe('direct upload behaviour', () => {
     for (let i = 0; i < 20; i++) await tick();
     assert.equal(h.xhrs.length, 0);
     assert.match(h.element('mediaStatus').textContent, /Confirm organizational authorization/);
+  });
+});
+
+describe('file selection accepts every claimed format (the real acceptance blocker)', () => {
+  const cases = [
+    ['WebM video', { name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: 'video/webm' }],
+    ['WebM with an empty MIME type from the OS', { name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: '' }],
+    ['WebM the OS mislabelled', { name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: 'application/octet-stream' }],
+    ['MP4', { name: 'training.mp4', size: 10 * 1024 * 1024, type: 'video/mp4' }],
+    ['MOV', { name: 'training.mov', size: 10 * 1024 * 1024, type: 'video/quicktime' }],
+    ['MOV with an empty MIME type', { name: 'training.mov', size: 10 * 1024 * 1024, type: '' }],
+    ['MP3', { name: 'session.mp3', size: 5 * 1024 * 1024, type: 'audio/mpeg' }],
+    ['M4A', { name: 'session.m4a', size: 5 * 1024 * 1024, type: 'audio/x-m4a' }],
+    ['WAV', { name: 'session.wav', size: 5 * 1024 * 1024, type: 'audio/wave' }]
+  ];
+  for (const [label, file] of cases) {
+    test(`${label} is accepted and confirmed back to the manager by name`, async () => {
+      const h = harness({ capability: CONFIGURED });
+      await tick(); await tick();
+      h.element('mediaUploadPreviewBtn').click();
+      const input = h.element('mediaFile');
+      input.files = [file];
+      input.onchange.call(input);
+      assert.equal(input.value, '', 'a supported file is never cleared');
+      assert.match(h.element('mediaLimitNote').textContent, new RegExp('Selected: ' + file.name.replace('.', '\\.')));
+      assert.match(h.element('mediaStatus').textContent, /accepted/i);
+    });
+  }
+
+  test('an unsupported file is refused immediately and cleared', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await tick(); await tick();
+    h.element('mediaUploadPreviewBtn').click();
+    const input = h.element('mediaFile');
+    input.files = [{ name: 'installer.exe', size: 1024 * 1024, type: 'application/x-msdownload' }];
+    input.value = 'installer.exe';
+    input.onchange.call(input);
+    assert.equal(input.value, '', 'an unsupported selection is cleared');
+    assert.match(h.element('mediaStatus').textContent, /not a supported media file/i);
+    assert.match(h.element('mediaStatus').textContent, /WebM/, 'the supported list is shown');
+  });
+
+  test('a mislabelled but supported file uploads under its resolved type, not the OS guess', async () => {
+    const h = harness({ capability: CONFIGURED, mediaStates: ['ready'] });
+    await tick(); await tick();
+    h.element('mediaFile').files = [{ name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: 'application/octet-stream' }];
+    h.element('mediaConsent').checked = true;
+    h.element('mediaUploadBtn').click();
+    for (let i = 0; i < 120; i++) await tick();
+    const reserve = h.calls.find(c => String(c.url).includes('media-upload-reserve'));
+    assert.equal(JSON.parse(reserve.body).contentType, 'video/webm', 'the resolved type is sent, so the signed PUT matches');
+    assert.equal(h.xhrs.length, 1);
   });
 });

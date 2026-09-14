@@ -499,3 +499,49 @@ because no account exists. What that means precisely:
 
 Until a real upload has been observed end to end, the product must still not
 claim "upload your training videos and we transcribe them."
+
+---
+
+## Acceptance finding: WebM file could not be selected (2026-09-14)
+
+**Reported:** a real WebM download from Wikimedia Commons did not appear as
+selectable in the browser file chooser, blocking the first direct-upload
+human acceptance test.
+
+**Root cause — not a WebM problem at all.** `#mediaFile` already listed both
+`.webm` and `video/webm`, and server validation already accepted WebM. The
+media file chooser was simply **unreachable**: with no R2/transcription
+credentials configured, `media-status` reports `directUploadAvailable:false`,
+and the tile handler deliberately refused to open the media panel and instead
+scrolled the manager down to the *transcript* form. The only "Choose File"
+there is `#transcriptFile`, whose production `accept` (set by the
+`knowledge-enterprise-upload` edge rewrite) is
+`.pdf,.docx,.pptx,.ppt,.txt,.md,.vtt,.srt,…` — so the OS greyed the `.webm`
+file out. The honest-refusal gate added with the MVP had turned into a trap:
+"upload video" quietly became "upload a document".
+
+**Fixed by:**
+
+1. The media panel now **always opens**, so the media chooser is reachable and
+   a file can be checked. When storage/transcription are unconfigured the
+   panel shows a banner naming the missing variables and the Upload button is
+   **disabled** — the file can be validated, but nothing can imply an upload
+   that cannot happen.
+2. The tile copy is now accurate in both states ("not switched on yet" rather
+   than "coming next", since the click really does open something).
+3. `accept` is now generated from the server allowlist: every allowed MIME
+   type **and** every allowed extension. A chooser given MIME types alone
+   greys out files whose type the OS reports differently — which is precisely
+   the failure mode here.
+4. MIME robustness: the allowlist gained the variants real systems emit
+   (`audio/wave`, `audio/vnd.wave`, `audio/mp3`, `video/x-m4v`), and both the
+   browser and the server fall back to the file extension when the OS reports
+   an empty or unexpected type. It stays a controlled allowlist — no
+   wildcard — so executables and documents are still refused.
+5. The browser now validates the selection immediately, confirms the chosen
+   filename back to the manager, and sends the **resolved** content type so a
+   mislabelled file still matches its signed PUT.
+
+**Guarded by** `tests/media-format-support.test.mjs`, which compares all four
+layers directly (UI claims, chooser `accept`, browser allowlist, server
+allowlist) and fails if they ever drift again.
