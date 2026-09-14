@@ -145,7 +145,9 @@ describe('nothing hides the Video/Audio path at runtime', () => {
   test('the capability probe no longer decides whether the path exists', () => {
     // It may disable the button; it may not rewrite the path's identity.
     assert.ok(!/mediaUploadPreviewBtn/.test(pageScript), 'the click-to-reveal tile is gone');
-    assert.match(pageScript, /button\.disabled\s*=\s*!ready/, 'it still gates the Upload button');
+    assert.match(pageScript, /button\.disabled\s*=\s*!!blocker/, 'it still gates the Upload button');
+    // and the capability is one of the things that can block it
+    assert.match(pageScript, /directUploadAvailable\)return 'not_configured'/);
   });
 
   test('upload is treated as unconfigured until proven otherwise, before any fetch resolves', () => {

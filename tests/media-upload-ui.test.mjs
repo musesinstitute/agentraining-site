@@ -19,7 +19,7 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 
 const SIGNED_PUT_URL = 'https://test-account.r2.cloudflarestorage.com/bucket/teams/team-a/media/m1/token.mp4?X-Amz-Signature=abc';
 
-function harness({ capability, mediaStates = ['ready'], slowCapability = false } = {}) {
+function harness({ capability, mediaStates = ['ready'], slowCapability = false, deferCapability = null } = {}) {
   const elements = new Map();
   const calls = [];
   const xhrs = [];
@@ -78,6 +78,9 @@ function harness({ capability, mediaStates = ['ready'], slowCapability = false }
     }
     if (u.includes('media-status')) {
       if (slowCapability) return new Promise(() => {}); // never resolves
+      // deferCapability lets a test control WHEN the probe answers, so the
+      // before/after-file-selection race is actually exercised.
+      if (deferCapability) return deferCapability.promise.then(() => ({ ok: true, status: 200, json: async () => ({ capability }) }));
       return { ok: true, status: 200, json: async () => ({ capability }) };
     }
     if (u.includes('media-upload-reserve')) {
@@ -125,7 +128,7 @@ describe('credentials-off behaviour (the live acceptance failure)', () => {
     assert.notEqual(h.element('mediaPanel').hidden, true, 'the media path must stay on the page without credentials');
     assert.equal(h.element('sourceType').value, '', 'it must not switch the document form on the manager\'s behalf');
     assert.equal(h.element('mediaUploadBtn').disabled, true, 'but uploading stays off');
-    assert.match(h.element('mediaConfigNote').textContent, /uploading is switched off/i);
+    assert.match(h.element('mediaConfigNote').textContent, /not yet configured for this environment/i);
     assert.match(h.element('mediaConfigNote').textContent, /R2_ACCOUNT_ID/, 'and says what is missing');
     assert.equal(h.calls.some(c => String(c.url || '').includes('media-upload-reserve')), false);
   });
@@ -157,11 +160,15 @@ describe('credentials-off behaviour (the live acceptance failure)', () => {
     assert.equal(h.element('mediaUploadBtn').disabled, true, 'fail safe: off until proven configured');
   });
 
-  test('with everything configured the Upload button becomes enabled', async () => {
+  test('with everything configured the environment banner clears, and the button waits on the manager', async () => {
     const h = harness({ capability: CONFIGURED });
     await tick(); await tick();
-    assert.equal(h.element('mediaUploadBtn').disabled, false);
+    // No environment-level problem left to report...
     assert.equal(h.element('mediaConfigNote').hidden, true);
+    // ...but a real upload still needs a file and authorization, and the page
+    // says which is outstanding rather than offering a dead button.
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(h.element('mediaBlockedReason').textContent, /Choose a video or audio file/);
   });
 });
 
@@ -276,5 +283,121 @@ describe('file selection accepts every claimed format (the real acceptance block
     const reserve = h.calls.find(c => String(c.url).includes('media-upload-reserve'));
     assert.equal(JSON.parse(reserve.body).contentType, 'video/webm', 'the resolved type is sent, so the signed PUT matches');
     assert.equal(h.xhrs.length, 1);
+  });
+});
+
+describe('Upload and transcribe button state (never enabled without a real pipeline)', () => {
+  const WEBM = { name: 'Blue_Origin_launch.webm', size: 42 * 1024 * 1024, type: 'video/webm' };
+  const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
+  async function ready(h) { await tick(); await tick(); await tick(); }
+  function choose(h, file) { const input = h.element('mediaFile'); input.files = [file]; input.onchange.call(input); }
+  function authorize(h, on = true) { const box = h.element('mediaConsent'); box.checked = on; box.onchange.call(box); }
+  const reason = h => h.element('mediaBlockedReason').textContent;
+
+  test('1. valid WebM + authorization + capability available -> ENABLED', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    choose(h, WEBM);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, false);
+    assert.equal(reason(h), '', 'nothing is blocking, so nothing is explained');
+  });
+
+  test('2. valid WebM + NO authorization -> disabled, and says so', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    choose(h, WEBM);
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(reason(h), /Confirm organizational authorization/);
+  });
+
+  test('3. authorization + NO valid media -> disabled, and says so', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(reason(h), /Choose a video or audio file/);
+  });
+
+  test('4. valid WebM + authorization + capability UNAVAILABLE -> disabled with an explicit reason', async () => {
+    const h = harness({ capability: UNCONFIGURED });
+    await ready(h);
+    choose(h, WEBM);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    // The exact "mysteriously disabled button" the acceptance run hit.
+    assert.match(reason(h), /not yet configured for this environment/);
+    assert.match(reason(h), /R2_ACCOUNT_ID/, 'names the missing configuration');
+    assert.match(reason(h), /supported format/, 'and confirms the file itself was fine');
+    assert.match(h.element('mediaStatus').textContent, /This file is accepted\.$/, 'must not promise an upload that is switched off');
+  });
+
+  test('5. capability arriving BEFORE file selection leaves the right state', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    assert.match(reason(h), /Choose a video or audio file/);
+    choose(h, WEBM);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, false);
+  });
+
+  test('6. capability arriving AFTER file selection leaves the right state', async () => {
+    const gate = deferred();
+    const h = harness({ capability: CONFIGURED, deferCapability: gate });
+    await ready(h);
+    // Manager gets ahead of the probe: file chosen and authorized first.
+    choose(h, WEBM);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, true, 'still unknown, so still off');
+    assert.match(reason(h), /could not be checked|not yet configured/);
+    gate.resolve();
+    for (let i = 0; i < 10; i++) await tick();
+    assert.equal(h.element('mediaUploadBtn').disabled, false, 'enables once the probe confirms a real pipeline');
+    assert.equal(reason(h), '');
+  });
+
+  test('7. ticking and unticking authorization recalculates the button', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    choose(h, WEBM);
+    authorize(h, true);
+    assert.equal(h.element('mediaUploadBtn').disabled, false);
+    authorize(h, false);
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(reason(h), /Confirm organizational authorization/);
+  });
+
+  test('8. changing the file recalculates the button', async () => {
+    const h = harness({ capability: CONFIGURED });
+    await ready(h);
+    authorize(h);
+    choose(h, WEBM);
+    assert.equal(h.element('mediaUploadBtn').disabled, false);
+    // Swapping in an unsupported file must switch it back off.
+    choose(h, { name: 'installer.exe', size: 1024, type: 'application/x-msdownload' });
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(reason(h), /Choose a video or audio file/);
+  });
+
+  test('9. missing credentials can never produce an enabled button, whatever the manager does', async () => {
+    const h = harness({ capability: UNCONFIGURED });
+    await ready(h);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      choose(h, WEBM);
+      authorize(h, true);
+      authorize(h, false);
+      authorize(h, true);
+      assert.equal(h.element('mediaUploadBtn').disabled, true, 'no sequence of UI actions may fake a pipeline');
+    }
+    assert.equal(h.xhrs.length, 0);
+  });
+
+  test('10. a failed capability check is reported differently from missing credentials', async () => {
+    const h = harness({ capability: CONFIGURED, slowCapability: true });
+    await ready(h);
+    choose(h, WEBM);
+    authorize(h);
+    assert.equal(h.element('mediaUploadBtn').disabled, true);
+    assert.match(reason(h), /could not be checked/, 'a failed probe must not be reported as missing credentials');
   });
 });
