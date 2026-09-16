@@ -10,7 +10,7 @@
 // key, so a mediaId from another company simply does not resolve.
 
 import { getStore } from '@netlify/blobs';
-import { getUser, verifyRequestOrigin } from '@netlify/identity';
+import { getUser } from '@netlify/identity';
 import { maxMediaUploadBytes, SUPPORTED_MEDIA_LABELS } from './lib/media-ingestion.mjs';
 import { storageAdapterFromEnv, REQUIRED_ENV_VARS as STORAGE_ENV_VARS } from './lib/r2-storage.mjs';
 import { transcriptionAdapterFromEnv, REQUIRED_ENV_VARS as TRANSCRIPTION_ENV_VARS } from './lib/transcription-provider.mjs';
@@ -19,7 +19,8 @@ import { STORE_NAME, reply, clean, normalizeEmail, safeSegment, loadMedia, media
 export default async function handler(req) {
   try {
     if (req.method !== 'GET') return reply(405, { error: 'GET required.' });
-    verifyRequestOrigin(req);
+    // This endpoint is read-only. Keep Identity + manager/admin authorization,
+    // but do not apply the write-oriented origin gate to Deploy Preview GETs.
     const user = await getUser(req);
     if (!user) return reply(401, { error: 'Please sign in to continue.' });
     const roles = Array.isArray(user.roles) ? user.roles : [];
