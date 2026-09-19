@@ -18,7 +18,33 @@
   function hideGate(){const g=document.getElementById('pilot-auth-gate');if(g)g.style.display='none'}
   async function ready(requiredRole){if(!enabled)return null;if(!window.netlifyIdentity)throw new Error(t('Pilot sign-in could not be loaded.','无法载入试用登录功能。'));if(!switchHandled&&params.get('switch')==='1'){switchHandled=true;window.netlifyIdentity.init();try{await window.netlifyIdentity.logout()}catch(e){}readyPromise=null;finishReady=null}if(!readyPromise){readyPromise=new Promise(resolve=>{window.netlifyIdentity.init();const finish=user=>{hideGate();mountAccountControls(user);resolve(user)};finishReady=finish;const u=currentUser();if(u)Promise.resolve(u.jwt()).then(()=>finish(u)).catch(()=>showGate(t('Please sign in again.','请重新登录。')));else showGate(t('Please sign in with your invited Pilot account.','请使用受邀请的试用账号登录。'))})}const u=await readyPromise;if(requiredRole&&!roles(u).includes(requiredRole)&&!roles(u).includes('admin'))throw new Error(t('This page requires the '+requiredRole+' role.','此页面需要相应权限。'));return u}
   async function token(requiredRole){const user=await ready(requiredRole);if(!user||typeof user.jwt!=='function')throw new Error(t('Secure Pilot token is unavailable.','安全访问凭证不可用。'));return user.jwt()}
-  async function request(resource,options={}){const {requiredRole,query,...fetchOptions}=options;const authToken=await token(requiredRole);const q=new URLSearchParams({resource});Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});const response=await fetch('/.netlify/functions/pilot-data?'+q,{...fetchOptions,headers:{'content-type':'application/json',authorization:'Bearer '+authToken,...(fetchOptions.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));return body}
-  window.PilotCloud={enabled,ready,token,request,currentUser,signOut};
-  if(enabled){const s=document.createElement('script');s.src='/openai-voice.js?v=20260817-openai1';s.defer=true;document.head.appendChild(s)}
+  // Routing is determined by each request, never by cached assignment state or prompt keywords.
+  async function request(resource, options={}) {
+    const {requiredRole, query, ...fetchOptions}=options;
+    const authToken=await token(requiredRole);
+    const method=String(fetchOptions.method||'GET').toUpperCase();
+    let endpoint='/.netlify/functions/pilot-data';
+    let grounded=false, sent={};
+    if(resource==='coach-messages' && method==='POST') {
+      sent=JSON.parse(fetchOptions.body||'{}');
+      grounded=sent.coachMode==='company_knowledge';
+      if(grounded) {
+        if(!sent.assignmentId || !sent.sourceKnowledgeId) throw new Error('Select an assigned Company Knowledge source before asking.');
+        endpoint='/.netlify/functions/pilot-coach-source';
+        fetchOptions.body=JSON.stringify({assignmentId:sent.assignmentId,sourceKnowledgeId:sent.sourceKnowledgeId,message:sent.content});
+      } else if(sent.coachMode!=='generic' || sent.assignmentId || sent.sourceKnowledgeId) {
+        throw new Error('Coach context is missing or inconsistent. Reload the Coach page and select a context.');
+      }
+    }
+    const q=new URLSearchParams({resource});
+    Object.entries(query||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')q.set(k,String(v))});
+    const response=await fetch(endpoint+(grounded?'':'?'+q), {...fetchOptions,headers:{...fetchOptions.headers,'content-type':'application/json',authorization:'Bearer '+authToken}});
+    const body=await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(body.error||t('Pilot cloud request failed ('+response.status+').','试用云端请求失败（'+response.status+'）。'));
+    if(grounded && (body.grounded!==true || body.assistantMessage?.groundedIn!=='company_knowledge' || body.assistantMessage?.assignmentContextId!==sent.assignmentId || body.assistantMessage?.sourceKnowledgeId!==sent.sourceKnowledgeId || !body.assistantMessage?.verification?.status)) {
+      throw new Error('The response did not confirm the selected source and verification. No answer was displayed.');
+    }
+    return body;
+  }
+  window.PilotCloud={enabled,ready,token,request,currentUser,signOut};if(enabled){const s=document.createElement('script');s.src='/openai-voice.js?v=20260817-openai1';s.defer=true;document.head.appendChild(s)}
 })();

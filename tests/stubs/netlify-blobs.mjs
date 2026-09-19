@@ -2,7 +2,12 @@
 // Never touches real Netlify Blobs storage.
 const stores = new Map();
 
-export function getStore({ name }) {
+export function getStore(nameOrOptions) {
+  // The real @netlify/blobs getStore() accepts either a plain store-name
+  // string or an options object ({ name, consistency, ... }). Support both
+  // here so a test can import any function file regardless of which form it
+  // calls with (e.g. netlify/functions/knowledge-analyze.mjs).
+  const name = typeof nameOrOptions === 'string' ? nameOrOptions : nameOrOptions?.name;
   if (!stores.has(name)) stores.set(name, new Map());
   const data = stores.get(name);
   return {
