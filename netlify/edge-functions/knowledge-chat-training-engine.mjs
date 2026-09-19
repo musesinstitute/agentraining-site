@@ -14,7 +14,7 @@ export default async (request, context) => {
       return new Response(html, { status: response.status, statusText: response.statusText, headers });
     }
 
-    const runtime = '<script data-kte-runtime="recovery2" src="/knowledge-training-engine-loader.js?v=20260911-recovery2"></script><script src="/knowledge-training-engine.js?v=20260911-recovery2"></script>';
+    const runtime = '<script data-kte-runtime="recovery2" src="/knowledge-training-engine-loader.js?v=20260916-bilingual1"></script><script src="/knowledge-training-engine.js?v=20260916-bilingual1"></script><script src="/question-bank-language.js?v=20260916-bilingual1"></script>';
     const injected = html.replace('</body>', runtime + '</body>');
     return new Response(injected, { status: response.status, statusText: response.statusText, headers });
   } catch (error) {

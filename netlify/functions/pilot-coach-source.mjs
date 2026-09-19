@@ -17,20 +17,23 @@ function userContext(user) {
   const metadata = user.appMetadata || {};
   return { id: cleanText(user.id, 100), email: normalizeEmail(user.email), roles, isManager: roles.includes('manager') || roles.includes('admin'), teamId: safeSegment(metadata.team_id, 'founding-pilot') };
 }
-function normalizeContent(text) {
+// Exported (in addition to being used internally below) purely so the
+// long-source test suite can verify middle-of-document retrieval directly
+// against this exact implementation, without weakening or duplicating it.
+export function normalizeContent(text) {
   return String(text || '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 }
-function compactContent(text, max = 14000) {
+export function compactContent(text, max = 14000) {
   const t = normalizeContent(text);
   if (t.length <= max) return t;
   const head = Math.floor(max * .72), tail = max - head;
   return t.slice(0, head) + '\n\n[... middle section omitted ...]\n\n' + t.slice(-tail);
 }
-function terms(value) {
+export function terms(value) {
   const stop = new Set(['about','after','again','also','and','are','because','been','before','being','between','but','can','current','does','example','for','from','give','have','help','how','into','its','learner','me','more','my','practice','should','that','the','their','this','through','under','very','what','when','where','which','why','with','would','you','your']);
   return [...new Set(String(value || '').toLowerCase().match(/[a-z0-9]{3,}/g) || [])].filter(x => !stop.has(x)).slice(0,40);
 }
-function relevantContent(text, query, context = '', max = 14000) {
+export function relevantContent(text, query, context = '', max = 14000) {
   const t = normalizeContent(text);
   if (t.length <= max) return t;
   const queryTerms = terms(`${query} ${context}`);
