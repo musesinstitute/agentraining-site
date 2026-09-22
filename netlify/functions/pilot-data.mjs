@@ -970,6 +970,56 @@ export default async function handler(req) {
 
     if (req.method === 'GET' && resource === 'me') return reply(200, { email: actor.email, roles: actor.roles, teamId: actor.teamId });
 
+    // Pilot-wide deletion lifecycle. A manager/admin can schedule deletion of
+    // the authenticated team's server-side Pilot data. The request itself is
+    // stored outside the team prefix so it survives long enough to drive and
+    // audit the deletion. A separate scheduled function performs due purges.
+    if (resource === 'data-deletion') {
+      verifyRequestOrigin(req);
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'pilot_data_deletion', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      const requestKey = `deletion-requests/${actor.teamId}`;
+
+      if (req.method === 'GET') {
+        const deletion = await store.get(requestKey, { type: 'json' });
+        return reply(200, { deletion: deletion || null });
+      }
+
+      if (req.method === 'POST') {
+        const input = await req.json().catch(() => ({}));
+        const now = new Date();
+        const immediate = input.immediate === true;
+        const deleteAfter = new Date(now.getTime() + (immediate ? 0 : 30 * 86400000));
+        const record = {
+          id: crypto.randomUUID(),
+          teamId: actor.teamId,
+          requestedAt: now.toISOString(),
+          deleteAfter: deleteAfter.toISOString(),
+          requestedBy: actor.email,
+          status: 'scheduled',
+          immediate,
+          schemaVersion: 'pilot-data-deletion-v1'
+        };
+        await store.setJSON(requestKey, record);
+        await writeAudit(store, teamPrefix, actor, 'pilot_data_deletion_requested', 'success', {
+          deleteAfter: record.deleteAfter, immediate
+        });
+        return reply(202, { deletion: record });
+      }
+
+      if (req.method === 'DELETE') {
+        const current = await store.get(requestKey, { type: 'json' });
+        if (!current || current.status !== 'scheduled') return reply(404, { error: 'No scheduled deletion request was found.' });
+        await store.delete(requestKey);
+        await writeAudit(store, teamPrefix, actor, 'pilot_data_deletion_cancelled', 'success', { requestId: current.id });
+        return reply(200, { cancelled: true });
+      }
+
+      return reply(405, { error: 'Method not allowed.' });
+    }
+
 
     if (req.method === 'GET' && resource === 'knowledge') {
       const rows = await listJSON(store, `${teamPrefix}/knowledge/`);
