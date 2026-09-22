@@ -49,3 +49,7 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+
+[functions."pilot-data-retention"]
+  schedule = "17 3 * * *"
