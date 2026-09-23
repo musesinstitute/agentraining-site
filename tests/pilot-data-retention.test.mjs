@@ -23,7 +23,7 @@ function manager(teamId = 'retention-team') {
   __setUser({ id: 'manager-' + teamId, email: `manager@${teamId}.test`, roles: ['manager'], appMetadata: { team_id: teamId } });
 }
 
-const request = (method, resource, body) => new Request(`https://example.test/.netlify/functions/pilot-data/${resource}`, {
+const request = (method, resource, body) => new Request(`https://example.test/.netlify/functions/pilot-data?resource=${encodeURIComponent(resource)}`, {
   method,
   headers: { 'content-type': 'application/json', origin: 'https://example.test' },
   ...(body === undefined ? {} : { body: JSON.stringify(body) })
