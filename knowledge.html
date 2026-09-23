@@ -6,24 +6,39 @@
 <meta name="description" content="Turn authorized enterprise training knowledge into manager-approved coaching and Practice.">
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script src="pilot-cloud.js?v=20260821-guide1"></script>
+<link rel="stylesheet" href="start-menu.css">
 <style>
 :root{--blue:#1a56db;--blue2:#0f3ea8;--ink:#0f172a;--muted:#64748b;--bg:#f6f8fc;--card:#fff;--line:#dfe5ee;--green:#047857;--amber:#b45309;--red:#b91c1c;--purple:#6d28d9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}a{color:inherit}nav{height:64px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);gap:16px}.logo{font-size:20px;font-weight:900;color:var(--blue);text-decoration:none}.logo span{color:#f59e0b}.navlinks{display:flex;align-items:center;gap:16px;font-size:13px}.navlinks a{text-decoration:none;color:#475569}.navlinks a:hover{color:var(--blue)}.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.lang button{border:0;background:#fff;padding:6px 9px;color:#64748b;cursor:pointer}.lang button.active{background:#eff6ff;color:var(--blue);font-weight:800}.hero{padding:54px 5%;background:linear-gradient(135deg,#eff6ff 0%,#ecfdf5 55%,#faf5ff 100%)}.hero-inner{max-width:1180px;margin:auto}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #bfdbfe;background:#fff;color:var(--blue);border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:16px 0 12px;max-width:850px}.hero p{font-size:17px;color:#475569;line-height:1.65;max-width:820px;margin:0}.flow{max-width:1180px;margin:-24px auto 24px;padding:0 18px}.flow-card{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 36px rgba(15,23,42,.08);overflow:hidden}.flow-step{padding:18px;border-right:1px solid var(--line)}.flow-step:last-child{border:0}.flow-step b{display:block;color:var(--blue);margin-bottom:6px}.flow-step span{font-size:12px;color:var(--muted);line-height:1.5}.shell{max-width:1180px;margin:auto;padding:0 18px 60px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:32px 0 14px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted)}.secure-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;padding:13px 15px;color:#1e40af;line-height:1.55}.manager-panel{display:none;background:#fff;border:1px solid #bfdbfe;border-radius:16px;padding:22px;margin-top:18px}.manager-panel.visible{display:block}.manager-panel h3{font-size:20px;margin:0 0 6px}.manager-panel>p{color:var(--muted);margin:0 0 18px}.upload-guide{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 18px}.upload-guide h4{margin:0 0 5px;font-size:15px}.upload-guide>p{margin:0 0 12px;color:var(--muted);line-height:1.5}.upload-options{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.upload-option{display:flex;align-items:flex-start;gap:9px;background:#fff;border:1px solid #e2e8f0;border-radius:9px;padding:11px}.upload-option span:first-child{font-size:18px;line-height:1}.upload-option b{display:block;font-size:12px;margin-bottom:3px}.upload-option small{color:var(--muted);line-height:1.4}.upload-limit{margin-top:11px;padding:10px 12px;border-radius:8px;background:#eff6ff;color:#1e40af;font-size:12px;line-height:1.5}.form-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.field.full{grid-column:1/-1}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#334155}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:11px 12px;background:#fff;font:inherit;color:var(--ink)}.field textarea{min-height:180px;resize:vertical;line-height:1.55}.field small{display:block;color:var(--muted);margin-top:5px;line-height:1.45}.consent{display:flex;gap:10px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:12px;line-height:1.5;color:#7c2d12}.consent input{margin-top:3px}.button-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn:hover{background:var(--blue2)}.btn.secondary{background:#fff;color:var(--blue);border:1px solid #93c5fd}.btn.green{background:var(--green)}.btn.danger{background:#fff;color:var(--red);border:1px solid #fecaca}.btn:disabled{opacity:.55;cursor:not-allowed}.status{min-height:22px;margin-top:10px;font-size:13px}.status.ok{color:var(--green)}.status.error{color:var(--red)}.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.source-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}.source-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.source-card h3{font-size:18px;margin:0}.meta{font-size:11px;color:var(--muted);margin-top:4px}.pill{display:inline-block;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;background:#f1f5f9;color:#475569}.pill.analyzed{background:#fef3c7;color:#92400e}.pill.approved{background:#d1fae5;color:#065f46}.analysis{background:#f8fafc;border-radius:10px;padding:13px;line-height:1.55}.analysis h4{margin:0 0 6px;font-size:13px}.analysis p{margin:0;color:#334155}.analysis ul{margin:8px 0 0;padding-left:18px;color:#475569}.analysis li{margin:4px 0}.practice-draft{border-left:3px solid var(--purple);padding:9px 12px;background:#faf5ff;border-radius:0 9px 9px 0}.practice-draft b{display:block;color:var(--purple);margin-bottom:4px}.source-actions{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}.assign-dialog{width:min(560px,calc(100% - 28px));border:0;border-radius:16px;padding:0;box-shadow:0 28px 80px rgba(15,23,42,.28)}.assign-dialog::backdrop{background:rgba(15,23,42,.62)}.assign-dialog-inner{padding:24px}.assign-dialog h3{margin:0 0 6px;font-size:21px}.assign-dialog p{margin:0 0 18px;color:var(--muted);line-height:1.55}.assign-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.assign-grid .full{grid-column:1/-1}.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.empty{background:#fff;border:1px dashed #cbd5e1;border-radius:13px;padding:30px;text-align:center;color:var(--muted)}.platform{margin-top:40px}.stage{margin:18px 0}.stage-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.stage-head strong{font-size:17px}.stage-num{background:var(--blue);color:#fff;border-radius:99px;padding:5px 10px;font-size:11px}.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.lesson{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px}.lesson h4{margin:7px 0;font-size:15px}.lesson p{color:var(--muted);font-size:12px;line-height:1.5;margin:0}.lesson a{display:block;margin-top:12px;text-align:center;background:#eff6ff;color:var(--blue);font-weight:800;border-radius:8px;padding:8px;text-decoration:none;font-size:12px}.trust{margin-top:28px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:12px;padding:14px;color:#065f46;line-height:1.55;font-size:12px}@media(max-width:850px){.flow-card{grid-template-columns:1fr 1fr}.flow-step:nth-child(2){border-right:0}.flow-step:nth-child(-n+2){border-bottom:1px solid var(--line)}.source-grid,.lesson-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.upload-options{grid-template-columns:1fr}.navlinks>a:not(.pilot-link){display:none}.hero{padding:38px 5%}.flow-card,.source-grid,.lesson-grid,.form-grid{grid-template-columns:1fr}.flow-step{border-right:0;border-bottom:1px solid var(--line)!important}.field.full{grid-column:auto}.section-head{align-items:flex-start;flex-direction:column}.hero p{font-size:15px}}
 .flow-step{appearance:none;width:100%;border-top:0;border-bottom:0;background:#fff;text-align:left;font:inherit;cursor:pointer}.flow-step:hover,.flow-step:focus-visible{background:#eff6ff;outline:0;box-shadow:inset 0 0 0 2px #93c5fd}.flow-status{max-width:1180px;margin:0 auto 24px;padding:0 18px;min-height:20px;color:var(--blue);font-weight:700;line-height:1.5}
 .upload-option[type="button"]{appearance:none;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}.upload-option[type="button"]:hover,.upload-option[type="button"]:focus-visible,.upload-option.selected{border-color:#60a5fa;background:#eff6ff;outline:0;box-shadow:0 0 0 2px #bfdbfe}
+.media-panel{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin:0 0 18px}.media-panel h4{margin:0 0 5px;font-size:15px}.media-panel>p{margin:0 0 14px;color:var(--muted);line-height:1.5}.path-head{display:flex;align-items:center;gap:8px;margin:16px 0 6px}.path-head:first-of-type{margin-top:10px}.path-badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:99px;background:var(--blue);color:#fff;font-size:11px;font-weight:900}.path-head b{font-size:14px}.path-note{margin:0 0 10px;color:var(--muted);line-height:1.5}.media-limit{background:#f5f3ff;color:#5b21b6;border:1px solid #ddd6fe}.media-build{margin-top:10px;font-size:10.5px;color:#94a3b8}.media-blocked-reason{display:block;margin-top:8px;color:#7c2d12;font-size:12px;line-height:1.5;flex-basis:100%}.media-config-note{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:9px;padding:11px 12px;margin:0 0 14px;line-height:1.5;font-size:12.5px}.media-file-chosen{display:block;margin-top:6px;font-weight:800;color:var(--green)}.media-progress{margin-top:12px}.media-bar{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden}.media-bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .25s ease}.media-steps{margin-top:9px;display:flex;flex-wrap:wrap;gap:7px}.media-step{font-size:11px;font-weight:800;border-radius:99px;padding:4px 9px;background:#f1f5f9;color:#64748b}.media-step.active{background:#eff6ff;color:var(--blue)}.media-step.done{background:#d1fae5;color:#065f46}.media-step.failed{background:#fee2e2;color:var(--red)}
+.upload-option.coming-soon{border-style:dashed;background:#f8fafc;cursor:default}.upload-option.coming-soon:hover,.upload-option.coming-soon:focus-visible{border-color:#93c5fd;background:#f1f5f9;box-shadow:none}.upload-option.coming-soon b{color:#475569}
+.question-bank-entry{margin-top:14px;background:#fff;border:1px solid #93c5fd;border-radius:13px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:18px}.question-bank-entry b{display:block;color:#1e40af;margin-bottom:4px}.question-bank-entry span{display:block;color:var(--muted);font-size:12px;line-height:1.5}.question-bank-entry .btn{white-space:nowrap}@media(max-width:620px){.question-bank-entry{align-items:flex-start;flex-direction:column}}
+.training-assets{margin-top:2px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.training-assets .btn{font-size:12px;padding:8px 11px}.qb-count{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+/* Brief highlight for a deep-linked destination (#upload / #question-bank /
+   #practice-scenarios) - a subtle pulse, not a redesign, and it auto-clears
+   itself (see highlightEl() in the script below). */
+.deep-link-highlight{animation:agentraining-deep-link-pulse 1.3s ease-out 2}
+@keyframes agentraining-deep-link-pulse{0%{box-shadow:0 0 0 0 rgba(26,86,219,.45)}100%{box-shadow:0 0 0 10px rgba(26,86,219,0)}}
+@media(prefers-reduced-motion:reduce){.deep-link-highlight{animation:none;outline:3px solid #93c5fd;outline-offset:2px}}
 </style>
 </head>
 <body>
-<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="navlinks"><a href="pilot.html?pilot=1" class="pilot-link" data-en="Pilot Home" data-zh="Pilot首頁">Pilot Home</a><a href="studios.html?pilot=1" data-en="Four Studios" data-zh="四大工作室">Four Studios</a><a href="simulator.html?ref=demo&pilot=1" data-en="Practice" data-zh="練習">Practice</a><a href="team-messages.html?pilot=1" data-en="Team Messages" data-zh="團隊消息">Team Messages</a><div class="lang"><button id="enBtn" class="active" type="button">EN</button><button id="zhBtn" type="button">中文</button></div></div></nav>
+<nav><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="navlinks"><a href="studios.html?pilot=1" class="pilot-link" data-en="Four Studios" data-zh="四大工作室">Four Studios</a><div class="lang"><button id="enBtn" class="active" type="button">EN</button><button id="zhBtn" type="button">中文</button></div></div></nav>
+<div class="start-menu-mount" data-position="top"></div>
 <header class="hero"><div class="hero-inner"><span class="badge" data-en="Company Knowledge Library" data-zh="企業知識庫">Company Knowledge Library</span><h1 data-en="Turn company knowledge into coached performance." data-zh="把企業知識轉化為可衡量的培訓成果。">Turn company knowledge into coached performance.</h1><p data-en="Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive." data-zh="把經授權的培訓材料帶入安全的團隊空間。AI負責整理、主管負責審核，學員得到聚焦的知識與練習，而不是另一個被動的內容檔案庫。">Bring authorized training material into one secure team workspace. AI organizes it, a manager approves it, and learners receive focused knowledge and Practice—not another passive content archive.</p></div></header>
 <div class="flow"><div class="flow-card"><button class="flow-step" type="button" data-flow="add"><b data-en="1 · Add source" data-zh="1 · 加入來源">1 · Add source</b><span data-en="Click to add a video link, transcript, procedure, script, or notes." data-zh="點擊加入影片連結、逐字稿、公司流程、銷售話術或培訓筆記。">Click to add a video link, transcript, procedure, script, or notes.</span></button><button class="flow-step" type="button" data-flow="analyze"><b data-en="2 · AI analyzes" data-zh="2 · AI分析">2 · AI analyzes</b><span data-en="Click after saving a draft: summary, key points, audience, and quality." data-zh="儲存草稿後點擊：產生摘要、重點、適用對象與內容品質。">Click after saving a draft: summary, key points, audience, and quality.</span></button><button class="flow-step" type="button" data-flow="approve"><b data-en="3 · Manager approves" data-zh="3 · 主管批准">3 · Manager approves</b><span data-en="Click after AI analysis; human judgment stays in control." data-zh="AI分析完成後點擊；發布前始終由主管作出判斷。">Click after AI analysis; human judgment stays in control.</span></button><button class="flow-step" type="button" data-flow="assign"><b data-en="4 · Assign Practice" data-zh="4 · 指派練習">4 · Assign Practice</b><span data-en="Click after approval to turn knowledge into targeted role-play." data-zh="主管批准後點擊，把企業知識轉化為針對性角色扮演。">Click after approval to turn knowledge into targeted role-play.</span></button></div></div>
 <div class="flow-status" id="flowStatus" role="status" aria-live="polite" data-en="These four steps are clickable. Start with Add source." data-zh="以上四個步驟均可點擊。請從「加入來源」開始。">These four steps are clickable. Start with Add source.</div>
 <main class="shell">
 <div class="secure-note" id="secureNote" data-en="Open this page from your authenticated Pilot workspace to use the Company Knowledge Library. The platform curriculum remains available below." data-zh="请从已登录的试用工作区打开本页，使用企业知识库。下方平台课程仍可查看。">Open this page from your authenticated Pilot workspace to use the Company Knowledge Library. The platform curriculum remains available below.</div>
+<div class="question-bank-entry"><div><b data-en="Question Bank · Company Training Library" data-zh="题库 · 企业培训资料库">Question Bank · Company Training Library</b><span data-en="Open an approved company document, recover saved questions, or start a manager-controlled Question Bank." data-zh="打开已批准的企业文件、恢复已保存题目，或开始由主管控制的题库。">Open an approved company document, recover saved questions, or start a manager-controlled Question Bank.</span></div><a class="btn secondary" href="knowledge-chat.html?pilot=1" data-en="Open Question Bank →" data-zh="打开题库 →">Open Question Bank →</a></div>
 <section class="manager-panel" id="managerPanel">
 <h3 data-en="Add company knowledge" data-zh="加入企業知識">Add company knowledge</h3><p data-en="Add one authorized source at a time. AI will organize it only after you save the draft and choose Analyze." data-zh="每次加入一份經授權的企業材料。儲存草稿並選擇「AI分析」後，AI才會開始整理。">Add one authorized source at a time. AI will organize it only after you save the draft and choose Analyze.</p>
 <div class="upload-guide">
 <h4 data-en="What can your company add?" data-zh="企業可以加入哪些材料？">What can your company add?</h4>
-<p data-en="Choose the source type below, then upload a transcript file or paste the authorized text." data-zh="在下方選擇來源類型，然後上傳逐字稿文件或貼上經授權的文字。">Choose the source type below, then upload a transcript file or paste the authorized text.</p>
+<p data-en="Two separate ways in: a company document or transcript, or a training video or audio recording. Each has its own file chooser below." data-zh="有兩種各自獨立的加入方式：企業文件／逐字稿，或培訓影片／音訊錄音。兩者在下方各有自己的檔案選擇器。">Two separate ways in: a company document or transcript, or a training video or audio recording. Each has its own file chooser below.</p>
+<div class="path-head"><span class="path-badge">A</span><b data-en="Upload company document or transcript" data-zh="上傳企業文件或逐字稿">Upload company document or transcript</b></div>
+<p class="path-note" data-en="Choose the source type below, then upload a transcript file or paste the authorized text." data-zh="在下方選擇來源類型，然後上傳逐字稿文件或貼上經授權的文字。">Choose the source type below, then upload a transcript file or paste the authorized text.</p>
 <div class="upload-options">
 <button class="upload-option" type="button" data-source-choice="video_transcript" data-focus-target="sourceUrl"><span>🎥</span><span><b data-en="Training video" data-zh="培訓影片">Training video</b><small data-en="Add the authorized video link plus its transcript." data-zh="加入經授權的影片連結及逐字稿。">Add the authorized video link plus its transcript.</small></span></button>
 <button class="upload-option" type="button" data-source-choice="meeting_transcript" data-focus-target="transcriptFile"><span>🗣️</span><span><b data-en="Zoom or meeting transcript" data-zh="Zoom或會議逐字稿">Zoom or meeting transcript</b><small data-en="Upload or paste the recorded meeting text." data-zh="上傳或貼上會議的文字記錄。">Upload or paste the recorded meeting text.</small></span></button>
@@ -32,15 +47,31 @@
 <button class="upload-option" type="button" id="googleDriveImportBtn"><span>📁</span><span><b data-en="Import from Google Drive" data-zh="從 Google Drive 匯入">Import from Google Drive</b><small data-en="Choose one Google Doc or text file. You will review the imported text before saving." data-zh="選擇一份 Google 文件或文字文件，儲存前可先檢查匯入的文字。">Choose one Google Doc or text file. You will review the imported text before saving.</small></span></button>
 </div>
 <div class="status" id="googleDriveStatus" role="status" aria-live="polite"></div>
-<div class="upload-limit"><b data-en="Supported transcript files:" data-zh="支援的逐字稿文件：">Supported transcript files:</b> TXT, MD, VTT, SRT · <span data-en="up to 1 MB. Direct video upload and automatic transcription are not included in this Pilot." data-zh="最大1MB。本Pilot暫不包括直接上傳影片及自動轉錄。">up to 1 MB. Direct video upload and automatic transcription are not included in this Pilot.</span></div>
+<div class="upload-limit"><b data-en="Supported transcript files:" data-zh="支援的逐字稿文件：">Supported transcript files:</b> TXT, MD, VTT, SRT · <span data-en="up to 5 MB (up to 500,000 characters). Direct video upload and automatic transcription are not included in this Pilot." data-zh="最大5MB（最多500,000字元）。本Pilot暫不包括直接上傳影片及自動轉錄。">up to 5 MB (up to 500,000 characters). Direct video upload and automatic transcription are not included in this Pilot.</span></div>
 </div>
+<section class="media-panel" id="mediaPanel" data-build="20260914-media2">
+<div class="path-head"><span class="path-badge">B</span><b data-en="Upload training video or audio" data-zh="上傳培訓影片或音訊">Upload training video or audio</b></div>
+<p class="path-note" data-en="Upload the recording itself. It goes directly and privately to your company's storage — it never passes through this page's server. After transcription it becomes a Company Knowledge draft you review, analyze and approve exactly as you do a pasted transcript." data-zh="直接上傳錄影或錄音檔。檔案會直接、私密地傳到貴公司的儲存空間，不會經過本頁的伺服器。轉錄完成後會成為企業知識草稿，由您依照與貼上逐字稿相同的流程檢查、分析與批准。">Upload the recording itself. It goes directly and privately to your company's storage — it never passes through this page's server. After transcription it becomes a Company Knowledge draft you review, analyze and approve exactly as you do a pasted transcript.</p>
+<div class="upload-limit media-limit" id="mediaFormatLine"><b data-en="Supported video and audio files:" data-zh="支援的影片與音訊檔案：">Supported video and audio files:</b> MP4, MOV, WebM, MP3, M4A, WAV · <span data-en="up to 500 MB per file." data-zh="每個檔案最大 500 MB。">up to 500 MB per file.</span></div>
+<div class="media-config-note" id="mediaConfigNote"></div>
+<div class="form-grid">
+<div class="field"><label for="mediaTitle" data-en="Title" data-zh="標題">Title</label><input id="mediaTitle" maxlength="240" placeholder="Underwriting Training — Session 1" data-placeholder-en="Underwriting Training — Session 1" data-placeholder-zh="核保培訓——第1節"></div>
+<div class="field"><label for="mediaLanguage" data-en="Spoken language" data-zh="語音語言">Spoken language</label><select id="mediaLanguage"><option value="" data-en="Detect automatically" data-zh="自動偵測">Detect automatically</option><option value="en" data-en="English" data-zh="英文">English</option><option value="zh" data-en="Chinese" data-zh="中文">Chinese</option></select></div>
+<div class="field full"><label for="mediaFile" data-en="Training video or audio file" data-zh="培訓影片或音訊文件">Training video or audio file</label><input id="mediaFile" type="file" accept="video/mp4,video/x-m4v,video/quicktime,video/webm,audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/wav,audio/x-wav,audio/wave,audio/vnd.wave,audio/webm,.mp4,.m4v,.mov,.webm,.mp3,.m4a,.wav"><small id="mediaLimitNote"></small></div>
+<div class="field full"><label class="consent"><input id="mediaConsent" type="checkbox"><span data-en="I confirm that my organization owns or is authorized to use this recording, and I authorize transcription and AI processing to create a manager-reviewed Company Knowledge draft." data-zh="我確認本企業擁有或獲准使用此錄影／錄音，並授權進行轉錄及AI處理，以產生由主管審核的企業知識草稿。">I confirm that my organization owns or is authorized to use this recording, and I authorize transcription and AI processing to create a manager-reviewed Company Knowledge draft.</span></label></div>
+<div class="field full"><div class="button-row"><button class="btn" id="mediaUploadBtn" type="button" data-en="Upload and transcribe" data-zh="上傳並轉錄">Upload and transcribe</button><span class="media-blocked-reason" id="mediaBlockedReason"></span></div>
+<div class="media-progress" id="mediaProgress" hidden><div class="media-bar"><i id="mediaBarFill"></i></div><div class="media-steps" id="mediaSteps"></div></div>
+<div class="status" id="mediaStatus" role="status" aria-live="polite"></div></div>
+</div>
+<div class="media-build" data-en="Media upload UI build 20260914-media2" data-zh="影音上傳介面版本 20260914-media2">Media upload UI build 20260914-media2</div>
+</section>
 <form id="knowledgeForm">
 <div class="form-grid">
 <div class="field"><label for="sourceTitle" data-en="Title" data-zh="標題">Title</label><input id="sourceTitle" maxlength="240" required placeholder="Monday Sales Training — Price Objections" data-placeholder-en="Monday Sales Training — Price Objections" data-placeholder-zh="週一銷售培訓——價格異議"></div>
 <div class="field"><label for="sourceType" data-en="Source type" data-zh="來源類型">Source type</label><select id="sourceType"><option value="video_transcript" data-en="Training video + transcript" data-zh="培訓影片＋逐字稿">Training video + transcript</option><option value="document_notes" data-en="Document / training notes" data-zh="文件／培訓筆記">Document / training notes</option><option value="sop_script" data-en="Company procedures / sales scripts" data-zh="公司操作流程／銷售話術">Company procedures / sales scripts</option><option value="meeting_transcript" data-en="Zoom / meeting transcript" data-zh="Zoom／會議逐字稿">Zoom / meeting transcript</option></select></div>
 <div class="field full"><label for="sourceUrl" data-en="Authorized source link (optional)" data-zh="經授權的來源連結（可選）">Authorized source link (optional)</label><input id="sourceUrl" type="url" placeholder="https://..." data-placeholder-en="https://... (authorized company link)" data-placeholder-zh="https://...（經授權的企業連結）"><small data-en="The system records this reference but does not automatically download the video." data-zh="系統只記錄此來源，不會自動下載影片。">The system records this reference but does not automatically download the video.</small></div>
-<div class="field full"><label for="transcriptFile" data-en="Upload text transcript (optional)" data-zh="上傳文字逐字稿（可選）">Upload text transcript (optional)</label><input id="transcriptFile" type="file" accept=".txt,.md,.vtt,.srt,text/plain"><small data-en="Accepted: TXT, MD, VTT, SRT up to 1 MB. The text is reviewed before saving." data-zh="接受TXT、MD、VTT、SRT，最大1MB；儲存前可先檢查文字。">Accepted: TXT, MD, VTT, SRT up to 1 MB. The text is reviewed before saving.</small></div>
-<div class="field full"><label for="sourceContent" data-en="Authorized transcript or training notes" data-zh="經授權的逐字稿或培訓筆記">Authorized transcript or training notes</label><textarea id="sourceContent" maxlength="30000" placeholder="Paste the transcript, company procedure, sales script, or training notes here…" data-placeholder-en="Paste the transcript, company procedure, sales script, or training notes here…" data-placeholder-zh="請在此貼上逐字稿、公司操作流程、銷售話術或培訓筆記……"></textarea><small id="charCount">0 / 30,000</small></div>
+<div class="field full"><label for="transcriptFile" data-en="Upload text transcript (optional)" data-zh="上傳文字逐字稿（可選）">Upload text transcript (optional)</label><input id="transcriptFile" type="file" accept=".txt,.md,.vtt,.srt,text/plain"><small data-en="Accepted: TXT, MD, VTT, SRT up to 5 MB. The text is reviewed before saving." data-zh="接受TXT、MD、VTT、SRT，最大5MB；儲存前可先檢查文字。">Accepted: TXT, MD, VTT, SRT up to 5 MB. The text is reviewed before saving.</small></div>
+<div class="field full"><label for="sourceContent" data-en="Authorized transcript or training notes" data-zh="經授權的逐字稿或培訓筆記">Authorized transcript or training notes</label><textarea id="sourceContent" maxlength="500000" placeholder="Paste the transcript, company procedure, sales script, or training notes here…" data-placeholder-en="Paste the transcript, company procedure, sales script, or training notes here…" data-placeholder-zh="請在此貼上逐字稿、公司操作流程、銷售話術或培訓筆記……"></textarea><small id="charCount">0 / 500,000</small></div>
 <div class="field full"><label class="consent"><input id="sourceConsent" type="checkbox"><span data-en="I confirm that my organization owns or is authorized to use this material, and I authorize AI processing to create a manager-reviewed summary and Practice Draft." data-zh="我確認本企業擁有或獲准使用此材料，並授權AI進行處理，以產生由主管審核的摘要與練習草案。">I confirm that my organization owns or is authorized to use this material, and I authorize AI processing to create a manager-reviewed summary and Practice Draft.</span></label></div>
 <div class="field full"><div class="button-row"><button class="btn" id="saveSource" type="submit" data-en="Save secure draft" data-zh="儲存安全草稿">Save secure draft</button><span data-en="AI analysis starts only when the manager chooses Analyze." data-zh="只有主管選擇「分析」後，AI分析才會開始。">AI analysis starts only when the manager chooses Analyze.</span></div><div class="status" id="formStatus" role="status" aria-live="polite"></div></div>
 </div></form></section>
@@ -63,11 +94,20 @@
 <section class="platform"><div class="section-head"><div><h2 data-en="Platform Curriculum" data-zh="平台課程">Platform Curriculum</h2><p data-en="The existing 25-scenario Insurance & Health Foundation Curriculum remains available." data-zh="原有的25個保險與健康基礎課程情境繼續保留。">The existing 25-scenario Insurance & Health Foundation Curriculum remains available.</p></div></div><div id="curriculumMap" class="empty">Loading curriculum…</div></section>
 <div class="trust"><b data-en="Enterprise trust boundary:" data-zh="企業信任邊界：">Enterprise trust boundary:</b> <span data-en="Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included." data-zh="知識依登入團隊隔離。學員只能看到主管批准的分析，原始逐字稿不向學員展示，私人Learner Coach對話永不包含其中。">Knowledge is isolated by authenticated team. Learners see only manager-approved analysis. Raw transcripts are not shown to learners. Private Learner Coach conversations are never included.</span></div>
 </main>
+<div class="start-menu-mount" data-position="bottom"></div>
+<script src="start-menu.js"></script>
 <script>
-var currentLang='en', companySources=[], canManage=false;
+var currentLang='en', companySources=[], canManage=false, knowledgeLoaded=false;
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
 function tr(en,zh){return currentLang==='zh'?zh:en}
-function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。'};return map[message]||('操作未完成：'+message)}
+function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');
+ // Long Training Content Fast Track: the server returns oversized-source
+ // rejections as "<English sentence> / <Chinese sentence>" (see
+ // netlify/functions/lib/knowledge-source.mjs sourceLengthError) so both
+ // languages are always available without a static translation-map entry
+ // for a message that embeds a dynamic character count.
+ var bilingual=message.split(' / ');if(bilingual.length===2&&/[一-鿿]/.test(bilingual[1]))return currentLang==='zh'?bilingual[1]:bilingual[0];
+ if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。'};return map[message]||('操作未完成：'+message)}
 function setLang(lang){currentLang=lang;document.documentElement.lang=lang==='zh'?'zh-Hant':'en';document.getElementById('enBtn').classList.toggle('active',lang==='en');document.getElementById('zhBtn').classList.toggle('active',lang==='zh');document.querySelectorAll('[data-en]').forEach(function(el){el.textContent=el.getAttribute(lang==='zh'?'data-zh':'data-en')});document.querySelectorAll('[data-placeholder-en]').forEach(function(el){el.placeholder=el.getAttribute(lang==='zh'?'data-placeholder-zh':'data-placeholder-en')});if(window.PilotCloud&&PilotCloud.enabled){document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。')}sessionStorage.setItem('agentraining_lang',lang);renderSources();renderCurriculum()}
 document.getElementById('enBtn').onclick=function(){setLang('en')};document.getElementById('zhBtn').onclick=function(){setLang('zh')};
 function statusLabel(status){var labels=currentLang==='zh'?{draft:'草稿',analyzed:'待主管審核',approved:'已批准'}:{draft:'Draft',analyzed:'Manager review',approved:'Approved'};return labels[status]||status}
@@ -85,8 +125,46 @@ function renderSources(){
   var sourceLink=source.sourceUrl?'<a href="'+esc(source.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+(currentLang==='zh'?'查看授權來源':'Open authorized source')+'</a>':'';
   var analysisHtml=analysis.summary?'<div class="analysis"><h4>'+(currentLang==='zh'?'AI摘要 · 主管審核':'AI Summary · Manager Review')+'</h4><p>'+esc(analysis.summary)+'</p>'+(points.length?'<ul>'+points.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div>':'<div class="analysis"><p>'+(currentLang==='zh'?'尚未進行AI分析。':'AI analysis has not run yet.')+'</p></div>';
   var draftHtml=draft.title?'<div class="practice-draft"><b>'+(currentLang==='zh'?'Practice草案：':'Practice Draft: ')+esc(draft.title)+'</b><span>'+esc(draft.objective||draft.situation||'')+'</span></div>':'';
-  return '<article class="source-card" data-source-card="'+esc(source.id)+'"><div class="source-top"><div><h3>'+esc(source.title)+'</h3><div class="meta">'+esc(typeLabel(source.sourceType))+' · '+esc(new Date(source.updatedAt||source.createdAt).toLocaleDateString())+' '+sourceLink+'</div></div><span class="pill '+esc(source.status)+'">'+esc(statusLabel(source.status))+'</span></div>'+analysisHtml+draftHtml+'<div class="source-actions">'+actions+'</div></article>'
+  // Company Knowledge → Question Bank / Practice Scenarios hand-off: link
+  // into the existing Training Library (knowledge-chat.html) for THIS
+  // document, preserving context via knowledgeId. Reuses the existing
+  // library/document model (same "sources" the Training Library reads) -
+  // no new storage, no new generation path. Manager-gated to match the
+  // Question Bank button's own visibility rule there.
+  var trainingAssetsHtml=canManage?'<div class="training-assets"><a class="btn secondary" href="knowledge-chat.html?pilot=1&amp;knowledgeId='+encodeURIComponent(source.id)+'">'+(currentLang==='zh'?'📝 题库与实战情境 →':'📝 Question Bank &amp; Practice Scenarios →')+'</a><span class="qb-count" data-qb-count="'+esc(source.id)+'">'+(currentLang==='zh'?'正在检查题库…':'Checking Question Bank…')+'</span></div>':'';
+  return '<article class="source-card" data-source-card="'+esc(source.id)+'"><div class="source-top"><div><h3>'+esc(source.title)+'</h3><div class="meta">'+esc(typeLabel(source.sourceType))+' · '+esc(new Date(source.updatedAt||source.createdAt).toLocaleDateString())+' '+sourceLink+'</div></div><span class="pill '+esc(source.status)+'">'+esc(statusLabel(source.status))+'</span></div>'+analysisHtml+draftHtml+trainingAssetsHtml+'<div class="source-actions">'+actions+'</div></article>'
  }).join('');
+ loadQuestionBankBadges();
+}
+// Read-only enrichment: fetch each visible document's latest saved
+// Question Bank (if any) purely to show its question count on the card.
+// Uses the existing 'latest' action (same one knowledge-training-engine.js
+// already uses for recovery) - no generation, no writes, no new storage.
+// Best-effort: a failed/absent lookup just leaves a neutral label.
+var qbBadgeVersion=0;
+async function loadQuestionBankBadges(){
+ if(!canManage)return;
+ var version=++qbBadgeVersion;
+ await Promise.all(companySources.map(async function(source){
+  var el=document.querySelector('[data-qb-count="'+CSS.escape(source.id)+'"]');
+  if(!el)return;
+  try{
+   var token=await PilotCloud.token('manager');
+   var res=await fetch('/.netlify/functions/knowledge-question-bank-v2',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify({action:'latest',knowledgeId:source.id})});
+   if(version!==qbBadgeVersion)return;
+   if(res.status===404){el.textContent=currentLang==='zh'?'尚未生成题库':'No Question Bank yet';return}
+   var data=await res.json(),bank=data&&data.questionBank;
+   if(version!==qbBadgeVersion)return;
+   if(bank&&bank.totalQuestions){
+    var complete=bank.status==='complete'||bank.totalQuestions>=bank.targetQuestions;
+    el.textContent=currentLang==='zh'
+     ?(bank.totalQuestions+' 道题目'+(complete?'':'（生成中）'))
+     :(bank.totalQuestions+(bank.totalQuestions===1?' question':' questions')+(complete?'':' (in progress)'));
+   }else{
+    el.textContent=currentLang==='zh'?'尚未生成题库':'No Question Bank yet';
+   }
+  }catch(e){if(version===qbBadgeVersion)el.textContent=''}
+ }));
 }
 document.getElementById('sourceLibrary').addEventListener('click',function(event){var button=event.target.closest('button[data-action]');if(!button)return;var action=button.dataset.action,id=button.dataset.id;if(action==='delete'){deleteSource(id);return}if(action==='assign'){openAssignDialog(id);return}knowledgeAction(action,id,button)});
 function guideFlow(action){
@@ -106,6 +184,242 @@ document.querySelectorAll('[data-source-choice]').forEach(function(button){butto
  var target=document.getElementById(button.dataset.focusTarget);if(target){target.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){target.focus()},350)}
  setFormStatus(tr('Source type selected. Add the authorized material below.','已選擇資料類型。請在下方加入經授權的材料。'),'ok');
 })});
+// ── Direct media ingestion ─────────────────────────────────────────────────
+// The file is PUT straight from this browser to private object storage using
+// a short-lived signed URL minted by media-upload-reserve. It is never
+// base64-encoded and never passes through a Netlify Function: a function
+// request body is capped at 6 MB and a one-hour training video is not.
+//
+// Everything here is gated on the real server capability report. If storage or
+// the transcription provider is not configured, the tile keeps its honest
+// "coming next" copy and no file can be selected - this page never shows a
+// successful upload that did not happen.
+var mediaCapability=null,mediaBusy=false;
+// Client-side format allowlist. Mirrors ALLOWED_MEDIA_TYPES /
+// EXTENSION_TYPES in netlify/functions/lib/media-ingestion.mjs exactly;
+// tests/media-format-support.test.mjs fails if the two ever drift, which is
+// the class of bug that made a real .webm file unselectable.
+var MEDIA_TYPE_KINDS={"video/mp4":"video","video/x-m4v":"video","video/quicktime":"video","video/webm":"video","audio/mpeg":"audio","audio/mp3":"audio","audio/mp4":"audio","audio/x-m4a":"audio","audio/wav":"audio","audio/x-wav":"audio","audio/wave":"audio","audio/vnd.wave":"audio","audio/webm":"audio"};
+var MEDIA_EXT_TYPES={".mp4":"video/mp4",".m4v":"video/mp4",".mov":"video/quicktime",".webm":"video/webm",".mp3":"audio/mpeg",".m4a":"audio/mp4",".wav":"audio/wav"};
+// An OS may report a supported file with an empty or unexpected MIME type
+// (common for .webm and .mov), so the extension is an equal second source of
+// truth - but only for extensions on the allowlist. Anything else is refused.
+function resolveMediaFileType(file){
+ var declared=String((file&&file.type)||'').toLowerCase().split(';')[0].trim();
+ if(MEDIA_TYPE_KINDS[declared])return declared;
+ var match=String((file&&file.name)||'').toLowerCase().match(/\.[a-z0-9]+$/);
+ var mapped=match?MEDIA_EXT_TYPES[match[0]]:null;
+ return (mapped&&MEDIA_TYPE_KINDS[mapped])?mapped:null;
+}
+
+var MEDIA_STEPS=[
+ {key:'uploading',en:'Uploading',zh:'正在上傳'},
+ {key:'uploaded',en:'Upload complete',zh:'上傳完成'},
+ {key:'transcribing',en:'Transcribing',zh:'正在轉錄'},
+ {key:'transcript_ready',en:'Transcript ready',zh:'逐字稿已完成'},
+ {key:'processing',en:'Creating Company Knowledge',zh:'正在建立企業知識'},
+ {key:'ready',en:'Ready',zh:'已完成'}
+];
+function mediaMb(bytes){return Math.floor(Number(bytes||0)/1048576).toLocaleString()}
+function setMediaStatus(message,kind){var el=document.getElementById('mediaStatus');el.textContent=message;el.className='status '+(kind||'')}
+function renderMediaSteps(activeKey,failed){
+ var reached=true;
+ document.getElementById('mediaSteps').innerHTML=MEDIA_STEPS.map(function(step){
+  var isActive=step.key===activeKey,cls='media-step';
+  if(isActive){cls+=failed?' failed':' active';reached=false}
+  else if(reached)cls+=' done';
+  return '<span class="'+cls+'">'+(currentLang==='zh'?step.zh:step.en)+'</span>';
+ }).join('');
+}
+function setMediaProgress(percent){document.getElementById('mediaBarFill').style.width=Math.max(0,Math.min(100,percent))+'%'}
+// Capability probe. This ONLY refines what is already on the page: it can
+// update the size limit if this deployment configures a different one, and it
+// decides whether the Upload button is enabled. It must never be responsible
+// for whether the Video/Audio path or its supported formats are VISIBLE -
+// those are static markup, so a slow, failed or unauthenticated probe can no
+// longer make the whole path look like it was never shipped. That is exactly
+// what broke the first live acceptance test.
+async function loadMediaCapability(){
+ if(!canManage||!window.PilotCloud||!PilotCloud.enabled)return;
+ try{
+  var token=await PilotCloud.token('manager');
+  var res=await fetch('/.netlify/functions/media-status',{headers:{authorization:'Bearer '+token}});
+  if(!res.ok)return;
+  var data=await res.json();
+  mediaCapability=data.capability||null;
+ }catch(e){return}
+ finally{applyMediaConfigState()}
+ if(!mediaCapability)return;
+ // Only override the static limit text when this deployment really differs.
+ var limitMb=mediaMb(mediaCapability.maxUploadBytes),line=document.getElementById('mediaFormatLine');
+ if(line&&limitMb&&limitMb!=='500'){
+  var span=line.querySelector('span');
+  if(span){span.setAttribute('data-en','up to '+limitMb+' MB per file.');span.setAttribute('data-zh','每個檔案最大 '+limitMb+' MB。');setLang(currentLang)}
+ }
+ var note=document.getElementById('mediaLimitNote');
+ if(note&&!note.classList.contains('media-file-chosen')){
+  var formats=(mediaCapability.supportedFormats||[]).join(', ');
+  note.setAttribute('data-en',formats+' · up to '+limitMb+' MB');
+  note.setAttribute('data-zh',formats+' · 每個文件最大 '+limitMb+' MB');
+  setLang(currentLang);
+ }
+ applyMediaConfigState();
+}
+// The Upload button reflects EVERY precondition for a real upload, and when it
+// is off the page says which one is blocking, right next to the button. A
+// manager must never be left with "file accepted + authorization confirmed +
+// mysteriously disabled button".
+//
+// It never enables on file/authorization alone: without a configured storage
+// and transcription provider there is no pipeline to run, so enabling would be
+// a lie. Click-time and server-side validation are unchanged.
+function mediaUploadBlocker(){
+ var file=document.getElementById('mediaFile'),consent=document.getElementById('mediaConsent');
+ var selected=file&&file.files&&file.files[0];
+ // Capability unknown (the probe has not answered, or failed) is deliberately
+ // reported differently from "answered: not configured" - otherwise a failed
+ // check is indistinguishable from missing credentials.
+ if(!mediaCapability)return 'capability_unknown';
+ if(!mediaCapability.directUploadAvailable)return 'not_configured';
+ if(!selected||!resolveMediaFileType(selected))return 'no_file';
+ if(!consent||!consent.checked)return 'no_consent';
+ return '';
+}
+function mediaBlockerMessage(blocker){
+ var missing=(mediaCapability&&mediaCapability.missingEnv||[]).join(', ');
+ if(blocker==='capability_unknown')return tr('Direct media processing could not be checked for this environment, so uploading stays switched off. Reload the page; if this persists the media-status check is failing.','無法檢查本環境的直接媒體處理設定，因此上傳保持關閉。請重新整理頁面；若持續出現，代表 media-status 檢查失敗。');
+ if(blocker==='not_configured')return tr('Direct media processing is not yet configured for this environment'+(missing?' — missing: '+missing:'')+'. Your file was checked and is a supported format, but there is nothing to upload it to yet. Until this is configured, use Path A above — the authorized video link plus its transcript.','本環境尚未配置直接媒體處理'+(missing?'——缺少：'+missing:'')+'。您的檔案格式已檢查且受支援，但目前沒有可上傳的目的地。在完成配置前，請使用上方的路徑 A——授權影片連結加逐字稿。');
+ if(blocker==='no_file')return tr('Choose a video or audio file to continue.','請先選擇影片或音訊檔案。');
+ if(blocker==='no_consent')return tr('Confirm organizational authorization to continue.','請確認企業授權後繼續。');
+ return '';
+}
+function applyMediaConfigState(){
+ var note=document.getElementById('mediaConfigNote'),button=document.getElementById('mediaUploadBtn'),reason=document.getElementById('mediaBlockedReason');
+ if(!note||!button)return;
+ var blocker=mediaUploadBlocker();
+ button.disabled=!!blocker;
+ // The banner above the form explains the environment-level reason only; the
+ // line beside the button explains whatever is blocking right now.
+ var environmental=(blocker==='not_configured'||blocker==='capability_unknown');
+ note.hidden=!environmental;
+ if(environmental)note.textContent=mediaBlockerMessage(blocker);
+ if(reason){reason.textContent=blocker?mediaBlockerMessage(blocker):'';reason.hidden=!blocker}
+}
+// Validate the chosen file immediately: confirm the filename back to the
+// manager when it is supported, and say plainly why when it is not.
+document.getElementById('mediaFile').addEventListener('change',function(){
+ var file=this.files&&this.files[0],note=document.getElementById('mediaLimitNote');
+ note.classList.remove('media-file-chosen');
+ if(!file){setMediaStatus('','');applyMediaConfigState();return}
+ var resolved=resolveMediaFileType(file);
+ if(!resolved){
+  var formats=(mediaCapability&&mediaCapability.supportedFormats||['MP4','MOV','WebM','MP3','M4A','WAV']).join(', ');
+  this.value='';
+  setMediaStatus(tr('"'+file.name+'" is not a supported media file. Supported formats: '+formats+'.','「'+file.name+'」不是支援的媒體格式。支援的格式：'+formats+'。'),'error');
+  applyMediaConfigState();
+  return;
+ }
+ note.classList.add('media-file-chosen');
+ note.textContent=tr('Selected: '+file.name+' ('+mediaMb(file.size)+' MB)','已選擇：'+file.name+'（'+mediaMb(file.size)+' MB）');
+ // Never promise an upload the page has switched off - applyMediaConfigState
+ // below states the real next step.
+ setMediaStatus(tr('This file is accepted.','此檔案格式可以接受。'),'ok');
+ applyMediaConfigState();
+});
+// XHR rather than fetch: only XHR reports upload progress, and a manager
+// uploading a 500 MB training video needs to see that it is moving.
+function putMediaFile(url,method,headers,file,onProgress){
+ return new Promise(function(resolve,reject){
+  var xhr=new XMLHttpRequest();
+  xhr.open(method||'PUT',url,true);
+  Object.keys(headers||{}).forEach(function(name){xhr.setRequestHeader(name,headers[name])});
+  xhr.upload.onprogress=function(event){if(event.lengthComputable)onProgress(Math.round(event.loaded/event.total*100))};
+  xhr.onload=function(){(xhr.status>=200&&xhr.status<300)?resolve():reject(new Error(tr('The storage service rejected the upload (status '+xhr.status+').','儲存服務拒絕了此次上傳（狀態 '+xhr.status+'）。')))};
+  xhr.onerror=function(){reject(new Error(tr('The upload could not reach the storage service. Check your connection and try again.','無法連接儲存服務，請檢查網路連線後再試一次。')))};
+  xhr.onabort=function(){reject(new Error(tr('Upload cancelled.','上傳已取消。')))};
+  xhr.send(file);
+ });
+}
+async function pollMediaUntilSettled(mediaId){
+ // Transcription of an hour of media takes minutes, so poll rather than hold
+ // a request open. Gives up reporting (not processing) after ~30 minutes.
+ for(var attempt=0;attempt<360;attempt++){
+  await new Promise(function(r){setTimeout(r,5000)});
+  var token=await PilotCloud.token('manager');
+  var res=await fetch('/.netlify/functions/media-status?mediaId='+encodeURIComponent(mediaId),{headers:{authorization:'Bearer '+token}});
+  if(!res.ok)continue;
+  var media=(await res.json()).media;
+  if(!media)continue;
+  renderMediaSteps(media.state,media.state==='failed');
+  if(media.state==='ready'||media.state==='failed')return media;
+  if(media.state==='transcribing')setMediaStatus(tr('Transcribing. This runs in the background — you can leave this page and come back.','正在轉錄。此步驟在背景執行，您可以離開本頁稍後再回來。'),'');
+ }
+ return null;
+}
+// The authorization checkbox had no listener, so ticking it changed nothing
+// visible - part of why the disabled button felt unexplained.
+document.getElementById('mediaConsent').addEventListener('change',applyMediaConfigState);
+document.getElementById('mediaUploadBtn').addEventListener('click',async function(){
+ if(mediaBusy)return;
+ var file=document.getElementById('mediaFile').files[0];
+ if(!file){setMediaStatus(tr('Choose a training video or audio file first.','請先選擇培訓影片或音訊文件。'),'error');return}
+ if(!document.getElementById('mediaConsent').checked){setMediaStatus(tr('Confirm organizational authorization before uploading.','請先確認企業授權後再上傳。'),'error');return}
+ var resolvedType=resolveMediaFileType(file);
+ if(!resolvedType){setMediaStatus(tr('"'+file.name+'" is not a supported media file.','「'+file.name+'」不是支援的媒體格式。'),'error');return}
+ if(!mediaCapability||!mediaCapability.directUploadAvailable){setMediaStatus(tr('Uploading is switched off for this workspace until direct media storage and transcription are configured. Your file was not uploaded.','本工作區在完成直接媒體儲存與轉錄配置前無法上傳。系統沒有上傳您的檔案。'),'error');return}
+ if(mediaCapability&&file.size>mediaCapability.maxUploadBytes){
+  setMediaStatus(tr('This file is '+mediaMb(file.size)+' MB, over the current '+mediaMb(mediaCapability.maxUploadBytes)+' MB per-file limit. Nothing was uploaded.','此文件為 '+mediaMb(file.size)+' MB，超過目前每個文件 '+mediaMb(mediaCapability.maxUploadBytes)+' MB 的上限。系統沒有上傳該文件。'),'error');
+  return;
+ }
+ mediaBusy=true;
+ var button=this;button.disabled=true;
+ document.getElementById('mediaProgress').hidden=false;
+ setMediaProgress(0);renderMediaSteps('uploading',false);
+ setMediaStatus(tr('Authorizing a private upload…','正在取得私密上傳授權……'),'');
+ try{
+  var token=await PilotCloud.token('manager');
+  var reserveRes=await fetch('/.netlify/functions/media-upload-reserve',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify({fileName:file.name,contentType:resolvedType,sizeBytes:file.size,title:document.getElementById('mediaTitle').value.trim()||file.name,languageHint:document.getElementById('mediaLanguage').value,consentConfirmed:true})});
+  var reserved=await reserveRes.json().catch(function(){return {}});
+  if(!reserveRes.ok)throw new Error(reserved.error||tr('Upload could not be authorized.','無法取得上傳授權。'));
+
+  setMediaStatus(tr('Uploading directly to your company\'s private storage…','正在直接上傳至貴公司的私密儲存空間……'),'');
+  await putMediaFile(reserved.upload.url,reserved.upload.method,reserved.upload.headers,file,function(percent){
+   setMediaProgress(percent);
+   setMediaStatus(tr('Uploading… '+percent+'%','正在上傳……'+percent+'%'),'');
+  });
+
+  setMediaProgress(100);renderMediaSteps('uploaded',false);
+  setMediaStatus(tr('Upload complete. Verifying and starting transcription…','上傳完成，正在驗證並開始轉錄……'),'');
+  var confirmRes=await fetch('/.netlify/functions/media-upload-confirm',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify({mediaId:reserved.media.mediaId})});
+  var confirmed=await confirmRes.json().catch(function(){return {}});
+  if(!confirmRes.ok)throw new Error(confirmed.error||tr('The upload could not be verified.','無法驗證此次上傳。'));
+
+  if(!confirmed.transcription||!confirmed.transcription.submitted){
+   renderMediaSteps('uploaded',false);
+   setMediaStatus(tr('Upload complete and stored safely, but transcription has not started: this workspace has no transcription provider configured yet. Nothing was lost — it can be transcribed once that is set up.','上傳完成並已安全儲存，但尚未開始轉錄：本工作區尚未配置轉錄服務。資料沒有遺失，待配置完成後即可轉錄。'),'error');
+   return;
+  }
+
+  renderMediaSteps('transcribing',false);
+  setMediaStatus(tr('Transcribing. This runs in the background — you can leave this page and come back.','正在轉錄。此步驟在背景執行，您可以離開本頁稍後再回來。'),'');
+  var media=await pollMediaUntilSettled(reserved.media.mediaId);
+  if(!media){setMediaStatus(tr('Still processing. Your media is safe — reopen this page later to see the finished draft.','仍在處理中。您的媒體檔案是安全的，請稍後重新開啟本頁查看完成的草稿。'),'');return}
+  if(media.state==='failed'){
+   renderMediaSteps('transcribing',true);
+   setMediaStatus(tr('Transcription did not finish ('+media.failureReason+'). No Company Knowledge draft was created from incomplete output.','轉錄未能完成（'+media.failureReason+'）。系統沒有以不完整的結果建立企業知識草稿。'),'error');
+   return;
+  }
+  renderMediaSteps('ready',false);
+  setMediaStatus(tr('Ready. A Company Knowledge draft was created from the transcript — review it below, then choose Analyze with AI.','已完成。系統已依據逐字稿建立企業知識草稿，請在下方檢查，然後選擇「AI分析」。'),'ok');
+  document.getElementById('mediaFile').value='';
+  document.getElementById('mediaConsent').checked=false;
+  await loadKnowledge();
+  if(media.knowledgeId)focusSourceAction(media.knowledgeId,'analyze',tr('Transcript saved as a draft. Choose Analyze with AI.','逐字稿已儲存為草稿。請選擇「AI分析」。'));
+ }catch(error){
+  renderMediaSteps('uploading',true);
+  setMediaStatus(friendlyError(error),'error');
+ }finally{mediaBusy=false;button.disabled=false}
+});
 async function loadLearnerOptions(){
  try{var data=await PilotCloud.request('profiles',{requiredRole:'manager'}),root=document.getElementById('learnerOptions');root.innerHTML=(data.profiles||[]).map(function(profile){return '<option value="'+esc(profile.learnerEmail)+'">'+esc(profile.preferredName||profile.learnerEmail)+'</option>'}).join('')}catch(error){}
 }
@@ -133,18 +447,88 @@ document.getElementById('assignForm').addEventListener('submit',async function(e
  }catch(error){status.className='status error';status.textContent=error.message}finally{button.disabled=false}
 });
 async function loadKnowledge(){
- if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';return}
+ if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';knowledgeLoaded=true;handleDeepLinkHash();return}
  try{
   var me=await PilotCloud.request('me'),data=await PilotCloud.request('knowledge');canManage=data.canManage===true;companySources=data.sources||[];
   document.getElementById('secureNote').innerHTML='<b>'+(canManage?tr('Manager workspace:','Manager主管工作區：'):tr('Learner workspace:','學員工作區：'))+'</b> '+tr('Company knowledge is isolated to this authenticated team.','企業知識僅供本登入團隊使用，與其他團隊隔離。');
   document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。');
   document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources()
  }catch(error){document.getElementById('sourceLibrary').className='empty';document.getElementById('sourceLibrary').textContent=friendlyError(error)}
+ finally{knowledgeLoaded=true;handleDeepLinkHash();if(!mediaCapability)loadMediaCapability()}
 }
 function setFormStatus(message,kind){var el=document.getElementById('formStatus');el.textContent=message;el.className='status '+(kind||'')}
-document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 30,000'});
-document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>1048576){setFormStatus(tr('Transcript file must be 1 MB or smaller.','逐字稿文件必須為1MB或以下。'),'error');this.value='';return}try{var text=await file.text();document.getElementById('sourceContent').value=text.slice(0,30000);document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus(tr('Loaded: ','已載入：')+file.name+tr('. Review the text before saving.','。請在儲存前檢查文字。'),'ok')}catch(error){setFormStatus(tr('Transcript could not be read.','無法讀取逐字稿文件。'),'error')}});
+var MAX_SOURCE_CHARS=500000,MAX_TRANSCRIPT_FILE_BYTES=5*1024*1024;
+function oversizedSourceMessage(receivedChars){return tr('This training source exceeds the current Pilot limit of 500,000 characters (received '+receivedChars.toLocaleString()+' characters). The source was NOT truncated or partially saved.','此培训资料超过当前 Pilot 支持的 500,000 字符容量（收到 '+receivedChars.toLocaleString()+' 字符）。系统没有截断或部分保存该资料。')}
+document.getElementById('sourceContent').addEventListener('input',function(){document.getElementById('charCount').textContent=this.value.length.toLocaleString()+' / 500,000'});
+document.getElementById('transcriptFile').addEventListener('change',async function(){var file=this.files&&this.files[0];if(!file)return;if(file.size>MAX_TRANSCRIPT_FILE_BYTES){setFormStatus(tr('Transcript file must be 5 MB or smaller.','逐字稿文件必須為5MB或以下。'),'error');this.value='';return}try{var text=await file.text();if(text.length>MAX_SOURCE_CHARS){setFormStatus(oversizedSourceMessage(text.length),'error');this.value='';return}document.getElementById('sourceContent').value=text;document.getElementById('sourceContent').dispatchEvent(new Event('input'));setFormStatus(tr('Loaded: ','已載入：')+file.name+tr('. Review the text before saving.','。請在儲存前檢查文字。'),'ok')}catch(error){setFormStatus(tr('Transcript could not be read.','無法讀取逐字稿文件。'),'error')}});
 function focusSourceAction(id,action,message){setTimeout(function(){var card=document.querySelector('[data-source-card="'+CSS.escape(id)+'"]'),next=card&&card.querySelector('[data-action="'+action+'"]');if(!card)return;card.scrollIntoView({behavior:'smooth',block:'center'});if(next){next.focus();document.getElementById('flowStatus').textContent=message}},80)}
+
+// ── Stable deep-link anchors for demo/WeChat/email links ───────────────────
+// #upload             -> the Add Source / Upload panel (manager only)
+// #question-bank       \_ both scroll to the same real entry point: this
+// #practice-scenarios  /  page only ever offers one combined "Question Bank
+//                          & Practice Scenarios" hand-off per document (see
+//                          renderSources()) - the two actually distinct
+//                          actions live inside knowledge-chat.html once a
+//                          document is open there. We never invent a
+//                          separate Practice Scenarios section here that
+//                          doesn't exist, and never bypass manager/approval
+//                          gating - we only scroll/highlight the correct
+//                          existing entry point, and preserve knowledgeId.
+function highlightEl(el){
+  if(!el)return;
+  el.classList.add('deep-link-highlight');
+  setTimeout(function(){el.classList.remove('deep-link-highlight')},2600);
+}
+function scrollAndHighlight(el){
+  if(!el)return false;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  highlightEl(el);
+  return true;
+}
+var deepLinkHandled=false;
+function handleDeepLinkHash(){
+  var hash=(location.hash||'').replace('#','');
+  if(!hash||deepLinkHandled)return;
+  if(hash==='upload'){
+    // Wait for canManage to be known so a manager whose data just hasn't
+    // loaded yet isn't shown the "Manager access required" message by
+    // mistake. guideFlow('add') already handles both the manager (scroll
+    // + focus the form) and non-manager (explain + point at secureNote)
+    // cases - reused as-is rather than duplicated here.
+    if(!knowledgeLoaded)return;
+    guideFlow('add');
+    deepLinkHandled=true;
+    return;
+  }
+  if(hash==='question-bank'||hash==='practice-scenarios'){
+    var knowledgeId=new URLSearchParams(location.search).get('knowledgeId');
+    if(knowledgeId){
+      var card=document.querySelector('[data-source-card="'+CSS.escape(knowledgeId)+'"]');
+      if(card){
+        deepLinkHandled=scrollAndHighlight(card.querySelector('.training-assets a')||card);
+        return;
+      }
+      if(!knowledgeLoaded)return; // sources still loading - retry below
+      // knowledgeId didn't match a source this account can see; fall
+      // through to the generic entry point rather than doing nothing.
+    }
+    deepLinkHandled=scrollAndHighlight(document.querySelector('.question-bank-entry'));
+  }
+}
+// Deep links arrive before PilotCloud/knowledge data finishes loading, so
+// handleDeepLinkHash() is also called right when that load settles (see
+// loadKnowledge()). This short poll is only a safety net for any other
+// timing gap (e.g. a slow paint) - it gives up after ~3s either way.
+(function pollDeepLink(){
+  handleDeepLinkHash();
+  if(deepLinkHandled)return;
+  var attempts=0,timer=setInterval(function(){
+    attempts++;
+    handleDeepLinkHash();
+    if(deepLinkHandled||attempts>20)clearInterval(timer);
+  },150);
+})();
 
 // ROOM 4C — Google Drive Single-File Import Pilot.
 // Ingestion convenience only: picks exactly one file, imports its readable
@@ -236,7 +620,8 @@ async function importPickedGoogleDriveFile(doc,accessToken){
  if(!response.ok)throw new Error(tr('Google Drive could not return this file right now.','Google Drive 目前無法回傳此文件。'));
  var text=await response.text();
  if(!text||!text.trim())throw new Error(tr('This file is empty.','此文件內容為空。'));
- return {text:text.slice(0,30000),truncated:text.length>30000,name:doc.name||'',url:doc.url||'',mimeType:doc.mimeType||'',id:doc.id};
+ if(text.length>MAX_SOURCE_CHARS)throw new Error(oversizedSourceMessage(text.length));
+ return {text:text,name:doc.name||'',url:doc.url||'',mimeType:doc.mimeType||'',id:doc.id};
 }
 async function startGoogleDriveImport(){
  var button=document.getElementById('googleDriveImportBtn');
@@ -263,20 +648,18 @@ async function startGoogleDriveImport(){
   }
   document.getElementById('sourceContent').scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(function(){document.getElementById('sourceContent').focus()},350);
-  setGoogleDriveStatus(imported.truncated
-   ?tr('Imported from Google Drive. This document exceeds the 30,000-character Pilot limit, so it was truncated — review the text before saving.','已從 Google Drive 匯入。此文件超過 30,000 字元的 Pilot 上限，已被截斷——請在儲存前檢查文字。')
-   :tr('Imported from Google Drive. Review the text below, confirm authorization, then Save secure draft.','已從 Google Drive 匯入。請在下方檢查文字、確認授權，然後儲存安全草稿。'),'ok');
+  setGoogleDriveStatus(tr('Imported from Google Drive. Review the text below, confirm authorization, then Save secure draft.','已從 Google Drive 匯入。請在下方檢查文字、確認授權，然後儲存安全草稿。'),'ok');
  }catch(error){
   setGoogleDriveStatus((error&&error.message)||tr('Google Drive import failed.','Google Drive 匯入失敗。'),'error');
  }finally{button.disabled=false}
 }
 document.getElementById('googleDriveImportBtn').addEventListener('click',startGoogleDriveImport);
-document.getElementById('knowledgeForm').addEventListener('submit',async function(event){event.preventDefault();var button=document.getElementById('saveSource');button.disabled=true;setFormStatus(tr('Saving secure draft…','正在儲存安全草稿……'),'');try{var payload={action:'create',title:document.getElementById('sourceTitle').value.trim(),sourceType:document.getElementById('sourceType').value,sourceUrl:document.getElementById('sourceUrl').value.trim(),content:document.getElementById('sourceContent').value.trim(),consentConfirmed:document.getElementById('sourceConsent').checked};var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify(payload)});companySources.unshift(data.source);this.reset();document.querySelectorAll('[data-source-choice]').forEach(function(item){item.classList.remove('selected')});document.getElementById('charCount').textContent='0 / 30,000';setFormStatus(tr('Secure draft saved. The next step is highlighted below.','安全草稿已儲存。下一步已在下方標示。'),'ok');renderSources();focusSourceAction(data.source.id,'analyze',tr('Step 1 complete. Choose Analyze with AI.','步驟1已完成。請選擇「AI分析」。'))}catch(error){setFormStatus(friendlyError(error),'error')}finally{button.disabled=false}});
+document.getElementById('knowledgeForm').addEventListener('submit',async function(event){event.preventDefault();var button=document.getElementById('saveSource');button.disabled=true;setFormStatus(tr('Saving secure draft…','正在儲存安全草稿……'),'');try{var payload={action:'create',title:document.getElementById('sourceTitle').value.trim(),sourceType:document.getElementById('sourceType').value,sourceUrl:document.getElementById('sourceUrl').value.trim(),content:document.getElementById('sourceContent').value.trim(),consentConfirmed:document.getElementById('sourceConsent').checked};var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify(payload)});companySources.unshift(data.source);this.reset();document.querySelectorAll('[data-source-choice]').forEach(function(item){item.classList.remove('selected')});document.getElementById('charCount').textContent='0 / 500,000';setFormStatus(tr('Secure draft saved. The next step is highlighted below.','安全草稿已儲存。下一步已在下方標示。'),'ok');renderSources();focusSourceAction(data.source.id,'analyze',tr('Step 1 complete. Choose Analyze with AI.','步驟1已完成。請選擇「AI分析」。'))}catch(error){setFormStatus(friendlyError(error),'error')}finally{button.disabled=false}});
 async function knowledgeAction(action,id,button){button.disabled=true;button.textContent=currentLang==='zh'?'處理中…':'Working…';try{var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:action,id:id})});companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources();if(action==='analyze')focusSourceAction(id,'approve',tr('Step 2 complete. Review the AI result, then approve it.','步驟2已完成。請檢查AI結果，然後批准。'));if(action==='approve')focusSourceAction(id,'assign',tr('Step 3 complete. The approved Practice is ready to assign.','步驟3已完成。已批准的練習可以指派。'))}catch(error){alert(friendlyError(error));button.disabled=false}}
 async function deleteSource(id){if(!confirm(currentLang==='zh'?'刪除此企業知識來源？此操作無法復原。':'Delete this company knowledge source? This cannot be undone.'))return;try{await PilotCloud.request('knowledge',{method:'DELETE',requiredRole:'manager',query:{id:id}});companySources=companySources.filter(function(x){return x.id!==id});renderSources()}catch(error){alert(friendlyError(error))}}
 var curriculumData=[];
 function renderCurriculum(){var root=document.getElementById('curriculumMap');if(!curriculumData.length){root.className='empty';root.textContent=currentLang==='zh'?'課程目前無法載入。':'Curriculum is unavailable right now.';return}var stages={};curriculumData.forEach(function(x){var key=x.moduleOrder||1;(stages[key]||(stages[key]=[])).push(x)});root.className='';root.innerHTML=Object.keys(stages).sort(function(a,b){return a-b}).map(function(key){var items=stages[key].sort(function(a,b){return (a.lessonOrder||0)-(b.lessonOrder||0)}),name=(items[0].module&&((currentLang==='zh'?items[0].module.zh:items[0].module.en)||items[0].module.en))||'';return '<section class="stage"><div class="stage-head"><span class="stage-num">'+(currentLang==='zh'?'第 '+key+' 階段':'Stage '+key)+'</span><strong>'+esc(name)+'</strong></div><div class="lesson-grid">'+items.map(function(x){var title=(x.title&&((currentLang==='zh'?x.title.zh:x.title.en)||x.title.en))||'',focus=(x.objective&&((currentLang==='zh'?x.objective.zh:x.objective.en)||x.objective.en))||'',id=x.id||x.key||'';return '<article class="lesson"><span class="pill">'+esc(x.difficulty||'')+'</span><h4>'+esc(title)+'</h4><p>'+esc(focus)+'</p><a href="simulator.html?ref=demo&amp;pilot=1&amp;practice='+encodeURIComponent(id)+'">'+(currentLang==='zh'?'練習此情境 →':'Practice this scenario →')+'</a></article>'}).join('')+'</div></section>'}).join('')}
 fetch('data/curriculum/foundation.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Curriculum unavailable');return r.json()}).then(function(rows){curriculumData=Array.isArray(rows)?rows:[];renderCurriculum()}).catch(function(){curriculumData=[];renderCurriculum()});
-setLang(sessionStorage.getItem('agentraining_lang')==='zh'?'zh':'en');loadKnowledge();
+setLang(sessionStorage.getItem('agentraining_lang')==='zh'?'zh':'en');applyMediaConfigState();loadKnowledge();
 </script>
 </body></html>
