@@ -265,9 +265,9 @@ describe('knowledge-analyze.mjs (OpenAI) long-source AI Analysis', () => {
     const original = globalThis.fetch;
     globalThis.fetch = async (url, options) => {
       const body = JSON.parse(options.body);
-      if (body.input.includes('SECTION FINDINGS IN ORIGINAL ORDER')) {
+      if (body.input.includes('SECTION FINDINGS:')) {
         mergeCalls++;
-        const findingsJson = JSON.parse(body.input.slice(body.input.indexOf('SECTION FINDINGS IN ORIGINAL ORDER:') + 'SECTION FINDINGS IN ORIGINAL ORDER:'.length));
+        const findingsJson = JSON.parse(body.input.slice(body.input.indexOf('SECTION FINDINGS:') + 'SECTION FINDINGS:'.length));
         const allPoints = findingsJson.flatMap(f => f.keyPoints);
         return new Response(JSON.stringify({ output_text: JSON.stringify({ summary: 'Synthesis covering all sections.', keyPoints: allPoints.slice(0, 6), audience: 'Agents', quality: 'important', practiceDraft: { title: 'T', situation: 'S', objective: 'O', clientName: 'C', clientOpening: 'Hi', successCriteria: ['x'] } }) }), { status: 200 });
       }
