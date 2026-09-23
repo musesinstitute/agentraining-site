@@ -1,0 +1,47 @@
+name: Feature Branch Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+      - knowledge-training-engine
+  push:
+    branches:
+      - feature/long-training-content-fast-track
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    if: github.event_name != 'pull_request' || github.head_ref == 'feature/long-training-content-fast-track'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: |
+          sudo mkdir -p /opt/pw-browsers
+          sudo chown -R "$USER":"$USER" /opt/pw-browsers
+          PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright install --with-deps chromium
+          CHROMIUM_BIN="$(find /opt/pw-browsers -type f \( -name chrome -o -name chromium \) | head -n 1)"
+          test -n "$CHROMIUM_BIN"
+          ln -sf "$CHROMIUM_BIN" /opt/pw-browsers/chromium
+
+      - name: Run retention tests
+        run: node --import ./tests/register.mjs --test tests/pilot-data-retention.test.mjs
+
+      - name: Run full test suite
+        run: npm test

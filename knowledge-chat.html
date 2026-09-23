@@ -827,9 +827,31 @@ function handleDragLeave() { document.getElementById('drop-zone').classList.remo
 function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag'); processFile(e.dataTransfer.files[0]); }
 function handleFileSelect(e) { processFile(e.target.files[0]); }
 
+// Long Training Content Fast Track Pilot limits. Server (pilot-data.mjs /
+// lib/knowledge-source.mjs) is authoritative; these client-side copies must
+// stay numerically equal to it.
+const MAX_SOURCE_CHARS = 500000;
+const MAX_TRANSCRIPT_FILE_BYTES = 5 * 1024 * 1024;
+function oversizedSourceMessage(receivedChars) {
+  return t(
+    `This training source exceeds the current Pilot limit of 500,000 characters (received ${receivedChars.toLocaleString()} characters). The source was NOT truncated or partially saved.`,
+    `此培训资料超过当前 Pilot 支持的 500,000 字符容量（收到 ${receivedChars.toLocaleString()} 字符）。系统没有截断或部分保存该资料。`
+  );
+}
+function showUploadError(message) {
+  const el = document.getElementById('upload-error');
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
 async function processFile(file) {
   if (!file) return;
   const dropLabel = document.getElementById('drop-label');
+  document.getElementById('upload-error').style.display = 'none';
+  if (!file.name.endsWith('.pdf') && file.size > MAX_TRANSCRIPT_FILE_BYTES) {
+    showUploadError(t('Transcript file must be 5 MB or smaller.', '逐字稿文件必須為5MB或以下。'));
+    return;
+  }
   dropLabel.textContent = `📎 ${file.name}`;
   dropLabel.dataset.fileSelected = '1';
   const buffer = await file.arrayBuffer();
@@ -844,7 +866,14 @@ async function processFile(file) {
         const content = await page.getTextContent();
         text += content.items.map(s => s.str).join(' ') + '\n';
       }
-      document.getElementById('upload-content').value = text.trim();
+      text = text.trim();
+      // Never silently truncate an authorized source — reject clearly
+      // instead of loading a partial extraction the manager might save.
+      if (text.length > MAX_SOURCE_CHARS) {
+        showUploadError(oversizedSourceMessage(text.length));
+        return;
+      }
+      document.getElementById('upload-content').value = text;
       // Also offer PDF preview
       pdfFileData = buffer;
     } catch(e) {
@@ -853,6 +882,10 @@ async function processFile(file) {
     }
   } else {
     const text = await file.text();
+    if (text.length > MAX_SOURCE_CHARS) {
+      showUploadError(oversizedSourceMessage(text.length));
+      return;
+    }
     document.getElementById('upload-content').value = text;
   }
 }
@@ -889,6 +922,7 @@ async function submitUpload() {
   errEl.style.display = 'none';
   if (!title) { errEl.textContent = t('Please enter a document title.', '请输入文件标题。'); errEl.style.display = 'block'; return; }
   if (!content) { errEl.textContent = t('Please add document content (upload a file or paste text).', '请添加文件内容（上传文件或粘贴文字）。'); errEl.style.display = 'block'; return; }
+  if (content.length > MAX_SOURCE_CHARS) { errEl.textContent = oversizedSourceMessage(content.length); errEl.style.display = 'block'; return; }
   if (!consent) { errEl.textContent = t('Please confirm organizational authorization before uploading.', '请先确认企业授权后再上传。'); errEl.style.display = 'block'; return; }
 
   btn.disabled = true;
@@ -949,7 +983,15 @@ function relTime(iso) {
 // this maps the known ones to Chinese instead of leaving the UI half-English
 // when the page is set to 中文.
 function friendlyError(message) {
-  if (currentLang !== 'zh') return message || t('The operation could not be completed.', '操作未能完成。');
+  message = message || t('The operation could not be completed.', '操作未能完成。');
+  // Long Training Content Fast Track: the server returns oversized-source
+  // rejections as "<English sentence> / <Chinese sentence>" (see
+  // netlify/functions/lib/knowledge-source.mjs sourceLengthError) so both
+  // languages are always available without a map entry for a message that
+  // embeds a dynamic character count.
+  const bilingual = message.split(' / ');
+  if (bilingual.length === 2 && /[一-鿿]/.test(bilingual[1])) return currentLang === 'zh' ? bilingual[1] : bilingual[0];
+  if (currentLang !== 'zh') return message;
   const map = {
     'Please sign in to continue.': '请先登录后继续。',
     'Document not found.': '找不到此文件。',
