@@ -36,7 +36,7 @@ jobs:
           sudo mkdir -p /opt/pw-browsers
           sudo chown -R "$USER":"$USER" /opt/pw-browsers
           PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npx playwright install --with-deps chromium
-          CHROMIUM_BIN="$(find /opt/pw-browsers -type f -name chromium | head -n 1)"
+          CHROMIUM_BIN="$(find /opt/pw-browsers -type f \( -name chrome -o -name chromium \) | head -n 1)"
           test -n "$CHROMIUM_BIN"
           ln -sf "$CHROMIUM_BIN" /opt/pw-browsers/chromium
 
