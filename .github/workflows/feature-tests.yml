@@ -31,5 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run test suite
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run retention tests
+        run: node --import ./tests/register.mjs --test tests/pilot-data-retention.test.mjs
+
+      - name: Run full test suite
         run: npm test
