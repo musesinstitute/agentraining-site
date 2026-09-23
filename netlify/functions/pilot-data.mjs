@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
+import { computeTeamGrowth } from './lib/team-growth.mjs';
 
 const STORE_NAME = 'agentraining-pilot';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -1079,6 +1080,29 @@ export default async function handler(req) {
       const visible = actor.isManager ? rows : rows.filter(row => row.userId === actor.id);
       visible.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
       return reply(200, { sessions: visible });
+    }
+
+    // Team Growth & Retention (read-only). Deterministic evidence signals from
+    // existing roster/sessions/assignments data only — no AI, no prediction.
+    if (req.method === 'GET' && resource === 'team-growth') {
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'team_growth_read', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      const [rosterRows, sessions, assignments, assignmentEvents] = await Promise.all([
+        listJSON(store, `${teamPrefix}/roster/`),
+        listJSON(store, `${teamPrefix}/sessions/`),
+        listJSON(store, `${teamPrefix}/assignments/`),
+        listJSON(store, `${teamPrefix}/assignment-events/`)
+      ]);
+      // The roster records only lastSeenAt (overwritten on every request), which
+      // is not a join date; joinedAt is passed through only if a row has one.
+      const members = rosterRows
+        .filter(row => row.isLearner && row.email)
+        .map(row => ({ email: normalizeEmail(row.email), joinedAt: row.joinedAt || null }));
+      const result = computeTeamGrowth({ members, sessions, assignments, assignmentEvents, now: new Date() });
+      await writeAudit(store, teamPrefix, actor, 'team_growth_read', 'success', { teamSize: result.summary.teamSize, focusCount: result.focus.length });
+      return reply(200, result);
     }
 
     if (req.method === 'GET' && resource === 'manager-chat') {
