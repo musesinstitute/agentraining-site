@@ -1,0 +1,35 @@
+name: Feature Branch Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+      - knowledge-training-engine
+  push:
+    branches:
+      - feature/long-training-content-fast-track
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    if: github.event_name != 'pull_request' || github.head_ref == 'feature/long-training-content-fast-track'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test suite
+        run: npm test
