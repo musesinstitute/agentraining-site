@@ -50,6 +50,9 @@ export default async function handler(req) {
     const prefix = `teams/${actor.teamId}/roster/`;
 
     if (req.method === 'POST') {
+      const key = `${prefix}${safeSegment(actor.id)}`;
+      const existing = await store.get(key, { type: 'json' });
+      const now = new Date().toISOString();
       const record = {
         id: actor.id,
         email: actor.email,
@@ -57,9 +60,11 @@ export default async function handler(req) {
         teamId: actor.teamId,
         isLearner: actor.isLearner,
         isManager: actor.isManager,
-        lastSeenAt: new Date().toISOString()
+        // First roster entry time; never overwritten, never backfilled.
+        joinedAt: existing ? (existing.joinedAt || null) : now,
+        lastSeenAt: now
       };
-      await store.setJSON(`${prefix}${safeSegment(actor.id)}`, record);
+      await store.setJSON(key, record);
       return reply(200, { member: record });
     }
 
