@@ -131,6 +131,30 @@ async function saveInvite(store, invite) {
   await store.setJSON(byTokenKey(invite.token), invite);
 }
 
+// Invite acceptance is the formal moment a learner joins the team, so it is
+// the preferred source of roster joinedAt. Same key layout as pilot-data.mjs /
+// pilot-roster.mjs (teams/{id}/roster/{userId}). An existing row is never
+// modified here, so a recorded joinedAt is never overwritten. Best-effort:
+// the first authenticated request registers the member anyway.
+async function recordRosterJoin(store, invite) {
+  try {
+    const key = `teams/${invite.teamId}/roster/${safeSegment(invite.acceptedUserId, 'user')}`;
+    if (await store.get(key, { type: 'json' })) return;
+    await store.setJSON(key, {
+      id: invite.acceptedUserId,
+      email: normalizeEmail(invite.email),
+      roles: ['learner', `team-${invite.teamId}`],
+      teamId: invite.teamId,
+      isLearner: true,
+      isManager: false,
+      joinedAt: invite.acceptedAt,
+      lastSeenAt: invite.acceptedAt
+    });
+  } catch (error) {
+    console.warn('pilot-invite roster join record skipped', error);
+  }
+}
+
 function isExpired(invite) {
   return Date.parse(invite.expiresAt) < Date.now();
 }
@@ -401,6 +425,7 @@ export default async function handler(req) {
 
       const accepted = { ...invite, status: 'accepted', acceptedAt: new Date().toISOString(), acceptedUserId: userId };
       await saveInvite(store, accepted);
+      await recordRosterJoin(store, accepted);
       await writeInviteAudit(store, invite.teamId, invite.email, 'invite_accept', 'success', { inviteId: invite.id, userId });
       return reply(201, { status: 'created', email: invite.email });
     }

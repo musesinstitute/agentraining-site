@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
+import { computeTeamGrowth, currentSignalsFor } from './lib/team-growth.mjs';
 
 const STORE_NAME = 'agentraining-pilot';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -52,6 +53,8 @@ function userContext(user) {
 async function registerRosterMembership(store, teamPrefix, actor) {
   try {
     const key = `${teamPrefix}/roster/${safeSegment(actor.id, 'user')}`;
+    const existing = await store.get(key, { type: 'json' });
+    const now = new Date().toISOString();
     await store.setJSON(key, {
       id: actor.id,
       email: actor.email,
@@ -59,7 +62,11 @@ async function registerRosterMembership(store, teamPrefix, actor) {
       teamId: actor.teamId,
       isLearner: actor.isLearner,
       isManager: actor.isManager,
-      lastSeenAt: new Date().toISOString()
+      // joinedAt = first time this member entered the roster. Set only when
+      // the row is first created (or earlier by invite acceptance) and never
+      // overwritten; rows that predate joinedAt keep it empty (no backfill).
+      joinedAt: existing ? (existing.joinedAt || null) : now,
+      lastSeenAt: now
     });
   } catch (error) {
     console.warn('pilot-data roster registration skipped', error);
@@ -230,6 +237,62 @@ async function updateLearnerProfile(store, teamPrefix, actor, session) {
   };
   await store.setJSON(profileKey, profile);
   return profile;
+}
+
+// Inputs for the Team Growth rules, always read from this team's own prefix.
+async function loadTeamGrowthInput(store, teamPrefix) {
+  const [rosterRows, sessions, assignments, assignmentEvents] = await Promise.all([
+    listJSON(store, `${teamPrefix}/roster/`),
+    listJSON(store, `${teamPrefix}/sessions/`),
+    listJSON(store, `${teamPrefix}/assignments/`),
+    listJSON(store, `${teamPrefix}/assignment-events/`)
+  ]);
+  const members = rosterRows
+    .filter(row => row.isLearner && row.email)
+    .map(row => ({ email: normalizeEmail(row.email), joinedAt: row.joinedAt || null }));
+  return { members, sessions, assignments, assignmentEvents, now: new Date() };
+}
+
+// Builds intervention metadata for a source="team-growth" assignment. Every
+// trusted field is derived on the server: identity and time from the
+// verified request, signals/evidence time by re-running the team-growth
+// rules. Client-sent createdBy/createdAt/signalTypes/sourceEvidenceAt are
+// ignored. Returns { error } to reject, { intervention: null } when the
+// learner no longer has a current signal (saved as a regular assignment).
+async function teamGrowthIntervention(store, teamPrefix, actor, input, record) {
+  const client = input.intervention || {};
+  const learner = record.assignedTo;
+  if (client.learner && normalizeEmail(client.learner) !== learner) {
+    return { error: reply(400, { error: 'The Team Growth context does not match the selected learner.' }) };
+  }
+  const growthInput = await loadTeamGrowthInput(store, teamPrefix);
+  if (!growthInput.members.some(member => member.email === learner)) {
+    await writeAudit(store, teamPrefix, actor, 'team_growth_assignment', 'denied', { reason: 'learner_not_on_team', assignedTo: learner });
+    return { error: reply(403, { error: 'This learner is not a member of your team.' }) };
+  }
+  const current = currentSignalsFor(growthInput, learner);
+  if (!current) return { intervention: null };
+  const requestedScenarioId = cleanText(client.suggestedScenarioId, 120);
+  if (requestedScenarioId && requestedScenarioId !== current.suggestedScenarioId) {
+    const teamScenarioIds = new Set(growthInput.assignments.map(item => item.scenarioId).filter(Boolean));
+    if (!teamScenarioIds.has(requestedScenarioId)) {
+      return { error: reply(400, { error: 'The suggested scenario is not valid for this team.' }) };
+    }
+  }
+  const stuck = current.signals.find(signal => signal.type === 'repeated_stuck');
+  const open = current.signals.find(signal => signal.type === 'assignment_open');
+  return {
+    intervention: {
+      learner,
+      signalTypes: current.signals.map(signal => signal.type),
+      sourceEvidenceAt: current.latestEvidenceAt,
+      suggestedScenarioId: current.suggestedScenarioId,
+      stuckScenario: stuck ? stuck.scenario : null,
+      sourceAssignmentIds: open ? open.evidence.map(item => item.assignmentId) : [],
+      createdAt: new Date().toISOString(),
+      createdBy: actor.email
+    }
+  };
 }
 
 async function listJSON(store, prefix) {
@@ -991,6 +1054,17 @@ export default async function handler(req) {
       if (record.sourceType === 'company_knowledge' && (!record.sourceKnowledgeId || !record.customScenario?.situation || !record.customScenario?.objective)) {
         return reply(400, { error: 'An approved Company Knowledge Practice Draft is required.' });
       }
+      let interventionDowngraded = false;
+      if (cleanText(input.source, 40) === 'team-growth') {
+        const result = await teamGrowthIntervention(store, teamPrefix, actor, input, record);
+        if (result.error) return result.error;
+        if (result.intervention) {
+          record.source = 'team-growth';
+          record.intervention = result.intervention;
+        } else {
+          interventionDowngraded = true;
+        }
+      }
       await store.setJSON(`${teamPrefix}/assignments/${record.id}`, record, { onlyIfNew: true });
       await writeAssignmentEvent(store, teamPrefix, {
         assignmentId: record.id, type: 'assigned', assignedTo: record.assignedTo,
@@ -1002,9 +1076,10 @@ export default async function handler(req) {
         managerContentZh: `指派已确认：“${record.scenarioName}”已发送给${record.learner || record.assignedTo}。学员现在可以从 AI 教练或练习任务收件箱开始。`
       });
       await writeAudit(store, teamPrefix, actor, 'assignment_create', 'success', {
-        assignmentId: record.id, assignedTo: record.assignedTo, scenarioId: record.scenarioId
+        assignmentId: record.id, assignedTo: record.assignedTo, scenarioId: record.scenarioId,
+        source: record.source || '', signalTypes: record.intervention?.signalTypes || []
       });
-      return reply(201, { assignment: record });
+      return reply(201, { assignment: record, interventionDowngraded });
     }
 
     if (req.method === 'PATCH' && resource === 'assignments') {
@@ -1079,6 +1154,18 @@ export default async function handler(req) {
       const visible = actor.isManager ? rows : rows.filter(row => row.userId === actor.id);
       visible.sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
       return reply(200, { sessions: visible });
+    }
+
+    // Team Growth & Retention (read-only). Deterministic evidence signals from
+    // existing roster/sessions/assignments data only — no AI, no prediction.
+    if (req.method === 'GET' && resource === 'team-growth') {
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, 'team_growth_read', 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      const result = computeTeamGrowth(await loadTeamGrowthInput(store, teamPrefix));
+      await writeAudit(store, teamPrefix, actor, 'team_growth_read', 'success', { teamSize: result.summary.teamSize, focusCount: result.focus.length, recentResultCount: result.recentResults.length });
+      return reply(200, result);
     }
 
     if (req.method === 'GET' && resource === 'manager-chat') {
