@@ -75,7 +75,7 @@ describe('Manager Studio - Team Growth Phase 2 (browser)', () => {
     await withResults.page.close();
 
     const zh = await openManager({ recentResults: [improvedResult], lang: 'zh' });
-    assert.match(await zh.page.textContent('#teamGrowthResults'), /最近见效的介入[\s\S]*Li：主管介入后已重新开始练习。/);
+    assert.match(await zh.page.textContent('#teamGrowthResults'), /最近見效的介入[\s\S]*Li：主管介入後已重新開始練習。/);
     await zh.page.close();
 
     const empty = await openManager({ recentResults: [] });
