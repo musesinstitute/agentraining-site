@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AgentTraining AI — Enterprise Sales Capability Platform</title>
-<meta name="description" content="Connect real client cases, personalized practice, company knowledge, and manager coaching in one continuous sales capability system."/>
+<title>AgentTraining AI — Turn New Recruits into Capable Advisors</title>
+<meta name="description" content="AgentTraining helps insurance team managers spot training problems earlier, act sooner, and turn new recruits into capable advisors through realistic practice. Validate it with a 14-day pilot."/>
 <link rel="manifest" href="/manifest.json"/>
 <meta name="theme-color" content="#1a56db"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -45,387 +45,133 @@
     --white: #ffffff;
     --border: #e5e7eb;
     --radius: 12px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.08);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--ink); background: var(--white); }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+
+  /* LANGUAGE: every bilingual element carries data-l="en" or data-l="zh" */
+  html[data-lang="en"] [data-l="zh"], html[data-lang="zh"] [data-l="en"] { display: none !important; }
 
   /* NAV */
   nav {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
     padding: 16px 40px; border-bottom: 1px solid var(--border);
     position: sticky; top: 0; background: var(--white); z-index: 100;
   }
-  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; }
+  .logo { font-size: 20px; font-weight: 700; color: var(--brand); text-decoration: none; white-space: nowrap; }
   .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); font-size: 14px; font-weight: 500; white-space: nowrap; }
   .nav-links a:hover { color: var(--brand); }
   .nav-lang { display: flex; gap: 2px; background: var(--surface); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
   .nav-lang-btn { background: transparent; border: none; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-muted); font-family: inherit; }
   .nav-lang-btn.active { background: var(--white); color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   .btn-nav {
-    background: var(--accent); color: #111827;
-    padding: 8px 20px; border-radius: 8px; text-decoration: none;
-    font-size: 14px; font-weight: 700; border: none;
+    background: var(--accent); color: #111827 !important;
+    padding: 8px 18px; border-radius: 8px; font-weight: 700 !important;
   }
-  .btn-nav:hover { background: #e08800; color: #111827; }
+  .btn-nav:hover { background: #e08800; }
 
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 80px 20px 60px;
-    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-  }
-  .hero-badge {
-    display: inline-block;
-    background: #dbeafe; color: var(--brand);
-    padding: 4px 14px; border-radius: 99px;
-    font-size: 13px; font-weight: 600; margin-bottom: 20px;
-  }
-  .hero h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
-  .hero h1 span { color: var(--brand); }
-  .hero p { font-size: 18px; color: var(--ink-muted); max-width: 600px; margin: 0 auto 36px; line-height: 1.6; }
-  .hero .hero-audience { margin-top: -20px; margin-bottom: 30px; font-size: 18px; font-weight: 700; color: var(--ink); }
-  .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--brand); color: var(--white);
-    padding: 14px 32px; border-radius: 10px; text-decoration: none;
+  /* SHARED */
+  section { padding: 96px 20px; }
+  .inner { max-width: 980px; margin: 0 auto; }
+  .narrow { max-width: 720px; margin: 0 auto; }
+  .eyebrow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--brand); margin-bottom: 16px; }
+  h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 800; line-height: 1.3; margin-bottom: 20px; }
+  .lead { font-size: 18px; color: var(--ink-muted); }
+  .btn-primary, .btn-secondary {
+    display: inline-block; padding: 14px 30px; border-radius: 10px; text-decoration: none;
     font-size: 16px; font-weight: 700; transition: background 0.2s;
   }
+  .btn-primary { background: var(--brand); color: var(--white); }
   .btn-primary:hover { background: var(--brand-dark); }
-  .btn-secondary {
-    background: var(--white); color: var(--brand);
-    padding: 14px 32px; border-radius: 10px; text-decoration: none;
-    font-size: 16px; font-weight: 600; border: 2px solid var(--brand);
-    transition: all 0.2s;
-  }
+  .btn-secondary { background: var(--white); color: var(--brand); border: 2px solid var(--brand); padding: 12px 28px; }
   .btn-secondary:hover { background: #eff6ff; }
-  .hero-sub { margin-top: 24px; font-size: 13px; color: var(--ink-muted); }
 
-  /* STATS */
-  .stats { display: flex; justify-content: center; gap: 48px; padding: 40px 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-  .stat { text-align: center; max-width: 190px; }
-  .stat-num { font-size: 30px; font-weight: 800; color: var(--brand); }
-  .stat-label { font-size: 13px; color: var(--ink-muted); margin-top: 6px; line-height: 1.45; }
-  .stat-label strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 3px; }
+  /* 1. HERO */
+  .hero { text-align: center; padding: 104px 20px 96px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); }
+  .hero h1 { font-size: clamp(30px, 5vw, 52px); font-weight: 800; line-height: 1.25; margin-bottom: 28px; }
+  .hero h1 span { color: var(--brand); display: block; }
+  .hero .hook { font-size: 19px; font-weight: 600; color: var(--ink); max-width: 640px; margin: 0 auto 16px; }
+  .hero .lead { max-width: 620px; margin: 0 auto 40px; }
+  .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-  /* SECTION */
-  section { padding: 72px 20px; }
-  .section-inner { max-width: 1100px; margin: 0 auto; }
-  .section-tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--brand); margin-bottom: 12px; }
-  h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
-  .section-sub { font-size: 16px; color: var(--ink-muted); max-width: 560px; line-height: 1.6; margin-bottom: 48px; }
+  /* 2. RISK */
+  .risk-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px 56px; margin: 48px 0 64px; }
+  .risk-item { border-top: 2px solid var(--border); padding-top: 18px; }
+  .risk-item h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .risk-item p { font-size: 15px; color: var(--ink-muted); }
+  .risk-close { border-left: 3px solid var(--brand); padding: 4px 0 4px 24px; }
+  .risk-close p { font-size: 17px; color: var(--ink); margin-bottom: 14px; }
+  .risk-close p:last-child { margin-bottom: 0; }
+  .risk-close strong { font-size: 20px; color: var(--brand); }
 
-  /* FEATURES GRID */
-  .features { background: var(--surface); }
-  .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  @media (max-width: 720px) { .features-grid { grid-template-columns: 1fr; } }
-  .feature-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 32px;
-    transition: box-shadow 0.2s;
-  }
-  .feature-card:hover { box-shadow: var(--shadow); }
-  .feature-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-  .feature-icon-wrap {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .icon-blue { background: #dbeafe; }
-  .icon-purple { background: #ede9fe; }
-  .icon-green { background: #dcfce7; }
-  .icon-orange { background: #ffedd5; }
-  .feature-card h3 { font-size: 18px; font-weight: 700; color: var(--ink); }
-  .feature-card p { font-size: 14px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 14px; }
-  .feature-bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; }
-  .feature-bullets li { font-size: 13px; color: #4b5563; display: flex; align-items: flex-start; gap: 8px; }
-  .feature-bullets li::before { content: "•"; color: var(--brand); font-weight: 700; flex-shrink: 0; }
+  /* 3. FOUR STUDIOS — one connected system */
+  .studios { background: var(--surface); }
+  .studios-head { text-align: center; margin-bottom: 48px; }
+  .studios-head h2 { margin-bottom: 8px; }
+  .studio-system { background: var(--white); border: 1px solid var(--border); border-radius: 16px; display: grid; grid-template-columns: repeat(2, 1fr); overflow: hidden; }
+  .studio { padding: 36px 36px 32px; }
+  .studio:nth-child(odd) { border-right: 1px solid var(--border); }
+  .studio:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .studio-name { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+  .studio h3 { font-size: 19px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .studio p { font-size: 15px; color: var(--ink-muted); }
+  .studio p + p { margin-top: 10px; }
+  .progression { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 10px; margin: 48px 0 40px; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .progression .arrow { color: var(--ink-muted); font-weight: 400; }
+  .progression .end { color: var(--brand); }
+  .studios-close { text-align: center; font-size: 17px; color: var(--ink-muted); max-width: 600px; margin: 0 auto; }
+  .studios-close strong { color: var(--ink); }
+  .studios-more { text-align: center; margin-top: 24px; font-size: 14px; }
+  .studios-more a { color: var(--brand); font-weight: 600; text-decoration: none; }
 
-  /* METHOD - SIGNATURE DIFFERENTIATOR */
-  .method-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
-  @media (max-width: 640px) { .method-compare { grid-template-columns: 1fr; } }
-  .method-compare-col { border-radius: var(--radius); overflow: hidden; }
-  .method-compare-header { padding: 12px 20px; font-size: 13px; font-weight: 700; text-align: center; }
-  .method-compare-header.bad { background: rgba(239,68,68,0.15); color: #fca5a5; }
-  .method-compare-header.good { background: rgba(168,85,247,0.25); color: #d8b4fe; }
-  .method-compare-list { list-style: none; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.03); }
-  .method-compare-list li { font-size: 13px; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
-  .bad-list li { color: #94a3b8; }
-  .bad-list li::before { content: "✗"; color: #f87171; flex-shrink: 0; font-weight: 700; }
-  .good-list li { color: #e2e8f0; }
-  .good-list li::before { content: "✓"; color: #a78bfa; flex-shrink: 0; font-weight: 700; }
-
-  /* REFERRAL PROGRAM */
-  .referral {
-    background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
-    border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
-  }
-  .referral-inner { max-width: 1100px; margin: 0 auto; padding: 64px 20px; }
-  .referral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-  @media (max-width: 720px) { .referral-grid { grid-template-columns: 1fr; gap: 32px; } }
-  .referral-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #dcfce7; color: #15803d;
-    padding: 6px 14px; border-radius: 99px;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-    text-transform: uppercase; margin-bottom: 18px;
-  }
-  .referral h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; margin-bottom: 14px; }
-  .referral-sub { font-size: 16px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 10px; }
-  .referral-zh { font-size: 15px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 28px; }
-  .referral-steps { display: flex; flex-direction: column; gap: 16px; }
-  .referral-step { display: flex; align-items: flex-start; gap: 14px; }
-  .referral-step-num {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--brand); color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 800; flex-shrink: 0;
-  }
-  .referral-step-text { font-size: 14px; color: var(--ink); line-height: 1.6; padding-top: 5px; }
-  .referral-step-text strong { color: var(--ink); font-weight: 700; }
-  .referral-card {
-    background: var(--white); border: 2px solid #16a34a;
-    border-radius: 16px; padding: 32px; text-align: center;
-    box-shadow: 0 8px 32px rgba(22,163,74,0.12);
-  }
-  .referral-reward-icon { font-size: 48px; margin-bottom: 16px; }
-  .referral-reward-title { font-size: 20px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-  .referral-reward-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 20px; }
-  .referral-reward-both {
-    background: #f0fdf4; border-radius: 10px; padding: 16px;
-    font-size: 13px; color: #15803d; font-weight: 600; margin-bottom: 20px;
-  }
-  .btn-referral {
-    display: inline-block; background: #16a34a; color: white;
-    padding: 12px 28px; border-radius: 10px; text-decoration: none;
-    font-size: 15px; font-weight: 700; transition: opacity 0.2s;
-  }
-  .btn-referral:hover { opacity: 0.88; }
-  .referral-note { font-size: 12px; color: var(--ink-muted); margin-top: 12px; }
-
-  /* UNIVERSAL BLOG */
-  .universal-blog { background: var(--surface); }
-  .universal-blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-  .universal-blog-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px;
-    text-decoration: none; color: inherit; display: block;
-    transition: box-shadow 0.2s, border-color 0.2s;
-  }
-  .universal-blog-card:hover { box-shadow: var(--shadow); border-color: var(--brand); }
-  .universal-blog-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--brand); margin-bottom: 10px; }
-  .universal-blog-card h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
-  .universal-blog-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 16px; }
-  .universal-blog-read { font-size: 13px; font-weight: 600; color: var(--brand); }
-  .method {
-    background: linear-gradient(135deg, #1a1530 0%, #2d1b4e 100%);
-    color: var(--white); position: relative; overflow: hidden;
-  }
-  .method::before {
-    content: ""; position: absolute; top: -50%; right: -10%;
-    width: 500px; height: 500px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
-  }
-  .method .section-inner { position: relative; z-index: 1; }
-  .method-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
-    color: #d8b4fe; padding: 6px 16px; border-radius: 99px;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-    text-transform: uppercase; margin-bottom: 20px;
-  }
-  .method h2 { color: var(--white); font-size: clamp(28px, 4.5vw, 44px); }
-  .method-sub { font-size: 17px; color: #c4b5fd; max-width: 640px; line-height: 1.65; margin-bottom: 16px; }
-  .method-warning {
-    font-size: 15px; color: #fbbf24; max-width: 640px; line-height: 1.6;
-    margin-bottom: 44px; font-weight: 500;
-  }
-  .method-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-  @media (max-width: 720px) { .method-grid { grid-template-columns: 1fr; } }
-  .method-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: var(--radius); padding: 28px;
-  }
-  .method-card-num {
-    font-family: var(--font-display, inherit); font-size: 13px; font-weight: 800;
-    color: #a855f7; margin-bottom: 10px; letter-spacing: 1px;
-  }
-  .method-card h3 { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
-  .method-card p { font-size: 14px; color: #c4b5fd; line-height: 1.65; }
-  .method-footer-note {
-    margin-top: 36px; padding: 20px 24px;
-    background: rgba(255,255,255,0.06); border-radius: var(--radius);
-    font-size: 14px; color: #e9d5ff; line-height: 1.6;
-    border-left: 3px solid #a855f7;
-  }
-
-  /* AI TECHNOLOGY */
-  .ai-tech { background: #0f172a; color: var(--white); }
-  .ai-tech .section-tag { color: #60a5fa; }
-  .ai-tech h2 { color: var(--white); }
-  .ai-tech .section-sub { color: #94a3b8; }
-  .ai-tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  @media (max-width: 720px) { .ai-tech-grid { grid-template-columns: 1fr; } }
-  .ai-tech-card {
-    background: #1e293b; border: 1px solid #334155;
-    border-radius: var(--radius); padding: 32px;
-    transition: border-color 0.2s;
-  }
-  .ai-tech-card:hover { border-color: #60a5fa; }
-  .ai-tech-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-  .ai-tech-icon {
-    width: 52px; height: 52px; border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; flex-shrink: 0;
-  }
-  .icon-dark-blue { background: #1d4ed8; }
-  .icon-dark-purple { background: #7c3aed; }
-  .icon-dark-teal { background: #0d9488; }
-  .icon-dark-amber { background: #d97706; }
-  .ai-tech-card h3 { font-size: 19px; font-weight: 700; color: var(--white); }
-  .ai-tech-card p { font-size: 14px; color: #94a3b8; line-height: 1.65; margin-bottom: 16px; }
-  .ai-tech-bullets { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-  .ai-tech-bullets li { font-size: 13px; color: #cbd5e1; display: flex; align-items: flex-start; gap: 8px; }
-  .ai-tech-bullets li::before { content: "•"; color: #60a5fa; font-weight: 700; flex-shrink: 0; }
-
-  /* HOW IT WORKS */
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
-  .step { text-align: center; }
-  .step-num {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--brand); color: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; font-weight: 800; margin: 0 auto 16px;
-  }
-  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-  .step p { font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
-
-  /* INDUSTRIES */
-  .industries { background: var(--surface); }
-  .industry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-  .industry-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 24px;
-  }
-  .industry-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .industry-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
-  .industry-tag {
-    display: inline-block; margin-top: 12px;
-    background: #eff6ff; color: var(--brand);
-    font-size: 11px; font-weight: 700; padding: 2px 10px;
-    border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-
-  /* INDUSTRY BLOG LINKS */
-  .industry-blog-links { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-  .industry-blog-links p { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-muted); margin-bottom: 8px; }
-  .industry-blog-link { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--brand); text-decoration: none; line-height: 1.4; margin-bottom: 5px; }
-  .industry-blog-link:hover { text-decoration: underline; }
-  .industry-blog-link::before { content: "→"; flex-shrink: 0; }
-
-  /* TESTIMONIALS */
-  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-  .testimonial {
-    background: var(--surface); border-radius: var(--radius);
-    padding: 28px; border: 1px solid var(--border);
-  }
-  .testimonial-text { font-size: 15px; line-height: 1.65; color: var(--ink); margin-bottom: 20px; }
-  .testimonial-author { display: flex; align-items: center; gap: 12px; }
-  .avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    background: var(--brand); color: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700;
-  }
-  .author-info strong { display: block; font-size: 14px; }
-  .author-info span { font-size: 12px; color: var(--ink-muted); }
-  .stars { color: var(--accent); font-size: 14px; margin-bottom: 12px; }
-
-  /* PRICING */
-  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-  .pricing-card {
-    background: var(--white); border: 2px solid var(--border);
-    border-radius: var(--radius); padding: 32px; text-align: center;
-    transition: box-shadow 0.2s;
-  }
-  .pricing-card:hover { box-shadow: var(--shadow); }
-  .pricing-card.featured { border-color: var(--brand); position: relative; }
-  .featured-badge {
-    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-    background: var(--brand); color: var(--white);
-    font-size: 11px; font-weight: 700; padding: 4px 16px;
-    border-radius: 99px; white-space: nowrap;
-  }
-  .plan-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); margin-bottom: 8px; }
-  .plan-price { font-size: 42px; font-weight: 800; color: var(--ink); }
-  .plan-price span { font-size: 16px; font-weight: 400; color: var(--ink-muted); }
-  .plan-desc { font-size: 13px; color: var(--ink-muted); margin: 12px 0 24px; line-height: 1.5; }
-  .plan-features { list-style: none; text-align: left; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
-  .plan-features li { font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
-  .plan-features li::before { content: "✓"; color: #16a34a; font-weight: 700; flex-shrink: 0; }
-  .btn-plan {
-    display: block; width: 100%;
-    padding: 12px; border-radius: 8px;
-    font-size: 15px; font-weight: 700;
-    text-decoration: none; text-align: center; transition: all 0.2s;
-  }
-  .btn-plan-outline {
-    border: 2px solid var(--brand); color: var(--brand);
-    background: transparent;
-  }
-  .btn-plan-outline:hover { background: #eff6ff; }
-  .btn-plan-fill {
-    background: var(--brand); color: var(--white); border: 2px solid var(--brand);
-  }
-  .btn-plan-fill:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
-
-  /* FAQ */
-  .faq-list { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
-  .faq-item {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 24px 28px;
-  }
-  .faq-q { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
-  .faq-a { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
-
-  /* BILINGUAL NOTE */
-  .bilingual { text-align: center; padding: 48px 20px; background: #fffbeb; border-top: 1px solid #fde68a; border-bottom: 1px solid #fde68a; }
-  .bilingual p { font-size: 15px; color: #92400e; }
-
-  /* BANNER CTA */
-  .banner {
-    background: var(--brand); color: var(--white);
-    text-align: center; padding: 72px 20px;
-  }
-  .banner h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
-  .banner p { font-size: 17px; opacity: 0.85; margin-bottom: 36px; }
-  .btn-banner {
-    background: var(--accent); color: #1c1917;
+  /* 4. CTA */
+  .cta { background: var(--brand); color: var(--white); text-align: center; }
+  .cta h2 { color: var(--white); }
+  .cta p { font-size: 17px; opacity: 0.9; }
+  .cta .questions { list-style: none; margin: 32px auto; display: flex; flex-direction: column; gap: 10px; font-size: 20px; font-weight: 700; }
+  .btn-cta {
+    display: inline-block; background: var(--accent); color: #1c1917;
     padding: 15px 36px; border-radius: 10px; text-decoration: none;
-    font-size: 17px; font-weight: 700; display: inline-block;
-    transition: opacity 0.2s;
+    font-size: 17px; font-weight: 700; margin-top: 8px;
   }
-  .btn-banner:hover { opacity: 0.9; }
+  .btn-cta:hover { opacity: 0.9; }
+  .cta .closing { margin-top: 48px; font-size: 16px; opacity: 0.85; }
 
   /* FOOTER */
-  footer {
-    background: var(--ink); color: #9ca3af;
-    padding: 40px 20px; text-align: center;
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  footer a { color: #9ca3af; text-decoration: none; margin: 0 12px; font-size: 14px; }
+  footer { background: var(--ink); color: #9ca3af; padding: 40px 20px; text-align: center; display: flex; flex-direction: column; gap: 12px; }
+  footer a { color: #9ca3af; text-decoration: none; margin: 0 10px; font-size: 14px; display: inline-block; }
   footer a:hover { color: var(--white); }
   footer p { font-size: 13px; }
 
   /* RESPONSIVE */
-  @media (max-width: 640px) {
-    nav { padding: 14px 20px; }
-    .nav-links { gap: 16px; }
-    .stats { gap: 28px; }
+  @media (max-width: 760px) {
+    nav { padding: 12px 16px; flex-wrap: wrap; }
+    .nav-links { gap: 14px; flex-wrap: wrap; }
+    .nav-links .nav-optional { display: none; }
+    section { padding: 64px 16px; }
+    .hero { padding: 64px 16px; }
+    .risk-list { grid-template-columns: 1fr; gap: 28px; margin: 32px 0 48px; }
+    .studio-system { grid-template-columns: 1fr; }
+    .studio { padding: 28px 24px; border-right: none !important; border-bottom: 1px solid var(--border); }
+    .studio:last-child { border-bottom: none; }
   }
 </style>
+<script>
+// Resolve language before first paint: ?lang= > saved preference > browser language.
+(function () {
+  var lang = 'en';
+  try {
+    var requested = new URLSearchParams(location.search).get('lang');
+    var saved = sessionStorage.getItem('agentraining_lang');
+    lang = requested === 'en' || requested === 'zh' ? requested
+      : saved === 'en' || saved === 'zh' ? saved
+      : (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  } catch (e) {}
+  document.documentElement.setAttribute('data-lang', lang);
+})();
+</script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function () {
@@ -448,553 +194,173 @@ window.addEventListener('DOMContentLoaded', function () {
 <!-- NAV -->
 <nav>
   <a class="logo" href="index.html">AgentTraining<span>.AI</span></a>
-  <div class="nav-links"><a href="studios.html" style="color:var(--brand);font-weight:700;">Four Studios</a>
-    <a href="#features">Features</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#enterprise" style="color:var(--brand);font-weight:700;">Enterprise</a>
-    <a href="#industries">Industries</a>
+  <div class="nav-links">
+    <a class="nav-optional" href="studios.html"><span data-l="en">Four Studios</span><span data-l="zh">四個 Studio</span></a>
+    <a class="nav-optional" href="simulator.html"><span data-l="en">Try Practice</span><span data-l="zh">體驗練習</span></a>
+    <a href="pilot.html?pilot=1"><span data-l="en">Sign in</span><span data-l="zh">登入</span></a>
     <div class="nav-lang">
-      <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchIndexLang('en')">EN</button>
+      <button type="button" class="nav-lang-btn" id="nav-en" onclick="switchIndexLang('en')">EN</button>
       <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchIndexLang('zh')">中文</button>
     </div>
-    <a class="btn-nav" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Book Team Demo</a>
+    <a class="btn-nav" href="pilot-start.html"><span data-l="en">Start a Pilot</span><span data-l="zh">開始試點</span></a>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">🏆 Enterprise Sales Capability Platform</div>
-  <h1>Train Every Advisor.<br/><span>Coach Every Manager.<br/>Advance Every Client.</span></h1>
-  <p>AgentTraining.ai connects real client cases, company knowledge, personalized practice, and manager coaching into one continuous sales capability system.</p>
-  <p class="hero-audience">Built for individual advisors, sales teams, and enterprise leaders.</p>
+<main>
+
+<!-- 1. HERO -->
+<section class="hero" id="hero">
+  <h1>
+    <span data-l="en">Recruiting is only the beginning.</span>
+    <span data-l="zh">招到人，只是開始。</span>
+    <span data-l="en">Helping new advisors produce results is how a team truly grows.</span>
+    <span data-l="zh">把新人帶出成績，才是真正的團隊增長。</span>
+  </h1>
+  <p class="hook">
+    <span data-l="en">Don't wait until someone leaves to discover they stopped progressing weeks ago.</span>
+    <span data-l="zh">不要等到一個人離開，才發現他幾個星期前就已經停下來了。</span>
+  </p>
+  <p class="lead">
+    <span data-l="en">AgentTraining helps insurance teams spot training problems earlier, act sooner, and turn knowledge into client-ready skills through realistic practice.</span>
+    <span data-l="zh">AgentTraining 幫助保險團隊更早發現訓練中的問題、更快介入，讓新人透過真實場景反覆練習，把知識逐漸變成面對客戶的能力。</span>
+  </p>
   <div class="hero-cta">
-    <a class="btn-primary" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Start a Team Pilot →</a>
-    <a class="btn-secondary" href="simulator.html">Try Individual Practice</a>
+    <a class="btn-primary" href="pilot-start.html"><span data-l="en">Start a 14-Day Pilot</span><span data-l="zh">開始 14 天試點</span></a>
+    <a class="btn-secondary" href="#studios"><span data-l="en">See How It Works</span><span data-l="zh">看看如何運作</span></a>
   </div>
-  <p class="hero-sub">Insurance-first &nbsp;·&nbsp; English + 繁體中文 &nbsp;·&nbsp; Individual and team pathways</p>
-</div>
+</section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat"><div class="stat-num">👤</div><div class="stat-label"><strong>Real Client Cases</strong>Start with the conversations your advisors actually face.</div></div>
-  <div class="stat"><div class="stat-num">🎯</div><div class="stat-label"><strong>Personalized Practice</strong>Target the capability gap behind each client challenge.</div></div>
-  <div class="stat"><div class="stat-num">📚</div><div class="stat-label"><strong>Company Knowledge</strong>Align coaching with your products, methods, and standards.</div></div>
-  <div class="stat"><div class="stat-num">📊</div><div class="stat-label"><strong>Manager Visibility</strong>Know who needs help and what should happen next.</div></div>
-</div>
+<!-- 2. RISK -->
+<section id="risk">
+  <div class="inner">
+    <h2>
+      <span data-l="en">You help clients manage risk every day.<br/>Who helps you manage the risks in your team?</span>
+      <span data-l="zh">您每天幫助客戶管理風險。<br/>誰來和您一起管理團隊的風險？</span>
+    </h2>
 
-<!-- METHOD - SIGNATURE DIFFERENTIATOR -->
-<section class="method">
-  <div class="section-inner">
-    <div class="method-badge">⚔️ Our Exclusive Method</div>
-    <h2>Practicing Alone With AI Won't Make You Better.<br/>Training Here Will.</h2>
-    <p class="method-sub">You can open ChatGPT right now and roleplay a sales call. It will tell you "great job." It has no idea what good actually looks like in your industry — and it has no consistent standard to measure you against.</p>
-    <p class="method-warning">⚠️ That's not training. That's rehearsing in the dark. The difference is what happens after you respond.</p>
-
-    <div class="method-compare">
-      <div class="method-compare-col">
-        <div class="method-compare-header bad">Any Generic AI Chatbot</div>
-        <ul class="method-compare-list bad-list">
-          <li>Improvises — no consistent standard</li>
-          <li>Tells you "great job" regardless</li>
-          <li>Can't evaluate if you actually understood the client</li>
-          <li>No industry-specific objection knowledge</li>
-          <li>Session 1 and session 100 scored the same way: not at all</li>
-        </ul>
+    <div class="risk-list">
+      <div class="risk-item">
+        <h3><span data-l="en">New advisors who don't stay</span><span data-l="zh">新人流失</span></h3>
+        <p><span data-l="en">They join the team, but capability and confidence take too long to build.</span><span data-l="zh">人招進來了，卻遲遲建立不了能力和信心。</span></p>
       </div>
-      <div class="method-compare-col">
-        <div class="method-compare-header good">AgentTraining AI</div>
-        <ul class="method-compare-list good-list">
-          <li>Same scoring framework every session</li>
-          <li>Scores whether you understood before you persuaded</li>
-          <li>Flags when you assumed instead of listened</li>
-          <li>Built on real insurance, real estate &amp; wellness objections</li>
-          <li>Catches the habits no one else is correcting anymore</li>
-        </ul>
+      <div class="risk-item">
+        <h3><span data-l="en">Training that doesn't carry into the field</span><span data-l="zh">訓練落不了地</span></h3>
+        <p><span data-l="en">The courses and meetings happened. In front of a client, they still don't know what to say or how to handle the objection.</span><span data-l="zh">課上了、會開了，真正面對客戶時還是不會說、不會處理問題。</span></p>
+      </div>
+      <div class="risk-item">
+        <h3><span data-l="en">Competition for talent</span><span data-l="zh">人才競爭</span></h3>
+        <p><span data-l="en">You aren't only competing for clients. You're competing for people who can actually produce.</span><span data-l="zh">今天競爭的不只是客戶，也是能夠真正做出業務的人。</span></p>
+      </div>
+      <div class="risk-item">
+        <h3><span data-l="en">A widening training gap</span><span data-l="zh">訓練能力的差距正在擴大</span></h3>
+        <p><span data-l="en">AI is speeding up practice, feedback, and coaching. Teams that find their approach sooner build their training capability sooner.</span><span data-l="zh">AI 正在加快練習、反饋和管理的速度。越早找到適合團隊的方法，越早建立自己的訓練能力。</span></p>
       </div>
     </div>
 
-    <div class="method-grid" style="margin-top:32px;">
-      <div class="method-card">
-        <div class="method-card-num">EASTERN STRATEGY</div>
-        <h3>知己知彼 — Understand Before You Persuade</h3>
-        <p>Sun Tzu: victory comes from understanding your counterpart first. Our AI coach scores whether you understood the client's real concern before you tried to move them — not just whether you sounded confident.</p>
-      </div>
-      <div class="method-card">
-        <div class="method-card-num">WESTERN INFLUENCE</div>
-        <h3>Dale Carnegie — Let Them Arrive at "Yes"</h3>
-        <p>Real influence comes from genuine interest, not pressure. Our scoring rewards agents who guide clients to their own conclusion — not agents who argue their way to a close.</p>
-      </div>
-    </div>
-
-    <div class="method-footer-note">
-      <strong>This applies equally to a brand-new agent and a 15-year veteran.</strong> Experienced agents lose major deals not because they don't know enough — but because experience creates blind spots no one corrects anymore. Our scoring catches what self-assessment misses. Every time.
+    <div class="risk-close">
+      <p><span data-l="en">A risk you can't see yet is still a risk.</span><span data-l="zh">風險不會因為暫時看不見，就不存在。</span></p>
+      <p><span data-l="en">Leave this in a drawer for three months, and your new advisors won't wait three months for you.</span><span data-l="zh">這件事在抽屜裡放三個月，新人不會等您三個月。</span></p>
+      <p><span data-l="en">What matters is simple: <strong>see it earlier, act sooner.</strong></span><span data-l="zh">真正重要的是：<strong>更早看見，更早行動。</strong></span></p>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="section-inner">
-    <div class="section-tag">One Continuous Capability System</div>
-    <h2>Four Studios. One team improvement cycle.</h2>
-    <p class="section-sub">Move from a real client challenge to targeted practice, company-aligned coaching, and a clear leadership action.</p>
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-blue">🎯</div>
-          <h3>Practice Studio <span style="font-size:10px;color:#15803d;background:#dcfce7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">LIVE</span></h3>
-        </div>
-        <p>Give every advisor a safe place to prepare for difficult conversations and receive consistent feedback.</p>
-        <ul class="feature-bullets">
-          <li>Industry-specific role-play</li>
-          <li>Immediate scorecard and coaching</li>
-          <li>English and Traditional Chinese</li>
-          <li>Repeat safely before the real meeting</li>
-        </ul>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-purple">👤</div>
-          <h3>Client Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
-        </div>
-        <p>Turn a real client objection into preparation for the advisor's next conversation and next action.</p>
-        <ul class="feature-bullets">
-          <li>Capture needs, objections, and status</li>
-          <li>Connect cases to relevant practice</li>
-          <li>Prepare follow-up conversations</li>
-          <li>Keep the client outcome in view</li>
-        </ul>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-green">📚</div>
-          <h3>Knowledge Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
-        </div>
-        <p>Bring company products, training methods, and compliance boundaries into the coaching process.</p>
-        <ul class="feature-bullets">
-          <li>Company training materials</li>
-          <li>Product and process knowledge</li>
-          <li>Approved sales standards</li>
-          <li>Reusable successful practices</li>
-        </ul>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card-header">
-          <div class="feature-icon-wrap icon-orange">📊</div>
-          <h3>Leadership Studio <span style="font-size:10px;color:#92400e;background:#fef3c7;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">TEAM PILOT</span></h3>
-        </div>
-        <p>Help leaders see capability gaps, assign the right practice, and review what happens next.</p>
-        <ul class="feature-bullets">
-          <li>See who needs help</li>
-          <li>Identify the specific skill gap</li>
-          <li>Assign focused practice</li>
-          <li>Review progress with the team</li>
-        </ul>
-      </div>
-
+<!-- 3. FOUR STUDIOS -->
+<section class="studios" id="studios">
+  <div class="inner">
+    <div class="studios-head">
+      <h2>Four Studios. One Goal.</h2>
+      <p class="lead"><span data-l="en">Turn new recruits into capable advisors.</span><span data-l="zh">把新人真正帶出來。</span></p>
     </div>
+
+    <div class="studio-system">
+      <div class="studio">
+        <div class="studio-name">Practice Studio</div>
+        <h3><span data-l="en">Practice before the client opportunity is on the line.</span><span data-l="zh">在見客戶以前，把問題練出來。</span></h3>
+        <p><span data-l="en">AI plays a realistic client so advisors can rehearse needs analysis, objection handling, follow-up, and closing, again and again.</span><span data-l="zh">用 AI 模擬真實客戶，反覆練需求分析、異議處理、跟進與成交。</span></p>
+        <p><span data-l="en">Mistakes you can make in practice shouldn't be made in front of a client.</span><span data-l="zh">能在練習裡犯的錯，就不要留到客戶面前再犯。</span></p>
+      </div>
+      <div class="studio">
+        <div class="studio-name">Client Studio</div>
+        <h3><span data-l="en">Turn real client challenges into the next practice session.</span><span data-l="zh">把真實業務的問題帶回訓練。</span></h3>
+        <p><span data-l="en">"It's too expensive." A client who won't decide. A follow-up that goes nowhere. A case that's stuck. Each real difficulty becomes targeted practice.</span><span data-l="zh">客戶說太貴、遲遲不決定、Follow-up 沒結果、Case 卡住——把真實困難變成下一次針對性訓練。</span></p>
+      </div>
+      <div class="studio">
+        <div class="studio-name">Knowledge Studio</div>
+        <h3><span data-l="en">Turn company knowledge into skills advisors can actually use.</span><span data-l="zh">把公司的知識變成真正會用的能力。</span></h3>
+        <p><span data-l="en">Product, underwriting, and sales materials don't just sit in a folder. They flow into practice, so advisors learn to explain them and use them.</span><span data-l="zh">產品、核保和銷售資料不只是存在資料夾裡，而是進入練習，讓新人逐漸能夠說出來、用出來。</span></p>
+      </div>
+      <div class="studio">
+        <div class="studio-name">Manager Studio</div>
+        <h3><span data-l="en">See who needs help before they quietly disengage.</span><span data-l="zh">在人離開以前，看見他正在掉隊。</span></h3>
+        <p><span data-l="en">See who is practicing, who is improving, who has stopped, and who keeps getting stuck, then assign the next practice in time.</span><span data-l="zh">看見誰在練、誰在進步、誰開始停下來、誰反覆卡住，並及時安排下一步訓練。</span></p>
+      </div>
+    </div>
+
+    <div class="progression" aria-label="Recruit, Practice, Progress, Results, Retention, Growth">
+      <span data-l="en">Recruit</span><span data-l="zh">招募</span><span class="arrow">→</span>
+      <span data-l="en">Practice</span><span data-l="zh">練習</span><span class="arrow">→</span>
+      <span data-l="en">Progress</span><span data-l="zh">進步</span><span class="arrow">→</span>
+      <span data-l="en">Results</span><span data-l="zh">成績</span><span class="arrow">→</span>
+      <span data-l="en">Retention</span><span data-l="zh">留存</span><span class="arrow">→</span>
+      <span class="end"><span data-l="en">Growth</span><span data-l="zh">增長</span></span>
+    </div>
+
+    <p class="studios-close">
+      <span data-l="en">Not another tool for your team to manage.<br/><strong>A better chance for the people you recruited to actually grow.</strong></span>
+      <span data-l="zh">不是為了讓團隊多用一個軟體。<br/><strong>而是為了讓您已經花時間招進來的人，有更好的機會真正成長起來。</strong></span>
+    </p>
   </div>
 </section>
 
-<!-- AI TECHNOLOGY -->
-<section class="ai-tech">
-  <div class="section-inner">
-    <div class="section-tag">Powered by Advanced AI</div>
-    <h2>The technology behind every training session</h2>
-    <p class="section-sub">Four AI capabilities work together to make every practice session as close to a real sales call as possible.</p>
-    <div class="ai-tech-grid">
-
-      <div class="ai-tech-card">
-        <div class="ai-tech-card-header">
-          <div class="ai-tech-icon icon-dark-blue">💬</div>
-          <h3>Contextual AI Conversation</h3>
-        </div>
-        <p>Our AI understands the full context of your conversation — not just the last message. It responds the way a real prospect would, tracking what you've said and holding you accountable.</p>
-        <ul class="ai-tech-bullets">
-          <li>Remembers your earlier claims in the conversation</li>
-          <li>Catches vague or unsupported statements</li>
-          <li>Drives toward natural conversation flow</li>
-          <li>Multi-turn dialogue that evolves realistically</li>
-        </ul>
-      </div>
-
-      <div class="ai-tech-card">
-        <div class="ai-tech-card-header">
-          <div class="ai-tech-icon icon-dark-purple">🧠</div>
-          <h3>Behavioral Analysis</h3>
-        </div>
-        <p>After each session, AI evaluates the quality of your communication — not just what you said, but how effectively you built trust, handled pushback, and moved toward a close.</p>
-        <ul class="ai-tech-bullets">
-          <li>Objection handling effectiveness score</li>
-          <li>Empathy and rapport measurement</li>
-          <li>Question quality assessment</li>
-          <li>Closing confidence rating</li>
-        </ul>
-      </div>
-
-      <div class="ai-tech-card">
-        <div class="ai-tech-card-header">
-          <div class="ai-tech-icon icon-dark-teal">🎯</div>
-          <h3>Industry Intelligence</h3>
-        </div>
-        <p>The AI is trained with deep knowledge of insurance, real estate, and technology sales — including product specifics, compliance language, and the objections real buyers actually raise.</p>
-        <ul class="ai-tech-bullets">
-          <li>IUL, whole life, annuity product knowledge built in</li>
-          <li>Real estate negotiation dynamics</li>
-          <li>SaaS buying committee behavior</li>
-          <li>Compliance-aware conversation guardrails</li>
-        </ul>
-      </div>
-
-      <div class="ai-tech-card">
-        <div class="ai-tech-card-header">
-          <div class="ai-tech-icon icon-dark-amber">📈</div>
-          <h3>Adaptive Difficulty</h3>
-        </div>
-        <p>The AI adjusts scenario complexity based on how you perform. Beginners get foundational objections. Experienced agents face sophisticated, multi-layered resistance.</p>
-        <ul class="ai-tech-bullets">
-          <li>Beginner to advanced difficulty levels</li>
-          <li>Targeted scenario selection by weak area</li>
-          <li>Progress tracking across sessions</li>
-          <li>Personalized improvement suggestions</li>
-        </ul>
-      </div>
-
-    </div>
+<!-- 4. CTA -->
+<section class="cta" id="pilot">
+  <div class="narrow">
+    <h2><span data-l="en">Two weeks from now, don't take our word for it.</span><span data-l="zh">兩週以後，不需要相信我們的宣傳。</span></h2>
+    <p><span data-l="en">Use your own team, your own training content, and your own real scenarios.</span><span data-l="zh">用您自己的團隊、自己的訓練內容、自己的實際場景。</span></p>
+    <p><span data-l="en">Run a 14-day pilot with 5–10 new advisors. Then look at three questions:</span><span data-l="zh">選擇 5–10 位新人，執行一次 14 天 Pilot。兩週以後，直接看三個問題：</span></p>
+    <ul class="questions">
+      <li><span data-l="en">Who is progressing?</span><span data-l="zh">誰在成長？</span></li>
+      <li><span data-l="en">Who needs help?</span><span data-l="zh">誰需要幫助？</span></li>
+      <li><span data-l="en">What should happen next?</span><span data-l="zh">下一步該做什麼？</span></li>
+    </ul>
+    <a class="btn-cta" href="pilot-start.html"><span data-l="en">Start Your 14-Day Pilot</span><span data-l="zh">開始 14 天試點</span></a>
+    <p class="closing"><span data-l="en">You lead the team.<br/>We help you manage the risks of growing it.</span><span data-l="zh">團隊由您帶領。<br/>成長的風險，我們和您一起管理。</span></p>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section>
-  <div class="section-inner">
-    <div class="section-tag">The Team Capability Loop</div>
-    <h2>From a real client challenge to a better next action</h2>
-    <p class="section-sub">Start small: one team, one recurring capability gap, and one measurable outcome.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Capture the Challenge</h3>
-        <p>Start with a real objection or client conversation your advisors repeatedly face.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Practice the Conversation</h3>
-        <p>Turn that challenge into focused role-play before the next real client interaction.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Coach to Your Standard</h3>
-        <p>Use structured feedback and, during a team pilot, align coaching with company knowledge.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h3>Identify the Gap</h3>
-        <p>See whether the advisor needs help with discovery, trust, objections, or next-step discipline.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <h3>Lead the Next Action</h3>
-        <p>Give the advisor focused follow-up and review whether performance improves over time.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- INDUSTRIES -->
-<section class="industries" id="industries">
-  <div class="section-inner">
-    <div class="section-tag">Industries</div>
-    <h2>Purpose-built for your sector</h2>
-    <p class="section-sub">Generic sales training misses the specific objections, regulations, and buyer psychology of your industry. We don't.</p>
-    <div class="industry-grid">
-
-      <div class="industry-card">
-        <h3>🏦 Insurance</h3>
-        <p>Practice the most complex conversations in financial sales — from product explanation to objection handling to closing.</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Life Insurance (Whole Life, Term, IUL)
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Annuity &amp; Retirement Planning
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Health Insurance
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
-            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Medicare &amp; Senior Markets
-          </div>
-        </div>
-      </div>
-
-      <div class="industry-card">
-        <h3>🏠 Real Estate</h3>
-        <p>Buyer consultations, listing presentations, price reduction conversations. Train for competitive markets and difficult sellers.</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Buyer Consultations
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Listing Presentations
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Objection Handling
-          </div>
-        </div>
-      </div>
-
-      <div class="industry-card">
-        <h3>🌿 Health &amp; Wellness</h3>
-        <p>Build trust in a skeptical market. Practice handling effectiveness doubts, price resistance, and competing claims — without making promises you can't keep.</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Trust &amp; Effectiveness Objections
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Price &amp; Value Conversations
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Nutritional &amp; Supplement Sales
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#374151;">
-            <span style="background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">LIVE</span> Wellness Service Consultations
-          </div>
-        </div>
-      </div>
-
-      <div class="industry-card" style="opacity:0.7;">
-        <h3>💻 Technology</h3>
-        <p>SaaS demos, ROI justification, multi-stakeholder selling. Practice with skeptical IT directors and budget-conscious CFOs.</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
-            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> SaaS Product Demos
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
-            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> ROI &amp; Budget Conversations
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#9ca3af;">
-            <span style="background:#f3f4f6;color:#9ca3af;padding:2px 10px;border-radius:99px;font-weight:600;font-size:11px;white-space:nowrap;">SOON</span> Enterprise Multi-Stakeholder
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PILOT MEASURES -->
-<section>
-  <div class="section-inner">
-    <div class="section-tag">Pilot Evidence</div>
-    <h2>What a focused pilot measures</h2>
-    <p class="section-sub">Agree on the capability gap first, then review observable practice evidence instead of relying on impressions.</p>
-    <div class="testimonials-grid">
-      <div class="testimonial">
-        <div class="stars">01</div>
-        <p class="testimonial-text"><strong>Practice participation</strong><br/>Who completed the assigned scenario, when it was completed, and whether the requested practice length was followed.</p>
-      </div>
-      <div class="testimonial">
-        <div class="stars">02</div>
-        <p class="testimonial-text"><strong>Demonstrated capability</strong><br/>Rubric scores, coach summary, and the complete transcript that supports each evidence-based observation.</p>
-      </div>
-      <div class="testimonial">
-        <div class="stars">03</div>
-        <p class="testimonial-text"><strong>Next coaching action</strong><br/>The specific follow-up a manager assigns, followed by comparable evidence that shows whether performance is improving.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BILINGUAL NOTE -->
-<div class="bilingual">
-  <p>🌏 &nbsp; AgentTraining AI supports <strong>English</strong> and <strong>Traditional Chinese (繁體中文)</strong> — built for US, Hong Kong, and Singapore markets.</p>
-</div>
-
-<!-- FAQ -->
-<section>
-  <div class="section-inner">
-    <div class="section-tag">Common Questions</div>
-    <h2>Before you ask, we'll answer</h2>
-    <p class="section-sub">Including the question every skeptical agent asks first.</p>
-    <div class="faq-list">
-
-      <div class="faq-item">
-        <div class="faq-q">Why should I use your platform instead of just opening ChatGPT or Claude myself and practicing?</div>
-        <div class="faq-a">You can absolutely improvise a roleplay with any general AI chatbot — but improvising isn't the same as training. A generic chatbot doesn't know what "good" looks like in an insurance or real estate sales conversation, won't push back the way a real skeptical client does, and at the end it will just tell you "great job" without telling you why or what to fix. AgentTraining AI scores every response against a consistent framework built on Sun Tzu's strategic thinking and Dale Carnegie's principles of influence — the same standard every time, so your progress is actually measurable instead of just a feeling.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">I've been selling for 10 years. Isn't this just for new agents?</div>
-        <div class="faq-a">No. The scoring framework doesn't get easier or simpler based on experience — it's the same standard for everyone. Veteran agents often discover their blind spots are in places they stopped paying attention to years ago: jumping to persuasion before fully understanding an objection, or pushing toward a close instead of letting the client arrive there themselves. Practicing against a consistent standard is valuable precisely because experience can create bad habits that nobody is correcting anymore.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">How is the AI client different from a real client?</div>
-        <div class="faq-a">It isn't trying to be identical — it's trying to be useful. The AI is built with industry-specific knowledge (life insurance, annuities, real estate negotiation) and responds the way real clients actually push back, not with generic objections. You can fail safely here, as many times as you need to, before that same conversation happens with a real client and real money on the line.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">What if I don't like the feedback I get?</div>
-        <div class="faq-a">Then it's doing its job. The point of structured feedback isn't to make you feel good — it's to show you specifically where the conversation went off track, so you can fix it before it costs you a real deal. Every session includes both what you did well and what to improve.</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ENTERPRISE SECTION -->
-<section id="enterprise" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:white;padding:80px 0;">
-  <div class="section-inner">
-    <div style="text-align:center;margin-bottom:48px;">
-      <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:20px;padding:6px 18px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;">For Teams &amp; Enterprises</div>
-      <h2 style="color:white;font-size:clamp(28px,4vw,44px);margin-bottom:16px;">Know Who Needs Help, What They Need, and What Happens Next.</h2>
-      <p style="color:rgba(255,255,255,0.7);font-size:18px;max-width:700px;margin:0 auto;line-height:1.6;">Move beyond course completion. Connect the client challenges your team faces with targeted practice, clear capability gaps, and the leader's next coaching action.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:48px;">
-      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
-        <div style="font-size:32px;margin-bottom:12px;">⚡</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">See the Capability Gap</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Identify whether an advisor needs help with discovery, trust, objections, product explanation, or securing a clear next step.</p>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
-        <div style="font-size:32px;margin-bottom:12px;">📊</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Assign Focused Practice</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Give the right advisor the right practice instead of sending the entire team through the same generic training.</p>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.12);">
-        <div style="font-size:32px;margin-bottom:12px;">🎯</div>
-        <h3 style="color:white;font-size:18px;margin-bottom:8px;">Review the Next Outcome</h3>
-        <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">Help leaders review whether the advisor followed up, improved the conversation, and moved the client toward the next stage.</p>
-      </div>
-    </div>
-
-    <div style="background:rgba(255,255,255,0.06);border-radius:20px;padding:36px;border:1px solid rgba(255,255,255,0.15);text-align:center;max-width:640px;margin:0 auto;">
-      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:8px;">A practical starting point:</div>
-      <blockquote style="font-size:20px;font-weight:700;color:white;line-height:1.4;margin:0 0 24px;font-style:italic;">"Start with one team, two or three recurring objections, and one outcome your leader wants to improve."</blockquote>
-      <a href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry" style="display:inline-block;background:white;color:#1e3a8a;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;">Start a Team Pilot →</a>
-      <p style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:12px;">Suggested pilot: 5–10 advisors · 2–3 priority objections · 4–6 weeks</p>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="section-inner">
-    <div class="section-tag">Pricing</div>
-    <h2>Start individually—or validate with one team.</h2>
-    <p class="section-sub">Individual advisors can begin immediately. Leaders can start with a focused pilot before deciding on a broader rollout.</p>
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">Free</div>
-        <p class="plan-desc">Try the simulator. No credit card needed.</p>
-        <ul class="plan-features">
-          <li>5 AI practice sessions</li>
-          <li>All industry scenarios</li>
-          <li>Basic feedback scorecard</li>
-          <li>English + Traditional Chinese</li>
-        </ul>
-        <a class="btn-plan btn-plan-outline" href="simulator.html">Start Free</a>
-      </div>
-      <div class="pricing-card">
-        <div class="plan-name">Professional</div>
-        <div class="plan-price">$39<span>/month</span></div>
-        <p class="plan-desc">For individual advisors who want structured, repeatable practice.</p>
-        <ul class="plan-features">
-          <li>80 sessions/month</li>
-          <li>All 41 scenarios</li>
-          <li>Detailed scorecard + replay</li>
-          <li>English + Traditional Chinese</li>
-        </ul>
-        <a class="btn-plan btn-plan-fill" href="https://www.paypal.com/ncp/payment/FQWSVH3NR73EC" target="_blank">Subscribe Now — $39/mo</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="featured-badge">Recommended for Leaders</div>
-        <div class="plan-name">Team Pilot</div>
-        <div class="plan-price">Let's Talk</div>
-        <p class="plan-desc">For a leader who wants to test one priority capability gap with a focused group.</p>
-        <ul class="plan-features">
-          <li>Suggested group of 5–10 advisors</li>
-          <li>2–3 priority client objections</li>
-          <li>Agreed pilot success measures</li>
-          <li>Leadership review at the end</li>
-        </ul>
-        <a class="btn-plan btn-plan-fill" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Plan My Pilot</a>
-      </div>
-      <div class="pricing-card">
-        <div class="plan-name">Enterprise</div>
-        <div class="plan-price">Custom</div>
-        <p class="plan-desc">For organizations ready to plan a broader rollout after validating the use case.</p>
-        <ul class="plan-features">
-          <li>Scope based on team size and goals</li>
-          <li>Company knowledge alignment plan</li>
-          <li>Manager workflow and rollout plan</li>
-          <li>Pricing based on validated requirements</li>
-        </ul>
-        <a class="btn-plan btn-plan-outline" href="mailto:sales@agentraining.ai?subject=Enterprise%20Rollout%20Inquiry">Discuss Enterprise Scope</a>
-      </div>
-    </div>
-    <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--ink-muted);">No large rollout required to begin. A small, measurable pilot is the recommended first step.</p>
-  </div>
-</section>
-
-<!-- BANNER CTA -->
-<div class="banner">
-  <h2>Start with one team, one capability gap, and one measurable outcome.</h2>
-  <p>Choose two or three recurring client objections and test a focused pilot with 5–10 advisors.</p>
-  <a class="btn-banner" href="mailto:sales@agentraining.ai?subject=Team%20Pilot%20Inquiry">Start a Team Pilot →</a>
-  <p style="font-size:14px;margin-top:20px;margin-bottom:0;opacity:0.75;">Individual advisor? <a href="simulator.html" style="color:white;font-weight:700;">Try the simulator free.</a></p>
-</div>
+</main>
 
 <!-- FOOTER -->
 <footer>
   <div>
-    <a href="index.html">Home</a>
-    <a href="simulator.html">AI Simulator</a>
-    <a href="terms.html">Terms of Service</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="mailto:contact@agentraining.ai">Contact</a>
+    <a href="index.html"><span data-l="en">Home</span><span data-l="zh">首頁</span></a>
+    <a href="studios.html"><span data-l="en">Four Studios</span><span data-l="zh">四個 Studio</span></a>
+    <a href="simulator.html"><span data-l="en">AI Simulator</span><span data-l="zh">AI 模擬練習</span></a>
+    <a href="https://www.paypal.com/ncp/payment/FQWSVH3NR73EC" target="_blank" rel="noopener"><span data-l="en">Individual Plan ($39/mo)</span><span data-l="zh">個人方案（$39/月）</span></a>
+    <a href="mailto:sales@agentraining.ai?subject=Enterprise%20Rollout%20Inquiry"><span data-l="en">Enterprise</span><span data-l="zh">企業方案</span></a>
+    <a href="pilot.html?pilot=1"><span data-l="en">Sign in</span><span data-l="zh">登入</span></a>
+    <a href="terms.html"><span data-l="en">Terms of Service</span><span data-l="zh">服務條款</span></a>
+    <a href="privacy.html"><span data-l="en">Privacy Policy</span><span data-l="zh">隱私政策</span></a>
+    <a href="mailto:contact@agentraining.ai"><span data-l="en">Contact</span><span data-l="zh">聯絡我們</span></a>
   </div>
   <p>© 2026 AgentTraining AI &nbsp;·&nbsp; <a href="mailto:contact@agentraining.ai">contact@agentraining.ai</a></p>
 </footer>
 
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registered'))
-      .catch(err => console.log('SW failed:', err));
-  });
-}
-</script>
-<script>
 function switchIndexLang(lang) {
+  if (lang !== 'en' && lang !== 'zh') lang = 'en';
+  document.documentElement.setAttribute('data-lang', lang);
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
   document.getElementById('nav-en').classList.toggle('active', lang === 'en');
   document.getElementById('nav-zh').classList.toggle('active', lang === 'zh');
-  // Store preference for simulator
-  sessionStorage.setItem('agentraining_lang', lang);
-  // Update hero text
-  const h1 = document.querySelector('.hero h1');
-  const heroP = document.querySelector('.hero p');
-  const audienceP = document.querySelector('.hero-audience');
-  const badge = document.querySelector('.hero-badge');
-  if (lang === 'zh') {
-    h1.innerHTML = '訓練每一位顧問。<br/><span>輔導每一位主管。<br/>推進每一位客戶。</span>';
-    heroP.textContent = 'AgentTraining.ai 把真實客戶案例、企業知識、個性化練習與主管輔導連接起來，形成一套持續運轉的銷售能力系統。';
-    audienceP.textContent = '無論您是個人顧問、銷售團隊還是企業主管，都可以從這裡開始。';
-    badge.textContent = '🏆 企業銷售能力平台';
-  } else {
-    h1.innerHTML = 'Train Every Advisor.<br/><span>Coach Every Manager.<br/>Advance Every Client.</span>';
-    heroP.textContent = 'AgentTraining.ai connects real client cases, company knowledge, personalized practice, and manager coaching into one continuous sales capability system.';
-    audienceP.textContent = 'Built for individual advisors, sales teams, and enterprise leaders.';
-    badge.textContent = '🏆 Enterprise Sales Capability Platform';
-  }
+  // Store preference for simulator and other pages
+  try { sessionStorage.setItem('agentraining_lang', lang); } catch (e) {}
+  document.title = lang === 'zh'
+    ? 'AgentTraining AI — 把新人真正帶出來'
+    : 'AgentTraining AI — Turn New Recruits into Capable Advisors';
 }
+switchIndexLang(document.documentElement.getAttribute('data-lang'));
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script>
 
@@ -1006,7 +372,7 @@ function switchIndexLang(lang) {
       const notice = document.createElement('div');
       notice.setAttribute('role', 'status');
       notice.style.cssText = 'position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:2147483000;max-width:520px;width:calc(100% - 32px);background:#ecfdf5;color:#166534;border:1px solid #86efac;border-radius:12px;padding:14px 18px;box-shadow:0 10px 30px rgba(0,0,0,.14);font:700 14px/1.5 Inter,-apple-system,BlinkMacSystemFont,sans-serif;text-align:center';
-      notice.textContent = '账号设置成功，可以登录。/ Account setup complete. You can now sign in.';
+      notice.textContent = '賬號設定成功，可以登入。/ Account setup complete. You can now sign in.';
       document.body.appendChild(notice);
       window.history.replaceState({}, document.title, '/');
       window.setTimeout(function() { notice.remove(); }, 8000);
@@ -1040,16 +406,16 @@ function switchIndexLang(lang) {
   backdrop.className = 'identity-setup-backdrop';
   backdrop.innerHTML =
     '<main class="identity-setup-card" role="dialog" aria-modal="true" aria-labelledby="identity-setup-title">' +
-      '<h2 id="identity-setup-title">' + (isInvite ? '完成注册 / Complete signup' : '重设密码 / Reset password') + '</h2>' +
-      '<p>' + (isInvite ? '请设置并确认您的登录密码。/ Set and confirm your login password.' : '请输入并确认您的新密码。/ Enter and confirm your new password.') + '</p>' +
+      '<h2 id="identity-setup-title">' + (isInvite ? '完成註冊 / Complete signup' : '重設密碼 / Reset password') + '</h2>' +
+      '<p>' + (isInvite ? '請設定並確認您的登入密碼。/ Set and confirm your login password.' : '請輸入並確認您的新密碼。/ Enter and confirm your new password.') + '</p>' +
       '<form id="identity-setup-form">' +
-        '<div class="identity-field"><label for="identity-password">密码 / Password</label>' +
+        '<div class="identity-field"><label for="identity-password">密碼 / Password</label>' +
           '<div class="identity-password-wrap"><input id="identity-password" type="password" minlength="6" autocomplete="new-password" required>' +
-          '<button class="identity-toggle" type="button" data-target="identity-password">👁 显示 / Show</button></div></div>' +
-        '<div class="identity-field"><label for="identity-password-confirm">确认密码 / Confirm password</label>' +
+          '<button class="identity-toggle" type="button" data-target="identity-password">👁 顯示 / Show</button></div></div>' +
+        '<div class="identity-field"><label for="identity-password-confirm">確認密碼 / Confirm password</label>' +
           '<div class="identity-password-wrap"><input id="identity-password-confirm" type="password" minlength="6" autocomplete="new-password" required>' +
-          '<button class="identity-toggle" type="button" data-target="identity-password-confirm">👁 显示 / Show</button></div></div>' +
-        '<button class="identity-submit" type="submit">' + (isInvite ? '完成注册 / Complete signup' : '保存新密码 / Save new password') + '</button>' +
+          '<button class="identity-toggle" type="button" data-target="identity-password-confirm">👁 顯示 / Show</button></div></div>' +
+        '<button class="identity-submit" type="submit">' + (isInvite ? '完成註冊 / Complete signup' : '儲存新密碼 / Save new password') + '</button>' +
         '<div id="identity-setup-status" class="identity-status" role="alert"></div>' +
       '</form>' +
     '</main>';
@@ -1060,7 +426,7 @@ function switchIndexLang(lang) {
       const input = document.getElementById(button.getAttribute('data-target'));
       const showing = input.type === 'text';
       input.type = showing ? 'password' : 'text';
-      button.textContent = showing ? '👁 显示 / Show' : '🙈 隐藏 / Hide';
+      button.textContent = showing ? '👁 顯示 / Show' : '🙈 隱藏 / Hide';
     });
   });
 
@@ -1077,20 +443,20 @@ function switchIndexLang(lang) {
 
     if (password.value !== confirmPassword.value) {
       status.className = 'identity-status error';
-      status.textContent = '两次输入的密码不一致。/ Passwords do not match.';
+      status.textContent = '兩次輸入的密碼不一致。/ Passwords do not match.';
       confirmPassword.focus();
       return;
     }
 
     if (password.value.length < 6) {
       status.className = 'identity-status error';
-      status.textContent = '密码至少需要 6 个字符。/ Password must contain at least 6 characters.';
+      status.textContent = '密碼至少需要 6 個字元。/ Password must contain at least 6 characters.';
       password.focus();
       return;
     }
 
     submit.disabled = true;
-    submit.textContent = '处理中… / Processing…';
+    submit.textContent = '處理中… / Processing…';
 
     try {
       while (!window.netlifyIdentity || !window.netlifyIdentity.gotrue) {
@@ -1105,17 +471,17 @@ function switchIndexLang(lang) {
       }
 
       status.className = 'identity-status success';
-      status.textContent = '设置成功，正在进入… / Success. Signing you in…';
+      status.textContent = '設定成功，正在進入… / Success. Signing you in…';
       window.setTimeout(function() {
         window.location.replace('/?identity_setup=success&lang=zh');
       }, 500);
     } catch (error) {
       status.className = 'identity-status error';
       status.textContent = /expired|invalid/i.test(String(error && error.message || error))
-        ? '此链接已失效，请使用最新邮件。/ This link has expired. Please use the newest email.'
-        : '设置未完成，请稍后再试。/ Setup could not be completed. Please try again.';
+        ? '此連結已失效，請使用最新郵件。/ This link has expired. Please use the newest email.'
+        : '設定未完成，請稍後再試。/ Setup could not be completed. Please try again.';
       submit.disabled = false;
-      submit.textContent = isInvite ? '完成注册 / Complete signup' : '保存新密码 / Save new password';
+      submit.textContent = isInvite ? '完成註冊 / Complete signup' : '儲存新密碼 / Save new password';
     }
   });
 

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Start a 14-Day Pilot — AgentTraining.ai</title>
+<style>
+:root{--blue:#1a56db;--ink:#111827;--muted:#64748b;--bg:#f7f8fc;--line:#e2e8f0;--accent:#f59e0b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px Inter,Arial,sans-serif}
+html[data-lang="en"] [data-l="zh"],html[data-lang="zh"] [data-l="en"]{display:none!important}
+.card{max-width:680px;margin:7vh auto;padding:34px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 42px rgba(15,23,42,.08)}
+.logo{color:var(--blue);font-weight:800;font-size:21px;text-decoration:none}.logo span{color:var(--accent)}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:center}.lang button{border:1px solid var(--line);background:#fff;padding:6px 9px;border-radius:7px;cursor:pointer}.lang button.active{color:var(--blue);font-weight:800;background:#eff6ff}
+h1{font-size:32px;margin:30px 0 12px}p{color:var(--muted);line-height:1.65}.steps{margin:26px 0;display:grid;gap:12px}.step{padding:16px;border:1px solid var(--line);border-radius:12px}.step b{display:block;margin-bottom:5px;color:var(--blue)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:9px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{border:1px solid var(--line);color:var(--ink);background:#fff}
+.note{font-size:13px;margin-top:22px}.request{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.request label{display:block;font-weight:700;margin:12px 0 6px}.request input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font:inherit}.request .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.request button{border:0;cursor:pointer}.status{margin-top:12px;font-size:13px;min-height:20px}.ok{color:#047857}.bad{color:#b91c1c}@media(max-width:600px){.request .row{grid-template-columns:1fr}}@media(max-width:720px){.card{margin:0;min-height:100vh;border-radius:0;padding:24px}.top{align-items:flex-start}h1{font-size:28px}}
+</style>
+</head>
+<body><main class="card">
+<div class="top"><a class="logo" href="index.html">AgentTraining<span>.AI</span></a><div class="lang"><button id="en">EN</button><button id="zh">中文</button></div></div>
+<h1><span data-l="en">Start your 14-Day Team Pilot</span><span data-l="zh">開始您的 14 天團隊試點</span></h1>
+<p><span data-l="en">AgentTraining pilots use a secure Manager account and a separate team workspace. We activate each new team before the Manager enters the platform.</span><span data-l="zh">AgentTraining 試點使用安全的主管帳號與獨立團隊工作區。每一個新團隊會先完成啟用，再由主管進入平台。</span></p>
+<div class="steps">
+<div class="step"><b><span data-l="en">1 · Request your pilot</span><span data-l="zh">1 · 申請試點</span></b><span data-l="en">Send us your name, organization, and the email you want to use as the Manager.</span><span data-l="zh">告訴我們您的姓名、機構，以及您希望作為主管帳號使用的 Email。</span></div>
+<div class="step"><b><span data-l="en">2 · Activate your Manager account</span><span data-l="zh">2 · 啟用主管帳號</span></b><span data-l="en">After approval, you receive a secure invitation and create your own password.</span><span data-l="zh">確認後，您會收到安全邀請，並自行設定密碼。</span></div>
+<div class="step"><b><span data-l="en">3 · Enter your team workspace</span><span data-l="zh">3 · 進入團隊工作區</span></b><span data-l="en">Sign in, invite learners, assign Practice, and run the 14-day pilot with your team.</span><span data-l="zh">登入後即可邀請學員、指派 Practice，並與團隊開始 14 天試點。</span></div>
+</div>
+<form class="request" id="requestForm">
+<div class="row"><div><label for="name"><span data-l="en">Your name</span><span data-l="zh">您的姓名</span></label><input id="name" autocomplete="name" required></div><div><label for="email"><span data-l="en">Manager email</span><span data-l="zh">主管 Email</span></label><input id="email" type="email" autocomplete="email" required></div></div>
+<div class="row"><div><label for="organization"><span data-l="en">Organization / team</span><span data-l="zh">機構 / 團隊</span></label><input id="organization" required></div><div><label for="teamSize"><span data-l="en">Approx. team size</span><span data-l="zh">團隊人數（約）</span></label><input id="teamSize" inputmode="numeric"></div></div>
+<div class="actions"><button class="btn primary" id="submitRequest" type="submit"><span data-l="en">Request My Pilot</span><span data-l="zh">申請我的試點</span></button><a class="btn secondary" href="pilot.html?pilot=1"><span data-l="en">Already invited? Sign in</span><span data-l="zh">已收到邀請？登入</span></a></div>
+<div class="status" id="requestStatus" role="status" aria-live="polite"></div>
+</form>
+<p class="note"><span data-l="en">Pilot access is approved before Manager privileges are created. Your password is set by you and is not sent to AgentTraining.</span><span data-l="zh">主管權限會在試點確認後建立。密碼由您自行設定，不會傳送給 AgentTraining。</span></p>
+</main>
+<script>
+function setLang(l){document.documentElement.dataset.lang=l;sessionStorage.setItem('agentraining_lang',l);document.getElementById('en').classList.toggle('active',l==='en');document.getElementById('zh').classList.toggle('active',l==='zh')}
+document.getElementById('en').onclick=()=>setLang('en');document.getElementById('zh').onclick=()=>setLang('zh');
+const saved=sessionStorage.getItem('agentraining_lang');setLang(saved==='zh'||(!saved&&(navigator.language||'').toLowerCase().startsWith('zh'))?'zh':'en');
+document.getElementById('requestForm').addEventListener('submit',async e=>{e.preventDefault();const button=document.getElementById('submitRequest'),status=document.getElementById('requestStatus');button.disabled=true;status.className='status';status.textContent=document.documentElement.dataset.lang==='zh'?'正在提交您的試點申請……':'Submitting your pilot request…';try{const response=await fetch('/.netlify/functions/pilot-request',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:document.getElementById('name').value,email:document.getElementById('email').value,organization:document.getElementById('organization').value,teamSize:document.getElementById('teamSize').value})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Request failed.');status.className='status ok';status.textContent=document.documentElement.dataset.lang==='zh'?'申請已收到。我們確認後會把安全的主管啟用邀請寄到您的 Email。':'Request received. After approval, we will send the secure Manager activation invitation to your email.';e.target.reset()}catch(err){status.className='status bad';status.textContent=err.message}finally{button.disabled=false}});
+</script></body></html>
