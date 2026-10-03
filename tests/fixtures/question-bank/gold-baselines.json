@@ -1,0 +1,1679 @@
+{
+  "schemaVersion": 1,
+  "evidenceOrigin": "Authenticated PR #22 saved latest bank and map status; 2026-09-11. No generation.",
+  "engineCommit": "83d3b4599a0ada0100a7f274d04e25ddc9e89611",
+  "cases": {
+    "banner": {
+      "snapshotSha256": "8de0317632e525f4d6dc84fa3fd719208b3d4ca5376058424fb6f34b8be3b3a9",
+      "sourceSha256": "a0572253898c6a342b1195e022222a9b45a85860a8f4107b6d634f5b321d6f7e",
+      "bank": {
+        "id": "49837aeb-f505-4eb0-9b83-f78b88b4d199",
+        "engineVersion": 2,
+        "depthProgressionVersion": 5,
+        "qualityGateVersion": 7,
+        "depthEligibilityVersion": 2,
+        "adaptiveRegenerationVersion": 1,
+        "knowledgeId": "2ffd7ff5-ab26-432e-bf49-d7029c361892",
+        "knowledgeMapId": "km-2ffd7ff5-ab26-432e-bf49-d7029c361892",
+        "knowledgeMapVersion": 3,
+        "title": "underwriting-field-guide \u2014 Question Bank",
+        "difficulty": "Mixed",
+        "targetQuestions": 50,
+        "totalQuestions": 50,
+        "batchSize": 5,
+        "status": "complete",
+        "coverage": {
+          "availableKnowledgePoints": 32,
+          "coveredKnowledgePoints": 25,
+          "percent": 78,
+          "understandingEligibleKnowledgePoints": 32,
+          "applicationEligibleKnowledgePoints": 23
+        },
+        "createdAt": "2026-09-06T23:01:49.442Z",
+        "updatedAt": "2026-09-06T23:04:45.951Z",
+        "diagnostics": {
+          "totalGenerated": 129,
+          "totalAccepted": 50,
+          "totalRejected": 79,
+          "primaryReasons": {
+            "rejected_duplicate": 53,
+            "rejected_depth": 26
+          },
+          "secondaryReasons": {},
+          "byPhase": {
+            "coverage": {
+              "attempted": 59,
+              "accepted": 17,
+              "rejected": 42,
+              "primaryReasons": {
+                "rejected_duplicate": 17,
+                "rejected_depth": 25
+              },
+              "secondaryReasons": {},
+              "acceptanceRate": 28.8,
+              "topRejectionReasons": [
+                {
+                  "reason": "rejected_depth",
+                  "count": 25
+                },
+                {
+                  "reason": "rejected_duplicate",
+                  "count": 17
+                }
+              ]
+            },
+            "understanding": {
+              "attempted": 38,
+              "accepted": 17,
+              "rejected": 21,
+              "primaryReasons": {
+                "rejected_duplicate": 21
+              },
+              "secondaryReasons": {},
+              "acceptanceRate": 44.7,
+              "topRejectionReasons": [
+                {
+                  "reason": "rejected_duplicate",
+                  "count": 21
+                }
+              ]
+            },
+            "application": {
+              "attempted": 32,
+              "accepted": 16,
+              "rejected": 16,
+              "primaryReasons": {
+                "rejected_duplicate": 15,
+                "rejected_depth": 1
+              },
+              "secondaryReasons": {},
+              "acceptanceRate": 50,
+              "topRejectionReasons": [
+                {
+                  "reason": "rejected_duplicate",
+                  "count": 15
+                },
+                {
+                  "reason": "rejected_depth",
+                  "count": 1
+                }
+              ]
+            },
+            "unknown": {
+              "attempted": 0,
+              "accepted": 0,
+              "rejected": 0,
+              "primaryReasons": {},
+              "secondaryReasons": {},
+              "acceptanceRate": 0,
+              "topRejectionReasons": []
+            }
+          },
+          "knowledgePoints": {
+            "K001": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K002": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K003": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K004": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K005": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K021": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K022": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K023": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K024": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K025": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K020": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K027": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K028": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K030": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K031": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K032": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K006": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K016": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K026": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K029": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K012": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 1
+            },
+            "K011": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K013": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K014": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K018": {
+              "Recall": 0,
+              "Understanding": 0,
+              "Application": 1
+            }
+          },
+          "acceptanceRate": 38.8,
+          "knowledgePointUtilization": {
+            "totalCanonicalKnowledgePoints": 32,
+            "used": 25,
+            "neverUsed": 7,
+            "neverUsedIds": [
+              "K007",
+              "K008",
+              "K009",
+              "K010",
+              "K015",
+              "K017",
+              "K019"
+            ]
+          }
+        },
+        "model": "gpt-5.4-mini",
+        "lastSuccessfulBatchAt": "2026-09-06T23:04:45.951Z"
+      },
+      "quality": {
+        "accepted": 50,
+        "rejected": 79,
+        "reasons": {
+          "rejected_duplicate": 53,
+          "rejected_depth": 26
+        }
+      },
+      "questions": [
+        {
+          "id": 1,
+          "knowledgePointId": "K001",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "d3c1d92fcf810b80663f4681a999297ff7a36b825720ddba33146de0cc92347d"
+        },
+        {
+          "id": 2,
+          "knowledgePointId": "K002",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "a30625f3fc6181ccb59f5fa7327a991d37d5f9300d85dd0df44374e8466f4afa"
+        },
+        {
+          "id": 3,
+          "knowledgePointId": "K003",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "e60c16bfab122a7c694d26ba5b0a572668b9048498f9eb0730e6b03ba81c72e8"
+        },
+        {
+          "id": 4,
+          "knowledgePointId": "K004",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "ad4ab05b091c2ba09d0ab81c879ddad81e2d119c1524696f6e2fae1037870d9b"
+        },
+        {
+          "id": 5,
+          "knowledgePointId": "K005",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "d53ceb44a55d51fda7b29f34fb09073ce6d54b2d7ee82ea7dbeafe6676081e56"
+        },
+        {
+          "id": 6,
+          "knowledgePointId": "K021",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "3384a1c48ffc348c19fa8120b634c7631d78fbcfb82d5d4e1026738b54b717c2"
+        },
+        {
+          "id": 7,
+          "knowledgePointId": "K022",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "038c862b3a2272bed492c1aba28174408f1ccdb5ab6cfe9f787d5e0d8ad8d5be"
+        },
+        {
+          "id": 8,
+          "knowledgePointId": "K023",
+          "depth": "Understanding",
+          "type": "scenario",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "5ccc01faedc24254c2bf0016f63c96fbba926a1ad8102f6d769afb84b1639953"
+        },
+        {
+          "id": 9,
+          "knowledgePointId": "K024",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "e6e5276f7daa042dc9d601c6f615e12c52760b3f334d926844db6c0078baadf6"
+        },
+        {
+          "id": 10,
+          "knowledgePointId": "K025",
+          "depth": "Understanding",
+          "type": "scenario",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "8ff86b75447642d148a9994be936017288e03a64785aef94df8883c3e6f7b470"
+        },
+        {
+          "id": 11,
+          "knowledgePointId": "K020",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "c5d31d1648fbcf61234afd5d7d954f3096db6f2b45e0379a35f10f6958f6fd23"
+        },
+        {
+          "id": 12,
+          "knowledgePointId": "K027",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "841b408f4f349ae53e17edbdad1c02aecfe9afbe2411c9b69a438191c0fe7c14"
+        },
+        {
+          "id": 13,
+          "knowledgePointId": "K028",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "09924cc1a2e86df7fa2e2fc6429ab783635d6125c97c91ba8713db354bedbc40"
+        },
+        {
+          "id": 14,
+          "knowledgePointId": "K030",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "0f899d16056d3318bf136275eac85e8fca79c0e2382de92dca51d7bbf11decb8"
+        },
+        {
+          "id": 15,
+          "knowledgePointId": "K031",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "ad2c126a4b728a752e8411432f7538615f2234017f82846ff32abc0efa6a412b"
+        },
+        {
+          "id": 16,
+          "knowledgePointId": "K032",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "64092cebbbeaf8efbcb0c9ee4485ad11a1286e7dee581d65e2ee62bfae6cd9d3"
+        },
+        {
+          "id": 17,
+          "knowledgePointId": "K006",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "1a21348d214e86b8eddb0b012b3387ca73962212e854b6e6f84437a1ecb138b8"
+        },
+        {
+          "id": 18,
+          "knowledgePointId": "K001",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "707860d6adacf46cce884a5531de383828ffc22e8f8934a761044465c8dcf764"
+        },
+        {
+          "id": 19,
+          "knowledgePointId": "K005",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "7fb9a21630078c0348a074bb40b090fd3d47b33b6c76a4b322a4925f41028855"
+        },
+        {
+          "id": 20,
+          "knowledgePointId": "K028",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "5244d3e0e59360353c26f7a9f2f1d4a788dbd49f3aaed8ea9f26d77aa5585d59"
+        },
+        {
+          "id": 21,
+          "knowledgePointId": "K016",
+          "depth": "Understanding",
+          "type": "scenario",
+          "trainingPhase": "understanding",
+          "questionSha256": "c56f37ea4ae91720a83a561bc3e760eb760f4839b91b44513b2e8eb762af8464"
+        },
+        {
+          "id": 22,
+          "knowledgePointId": "K026",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "4f50bedeca945bb469581105a0161f5a91bbe175cb09ac90ba6aca9a94eeb5ce"
+        },
+        {
+          "id": 23,
+          "knowledgePointId": "K029",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "5db48bd40d5d652b5f347e7d2a5b0023369cb7f22624dbbbd51d94d0a5eaa7fa"
+        },
+        {
+          "id": 24,
+          "knowledgePointId": "K030",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "ba0c05ef1cc01be0fc80d4792e15d867611c86d29aa502ce148527040863fbeb"
+        },
+        {
+          "id": 25,
+          "knowledgePointId": "K031",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "940a223b10bc7bc872aa205e2b348a526e510328506a71b0dc27c97eb87facf7"
+        },
+        {
+          "id": 26,
+          "knowledgePointId": "K002",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "dfc1fa6006497c83569f7fe7e6a2786c29649c2484fad1188a05234e5dde23e3"
+        },
+        {
+          "id": 27,
+          "knowledgePointId": "K003",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "43567253e0769d2e6b5689ff23ac0dc87860531cf2a5cfdadf645770fff8acd8"
+        },
+        {
+          "id": 28,
+          "knowledgePointId": "K004",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "ac53682a72470b0af19447e5ee1c6a6a60d7c501944ed6605602c92340be13bc"
+        },
+        {
+          "id": 29,
+          "knowledgePointId": "K012",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "6d6fbb8b0e834c501b23b258ccfd7defa6488fecd572d633b0269a0fb611a4ef"
+        },
+        {
+          "id": 30,
+          "knowledgePointId": "K032",
+          "depth": "Understanding",
+          "type": "scenario",
+          "trainingPhase": "understanding",
+          "questionSha256": "aaca594472a235281cdc47fbcf1d087adfcdd36d8139209f6204870f4a58c6f7"
+        },
+        {
+          "id": 31,
+          "knowledgePointId": "K006",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "c09177f4a67229debf1f2972a776cbb29dac82afe5be9cfd65bec0b2881bfa8b"
+        },
+        {
+          "id": 32,
+          "knowledgePointId": "K011",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "aef120a0be6453025e9a5f65274deeebe8ceaa1da8e489b4af98087cbc60707c"
+        },
+        {
+          "id": 33,
+          "knowledgePointId": "K013",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "beafbfe747f65f39f105c79692837f831d36fd515f3ef6ab507f30d756ac232d"
+        },
+        {
+          "id": 34,
+          "knowledgePointId": "K014",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "74b6262fab9cf5a4323374e21bf2ed3ab51e7a89f817e3f0891b4813a838f16a"
+        },
+        {
+          "id": 35,
+          "knowledgePointId": "K025",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "f237bc79dcaeda77694badca977aa9a64f15ba6a53293f78af5b9abe7d467909"
+        },
+        {
+          "id": 36,
+          "knowledgePointId": "K028",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "b7213d0c052baf2325f533b2b41463cad4cf9ffa837728bd4da3c97bab9f1807"
+        },
+        {
+          "id": 37,
+          "knowledgePointId": "K016",
+          "depth": "Application",
+          "type": "mcq",
+          "trainingPhase": "application",
+          "questionSha256": "e71267f438daa113855749f8c75052c0f19ce9badf958dce6bea704002f5b196"
+        },
+        {
+          "id": 38,
+          "knowledgePointId": "K023",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "7a7ae074d3d85888ec30c6a7a76ed11c69598aa3266717b9c4226beeea8bdb50"
+        },
+        {
+          "id": 39,
+          "knowledgePointId": "K024",
+          "depth": "Application",
+          "type": "mcq",
+          "trainingPhase": "application",
+          "questionSha256": "a3f8141e8faf6f9accc252604e15401e4ccfb42387d0220c6ad584e7e639357d"
+        },
+        {
+          "id": 40,
+          "knowledgePointId": "K026",
+          "depth": "Application",
+          "type": "mcq",
+          "trainingPhase": "application",
+          "questionSha256": "2b5c10a0a90e3a1f7e044f7c651b1e69bf1d766cc3fa6034fb0b2c13506d1372"
+        },
+        {
+          "id": 41,
+          "knowledgePointId": "K029",
+          "depth": "Application",
+          "type": "mcq",
+          "trainingPhase": "application",
+          "questionSha256": "d0efa69fc8543580b95b456d2e33c26f1187f1a2780c4cd59e80dc90424aac12"
+        },
+        {
+          "id": 42,
+          "knowledgePointId": "K030",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "4dec4f57dc36c571fed3b50114b3004d6c8d391f72c419708d71b6e995ef7417"
+        },
+        {
+          "id": 43,
+          "knowledgePointId": "K031",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "5ffab954fb63c06a77b7293dc4c32871d16710d2300352df362bd658cd376b1c"
+        },
+        {
+          "id": 44,
+          "knowledgePointId": "K001",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "bb461d5c416fb55d8d4e28f513ce40a03ed91a88fb03c82d1433da3a25fa1421"
+        },
+        {
+          "id": 45,
+          "knowledgePointId": "K003",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "0933bb93e90cd910d794bb6bf520a1ff303b93572a20c38635f145eca28e11f7"
+        },
+        {
+          "id": 46,
+          "knowledgePointId": "K004",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "c5dfa07c235279e853130aa1966e791e98d5f8d835750a8c1ee28b0992d054b9"
+        },
+        {
+          "id": 47,
+          "knowledgePointId": "K005",
+          "depth": "Application",
+          "type": "mcq",
+          "trainingPhase": "application",
+          "questionSha256": "0443bb19f8150938c458b2e1093045e6c3b6c88c61c175251f701e05137ad61c"
+        },
+        {
+          "id": 48,
+          "knowledgePointId": "K012",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "b917429d5102e933d078116952f25be46b44703825f7849aed17f7c6ec5aeb1a"
+        },
+        {
+          "id": 49,
+          "knowledgePointId": "K032",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "50c015475e0725b21cd7c4799cb71bb67da0da45a7a6120abfd1a820d954096d"
+        },
+        {
+          "id": 50,
+          "knowledgePointId": "K018",
+          "depth": "Application",
+          "type": "scenario",
+          "trainingPhase": "application",
+          "questionSha256": "e7876c6515028266d63a89d85f1bf963496a2c73dc1303ad6eae4a7678d530ae"
+        }
+      ],
+      "map": {
+        "id": "km-2ffd7ff5-ab26-432e-bf49-d7029c361892",
+        "version": 3,
+        "createdAt": "2026-09-06T23:01:39.135Z",
+        "updatedAt": "2026-09-06T23:01:39.135Z",
+        "totalPoints": 32
+      },
+      "pointEligibility": [
+        {
+          "id": "K001",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K002",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K003",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K004",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K005",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K006",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K007",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K008",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K009",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K010",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K011",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K012",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K013",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K014",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K015",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K016",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K017",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K018",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K019",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K020",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K021",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K022",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K023",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K024",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K025",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K026",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K027",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K028",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K029",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K030",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K031",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K032",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        }
+      ]
+    },
+    "pacific": {
+      "snapshotSha256": "bd48dc87ea2fb6bbcdd5d764a3146477741384bad36b621a3885d96a51e97fad",
+      "sourceSha256": "67e1daf0eceb8ef46222a628bd63a46bcf462532f3fd4ade79b057b3b9a1b143",
+      "bank": {
+        "id": "d95ef9ef-fad2-44f9-9b62-e1ef1e4441bb",
+        "engineVersion": 2,
+        "depthProgressionVersion": 5,
+        "qualityGateVersion": 7,
+        "depthEligibilityVersion": 2,
+        "adaptiveRegenerationVersion": 1,
+        "knowledgeId": "d430f5b8-9cea-423b-9fd2-0ac4b452a49a",
+        "knowledgeMapId": "km-d430f5b8-9cea-423b-9fd2-0ac4b452a49a",
+        "knowledgeMapVersion": 3,
+        "title": "Pacific Life Underwriting Guide \u2014 Question Bank",
+        "difficulty": "Mixed",
+        "targetQuestions": 50,
+        "totalQuestions": 24,
+        "batchSize": 5,
+        "status": "generating",
+        "coverage": {
+          "availableKnowledgePoints": 32,
+          "coveredKnowledgePoints": 21,
+          "percent": 66,
+          "understandingEligibleKnowledgePoints": 30,
+          "applicationEligibleKnowledgePoints": 22
+        },
+        "createdAt": "2026-09-11T00:04:58.888Z",
+        "updatedAt": "2026-09-11T00:07:12.513Z",
+        "diagnostics": {
+          "totalGenerated": 70,
+          "totalAccepted": 24,
+          "totalRejected": 46,
+          "primaryReasons": {
+            "rejected_duplicate": 38,
+            "rejected_depth": 5,
+            "shallow_format_after_q20": 3
+          },
+          "secondaryReasons": {},
+          "byPhase": {
+            "coverage": {
+              "attempted": 32,
+              "accepted": 20,
+              "rejected": 12,
+              "primaryReasons": {
+                "rejected_duplicate": 7,
+                "rejected_depth": 5
+              },
+              "secondaryReasons": {},
+              "acceptanceRate": 62.5,
+              "topRejectionReasons": [
+                {
+                  "reason": "rejected_duplicate",
+                  "count": 7
+                },
+                {
+                  "reason": "rejected_depth",
+                  "count": 5
+                }
+              ]
+            },
+            "understanding": {
+              "attempted": 38,
+              "accepted": 4,
+              "rejected": 34,
+              "primaryReasons": {
+                "shallow_format_after_q20": 3,
+                "rejected_duplicate": 31
+              },
+              "secondaryReasons": {},
+              "acceptanceRate": 10.5,
+              "topRejectionReasons": [
+                {
+                  "reason": "rejected_duplicate",
+                  "count": 31
+                },
+                {
+                  "reason": "shallow_format_after_q20",
+                  "count": 3
+                }
+              ]
+            },
+            "application": {
+              "attempted": 0,
+              "accepted": 0,
+              "rejected": 0,
+              "primaryReasons": {},
+              "secondaryReasons": {},
+              "acceptanceRate": 0,
+              "topRejectionReasons": []
+            },
+            "unknown": {
+              "attempted": 0,
+              "accepted": 0,
+              "rejected": 0,
+              "primaryReasons": {},
+              "secondaryReasons": {},
+              "acceptanceRate": 0,
+              "topRejectionReasons": []
+            }
+          },
+          "knowledgePoints": {
+            "K001": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K002": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K003": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K004": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K005": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K007": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K008": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K009": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K010": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K021": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K022": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K023": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K024": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K025": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K027": {
+              "Recall": 1,
+              "Understanding": 0,
+              "Application": 0
+            },
+            "K028": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K029": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K030": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K031": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K032": {
+              "Recall": 1,
+              "Understanding": 1,
+              "Application": 0
+            },
+            "K013": {
+              "Recall": 0,
+              "Understanding": 1,
+              "Application": 0
+            }
+          },
+          "acceptanceRate": 34.3,
+          "knowledgePointUtilization": {
+            "totalCanonicalKnowledgePoints": 32,
+            "used": 21,
+            "neverUsed": 11,
+            "neverUsedIds": [
+              "K006",
+              "K011",
+              "K012",
+              "K014",
+              "K015",
+              "K016",
+              "K017",
+              "K018",
+              "K019",
+              "K020",
+              "K026"
+            ]
+          }
+        },
+        "model": "gpt-5.4-mini",
+        "lastSuccessfulBatchAt": "2026-09-11T00:06:45.675Z"
+      },
+      "quality": {
+        "accepted": 24,
+        "rejected": 46,
+        "reasons": {
+          "rejected_duplicate": 38,
+          "rejected_depth": 5,
+          "shallow_format_after_q20": 3
+        }
+      },
+      "questions": [
+        {
+          "id": 1,
+          "knowledgePointId": "K001",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "51ac3e5b1a79756de71385a86422d74e883ab9590bf4e3081bfa9c88991e95b6"
+        },
+        {
+          "id": 2,
+          "knowledgePointId": "K002",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "055f9ba5a2296dee7e59fab2e7c0321cbf0f5f5630f632b1fa9a859f609bf979"
+        },
+        {
+          "id": 3,
+          "knowledgePointId": "K003",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "8cbf3594123bd0760203a77b96db97dfbd5977764b94ca8afc99deae59a14542"
+        },
+        {
+          "id": 4,
+          "knowledgePointId": "K004",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "43a7936de530709b7238424145467df3bd92a2781a718281c3fe7ff142a9c75b"
+        },
+        {
+          "id": 5,
+          "knowledgePointId": "K005",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "35a0c90305cb520fbaa89f8b821fe0df167c793791adca8587b17b894643ecc6"
+        },
+        {
+          "id": 6,
+          "knowledgePointId": "K007",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "203d44e51b42bc46ea079ae975b5c5b0c53a372a660423c9553900b01e04211c"
+        },
+        {
+          "id": 7,
+          "knowledgePointId": "K008",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "0355dbc412170a19e8d78e758b8b91aed8b5fe048c04e1d3af3402dba16e551e"
+        },
+        {
+          "id": 8,
+          "knowledgePointId": "K009",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "ecfece2677b520f6a3a934d57a6fe82ea5bca15c9c7487a6bc8d58fece6959be"
+        },
+        {
+          "id": 9,
+          "knowledgePointId": "K010",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "27fbf7ef03f75981e5909efa6633e83efa4b2da8b5900acdd76db5fed03d25d3"
+        },
+        {
+          "id": 10,
+          "knowledgePointId": "K021",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "5a9f5d6c73f368924424da1f1baaad0dc2b986f8a883e42801cf086387ebcf79"
+        },
+        {
+          "id": 11,
+          "knowledgePointId": "K022",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "adea59b071cc7a861ad8b2c0d383b4dfe0d90bc01d59849b89064ac338111b6c"
+        },
+        {
+          "id": 12,
+          "knowledgePointId": "K023",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "a5ec0a5bcd70cc1355164a7580725feaebf17c2791d16baec64ae1e67ffde203"
+        },
+        {
+          "id": 13,
+          "knowledgePointId": "K024",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "742c1231d2b38e5336255efb8c5d2757b27740047b5e759be0ccb4c1ad1df530"
+        },
+        {
+          "id": 14,
+          "knowledgePointId": "K025",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "765552963582ae71b02d49c3390057452d9cc770eac5962acd055b4c42ab9d83"
+        },
+        {
+          "id": 15,
+          "knowledgePointId": "K027",
+          "depth": "Recall",
+          "type": "truefalse",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "2dd7544ed1b4426a2cbefbb9312819eef17463101261081cb705f6158510518e"
+        },
+        {
+          "id": 16,
+          "knowledgePointId": "K028",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "b33bb01576c6c42d46582ff451efa729d8289755f6ff052be5801b43ed92ca27"
+        },
+        {
+          "id": 17,
+          "knowledgePointId": "K029",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "b6babf3e79d067bbd892900c408793ed6dc39a96951a4a4b9b90bbe1434d9137"
+        },
+        {
+          "id": 18,
+          "knowledgePointId": "K030",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "0d33faeef55d3e128e50f6f0f3186c95bb92fc8e3b4509e70ad0b8f0894fd5bb"
+        },
+        {
+          "id": 19,
+          "knowledgePointId": "K031",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "40f3dace9865d3112322c927542583a4ccbcfe2896bad6032bc74dfd4319f95a"
+        },
+        {
+          "id": 20,
+          "knowledgePointId": "K032",
+          "depth": "Recall",
+          "type": "mcq",
+          "trainingPhase": "broad_coverage",
+          "questionSha256": "96e153f1d786ce168fcc63586bdc6f088e26c1497690aeea566f38022db5d355"
+        },
+        {
+          "id": 21,
+          "knowledgePointId": "K007",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "724ca5c3faae970d758f8978bf17e466c45e237c1393d5ff48e2379f15b0f9a0"
+        },
+        {
+          "id": 22,
+          "knowledgePointId": "K013",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "66881bfb75c7aea95431e355f8ce9ef969ca85ebf09d0fdd893e3a27d396abe9"
+        },
+        {
+          "id": 23,
+          "knowledgePointId": "K031",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "d85cc9d61f582e1d26534f99da9c0c2a05ea8c8a7abb9833d844abb8a0ad5bee"
+        },
+        {
+          "id": 24,
+          "knowledgePointId": "K032",
+          "depth": "Understanding",
+          "type": "mcq",
+          "trainingPhase": "understanding",
+          "questionSha256": "635884f2d128b278a64c1975c45557a26124338cd41073bac7b34cfff445b79e"
+        }
+      ],
+      "map": {
+        "id": "km-d430f5b8-9cea-423b-9fd2-0ac4b452a49a",
+        "version": 3,
+        "createdAt": "2026-09-10T21:52:47.750Z",
+        "updatedAt": "2026-09-10T21:52:47.750Z",
+        "totalPoints": 32
+      },
+      "pointEligibility": [
+        {
+          "id": "K001",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K002",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K003",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K004",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K005",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K006",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K007",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K008",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K009",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K010",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K011",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K012",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K013",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K014",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K015",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K016",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K017",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding"
+          ],
+          "trainingWorthiness": 4
+        },
+        {
+          "id": "K018",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K019",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K020",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K021",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K022",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K023",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K024",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K025",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 6
+        },
+        {
+          "id": "K026",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K027",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 5
+        },
+        {
+          "id": "K028",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K029",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K030",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K031",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        },
+        {
+          "id": "K032",
+          "eligibleDepths": [
+            "Recall",
+            "Understanding",
+            "Application"
+          ],
+          "trainingWorthiness": 7
+        }
+      ]
+    }
+  }
+}
