@@ -41,3 +41,13 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+
+# Verified Preview #22 Question Bank runtime
+[[edge_functions]]
+  function = "knowledge-chat-training-engine"
+  path = "/knowledge-chat.html"
+
+[[edge_functions]]
+  function = "knowledge-chat-training-engine"
+  path = "/knowledge-chat"
