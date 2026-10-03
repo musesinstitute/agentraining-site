@@ -37,6 +37,14 @@
   function = "knowledge-enterprise-upload"
   path = "/knowledge"
 
+[[edge_functions]]
+  function = "knowledge-chat-training-engine"
+  path = "/knowledge-chat.html"
+
+[[edge_functions]]
+  function = "knowledge-chat-training-engine"
+  path = "/knowledge-chat"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"

@@ -1192,6 +1192,9 @@ export default async function handler(req) {
         return reply(403, { error: 'Private Coach Chat is available only to the learner.' });
       }
       const input = await req.json();
+      if (input.coachMode !== 'generic' || input.assignmentId || input.sourceKnowledgeId) {
+        return reply(409, { error: 'Explicit generic Coach context required. Company Knowledge questions must use the source-grounded endpoint.' });
+      }
       const content = cleanText(input.content, 6000);
       if (!content) return reply(400, { error: 'Please enter a message.' });
       const prefix = privateCoachPrefix(teamPrefix, actor);
@@ -1209,6 +1212,7 @@ export default async function handler(req) {
       history.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
       const replyText = await generateCoachReply(profile, sessions, assignments, history, content);
       const assistantMessage = coachMessage('assistant', replyText);
+      assistantMessage.coachPath = 'generic';
       await store.setJSON(`${prefix}${assistantMessage.createdAt}-${assistantMessage.id}`, assistantMessage, { onlyIfNew: true });
       await writeAudit(store, teamPrefix, actor, 'private_coach_message', 'success', { evidenceSessionId: profile?.latestSessionId || '' });
       return reply(201, { userMessage: learnerMessage, assistantMessage });
