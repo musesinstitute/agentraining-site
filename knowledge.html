@@ -132,13 +132,29 @@ document.getElementById('assignForm').addEventListener('submit',async function(e
   this.reset();document.getElementById('assignSourceId').value=source.id;
  }catch(error){status.className='status error';status.textContent=error.message}finally{button.disabled=false}
 });
+function focusRequestedPractice(){
+ var params=new URLSearchParams(location.search),id=params.get('source'),action=params.get('action');
+ if(!id||action!=='practice')return;
+ var source=companySources.find(function(item){return item.id===id});
+ if(!source)return;
+ var card=document.querySelector('[data-source-card="'+CSS.escape(id)+'"]');
+ if(card){card.scrollIntoView({behavior:'smooth',block:'center'});card.style.boxShadow='0 0 0 3px #bfdbfe';setTimeout(function(){card.style.boxShadow=''},2600)}
+ var draft=source.analysis&&source.analysis.practiceDraft;
+ if(canManage&&source.status==='approved'&&draft){
+   setTimeout(function(){openAssignDialog(id)},450);
+ } else {
+   var msg=currentLang==='zh'?'此來源尚未有可指派的已批准 Practice 草案。請先完成 AI 分析與批准。':'This source does not yet have an approved Practice Draft. Complete AI analysis and approval first.';
+   setTimeout(function(){alert(msg)},350);
+ }
+}
+
 async function loadKnowledge(){
  if(!window.PilotCloud||!PilotCloud.enabled){document.getElementById('secureNote').innerHTML='<b>'+tr('Secure Pilot:','安全Pilot：')+'</b> <a href="knowledge.html?pilot=1">'+tr('Open the authenticated Company Knowledge Library.','開啟需要登入的企業知識庫。')+'</a>';return}
  try{
   var me=await PilotCloud.request('me'),data=await PilotCloud.request('knowledge');canManage=data.canManage===true;companySources=data.sources||[];
   document.getElementById('secureNote').innerHTML='<b>'+(canManage?tr('Manager workspace:','Manager主管工作區：'):tr('Learner workspace:','學員工作區：'))+'</b> '+tr('Company knowledge is isolated to this authenticated team.','企業知識僅供本登入團隊使用，與其他團隊隔離。');
   document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。');
-  document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources()
+  document.getElementById('managerPanel').classList.toggle('visible',canManage);renderSources();focusRequestedPractice()
  }catch(error){document.getElementById('sourceLibrary').className='empty';document.getElementById('sourceLibrary').textContent=friendlyError(error)}
 }
 function setFormStatus(message,kind){var el=document.getElementById('formStatus');el.textContent=message;el.className='status '+(kind||'')}
