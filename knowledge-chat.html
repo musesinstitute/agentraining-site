@@ -411,7 +411,8 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
       <div id="qb-questions-list"></div>
       <div style="text-align:center;margin-top:16px">
         <button class="btn-cancel" id="qb-close-btn" onclick="closeQBModal()">Close</button>
-        <button class="btn-primary" onclick="resetQBModal()" style="margin-left:8px" id="qb-regenerate-btn">Generate Again</button>
+        <button class="btn-primary" onclick="openPracticeFromQB()" style="margin-left:8px" id="qb-practice-btn">Create Practice Scenario</button>
+        <button class="btn-cancel" onclick="resetQBModal()" style="margin-left:8px" id="qb-regenerate-btn">Generate Again</button>
       </div>
     </div>
   </div>
@@ -524,6 +525,7 @@ function applyLang() {
   setText('qb-generate-btn', 'Generate Questions', '生成题目');
   setText('qb-export-btn', '⬇ Export', '⬇ 导出');
   setText('qb-close-btn', 'Close', '关闭');
+  setText('qb-practice-btn', 'Create Practice Scenario', '建立練習情境');
   setText('qb-regenerate-btn', 'Generate Again', '重新生成');
 
   renderQuickButtons();
@@ -1080,6 +1082,15 @@ function renderQBResults(bank) {
     `;
     list.appendChild(el);
   });
+}
+
+function openPracticeFromQB() {
+  if (!currentDoc) return;
+  // Practice Draft creation/approval/assignment is owned by Knowledge Studio.
+  // Keep one source of truth: hand the manager back to that existing workflow
+  // with the source id so knowledge.html can focus the matching approved card.
+  const lang = currentLang === 'zh' ? '&lang=zh' : '&lang=en';
+  location.href = 'knowledge.html?pilot=1&source=' + encodeURIComponent(currentDoc.id) + '&action=practice' + lang;
 }
 
 function toggleOpts(i) {
