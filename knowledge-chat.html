@@ -170,6 +170,9 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
 .qb-trigger-btn{background:#047857;color:#fff;border:none;border-radius:8px;padding:6px 12px;
   font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
 .qb-trigger-btn:hover{background:#065f46}
+.practice-trigger-btn{background:#6d28d9;color:#fff;border:none;border-radius:8px;padding:6px 12px;
+  font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.practice-trigger-btn:hover{background:#5b21b6}
 #qb-modal{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center}
 #qb-modal.show{display:flex}
 .qb-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
@@ -276,6 +279,9 @@ nav{height:56px;padding:0 18px;background:var(--white);border-bottom:1px solid v
         </div>
         <button class="qb-trigger-btn" id="qb-trigger-btn" onclick="openQBModal()" style="display:none">
           📝 <span id="qb-btn-label">Question Bank</span>
+        </button>
+        <button class="practice-trigger-btn" id="practice-trigger-btn" onclick="openPracticeFromQB()" style="display:none">
+          🎯 <span id="practice-btn-label">Practice Scenario</span>
         </button>
       </div>
       <div class="quick-btns" id="quick-btns"></div>
@@ -508,6 +514,7 @@ function applyLang() {
   if (dropLabel && !dropLabel.dataset.fileSelected) dropLabel.textContent = t('Click to select PDF / TXT / MD — or drag and drop', '点击选择 PDF / TXT / MD 文件，或直接拖放');
 
   setText('qb-btn-label', 'Question Bank', '生成题库');
+  setText('practice-btn-label', 'Practice Scenario', '練習情境');
   setText('qb-modal-title', 'Generate Question Bank', '生成题库');
   setText('qb-modal-subtitle', 'AI will generate questions based strictly on this document.', 'AI 将根据此文件生成培训题目，所有题目均有据可查。');
   setText('qb-count-label', 'Number of questions', '题目数量');
@@ -654,6 +661,8 @@ async function openDocument(src) {
   // The button's label text is already set by applyLang() at page load.
   const qbBtn = document.getElementById('qb-trigger-btn');
   if (qbBtn) qbBtn.style.display = canManage ? 'block' : 'none';
+  const practiceBtn = document.getElementById('practice-trigger-btn');
+  if (practiceBtn) practiceBtn.style.display = canManage && src.status === 'approved' ? 'block' : 'none';
   resetQBModal();
 
   // Close library on mobile
