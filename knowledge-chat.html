@@ -1018,28 +1018,39 @@ async function generateQB() {
   errEl.style.display = 'none';
   generateBtn.disabled = true;
   cancelBtn.style.display = 'none';
-  progressEl.textContent = t(
-    `AI is generating ${count} questions from this document. This may take 30–60 seconds…`,
-    `AI 正在根据文件生成 ${count} 道题目，请稍候（约 30–60 秒）……`
-  );
   progressEl.style.display = 'block';
 
   try {
-    // generate_questions is a manager-only pilot-data "knowledge" action
-    // (same resource/auth path as create/analyze/approve), so PilotCloud.request
-    // handles the fresh token + error unwrapping the same way submitUpload()'s
-    // create step does.
-    // Question generation can take longer than the generic pilot-data gateway path.
-    // Use the dedicated endpoint, mirroring the timeout-safe Knowledge analysis flow.
     const authToken = await PilotCloud.token('manager');
-    const res = await fetch('/.netlify/functions/knowledge-question-bank', {
+    const allQuestions = [];
+    let title = currentDoc.title + ' — Question Bank';
+    const batchSize = 5;
+    for (let startAt = 0; startAt < count; startAt += batchSize) {
+      const thisCount = Math.min(batchSize, count - startAt);
+      progressEl.textContent = t(
+        `Generating questions ${startAt + 1}–${startAt + thisCount} of ${count}… Completed batches are kept in this session.`,
+        `正在生成第 ${startAt + 1}–${startAt + thisCount} 题，共 ${count} 题……已完成批次会保留在本次页面中。`
+      );
+      const res = await fetch('/.netlify/functions/knowledge-question-bank', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + authToken },
+        body: JSON.stringify({ id: currentDoc.id, count: thisCount, difficulty, startAt, totalCount: count })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || t('Question bank generation failed. Please retry.', '题库生成未完成，请重试。'));
+      if (data.questionBank?.title) title = data.questionBank.title;
+      allQuestions.push(...(data.questionBank?.questions || []));
+    }
+
+    progressEl.textContent = t('Saving the completed Question Bank…', '正在保存完整题库……');
+    const saveRes = await fetch('/.netlify/functions/knowledge-question-bank', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: 'Bearer ' + authToken },
-      body: JSON.stringify({ id: currentDoc.id, count, difficulty })
+      body: JSON.stringify({ action: 'finalize', id: currentDoc.id, difficulty, title, questions: allQuestions })
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || t('Question bank generation failed. Please retry.', '题库生成未完成，请重试。'));
-    currentQB = data.questionBank;
+    const saved = await saveRes.json().catch(() => ({}));
+    if (!saveRes.ok) throw new Error(saved.error || t('Questions were generated but the bank could not be saved. Please retry.', '题目已生成，但题库保存失败，请重试。'));
+    currentQB = saved.questionBank;
     progressEl.style.display = 'none';
     renderQBResults(currentQB);
   } catch(e) {
