@@ -1029,11 +1029,16 @@ async function generateQB() {
     // (same resource/auth path as create/analyze/approve), so PilotCloud.request
     // handles the fresh token + error unwrapping the same way submitUpload()'s
     // create step does.
-    const data = await PilotCloud.request('knowledge', {
+    // Question generation can take longer than the generic pilot-data gateway path.
+    // Use the dedicated endpoint, mirroring the timeout-safe Knowledge analysis flow.
+    const authToken = await PilotCloud.token('manager');
+    const res = await fetch('/.netlify/functions/knowledge-question-bank', {
       method: 'POST',
-      requiredRole: 'manager',
-      body: JSON.stringify({ action: 'generate_questions', id: currentDoc.id, count, difficulty })
+      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + authToken },
+      body: JSON.stringify({ id: currentDoc.id, count, difficulty })
     });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || t('Question bank generation failed. Please retry.', '题库生成未完成，请重试。'));
     currentQB = data.questionBank;
     progressEl.style.display = 'none';
     renderQBResults(currentQB);
