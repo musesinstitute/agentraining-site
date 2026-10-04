@@ -70,6 +70,8 @@
     font-size: 14px; font-weight: 700; border: none;
   }
   .btn-nav:hover { background: #e08800; color: #111827; }
+  .btn-signin { background: var(--white); color: var(--brand) !important; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--brand); font-weight: 700 !important; cursor: pointer; }
+  .btn-signin:hover { background: #eff6ff; }
 
   /* HERO */
   .hero {
@@ -436,9 +438,11 @@ window.addEventListener('DOMContentLoaded', function () {
       window.netlifyIdentity.open();
     }
   });
-  window.netlifyIdentity.on('login', function () {
+  window.netlifyIdentity.on('login', function (user) {
     window.netlifyIdentity.close();
-    window.location.href = '/manager.html?pilot=1';
+    const roles = (user && user.app_metadata && Array.isArray(user.app_metadata.roles)) ? user.app_metadata.roles : [];
+    const isManager = roles.includes('manager') || roles.includes('admin');
+    window.location.href = isManager ? '/pilot.html?pilot=1' : '/pilot.html?pilot=1';
   });
 });
 </script>
@@ -457,6 +461,7 @@ window.addEventListener('DOMContentLoaded', function () {
       <button type="button" class="nav-lang-btn active" id="nav-en" onclick="switchIndexLang('en')">EN</button>
       <button type="button" class="nav-lang-btn" id="nav-zh" onclick="switchIndexLang('zh')">中文</button>
     </div>
+    <a class="btn-signin" href="#" onclick="event.preventDefault(); if(window.netlifyIdentity){ window.netlifyIdentity.open('login'); }">Sign In</a>
     <a class="btn-nav" href="pilot-start.html">Book Team Demo</a>
   </div>
 </nav>
