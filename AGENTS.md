@@ -4,11 +4,29 @@
 
 ---
 
-## 1. 分支規則（最重要，之前造成過長時間的線上事故）
+## 1. 分支與部署規則（最重要，之前造成過長時間的線上事故）
 
-- **`master` 是唯一的正式分支。** Netlify 的 production 部署固定抓 `master`（可在 Netlify → Deploys 頁面確認，會顯示 `Production: master@xxxxxxx`）。
-- **一律直接在 `master` 上編輯、commit。** 不要開新分支再合併，除非使用者明確要求。
-- **`main` 分支基本上是廢棄的，不要用。** `main` 上的 `data/` 資料夾（場景資料）根本不存在，`main` 的內容跟 `master`已經嚴重分岔（相差 30+ commits）。曾經因為 `main` 跟 `master` 的 `netlify/functions/claude.js` 版本不同步，導致網站整整故障，一直到深入排查才發現。
+### 1a. `master` = 正式環境，不直接改
+
+- **`master` 是唯一的 production 分支。** Netlify 的 production 部署固定抓 `master`（可在 Netlify → Deploys 頁面確認，會顯示 `Production: master@xxxxxxx`）。
+- **不要直接在 `master` 上編輯或 commit。** 所有實質改動（新功能、bug 修復、refactor）都必須走下面 1b 的流程。
+- 唯一可以直接改 `master` 的情況：**文件修改**（README、AGENTS.md 等純文字說明檔），且改動不影響任何程式碼行為。
+
+### 1b. 標準改動流程
+
+1. **從 `master` 開出專用分支**，命名要能看出內容（如 `fix/knowledge-map-409`、`feat/capacity-banner`）。
+2. 在分支上開發、commit。
+3. **開 Draft Pull Request**（目標合併到 `master`）。Netlify 會自動產生 Deploy Preview URL。
+4. **在 Deploy Preview 上做 UAT 驗證**——功能是否正常、有沒有 regression、console 有沒有新的錯誤。
+5. PR 通過驗證後，由使用者（Lei）明確批准再合併。**AI agent 不得自行合併 PR。**
+6. 合併前的 checklist：
+   - PR 裡包含分支上所有必要的新檔案（本次事故教訓：`knowledge-map.mjs` 在分支上存在但 PR 裡遺漏，導致合併後 production 缺少關鍵函式）。
+   - 如果分支新增了 `netlify/functions/` 底下的檔案，**逐一確認這些檔案都在 PR 的 diff 裡**。
+   - Deploy Preview 的功能驗證通過。
+
+### 1c. `main` 分支已廢棄
+
+- **`main` 分支基本上是廢棄的，不要用。** `main` 上的 `data/` 資料夾（場景資料）根本不存在，`main` 的內容跟 `master` 已經嚴重分岔（相差 30+ commits）。曾經因為 `main` 跟 `master` 的 `netlify/functions/claude.js` 版本不同步，導致網站整整故障，一直到深入排查才發現。
 - 如果不確定該用哪個分支，答案永遠是 `master`。
 
 ## 2. 場景資料：有兩套系統，兩套都要查
