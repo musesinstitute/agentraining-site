@@ -50,6 +50,7 @@ async function loadHome(){
   if(!PilotCloud.enabled){location.replace('pilot.html?pilot=1');return}
   try{
     const me=await PilotCloud.request('me');const isManager=(me.roles||[]).some(r=>r==='manager'||r==='admin');
+    if(isManager&&!new URLSearchParams(location.search).has('briefed')){location.replace('manager-risk-briefing.html?pilot=1&lang='+encodeURIComponent(currentLang));return}
     const opts=isManager?{requiredRole:'manager'}:{};
     const [assignmentData,sessionData,profileData]=await Promise.all([PilotCloud.request('assignments',opts),PilotCloud.request('sessions',opts),PilotCloud.request('profiles',opts)]);
     document.getElementById('identity').textContent=me.email;document.getElementById('roleBadge').textContent=isManager?t('Manager Pilot','主管试用账号'):t('Learner Pilot','学员试用账号');
