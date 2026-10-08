@@ -442,7 +442,7 @@ window.addEventListener('DOMContentLoaded', function () {
     window.netlifyIdentity.close();
     const roles = (user && user.app_metadata && Array.isArray(user.app_metadata.roles)) ? user.app_metadata.roles : [];
     const isManager = roles.includes('manager') || roles.includes('admin');
-    window.location.href = isManager ? '/pilot.html?pilot=1' : '/pilot.html?pilot=1';
+    window.location.href = '/pilot.html?pilot=1';
   });
 });
 </script>
