@@ -1,0 +1,1208 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 1 controlled import pilot. Extracted questions from source S005. Every record's verifiedAnswer is null and verificationStatus is 'unverified' by design — sourceAnswer reflects a mark/checkmark visible in the original PDF, which is source evidence, not authoritative verification. See docs/room-4d/D-001B-IMPORT-REPORT.md.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "sourceId": "S005",
+  "pagesProcessed": 5,
+  "questionCount": 21,
+  "questions": [
+    {
+      "questionId": "Q-S005-001",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001",
+        "K08-SOCIAL-SECURITY-FUNDING-001"
+      ],
+      "questionText": "Which of the following applies to the social insurance program known as social security?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Contributions are compulsory for most workers"
+        },
+        {
+          "key": "B",
+          "text": "Benefits are based upon a contract with the insured"
+        },
+        {
+          "key": "C",
+          "text": "Benefits are paid to each individual matching their contributions"
+        },
+        {
+          "key": "D",
+          "text": "All insured workers begin to receive benefits at age 65"
+        }
+      ],
+      "sourceAnswer": "A",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice A is checked as the selected answer.",
+          "sourceLocation": "choice A"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Contributions are compulsory for most workers",
+          "primaryLanguage": "en",
+          "translation": "对大部分人，社安税是必须要交的",
+          "translationLanguage": "zh",
+          "term": "social security tax",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-002",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001",
+        "K08-SOCIAL-SECURITY-FUNDING-001"
+      ],
+      "questionText": "From the choices below select the one which is false about Social Security (OASDHI):",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Benefits are installed by federal law, not by a contract."
+        },
+        {
+          "key": "B",
+          "text": "The benefits received are closely related to the contributions made, actuarially speaking."
+        },
+        {
+          "key": "C",
+          "text": "It will likely need to be supplemented by the individual participant since it was designed only to provide a minimum floor of income."
+        },
+        {
+          "key": "D",
+          "text": "It is, for the most part, a compulsory system."
+        }
+      ],
+      "sourceAnswer": "B",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-001 (conceptualDuplicate) with Q-S005-018: same question stem (\"false about OASDHI\") with an overlapping but distinct set of answer choices, and a different marked \"false\" statement. See data/knowledge/project-001/import/duplicate-groups.json.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice B is checked as the selected (false) answer.",
+          "sourceLocation": "choice B"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The benefits received are closely related to the contributions made, actuarially speaking.",
+          "primaryLanguage": "en",
+          "translation": "社安福利和付的社安税没有必然联系",
+          "translationLanguage": "zh",
+          "term": "benefits vs. contributions",
+          "note": "这句被判定为false: 福利与所交的税并无必然的精算关系"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-003",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001"
+      ],
+      "questionText": "By definition, the United States Government is not an insurer.",
+      "choices": [
+        {
+          "key": "A",
+          "text": "TRUE"
+        },
+        {
+          "key": "B",
+          "text": "FALSE"
+        }
+      ],
+      "sourceAnswer": "B",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice B (FALSE) is checked.",
+          "sourceLocation": "choice B"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The United States Government is not an insurer — FALSE",
+          "primaryLanguage": "en",
+          "translation": "美国政府是保险公司",
+          "translationLanguage": "zh",
+          "term": "government as insurer",
+          "note": "Social Security 下，美国政府本身即被视为保险方"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-004",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-CURRENTLY-INSURED-001",
+        "K08-QUARTERS-OF-COVERAGE-001"
+      ],
+      "questionText": "A worker dies while he is credited with six quarters of the last 13 quarter period. What status does the worker have under social security?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Partially insured"
+        },
+        {
+          "key": "B",
+          "text": "Disability insured"
+        },
+        {
+          "key": "C",
+          "text": "Currently insured"
+        },
+        {
+          "key": "D",
+          "text": "Fully insured"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "six quarters of the last 13 quarter period = currently insured",
+          "primaryLanguage": "en",
+          "translation": "13个季度里6个季度工作就算currently insured",
+          "translationLanguage": "zh",
+          "term": "currently insured",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-005",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-FULLY-INSURED-001",
+        "K08-RETIREMENT-BENEFITS-001"
+      ],
+      "questionText": "Retirement benefits under social security are available only for workers who are:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Medicare insured"
+        },
+        {
+          "key": "B",
+          "text": "Currently insured"
+        },
+        {
+          "key": "C",
+          "text": "Disability insured"
+        },
+        {
+          "key": "D",
+          "text": "Fully insured"
+        }
+      ],
+      "sourceAnswer": "D",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice D is checked.",
+          "sourceLocation": "choice D"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Retirement Benefit requires fully insured status",
+          "primaryLanguage": "en",
+          "translation": "只有fully全保的人才可以领退休金Retirement Benefit",
+          "translationLanguage": "zh",
+          "term": "fully insured",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-006",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001",
+        "K08-RETIREMENT-BENEFITS-001"
+      ],
+      "questionText": "Three of the four types of benefits given by the Social Security system are listed below. What is the fourth?\n1) Disability\n2) Medicare\n3) Survivors",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Medi-Cal"
+        },
+        {
+          "key": "B",
+          "text": "Worker's Compensation"
+        },
+        {
+          "key": "C",
+          "text": "Retirement"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [
+        {
+          "content": "社安金的四个作用: 残疾 (Disability) / 社保医疗 (Medicare) / 幸存的配偶 (Survivors) / 退休 (Retirement，最重要的 — the most important).",
+          "language": "zh"
+        }
+      ],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-007",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001",
+        "K08-SOCIAL-SECURITY-FUNDING-001"
+      ],
+      "questionText": "Which of the following is true regarding the government's social insurance program known as Social Security?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "The majority of workers in the U.S. must pay into the program."
+        },
+        {
+          "key": "B",
+          "text": "The contributions paid in closely match the benefits received."
+        },
+        {
+          "key": "C",
+          "text": "Participants sign a contractual agreement with the insurer."
+        },
+        {
+          "key": "D",
+          "text": "Both A and B above are true."
+        }
+      ],
+      "sourceAnswer": "A",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice A is checked.",
+          "sourceLocation": "choice A"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The majority of workers in the U.S. must pay into the program.",
+          "primaryLanguage": "en",
+          "translation": "社安金是大部分人（majority)必须交must pay的",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-008",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-RETIREMENT-AGE-001"
+      ],
+      "questionText": "The social security normal retirement age depends upon:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "The number of quarters of coverage"
+        },
+        {
+          "key": "B",
+          "text": "The number of years of employment"
+        },
+        {
+          "key": "C",
+          "text": "The worker's year of birth"
+        },
+        {
+          "key": "D",
+          "text": "The worker's average annual earnings"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The social security normal retirement age depends on the worker's year of birth.",
+          "primaryLanguage": "en",
+          "translation": "社安金退休年龄根据工人出生年来决定",
+          "translationLanguage": "zh",
+          "term": "retirement age",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-009",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-BLACKOUT-PERIOD-001",
+        "K08-SURVIVOR-BENEFITS-001",
+        "K08-FULLY-INSURED-001"
+      ],
+      "questionText": "Lawrence is a 'fully insured' worker. If he were to die leaving his 40 year old spouse and 12 year old son, would his surviving spouse be entitled to receive monthly benefits for the remainder of her life?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Yes"
+        },
+        {
+          "key": "B",
+          "text": "No"
+        }
+      ],
+      "sourceAnswer": "B",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice B (No) is checked.",
+          "sourceLocation": "choice B"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "40-year-old widow with a 12-year-old son cannot receive benefits for life",
+          "primaryLanguage": "en",
+          "translation": "40岁的寡妇带着12岁的儿子不能领一辈子钱，儿子成年后，自己60岁之前不能领（blackout Period)",
+          "translationLanguage": "zh",
+          "term": "blackout period",
+          "note": "儿子成年后到寡妇满60岁前为黑窗期，此期间不能领取"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-010",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-BLACKOUT-PERIOD-001"
+      ],
+      "questionText": "The period of time in which a housewife, who has survived the death of her husband, will not receive income benefits from Social Security is called the:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "\"Blackout period\""
+        },
+        {
+          "key": "B",
+          "text": "Elimination period"
+        },
+        {
+          "key": "C",
+          "text": "Qualification period"
+        },
+        {
+          "key": "D",
+          "text": "None of the above"
+        }
+      ],
+      "sourceAnswer": "A",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice A is checked.",
+          "sourceLocation": "choice A"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Blackout period",
+          "primaryLanguage": "en",
+          "translation": "黑窗期",
+          "translationLanguage": "zh",
+          "term": "blackout period",
+          "note": "丈夫死了，自己还拿不到社安金这段时间叫做黑窗期"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-011",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-DISABILITY-BENEFITS-001"
+      ],
+      "questionText": "Which is NOT a way one can become entitled to Social Security Disability benefits?\n1) Be totally and permanently disabled for 1 month.\n2) Be disabled for 12 months or longer, plus other qualifications.",
+      "choices": [
+        {
+          "key": "A",
+          "text": "1 only"
+        },
+        {
+          "key": "B",
+          "text": "2 only"
+        },
+        {
+          "key": "C",
+          "text": "Neither"
+        }
+      ],
+      "sourceAnswer": "A",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice A is checked.",
+          "sourceLocation": "choice A"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Disability requires 12+ months to receive benefits",
+          "primaryLanguage": "en",
+          "translation": "残疾需要12个月以上才能拿福利",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-012",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-DISABILITY-BENEFITS-001"
+      ],
+      "questionText": "Which of the following is not correct regarding the disability benefits provided by Social Security?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "To be eligible for benefits the worker must prove total and permanent disability for a minimum of 5 months just prior to receiving benefits."
+        },
+        {
+          "key": "B",
+          "text": "The payments received from this program are meant to entirely replace a worker's lost earnings."
+        },
+        {
+          "key": "C",
+          "text": "The earnings of a worker up to the time of disability determine the amount of benefits."
+        },
+        {
+          "key": "D",
+          "text": "Total and permanent disability must continue for benefits to continue."
+        }
+      ],
+      "sourceAnswer": "B",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice B is checked.",
+          "sourceLocation": "choice B"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Social security disability benefits do not fully replace lost income.",
+          "primaryLanguage": "en",
+          "translation": "社安金不能全部代替失去的收入",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-013",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-DISABILITY-BENEFITS-001"
+      ],
+      "questionText": "Which definition of disability is the most difficult for an injured worker to satisfy?",
+      "choices": [
+        {
+          "key": "A",
+          "text": "The own-occupation definition used by the Social Security Administration"
+        },
+        {
+          "key": "B",
+          "text": "The typical definition of partial disability used by disability income policies"
+        },
+        {
+          "key": "C",
+          "text": "The total disability definition used by the Social Security Administration"
+        },
+        {
+          "key": "D",
+          "text": "The typical definition of temporary disability used by disability income policies"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Total disability under the Social Security Administration is the hardest definition to satisfy.",
+          "primaryLanguage": "en",
+          "translation": "哪一个伤残符合起来最难？Total disability完全残废",
+          "translationLanguage": "zh",
+          "term": "total disability",
+          "note": "完全残废"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-014",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-DISABILITY-BENEFITS-001"
+      ],
+      "questionText": "Under social security, the definition of disability is the inability to engage in:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "An approved occupation"
+        },
+        {
+          "key": "B",
+          "text": "An activity with a given level of compensation"
+        },
+        {
+          "key": "C",
+          "text": "Any substantial gainful activity"
+        },
+        {
+          "key": "D",
+          "text": "The person's chosen career"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Disability = inability to engage in substantial gainful activity.",
+          "primaryLanguage": "en",
+          "translation": "残疾就是不能进行有收入的活动了",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-015",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDAMENTALS-001"
+      ],
+      "questionText": "Social Security provides protection against the financial consequences of all of the following, except:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Premature death"
+        },
+        {
+          "key": "B",
+          "text": "Disability"
+        },
+        {
+          "key": "C",
+          "text": "Poor investments"
+        },
+        {
+          "key": "D",
+          "text": "Retirement"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Social Security cannot rescue poor investments/poverty.",
+          "primaryLanguage": "en",
+          "translation": "社安金救不了投资失败，穷。",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-016",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-BLACKOUT-PERIOD-001"
+      ],
+      "questionText": "The social security blackout period ends when the surviving spouse reaches the age of:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "55"
+        },
+        {
+          "key": "B",
+          "text": "60"
+        },
+        {
+          "key": "C",
+          "text": "62"
+        },
+        {
+          "key": "D",
+          "text": "65"
+        }
+      ],
+      "sourceAnswer": "B",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice B is checked.",
+          "sourceLocation": "choice B"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The blackout period ends at age 60.",
+          "primaryLanguage": "en",
+          "translation": "黑窗期到60岁停止",
+          "translationLanguage": "zh",
+          "term": "blackout period",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-017",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-DISABILITY-BENEFITS-001"
+      ],
+      "questionText": "Social Security disability benefits are paid to persons expected to die or be disabled at least:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "3 months"
+        },
+        {
+          "key": "B",
+          "text": "6 months"
+        },
+        {
+          "key": "C",
+          "text": "12 months"
+        },
+        {
+          "key": "D",
+          "text": "24 months"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Disability requires 12+ months.",
+          "primaryLanguage": "en",
+          "translation": "残疾要12个月以上",
+          "translationLanguage": "zh",
+          "term": "",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-018",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDING-001"
+      ],
+      "questionText": "From the choices below select the one which is false about Social Security (OASDHI):",
+      "choices": [
+        {
+          "key": "A",
+          "text": "The program is considered \"fully funded.\""
+        },
+        {
+          "key": "B",
+          "text": "The benefits received are not closely related to the contributions made, actuarially speaking."
+        },
+        {
+          "key": "C",
+          "text": "It will likely need to be supplemented by the individual participant since it was designed only to provide a minimum floor of income."
+        },
+        {
+          "key": "D",
+          "text": "It is, for the most part, a compulsory system."
+        }
+      ],
+      "sourceAnswer": "A",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "DUPLICATE GROUP DG-001 (conceptualDuplicate) with Q-S005-002: same question stem (\"false about OASDHI\") with an overlapping but distinct set of answer choices, and a different marked \"false\" statement. See data/knowledge/project-001/import/duplicate-groups.json.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice A is checked as the selected (false) answer.",
+          "sourceLocation": "choice A"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "The program is considered \"fully funded.\" — FALSE",
+          "primaryLanguage": "en",
+          "translation": "社安金不是已经完全Fund的，也有可能以后没有",
+          "translationLanguage": "zh",
+          "term": "fully funded",
+          "note": "这句被判定为false: 社安金并非已完全预先筹资"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-019",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SOCIAL-SECURITY-FUNDING-001"
+      ],
+      "questionText": "The taxes that fund Social Security are paid by:",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Employees only"
+        },
+        {
+          "key": "B",
+          "text": "Employers only"
+        },
+        {
+          "key": "C",
+          "text": "Employers and employees equally"
+        },
+        {
+          "key": "D",
+          "text": "Employers and employee, but the employer pays more"
+        }
+      ],
+      "sourceAnswer": "C",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice C is checked.",
+          "sourceLocation": "choice C"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Social security tax is shared equally by employer and employee.",
+          "primaryLanguage": "en",
+          "translation": "社安税由雇主和雇员一人一半承担",
+          "translationLanguage": "zh",
+          "term": "payroll tax",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-020",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-QUARTERS-OF-COVERAGE-001"
+      ],
+      "questionText": "Determination of a worker's insured status for Social Security uses:",
+      "choices": [
+        {
+          "key": "a",
+          "text": "The number of years worked"
+        },
+        {
+          "key": "b",
+          "text": "The number of quarters worked"
+        },
+        {
+          "key": "c",
+          "text": "The worker's average annual earnings"
+        },
+        {
+          "key": "d",
+          "text": "The worker's age"
+        }
+      ],
+      "sourceAnswer": "b",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice b is checked.",
+          "sourceLocation": "choice b"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "Insured status is determined by the number of quarters worked.",
+          "primaryLanguage": "en",
+          "translation": "社安福利状态由工作了的季度决定",
+          "translationLanguage": "zh",
+          "term": "quarters of coverage",
+          "note": ""
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    },
+    {
+      "questionId": "Q-S005-021",
+      "domainId": "K08",
+      "knowledgePointIds": [
+        "K08-SURVIVOR-BENEFITS-001"
+      ],
+      "questionText": "When an eligible worker dies, all of the following may be entitled to survivors benefits through social security, EXCEPT:",
+      "choices": [
+        {
+          "key": "a",
+          "text": "Children of the worker who are unmarried and under 18 (up to 19 if in high school full time)"
+        },
+        {
+          "key": "b",
+          "text": "The worker's 41-year old widow"
+        },
+        {
+          "key": "c",
+          "text": "The 41-year old widow who cares for the deceased worker's 14-year old son"
+        },
+        {
+          "key": "d",
+          "text": "Parents of the deceased worker who were his dependents and are both 74 years old"
+        }
+      ],
+      "sourceAnswer": "b",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S005",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "selected-answer",
+          "content": "Choice b is checked.",
+          "sourceLocation": "choice b"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [
+        {
+          "primary": "A young widow with no (qualifying) children cannot receive her husband's social security survivor benefit.",
+          "primaryLanguage": "en",
+          "translation": "年轻的寡妇没有孩子领不了丈夫社安金",
+          "translationLanguage": "zh",
+          "term": "survivor benefits",
+          "note": "对比 c 选项：照顾未成年子女的寡妇则可以领取"
+        }
+      ],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T10:28:21.976Z",
+      "updatedAt": "2026-08-29T10:28:21.976Z"
+    }
+  ]
+}
