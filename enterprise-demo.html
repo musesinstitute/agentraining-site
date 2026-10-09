@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Enterprise Intelligence Demo | AgentTraining.ai</title>
+<title>Enterprise Intelligence Demo | AgentTraining.ai</title><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="pilot-cloud.js?v=20260826-token"></script>
 <style>
 :root{font-family:Inter,system-ui,Arial,sans-serif;color:#152238;background:#f5f8fc}*{box-sizing:border-box}body{margin:0}header{background:#102b54;color:white;padding:24px max(24px,calc((100vw - 1050px)/2))}header a{color:#dce9ff}main{max-width:1050px;margin:30px auto;padding:0 20px}.tag{display:inline-block;background:#fff1d6;color:#805400;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700}h1{font-size:32px;margin:10px 0}h2{font-size:21px}p{line-height:1.6}.muted{color:#586a80}.card{background:white;border:1px solid #d9e2ee;border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 2px 12px #102b5410}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.step{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#3262aa;font-weight:800}textarea,select{width:100%;font:inherit;border:1px solid #a9bad0;border-radius:8px;padding:12px}textarea{min-height:100px}button,.btn{display:inline-block;background:#2056ad;color:white;border:0;border-radius:8px;padding:12px 17px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}button:disabled{background:#9ba9bc;cursor:not-allowed}.outline{background:white;color:#2056ad;border:1px solid #2056ad}.hidden{display:none}.evidence{border-left:4px solid #3262aa;background:#f4f8ff;padding:12px;margin:12px 0}.warning{background:#fff9e8;border:1px solid #f2d38a;padding:12px;border-radius:8px}li{margin:8px 0}footer{padding:28px;text-align:center;color:#667} @media(max-width:650px){.grid{grid-template-columns:1fr}h1{font-size:26px}}
 </style></head><body>
@@ -20,11 +20,45 @@
 <section id="outcomeSection" class="card hidden"><div class="step">04 · Training & Outcome</div><h2>Training action recorded in demo</h2><p id="confirmation" role="status"></p><p>Next, the learner would open the assigned scenario, complete Practice, receive coaching, and generate comparable reassessment evidence.</p>
 <div class="warning"><strong>Outcome not yet established.</strong> This demo does not invent post-training scores, client conversions, or business results.</div>
 <p><a class="btn" href="simulator.html?ref=demo&pilot=1">Explore Practice Studio</a> <a class="btn outline" href="manager.html?pilot=1">Explore Manager Studio</a></p></section>
+<section class="card"><div class="step">Live Pilot Evidence · Manager Only</div><h2>Inspect authorized team evidence</h2><p>This read-only view retrieves learner profiles and practice session counts from your authenticated Pilot team. It does not retrieve private Coach Chat messages or create assignments.</p><p class="warning">Live data is separate from the synthetic Rachel/David walkthrough above. Nothing here is used automatically to approve a training plan.</p><button id="loadLive" type="button">Load my team's real evidence</button><p id="liveStatus" role="status" aria-live="polite"></p><div id="liveEvidence"></div></section>
 <section class="card"><div class="step">Real Pilot Workspace · Separate from sample demo</div><h2>Open the connected tools</h2><p>These links lead to existing Pilot features. They are <strong>not</strong> yet automatically connected to the synthetic evidence shown above. Sign-in and team permissions may be required.</p><div class="grid"><div><h3>Manager AI Copilot</h3><p>Ask questions within the authenticated Pilot workspace.</p><a class="btn outline" href="manager-chat.html?pilot=1">Open Manager AI</a></div><div><h3>Learner Success Profiles</h3><p>Inspect available evidence-linked learner claims, with privacy controls.</p><a class="btn outline" href="learner-profile.html?pilot=1">Open Learner Profiles</a></div><div><h3>Manager Studio</h3><p>Review assignments and team practice results.</p><a class="btn outline" href="manager.html?pilot=1">Open Manager Studio</a></div><div><h3>Knowledge Studio</h3><p>Review curriculum and company training materials.</p><a class="btn outline" href="knowledge.html?pilot=1">Open Knowledge</a></div></div></section>
 <section class="card"><h2>Why this is different from generic AI chat</h2><p>Intent → qualified evidence → justified scenario → human-approved assignment → Practice → auditable reassessment. In the full product, each step must be connected to authenticated cloud records, access controls, source citations, and actual completion events.</p></section>
 </main><footer>AgentTraining.ai · Demonstration prototype · No live team data used</footer>
 <script>
 const $=id=>document.getElementById(id);
+$('loadLive').addEventListener('click',async()=>{
+ const status=$('liveStatus'),root=$('liveEvidence'),button=$('loadLive');
+ root.replaceChildren();button.disabled=true;status.textContent='Authenticating manager and loading team records…';
+ try{
+  if(!window.PilotCloud){throw new Error('Pilot workspace is unavailable.');}
+  if(!PilotCloud.enabled){status.textContent='Open this demo with ?pilot=1 to use authenticated team evidence. No data was loaded.';return;}
+  const me=await PilotCloud.request('me');
+  if(!(me.roles||[]).some(r=>r==='manager'||r==='admin'))throw new Error('Manager permission required; no team data displayed.');
+  const [profilesData,sessionsData]=await Promise.all([
+   PilotCloud.request('profiles',{requiredRole:'manager'}),
+   PilotCloud.request('sessions',{requiredRole:'manager'})
+  ]);
+  const profiles=Array.isArray(profilesData.profiles)?profilesData.profiles:[];
+  const sessions=Array.isArray(sessionsData.sessions)?sessionsData.sessions:[];
+  status.textContent='Authorized team data: '+profiles.length+' learner profiles, '+sessions.length+' practice sessions. Claims are evidence-linked and may be disputed; no automatic assignment is made.';
+  if(!profiles.length){const p=document.createElement('p');p.textContent='No learner profiles are available in this authorized workspace. More Practice evidence is needed.';root.appendChild(p);}
+  for(const profile of profiles.slice(0,25)){
+   const card=document.createElement('div');card.className='evidence';
+   const heading=document.createElement('strong');heading.textContent=profile.preferredName||profile.learnerEmail||'Learner';card.appendChild(heading);
+   const claims=Array.isArray(profile.claims)?profile.claims:[];
+   const valid=claims.filter(c=>!c.disputedAt&&!c.disputed&&c.status!=='disputed');
+   const summary=document.createElement('p');summary.textContent=valid.length+' non-disputed claims available; '+(claims.length-valid.length)+' disputed/flagged claims excluded.';card.appendChild(summary);
+   for(const claim of valid.slice(0,4)){
+    const line=document.createElement('p');const conf=claim.confidence&&claim.confidence.level||'unknown';
+    line.textContent=(claim.claimType||'Observation')+' · '+(claim.competency||'Skill')+' · '+conf+' confidence: '+(claim.statement||'No statement');card.appendChild(line);
+   }
+   const link=document.createElement('a');link.textContent='Review full evidence and sources →';link.href='learner-profile.html?pilot=1&learner='+encodeURIComponent(profile.learnerEmail||'');card.appendChild(link);root.appendChild(card);
+  }
+  if(profiles.length>25){const p=document.createElement('p');p.textContent='Showing the first 25 profiles. Open Manager Studio for the full team.';root.appendChild(p);}
+ }catch(error){status.textContent='Unable to load authorized evidence: '+(error.message||'Unknown error')+'. No sample data was substituted.';}
+ finally{button.disabled=false;}
+});
+
 let objectiveType='unclassified';
 const patterns=[
 {type:'premium',test:/premium|price|cost|afford|保费|保費|价格|價格/i,goal:'Explain protection value, explore affordability concerns, and confirm a specific next step.',rationale:'The manager mentioned pricing or premium objections. Practice should target value explanation and next-step clarity.'},
