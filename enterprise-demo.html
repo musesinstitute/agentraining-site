@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enterprise Intelligence Demo | AgentTraining.ai</title><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="pilot-cloud.js?v=20260826-token"></script>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#152238;background:#f5f8fc}*{box-sizing:border-box}body{margin:0}header{background:#102b54;color:white;padding:24px max(24px,calc((100vw - 1050px)/2))}header a{color:#dce9ff}main{max-width:1050px;margin:30px auto;padding:0 20px}.tag{display:inline-block;background:#fff1d6;color:#805400;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700}h1{font-size:32px;margin:10px 0}h2{font-size:21px}p{line-height:1.6}.muted{color:#586a80}.card{background:white;border:1px solid #d9e2ee;border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 2px 12px #102b5410}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.step{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#3262aa;font-weight:800}textarea,select{width:100%;font:inherit;border:1px solid #a9bad0;border-radius:8px;padding:12px}textarea{min-height:100px}button,.btn{display:inline-block;background:#2056ad;color:white;border:0;border-radius:8px;padding:12px 17px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}button:disabled{background:#9ba9bc;cursor:not-allowed}.outline{background:white;color:#2056ad;border:1px solid #2056ad}.hidden{display:none}.evidence{border-left:4px solid #3262aa;background:#f4f8ff;padding:12px;margin:12px 0}.warning{background:#fff9e8;border:1px solid #f2d38a;padding:12px;border-radius:8px}li{margin:8px 0}footer{padding:28px;text-align:center;color:#667} @media(max-width:650px){.grid{grid-template-columns:1fr}h1{font-size:26px}}
+</style></head><body>
+<header><a href="index.html">AgentTraining.ai</a> · <a href="studios.html">Four Studios</a> · <a href="manager.html?pilot=1">Manager Studio</a></header>
+<main><span class="tag">INTERACTIVE CONCEPT DEMO · SYNTHETIC DATA</span><h1>From Manager Intent to Measurable Training</h1>
+<p class="muted">Explore how a manager can turn a team priority into evidence-based coaching actions. This walkthrough uses clearly labeled illustrative records; it does not access live learner data or issue real assignments.</p>
+<section class="card"><div class="step">01 · Manager Intent</div><h2>What do you want your team to improve?</h2>
+<label for="intent">Training objective</label><textarea id="intent">Improve how our insurance advisors handle premium objections and confirm a clear next step within two weeks.</textarea>
+<button id="analyze">Analyze objective</button><p id="intentResult" role="status" aria-live="polite"></p></section>
+<section id="evidenceSection" class="card hidden"><div class="step">02 · Evidence Intelligence</div><h2>What supports the recommendation?</h2>
+<div class="warning"><strong>Illustrative evidence only.</strong> These sample records are not drawn from your company's training files, CRM, or actual Practice history.</div>
+<div class="grid"><div class="evidence"><strong>Rachel · Sample practice</strong><p>Premium objection · simulated score 64/100</p><p>Observed example: explained coverage but did not confirm a next step.</p></div><div class="evidence"><strong>David · Sample practice</strong><p>Premium objection · simulated score 72/100</p><p>Observed example: handled empathy well; value explanation needs practice.</p></div></div>
+<p class="muted" id="evidenceAssessment">Evidence sufficiency: insufficient for a durable learner profile claim. These single illustrative sessions can only support a provisional practice suggestion.</p><button id="recommend">Review proposed training plan</button></section>
+<section id="planSection" class="card hidden"><div class="step">03 · Manager Decision</div><h2>Review before assigning</h2><div class="grid"><div><label for="learner">Learner</label><select id="learner"><option>Rachel (sample)</option><option>David (sample)</option></select></div><div><label for="scenario">Practice scenario</label><select id="scenario"><option>Premium objection: value and next step</option><option>Premium objection: empathy and discovery</option></select></div></div>
+<p><strong>Goal:</strong> <span id="planGoal">Practice a compliant, clear explanation of protection value and agree on a specific next action.</span></p><p><strong>Rationale:</strong> <span id="planRationale">Targeted practice is preferable to an unrelated scenario; manager should verify this need against actual evidence.</span></p>
+<button id="approve">Confirm proposed plan (demo only)</button><p class="muted">Approval here updates this walkthrough only. No notification or assignment is sent to any learner.</p></section>
+<section id="outcomeSection" class="card hidden"><div class="step">04 · Training & Outcome</div><h2>Training action recorded in demo</h2><p id="confirmation" role="status"></p><p>Next, the learner would open the assigned scenario, complete Practice, receive coaching, and generate comparable reassessment evidence.</p>
+<div class="warning"><strong>Outcome not yet established.</strong> This demo does not invent post-training scores, client conversions, or business results.</div>
+<p><a class="btn" href="simulator.html?ref=demo&pilot=1">Explore Practice Studio</a> <a class="btn outline" href="manager.html?pilot=1">Explore Manager Studio</a></p></section>
+<section class="card"><div class="step">Live Pilot Evidence · Manager Only</div><h2>Inspect authorized team evidence</h2><p>This read-only view retrieves learner profiles and practice session counts from your authenticated Pilot team. It does not retrieve private Coach Chat messages or create assignments.</p><p class="warning">Live data is separate from the synthetic Rachel/David walkthrough above. Nothing here is used automatically to approve a training plan.</p><button id="loadLive" type="button">Load my team's real evidence</button><p id="liveStatus" role="status" aria-live="polite"></p><div id="liveEvidence"></div><div id="liveMatches" aria-live="polite"></div></section>
+<section class="card"><div class="step">Real Pilot Workspace · Separate from sample demo</div><h2>Open the connected tools</h2><p>These links lead to existing Pilot features. They are <strong>not</strong> yet automatically connected to the synthetic evidence shown above. Sign-in and team permissions may be required.</p><div class="grid"><div><h3>Manager AI Copilot</h3><p>Ask questions within the authenticated Pilot workspace.</p><a class="btn outline" href="manager-chat.html?pilot=1">Open Manager AI</a></div><div><h3>Learner Success Profiles</h3><p>Inspect available evidence-linked learner claims, with privacy controls.</p><a class="btn outline" href="learner-profile.html?pilot=1">Open Learner Profiles</a></div><div><h3>Manager Studio</h3><p>Review assignments and team practice results.</p><a class="btn outline" href="manager.html?pilot=1">Open Manager Studio</a></div><div><h3>Knowledge Studio</h3><p>Review curriculum and company training materials.</p><a class="btn outline" href="knowledge.html?pilot=1">Open Knowledge</a></div></div></section>
+<section class="card"><h2>Why this is different from generic AI chat</h2><p>Intent → qualified evidence → justified scenario → human-approved assignment → Practice → auditable reassessment. In the full product, each step must be connected to authenticated cloud records, access controls, source citations, and actual completion events.</p></section>
+</main><footer>AgentTraining.ai · Synthetic walkthrough plus optional authorized, read-only Pilot evidence</footer>
+<script>
+const $=id=>document.getElementById(id);
+$('loadLive').addEventListener('click',async()=>{
+ const status=$('liveStatus'),root=$('liveEvidence'),button=$('loadLive');
+ root.replaceChildren();button.disabled=true;status.textContent='Authenticating manager and loading team records…';
+ try{
+  if(!window.PilotCloud){throw new Error('Pilot workspace is unavailable.');}
+  if(!PilotCloud.enabled){status.textContent='Open this demo with ?pilot=1 to use authenticated team evidence. No data was loaded.';return;}
+  const me=await PilotCloud.request('me');
+  if(!(me.roles||[]).some(r=>r==='manager'||r==='admin'))throw new Error('Manager permission required; no team data displayed.');
+  const [profilesData,sessionsData]=await Promise.all([
+   PilotCloud.request('profiles',{requiredRole:'manager'}),
+   PilotCloud.request('sessions',{requiredRole:'manager'})
+  ]);
+  const profiles=Array.isArray(profilesData.profiles)?profilesData.profiles:[];
+  authorizedProfiles=profiles;
+  const sessions=Array.isArray(sessionsData.sessions)?sessionsData.sessions:[];
+  status.textContent='Authorized team data: '+profiles.length+' learner profiles, '+sessions.length+' practice sessions. Claims are evidence-linked and may be disputed; no automatic assignment is made.';
+  if(!profiles.length){const p=document.createElement('p');p.textContent='No learner profiles are available in this authorized workspace. More Practice evidence is needed.';root.appendChild(p);}
+  for(const profile of profiles.slice(0,25)){
+   const card=document.createElement('div');card.className='evidence';
+   const heading=document.createElement('strong');heading.textContent=profile.preferredName||profile.learnerEmail||'Learner';card.appendChild(heading);
+   const claims=Array.isArray(profile.claims)?profile.claims:[];
+   const valid=claims.filter(c=>!c.disputedAt&&!c.disputed&&c.status!=='disputed');
+   const summary=document.createElement('p');summary.textContent=valid.length+' non-disputed claims available; '+(claims.length-valid.length)+' disputed/flagged claims excluded.';card.appendChild(summary);
+   for(const claim of valid.slice(0,4)){
+    const line=document.createElement('p');const conf=claim.confidence&&claim.confidence.level||'unknown';
+    line.textContent=(claim.claimType||'Observation')+' · '+(claim.competency||'Skill')+' · '+conf+' confidence: '+(claim.statement||'No statement');card.appendChild(line);
+   }
+   const link=document.createElement('a');link.textContent='Review full evidence and sources →';link.href='learner-profile.html?pilot=1&learner='+encodeURIComponent(profile.learnerEmail||'');card.appendChild(link);root.appendChild(card);
+  }
+  if(profiles.length>25){const p=document.createElement('p');p.textContent='Showing the first 25 profiles. Open Manager Studio for the full team.';root.appendChild(p);}
+  renderObjectiveEvidence();
+ }catch(error){authorizedProfiles=null;$('liveMatches').replaceChildren();root.replaceChildren();status.textContent='Unable to load authorized evidence: '+(error.message||'Unknown error')+'. No sample data was substituted.';}
+ finally{button.disabled=false;}
+});
+
+let objectiveType='unclassified';
+let authorizedProfiles=null;
+function evidenceMatchesObjective(claim,type){const skill=String(claim.competency||'').toLowerCase();const detail=String(claim.statement||'').toLowerCase();if(type==='premium')return /accuracy|empathy|closing/.test(skill)&&/premium|price|value|objection|cost|afford|coverage/.test(detail);if(type==='followup')return /closing/.test(skill);if(type==='knowledge')return /accuracy/.test(skill);return false;}
+function renderObjectiveEvidence(){
+ const root=$('liveMatches');if(!root)return;root.replaceChildren();if(!authorizedProfiles)return;
+ const h=document.createElement('h3');h.textContent='Evidence coverage for current objective';root.appendChild(h);
+ if(objectiveType==='unclassified'||objectiveType==='recruiting'){const p=document.createElement('p');p.textContent='No validated competency mapping for this objective. No individual training recommendation is supported.';root.appendChild(p);return;}
+ let matched=0,claimsCount=0,refsCount=0,lowCount=0,missingCount=0;
+ for(const profile of authorizedProfiles){
+  const claims=(Array.isArray(profile.claims)?profile.claims:[]).filter(c=>c.status!=='disputed'&&!c.disputed&&!c.disputedAt&&evidenceMatchesObjective(c,objectiveType));
+  if(!claims.length)continue;matched++;const block=document.createElement('div');block.className='evidence';
+  const title=document.createElement('strong');title.textContent=profile.preferredName||profile.learnerEmail||'Learner';block.appendChild(title);
+  for(const c of claims.slice(0,5)){
+   claimsCount++;const refs=Array.isArray(c.evidenceRefs)?c.evidenceRefs:[];refsCount+=refs.length;if(!refs.length)missingCount++;if(!['high','medium'].includes(c.confidence?.level))lowCount++;
+   const p=document.createElement('p');p.textContent=(c.claimType||'Observation')+' · '+(c.competency||'skill')+' · '+(c.confidence?.level||'unknown')+' confidence · '+refs.length+' source(s): '+(c.statement||'');block.appendChild(p);
+   for(const ref of refs.slice(0,2)){const detail=document.createElement('p');detail.className='muted';const date=ref.observedAt?new Date(ref.observedAt):null;detail.textContent='Source: '+(ref.scenario||'Practice')+' · '+(date&&!Number.isNaN(date.getTime())?date.toLocaleDateString():'date unavailable')+' · '+(ref.score??'—')+'/100 · rubric '+(ref.rubricVersion||'unavailable');block.appendChild(detail);}
+  }
+  const link=document.createElement('a');link.href='learner-profile.html?pilot=1&learner='+encodeURIComponent(profile.learnerEmail||'');link.textContent='Review full evidence →';block.appendChild(link);root.appendChild(block);
+ }
+ const summary=document.createElement('p');summary.textContent='Coverage: '+matched+'/'+authorizedProfiles.length+' profiles with related claims; '+claimsCount+' displayed claims; '+refsCount+' evidence references; '+lowCount+' low/unknown confidence; '+missingCount+' without source references.';root.insertBefore(summary,h.nextSibling);
+ const note=document.createElement('p');note.className='warning';note.textContent=matched===0?'No matching evidence. Individual recommendations are not justified.':missingCount||lowCount?'Provisional evidence: verify recency, source quality, and manager context before assigning training.':'Matching evidence is available, but curriculum mapping and training efficacy remain unverified. Human review required.';root.appendChild(note);
+}
+
+
+const patterns=[
+{type:'premium',test:/premium|price|cost|afford|保费|保費|价格|價格/i,goal:'Explain protection value, explore affordability concerns, and confirm a specific next step.',rationale:'The manager mentioned pricing or premium objections. Practice should target value explanation and next-step clarity.'},
+{type:'followup',test:/follow.?up|next step|close|closing|成交|跟进|跟進/i,goal:'Practice respectful follow-up and secure an agreed next action.',rationale:'The manager emphasized follow-up or closing. The plan focuses on next-step conversations.'},
+{type:'recruiting',test:/recruit|hiring|candidate|招募|招聘/i,goal:'Practice candidate discovery, realistic role explanation, and clear follow-up.',rationale:'The manager identified recruiting. Use recruiting-specific training, not premium-objection examples.'},
+{type:'knowledge',test:/knowledge|product|coverage|explain|training material|知识|知識|产品|產品/i,goal:'Practice accurate explanations using verified company-approved materials.',rationale:'The manager asked for product or knowledge capability. Approved knowledge sources must be checked before claims.'}
+];
+function analyzeIntent(v){return patterns.find(p=>p.test.test(v))||{type:'unclassified',goal:'Clarify the target behavior, success criteria, and intended audience before assigning practice.',rationale:'The objective is not specific enough to select a defensible scenario automatically.'};}
+$('analyze').addEventListener('click',()=>{
+ const v=$('intent').value.trim();if(!v){$('intentResult').textContent='Please enter a training objective.';return;}
+ const analysis=analyzeIntent(v);objectiveType=analysis.type;
+ $('intentResult').textContent='Objective interpreted as: '+(objectiveType==='unclassified'?'needs clarification':objectiveType)+'. This is a transparent keyword-based prototype, not an AI model or an analysis of company records.';
+ $('planGoal').textContent=analysis.goal;$('planRationale').textContent=analysis.rationale;
+ $('evidenceAssessment').textContent=objectiveType==='premium'?'The Rachel and David examples below are synthetic premium-objection samples, not actual team evidence. No learner-level conclusions can be made.':'The examples below concern premium objections and DO NOT support this objective. No relevant learner evidence is connected; obtain authorized practice results before targeting individuals.';
+ $('recommend').textContent=objectiveType==='premium'?'Review proposed training plan':'Review provisional plan (no matching evidence)';
+ $('evidenceSection').classList.remove('hidden');$('planSection').classList.add('hidden');$('outcomeSection').classList.add('hidden');
+ renderObjectiveEvidence();
+});
+$('recommend').addEventListener('click',()=>{
+ $('planSection').classList.remove('hidden');
+ const scenario=$('scenario');scenario.replaceChildren();
+ const options=objectiveType==='premium'?['Premium objection: value and next step','Premium objection: empathy and discovery']:objectiveType==='followup'?['Follow-up: confirm next action']:objectiveType==='recruiting'?['Recruiting: candidate discovery']:objectiveType==='knowledge'?['Knowledge explanation: verify approved sources']:['Clarify objective before selecting a scenario'];
+ for(const title of options){const o=document.createElement('option');o.textContent=title;scenario.appendChild(o);}
+ $('approve').disabled=objectiveType!=='premium';
+ if(objectiveType!=='premium'){$('planRationale').textContent+=' No matched evidence or verified curriculum mapping exists in this prototype. Confirmation is disabled to avoid implying a valid assignment.';}
+});
+$('approve').addEventListener('click',()=>{$('confirmation').textContent='Demo-only confirmation: '+$('learner').value+' — '+$('scenario').value+'. No real assignment was sent.';$('outcomeSection').classList.remove('hidden');});
+</script></body></html>
