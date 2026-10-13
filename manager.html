@@ -55,9 +55,9 @@ applyStaticLanguage();
     const raw=sessionStorage.getItem('agentraining_mission_plan'); if(!raw)return;
     const plan=JSON.parse(raw), rows=Object.entries(plan.minutes||{}).filter(([,m])=>Number(m)>0);
     const names={michelle:'Michelle',john:'John',david:'David',grace:'Grace',anna:'Anna'};
-    const summary=rows.map(([id,m])=>(names[id]||id)+' '+m+' min').join(' · ');
+    const summary=rows.map(([id,m])=>(names[id]||id)+' '+m+' min').join(' · '); const scenario=plan.scenarioId||'';
     const box=document.createElement('section'); box.className='next-action'; box.style.cssText='border-color:#f59e0b;background:linear-gradient(135deg,#fff7ed,#eff6ff)';
-    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>Next: invite the real Pilot learners, then assign Practice. The plan stays visible while you execute.</p></div><a href="#invite-panel">Invite Learners</a>';
+    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>'+(scenario?'Recommended Practice: <b>'+escMission(scenario)+'</b>. ':'')+'Next: invite the real Pilot learners, then assign Practice.</p></div><a href="#invite-panel">Invite Learners</a>';
     const main=document.querySelector('main'); const first=main&&main.firstElementChild; if(main)main.insertBefore(box,first?first.nextSibling:null);
   }catch(e){}
 })();
@@ -102,7 +102,7 @@ async function loadAssignmentScenarios(){
     const data=await response.json();
     const scenarios=Array.isArray(data)?data:(data.scenarios||data.curriculum||[]);
     if(!scenarios.length)throw new Error(t('No curriculum scenarios were found','没有找到培训情境'));
-    select.innerHTML='<option value="">'+t('Select a scenario','请选择培训情境')+'</option>'+scenarios.map((x,i)=>{const id=x.id||x.key||('curriculum-'+i);const name=currentLang==='zh'?(x.title?.zh||x.zh?.name||x.name||x.title?.en||x.en?.name||id):(x.name||x.title?.en||x.en?.name||x.title?.zh||x.zh?.name||id);return '<option value="'+esc(id)+'" data-name="'+esc(name)+'">'+esc(name)+'</option>'}).join('');
+    select.innerHTML='<option value="">'+t('Select a scenario','请选择培训情境')+'</option>'+scenarios.map((x,i)=>{const id=x.id||x.key||('curriculum-'+i);const name=currentLang==='zh'?(x.title?.zh||x.zh?.name||x.name||x.title?.en||x.en?.name||id):(x.name||x.title?.en||x.en?.name||x.title?.zh||x.zh?.name||id);return '<option value="'+esc(id)+'" data-name="'+esc(name)+'">'+esc(name)+'</option>'}).join(''); try{const p=JSON.parse(sessionStorage.getItem('agentraining_mission_plan')||'null');if(p&&p.scenarioId&&Array.from(select.options).some(o=>o.value===p.scenarioId)){select.value=p.scenarioId;setAssignStatus(t('Mission Control recommendation preselected.','已预选 Mission Control 推荐练习。'),'ok')}}catch(e){}
   }catch(error){
     select.innerHTML='<option value="">'+t('Unable to load scenarios','无法载入培训情境')+'</option>';
     select.disabled=true;
