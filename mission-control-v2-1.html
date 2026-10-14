@@ -1,0 +1,828 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mission Control V2.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* App layout: fixed illustrative banner + stepper, then one working panel per step.
+   State is encoded in shape and text as well as colour, per the accessibility gate. */
+:root{
+  --bg:#f4f5f8; --surface:#ffffff; --surface-2:#eef1f6; --surface-3:#e3e8f0;
+  --fg:#171a21; --muted:#5a6270; --faint:#878f9d;
+  --border:#dde1e9; --border-strong:#c6ccd8;
+  --accent:#2b54d4; --accent-soft:#e8edfd; --accent-ink:#1b3aa0;
+  --p0:#b02d10; --p0-soft:#fcebe6;
+  --warn:#8f6304; --warn-soft:#fbf2dd;
+  --good:#1f7a43; --good-soft:#e6f4ea;
+  /* inference ladder */
+  --L1:#2f6b4f; --L2:#2b54d4; --L3:#8a5a00; --L4:#8e3b7a;
+  --code-bg:#12151d; --code-fg:#e4e7ee; --code-faint:#8b93a5;
+  --font-display:"Archivo","Segoe UI",system-ui,sans-serif;
+  --font-body:"Source Serif 4",Georgia,serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d0f14; --surface:#161a22; --surface-2:#1c2130; --surface-3:#242b3a;
+  --fg:#e8eaf0; --muted:#9aa2b2; --faint:#6b7382;
+  --border:#262c3a; --border-strong:#434c5e;
+  --accent:#7193ff; --accent-soft:#17233f; --accent-ink:#a9c0ff;
+  --p0:#f0795a; --p0-soft:#2c1510;
+  --warn:#e0b25a; --warn-soft:#271e0c;
+  --good:#5ec584; --good-soft:#102418;
+  --L1:#5ec584; --L2:#7193ff; --L3:#e0b25a; --L4:#d68cc4;
+  --code-bg:#070910; --code-fg:#dfe3ec; --code-faint:#79808f;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0d0f14; --surface:#161a22; --surface-2:#1c2130; --surface-3:#242b3a;
+  --fg:#e8eaf0; --muted:#9aa2b2; --faint:#6b7382;
+  --border:#262c3a; --border-strong:#434c5e;
+  --accent:#7193ff; --accent-soft:#17233f; --accent-ink:#a9c0ff;
+  --p0:#f0795a; --p0-soft:#2c1510;
+  --warn:#e0b25a; --warn-soft:#271e0c;
+  --good:#5ec584; --good-soft:#102418;
+  --L1:#5ec584; --L2:#7193ff; --L3:#e0b25a; --L4:#d68cc4;
+  --code-bg:#070910; --code-fg:#dfe3ec; --code-faint:#79808f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.6;font-size:1rem;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;line-height:1.2;text-wrap:balance}
+p{margin:0}
+code,.mono{font-family:var(--font-mono);font-size:.86em}
+.wrap{max-width:60rem;margin-inline:auto;padding-inline:clamp(16px,3.5vw,32px)}
+
+/* ---------- banner + stepper ---------- */
+.illus{background:var(--warn-soft);border-bottom:1px solid color-mix(in srgb,var(--warn) 40%,var(--border));color:var(--warn)}
+.illus .wrap{display:flex;align-items:center;gap:.55rem;padding-block:.5rem;font-family:var(--font-display);font-weight:700;font-size:.76rem;letter-spacing:.04em}
+.illus .dot{width:.55rem;height:.55rem;border-radius:50%;background:currentColor;flex:none}
+.illus span.t{min-width:0}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.topbar .wrap{padding-block:.6rem;display:flex;flex-direction:column;gap:.5rem}
+.brandrow{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:800;font-size:.95rem}
+.brand .v{color:var(--accent-ink)}
+.brandrow .sp{margin-left:auto;display:flex;gap:.4rem}
+.stepper{display:flex;gap:.3rem;overflow-x:auto;scrollbar-width:none;padding-bottom:.1rem}
+.stepper::-webkit-scrollbar{display:none}
+.stepper .s{flex:1 1 0;min-width:6.2rem;display:flex;flex-direction:column;gap:.15rem;padding:.4rem .5rem;border-radius:.45rem;border:1px solid var(--border);background:var(--surface);opacity:.55}
+.stepper .s .k{font-family:var(--font-mono);font-size:.64rem;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:.25rem}
+.stepper .s .n{font-family:var(--font-display);font-weight:700;font-size:.78rem;white-space:nowrap}
+.stepper .s.done{opacity:1;border-color:color-mix(in srgb,var(--good) 45%,var(--border))}
+.stepper .s.done .k{color:var(--good)}
+.stepper .s.now{opacity:1;border-color:var(--accent);border-width:2px;background:var(--accent-soft)}
+.stepper .s.now .k{color:var(--accent-ink)}
+
+/* ---------- panel ---------- */
+main{padding-block:1.4rem 3rem}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:1rem;padding:clamp(1.1rem,3vw,1.9rem);margin-bottom:1rem}
+.steplab{font-family:var(--font-display);font-weight:700;font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-ink);display:block;margin-bottom:.5rem}
+h2.sh{font-size:clamp(1.3rem,3vw,1.75rem);font-weight:800;letter-spacing:-.015em}
+h2.sh:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:.3rem}
+.sub{color:var(--muted);margin-top:.6rem;max-width:44rem}
+
+/* learner radio cards */
+fieldset{border:0;padding:0;margin:1.2rem 0 0}
+legend{font-family:var(--font-display);font-weight:700;font-size:.82rem;margin-bottom:.6rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem}
+.lcard{display:flex;gap:.75rem;align-items:flex-start;border:2px solid var(--border-strong);border-radius:.75rem;padding:.9rem 1rem;cursor:pointer;background:var(--surface);min-height:5rem;position:relative}
+.lcard:hover{border-color:var(--accent)}
+.lcard:focus-within{outline:3px solid var(--accent);outline-offset:3px}
+.lcard input{width:1.3rem;height:1.3rem;margin:.15rem 0 0;flex:none;accent-color:var(--accent)}
+.lcard .body{display:flex;flex-direction:column;gap:.2rem;min-width:0;flex:1}
+.lcard .nm{font-family:var(--font-display);font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.lcard .meta{font-size:.84rem;color:var(--muted);line-height:1.45}
+.lcard .cov{font-family:var(--font-mono);font-size:.7rem;color:var(--faint);margin-top:.15rem}
+.lcard.sel{border-color:var(--accent);border-width:3px;background:var(--accent-soft);padding:calc(.9rem - 1px) calc(1rem - 1px)}
+.selmark{font-family:var(--font-display);font-weight:800;font-size:.66rem;letter-spacing:.09em;color:var(--accent-ink);border:1px solid var(--accent-ink);border-radius:2rem;padding:.08rem .45rem}
+
+/* buttons */
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1.3rem}
+button{font:inherit;font-family:var(--font-display);font-weight:700;cursor:pointer;border-radius:.6rem;min-height:3rem;padding:.7rem 1.1rem;border:2px solid transparent;font-size:.95rem}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.08)}
+.btn-primary:disabled{background:var(--surface-3);color:var(--faint);border-color:var(--border-strong);cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--fg);border-color:var(--border-strong)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn-sm{min-height:2.4rem;padding:.4rem .8rem;font-size:.85rem;border-radius:.5rem}
+.helper{font-size:.86rem;color:var(--muted);max-width:30rem}
+
+/* status region */
+.status{font-family:var(--font-display);font-weight:600;font-size:.88rem;color:var(--accent-ink);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 32%,var(--border));border-radius:.55rem;padding:.6rem .85rem;margin-top:1rem}
+.status:empty{display:none}
+
+/* tier chips */
+.tier{font-family:var(--font-display);font-weight:800;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--tc);color:var(--tc);border-radius:.3rem;padding:.12rem .45rem;white-space:nowrap}
+.t-obs{--tc:var(--L1)} .t-int{--tc:var(--L2)} .t-hyp{--tc:var(--L3)} .t-con{--tc:var(--L4)}
+
+/* metric contrast */
+.contrast{display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:.75rem;padding:1rem 1.1rem;margin-top:1.1rem}
+.contrast .lab{font-family:var(--font-display);font-weight:600;font-size:.92rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.contrast .val{font-family:var(--font-mono);font-weight:700;font-size:1.5rem;text-align:right}
+.contrast .val.hi{color:var(--good)}
+.contrast .val.lo{color:var(--p0)}
+.contrast .gapline{grid-column:1/-1;border-top:1px dashed var(--border-strong);padding-top:.7rem;margin-top:.3rem;font-size:.9rem;color:var(--muted);display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+
+.note{border-radius:.7rem;padding:.9rem 1.05rem;margin-top:1rem;border:1px solid var(--border);background:var(--surface-2);font-size:.92rem;line-height:1.6}
+.note .nl{font-family:var(--font-display);font-weight:700;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:.4rem;color:var(--muted)}
+.note.warn{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 35%,var(--border))}
+.note.warn .nl{color:var(--warn)}
+.note.bad{background:var(--p0-soft);border-color:color-mix(in srgb,var(--p0) 35%,var(--border))}
+.note.bad .nl{color:var(--p0)}
+.note.ok{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 35%,var(--border))}
+.note.ok .nl{color:var(--good)}
+.note ul{margin:.4rem 0 0;padding-left:1.1rem}
+.note li{margin-bottom:.25rem}
+
+/* transcript */
+.script{background:var(--code-bg);color:var(--code-fg);border-radius:.7rem;padding:1rem;margin-top:1rem;font-size:.88rem;line-height:1.75;border:1px solid #000}
+.script .ln{display:grid;grid-template-columns:5.5rem 1fr;gap:.6rem}
+.script .who{font-family:var(--font-mono);font-size:.76rem;color:var(--code-faint);padding-top:.15rem}
+.script .ln.flag .said{color:#ffb38a;font-weight:600}
+.srcmeta{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
+.srcmeta .m{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);border-radius:.35rem;padding:.2rem .5rem}
+
+/* sufficiency */
+.suff{border:1px solid var(--border);border-left:4px solid var(--tc);border-radius:.7rem;padding:1rem 1.1rem;margin-top:1.1rem;background:var(--surface-2)}
+.suff .hd{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:.5rem}
+.suff .claim{font-family:var(--font-display);font-weight:700;font-size:1rem;line-height:1.45;margin-bottom:.5rem}
+.suff .cov{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);line-height:1.7}
+.suff .bar{display:flex;gap:.2rem;margin:.5rem 0 .2rem}
+.suff .bar i{height:.4rem;flex:1;border-radius:2px;background:var(--border-strong)}
+.suff .bar i.on{background:var(--tc)}
+
+/* plan table */
+.budget{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.5rem;margin-top:1rem}
+.bx{background:var(--surface-2);border:1px solid var(--border);border-radius:.6rem;padding:.7rem .85rem;display:flex;flex-direction:column;gap:.1rem}
+.bx .bl{font-family:var(--font-display);font-weight:700;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.bx .bv{font-family:var(--font-mono);font-weight:700;font-size:1.2rem;font-variant-numeric:tabular-nums}
+.bx.over .bv{color:var(--p0)}
+
+.alloc{margin-top:1rem;border:1px solid var(--border);border-radius:.75rem;overflow:hidden}
+.arow{display:grid;grid-template-columns:8.5rem 7rem 1fr;gap:.8rem;padding:.8rem 1rem;border-bottom:1px solid var(--border);align-items:start}
+.arow:last-child{border-bottom:0}
+.arow .an{font-family:var(--font-display);font-weight:700;font-size:.98rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.arow .am{font-family:var(--font-mono);font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.arow .ar{font-size:.86rem;color:var(--muted);line-height:1.5;min-width:0}
+.arow.zero{background:var(--surface-2)}
+.arow.zero .am,.arow.zero .an{color:var(--faint)}
+.arow.changed{background:var(--accent-soft)}
+.arow .delta{font-family:var(--font-mono);font-size:.7rem;color:var(--accent-ink);font-weight:700;display:block;margin-top:.15rem;white-space:nowrap}
+.youmark{font-family:var(--font-display);font-weight:800;font-size:.6rem;letter-spacing:.07em;color:var(--good);border:1px solid var(--good);border-radius:2rem;padding:.08rem .4rem;white-space:nowrap}
+@media (max-width:560px){.arow{grid-template-columns:1fr auto;gap:.3rem .6rem}.arow .ar{grid-column:1/-1}}
+
+/* controls */
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.9rem;margin-top:1.2rem}
+.cgroup{border:1px solid var(--border);border-radius:.75rem;padding:.9rem 1rem;background:var(--surface-2)}
+.cgroup legend,.cgroup .gl{font-family:var(--font-display);font-weight:700;font-size:.78rem;margin-bottom:.55rem;color:var(--fg);display:block;padding:0}
+.opt{display:flex;gap:.6rem;align-items:flex-start;padding:.5rem;border-radius:.5rem;cursor:pointer;min-height:2.6rem}
+.opt:hover{background:var(--surface-3)}
+.opt:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.opt input{width:1.2rem;height:1.2rem;margin:.15rem 0 0;flex:none;accent-color:var(--accent)}
+.opt .ot{font-size:.92rem;line-height:1.45}
+.opt .oh{display:block;font-size:.8rem;color:var(--muted);margin-top:.1rem}
+
+/* day 7 */
+.timejump{display:flex;align-items:center;gap:.8rem;margin:1.6rem 0;color:var(--warn)}
+.timejump .ln{flex:1;height:0;border-top:2px dashed currentColor}
+.timejump .tx{font-family:var(--font-display);font-weight:800;font-size:.78rem;letter-spacing:.14em;white-space:nowrap}
+.simout{background:var(--surface-2);border:1px solid var(--border);border-left:4px solid var(--L4);border-radius:.7rem;padding:1rem 1.1rem;margin-top:1rem}
+.simout .sv{font-family:var(--font-mono);font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums;margin:.3rem 0}
+.disclaim{font-family:var(--font-display);font-weight:600;font-size:.78rem;color:var(--L4);margin-top:.2rem}
+
+details.disc{margin-top:.8rem;border:1px solid var(--border);border-radius:.6rem;overflow:hidden;background:var(--surface-2)}
+details.disc>summary{list-style:none;cursor:pointer;padding:.7rem .9rem;font-family:var(--font-display);font-weight:700;font-size:.88rem;display:flex;gap:.5rem;align-items:center;min-height:2.8rem}
+details.disc>summary::-webkit-details-marker{display:none}
+details.disc>summary:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+details.disc .db{padding:0 .9rem .9rem}
+.caret{color:var(--accent-ink);font-weight:800;transition:transform .15s}
+details.disc[open] .caret{transform:rotate(90deg)}
+
+select,textarea{font:inherit;font-family:var(--font-display);font-size:.9rem;border-radius:.5rem;border:1px solid var(--border-strong);background:var(--surface);color:var(--fg);padding:.5rem .6rem;width:100%;min-height:2.6rem}
+select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+label.fl{font-family:var(--font-display);font-weight:700;font-size:.78rem;display:block;margin-bottom:.3rem;margin-top:.7rem}
+
+.foot{color:var(--faint);font-size:.8rem;line-height:1.7;margin-top:1.4rem;max-width:44rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="illus">
+  <div class="wrap"><span class="dot" aria-hidden="true"></span><span class="t">Illustrative demo data — synthetic learners. No real learner records, and no assignments are ever sent.</span></div>
+</div>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brandrow">
+      <span class="brand">Mission Control <span class="v">V2.1</span></span>
+      <span class="sp">
+        <button class="btn-ghost btn-sm" id="restartBtn" type="button">Restart demo</button>
+      </span>
+    </div>
+    <nav class="stepper" id="stepper" aria-label="Progress"></nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="panel" id="panel"></div>
+    <p class="foot" id="footnote"></p>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   DATA — five learners, each with their own independent case.
+   Every case carries provenance and an evidence-coverage record,
+   so the sufficiency rule can be applied rather than asserted.
+   ============================================================ */
+const LEARNERS = {
+  michelle: {
+    name:"Michelle", knowledge:92, practice:54, practiceLabel:"Price-objection practice",
+    context:"Client-facing meeting approaching",
+    cardMeta:"92 · Strong product knowledge",
+    coverage:{obs:4, families:2, nonPractice:1, newestDays:3},
+    familyNames:"SMB discovery, price objection",
+    interpretation:"In these sessions she moves to product features before addressing the stated price concern.",
+    claim:"Price-objection handling is a readiness gap. Scope: SMB first-contact conversations where price is raised early.",
+    alternatives:["Scenario difficulty was above her usual band in 2 of 4 sessions."],
+    whatWouldChange:"A recorded live client call in which she explores affordability before pitching features.",
+    transcript:[
+      {who:"Client", said:"Honestly, this is more than we budgeted for this year."},
+      {who:"Michelle", said:"I understand. Let me walk you through what's included in the premium tier —", flag:true},
+      {who:"Client", said:"It's not about features. It's the number."},
+      {who:"Michelle", said:"Right, and the number reflects the coverage breadth, which most clients find —", flag:true}
+    ],
+    observedGap:"She answers a budget objection with feature breadth, without first exploring what the client can actually afford.",
+    day7:{better:{from:54,to:81,next:"Move to a harder objection set, then validate in a live client scenario."},
+          worse:{from:54,to:58,next:"Change the coaching approach — review the missed discovery step directly, then reassess."}}
+  },
+  john: {
+    name:"John", knowledge:78, practice:61, practiceLabel:"Discovery questioning",
+    context:"Client meeting tomorrow",
+    cardMeta:"78 · Client meeting tomorrow",
+    coverage:{obs:1, families:1, nonPractice:0, newestDays:1},
+    familyNames:"SMB discovery",
+    interpretation:"In this one session he presented the product before asking what the client needed.",
+    claim:"May have a habitual gap in discovery questioning.",
+    alternatives:[
+      "A single session is a sample of one — this may be situational.",
+      "The scenario opened mid-conversation, which can suppress discovery behaviour.",
+      "Transcription quality on this recording is unverified."
+    ],
+    whatWouldChange:"One more discovery scenario with a different client archetype, or a supervisor observation of a live call.",
+    transcript:[
+      {who:"Client", said:"We're looking at options for the team — not sure what we need yet."},
+      {who:"John", said:"Great — our standard package covers life, disability and critical illness.", flag:true},
+      {who:"Client", said:"Okay… how does that map to what we already have?"},
+      {who:"John", said:"I can send the full comparison sheet over after this.", flag:true}
+    ],
+    observedGap:"He moves to the product menu before establishing what the client already has or needs.",
+    day7:{better:{from:61,to:79,next:"Confirm the improvement holds in a second client archetype before closing the gap."},
+          worse:{from:61,to:64,next:"The hypothesis may be wrong. Re-examine whether this is discovery skill or scenario framing."}}
+  },
+  david: {
+    name:"David", knowledge:64, practice:58, practiceLabel:"Product fundamentals",
+    context:"No client-facing event scheduled",
+    cardMeta:"64 · Product fundamentals gap",
+    coverage:{obs:2, families:1, nonPractice:0, newestDays:11},
+    familyNames:"Product knowledge check",
+    interpretation:"Both sessions show hesitation on policy terms rather than on conversational technique.",
+    claim:"May have a fundamentals gap in policy terminology rather than a sales-skill gap.",
+    alternatives:["Both observations are from the same scenario family, so this may not generalise.",
+                  "Newest evidence is 11 days old."],
+    whatWouldChange:"A Knowledge Studio assessment on policy terms would separate knowledge from technique cheaply.",
+    transcript:[
+      {who:"Client", said:"What's the difference between the guaranteed and indexed option?"},
+      {who:"David", said:"The indexed one is… it tracks the market, I believe, up to a cap.", flag:true},
+      {who:"Client", said:"Up to what cap?"},
+      {who:"David", said:"I'd want to double-check that before I give you a number.", flag:true}
+    ],
+    observedGap:"He defers on a core product definition rather than answering it directly.",
+    day7:{better:{from:58,to:72,next:"Fundamentals improved. Move him into conversational practice."},
+          worse:{from:58,to:60,next:"Try a different format — written reference drill rather than live simulation."}}
+  },
+  grace: {
+    name:"Grace", knowledge:89, practice:86, practiceLabel:"Objection handling",
+    context:"No gap identified",
+    cardMeta:"89 · Strong practice results",
+    coverage:{obs:5, families:3, nonPractice:1, newestDays:5},
+    familyNames:"price objection, SMB discovery, renewal conversation",
+    interpretation:"Performance is consistent across three distinct scenario families and one supervisor observation.",
+    claim:"No readiness gap identified. Scope: the three scenario families observed.",
+    alternatives:[],
+    whatWouldChange:"A materially harder scenario band, if you want to find her actual ceiling.",
+    transcript:[
+      {who:"Client", said:"Your competitor quoted me 20% less."},
+      {who:"Grace", said:"That's worth taking seriously. Can I ask what's included in their number?"},
+      {who:"Client", said:"Honestly, I'm not sure."},
+      {who:"Grace", said:"Let's compare them line by line before either of us talks price."}
+    ],
+    observedGap:"None. She explores before defending, which is the behaviour the rubric looks for.",
+    day7:{better:{from:86,to:90,next:"No coaching was allocated. Consider a harder scenario band to find her ceiling."},
+          worse:{from:86,to:84,next:"Within normal variation. No action indicated."}}
+  },
+  anna: {
+    name:"Anna", knowledge:81, practice:74, practiceLabel:"Needs analysis",
+    context:"Recent improvement — stability unconfirmed",
+    cardMeta:"81 · Recently improved",
+    coverage:{obs:3, families:2, nonPractice:0, newestDays:6},
+    familyNames:"needs analysis, renewal conversation",
+    interpretation:"Her last three sessions improved steadily, but all are simulations.",
+    claim:"Recent improvement may not yet be stable outside simulation.",
+    alternatives:["Improvement could reflect familiarity with the scenario set rather than transferable skill.",
+                  "No non-simulation evidence exists yet."],
+    whatWouldChange:"A single supervisor observation of a live client interaction would confirm or break this.",
+    transcript:[
+      {who:"Client", said:"We renewed last year without really reviewing it."},
+      {who:"Anna", said:"Then let's start there — what changed for the team since that renewal?"},
+      {who:"Client", said:"We added eight people and two contractors."},
+      {who:"Anna", said:"That changes the calculation. Let me note both before we look at options."}
+    ],
+    observedGap:"None visible in simulation. The open question is whether it transfers.",
+    day7:{better:{from:74,to:83,next:"Improvement held. Seek one live observation to close the hypothesis."},
+          worse:{from:74,to:72,next:"Consistent with the familiarity explanation. Vary the scenario set."}}
+  }
+};
+const ORDER = ["michelle","john","david","grace","anna"];
+
+/* Deterministic allocation table — four combinations, each with a stated reason.
+   This is a transparent lookup, not an optimiser, and the UI says so. */
+const ALLOC = {
+  "30-none":[
+    {id:"john",     min:15, why:"Client meeting tomorrow — highest time pressure."},
+    {id:"michelle", min:10, why:"Confirmed price-objection gap with an upcoming client meeting."},
+    {id:"david",    min:5,  why:"Fundamentals gap, but no client-facing event scheduled."},
+    {id:"grace",    min:0,  why:"Consistent results across three scenario families. No intervention today."},
+    {id:"anna",     min:0,  why:"Improving. Reassess next week rather than spending time now."}
+  ],
+  "30-support":[
+    {id:"michelle", min:15, why:"Time freed by senior support — room for a full price-objection simulation."},
+    {id:"david",    min:10, why:"Fundamentals coaching now fits inside the budget."},
+    {id:"john",     min:5,  why:"A senior colleague runs the readiness check; you keep a short check-in."},
+    {id:"grace",    min:0,  why:"Consistent results across three scenario families. No intervention today."},
+    {id:"anna",     min:0,  why:"Improving. Reassess next week rather than spending time now."}
+  ],
+  "15-none":[
+    {id:"john",     min:10, why:"Client meeting tomorrow still ranks first, but compressed."},
+    {id:"michelle", min:5,  why:"Short targeted drill only — not enough time for a full simulation."},
+    {id:"david",    min:0,  why:"Deferred — not enough time today, and no client-facing event.", deferred:true},
+    {id:"grace",    min:0,  why:"Consistent results across three scenario families. No intervention today."},
+    {id:"anna",     min:0,  why:"Improving. Reassess next week rather than spending time now."}
+  ],
+  "15-support":[
+    {id:"michelle", min:10, why:"Senior support covers John, so the confirmed gap gets the time."},
+    {id:"john",     min:5,  why:"Short check-in; the senior colleague runs the readiness check."},
+    {id:"david",    min:0,  why:"Deferred — not enough time today, and no client-facing event.", deferred:true},
+    {id:"grace",    min:0,  why:"Consistent results across three scenario families. No intervention today."},
+    {id:"anna",     min:0,  why:"Improving. Reassess next week rather than spending time now."}
+  ]
+};
+
+const OVERRIDE_REASONS = [
+  "Evidence is insufficient for this judgement",
+  "Conflicts with what I've seen in the field",
+  "I rank the priorities differently",
+  "Time estimate is unrealistic",
+  "Other"
+];
+
+const STEPS = [
+  {k:"Prioritize"},{k:"Diagnose"},{k:"Evidence"},{k:"Plan"},{k:"Reassess"}
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let state;
+function freshState(){
+  return {
+    currentStep:1,
+    selectedLearnerId:null,
+    evidenceViewed:false,
+    timeBudget:30,
+    seniorSupport:false,
+    allocationVersion:0,
+    prevAlloc:null,
+    planConfirmed:false,
+    humanOverride:null,
+    evidenceRejected:false,
+    day7Scenario:null,
+    announcement:"",
+    lastChangeNote:""
+  };
+}
+
+/* sufficiency rule — the promotion test, applied rather than asserted */
+function level(cov){
+  if(cov.obs >= 3 && cov.families >= 2 && cov.nonPractice >= 1) return "Conclusion";
+  return "Hypothesis";
+}
+function allocKey(){ return state.timeBudget + "-" + (state.seniorSupport ? "support" : "none"); }
+function currentAlloc(){ return ALLOC[allocKey()]; }
+function allocatedMinutes(){ return currentAlloc().reduce((s,r)=>s+r.min,0); }
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const panel = document.getElementById("panel");
+const stepperEl = document.getElementById("stepper");
+const footEl = document.getElementById("footnote");
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderStepper(){
+  stepperEl.innerHTML = STEPS.map((s,i)=>{
+    const n=i+1;
+    const done = n < state.currentStep;
+    const now = n === state.currentStep;
+    const mark = done ? "✓" : now ? "●" : "○";
+    const cls = done ? "s done" : now ? "s now" : "s";
+    return `<div class="${cls}"${now?' aria-current="step"':''}>
+      <span class="k"><span aria-hidden="true">${mark}</span> STEP ${n}${done?" DONE":now?" — NOW":""}</span>
+      <span class="n">${s.k}</span></div>`;
+  }).join("");
+}
+
+function announce(msg){
+  state.announcement = msg;
+  const el = document.getElementById("liveStatus");
+  if(el) el.textContent = msg;
+}
+
+function goStep(n, msg){
+  state.currentStep = n;
+  render();
+  if(msg) announce(msg);
+  const h = document.getElementById("stepHeading");
+  if(h) h.focus();
+}
+
+function render(){
+  renderStepper();
+  const fns = {1:step1,2:step2,3:step3,4:step4,5:step5};
+  panel.innerHTML = fns[state.currentStep]();
+  wire();
+  footEl.textContent = footnoteFor(state.currentStep);
+}
+
+function footnoteFor(n){
+  if(n===1) return "Step 1 chooses who to inspect first. The system assesses all five learners on urgency and evidence in parallel — the plan in Step 4 is team-level, not limited to the learner you pick here.";
+  if(n===4) return "The allocation is a transparent deterministic lookup over four combinations (30/15 minutes × senior support on/off), each with a stated reason. It is not an optimiser, and nothing here should be read as an optimal AI plan.";
+  if(n===5) return "Day 7 output is a simulated scenario shown to demonstrate the feedback loop. It is not a forecast, and no real follow-up data is involved.";
+  return "Every claim on screen is labelled by inferential distance: Observation, Interpretation, Hypothesis or Conclusion. All data is illustrative.";
+}
+
+/* ---------- STEP 1 ---------- */
+function step1(){
+  const sel = state.selectedLearnerId;
+  const cards = ORDER.map(id=>{
+    const L = LEARNERS[id];
+    const on = sel===id;
+    const lv = level(L.coverage);
+    return `<label class="lcard${on?" sel":""}" for="r-${id}">
+      <input type="radio" name="learner" id="r-${id}" value="${id}"${on?" checked":""}>
+      <span class="body">
+        <span class="nm">${esc(L.name)} ${on?'<span class="selmark">SELECTED</span>':''}</span>
+        <span class="meta">${esc(L.cardMeta)}</span>
+        <span class="cov">${L.coverage.obs} obs · ${L.coverage.families} context${L.coverage.families>1?"s":""} · highest level reachable: ${lv}</span>
+      </span></label>`;
+  }).join("");
+
+  const cta = sel
+    ? `Review ${esc(LEARNERS[sel].name)}'s readiness evidence →`
+    : "Select a learner to continue";
+
+  return `<span class="steplab">Step 1 of 5 · Prioritize</span>
+  <h2 class="sh" id="stepHeading" tabindex="-1">Who should you look at first?</h2>
+  <p class="sub">You have ${state.timeBudget} minutes of coaching time today — that is the total across everyone, not per person. Choose one learner to inspect closely. The next step shows what their summary score may be hiding.</p>
+  <fieldset>
+    <legend>Choose one learner to review (five options, one selectable)</legend>
+    <div class="grid">${cards}</div>
+  </fieldset>
+  <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
+  <div class="row">
+    <button class="btn-primary" id="toStep2" type="button"${sel?"":" disabled"} aria-describedby="s1help">${cta}</button>
+    <span class="helper" id="s1help">${sel?"Opens the diagnostic view for "+esc(LEARNERS[sel].name)+".":"Select one learner first — the button stays disabled until you do."}</span>
+  </div>`;
+}
+
+/* ---------- STEP 2 ---------- */
+function step2(){
+  const L = LEARNERS[state.selectedLearnerId];
+  const gap = L.knowledge - L.practice;
+  const noGap = gap <= 5;
+  return `<span class="steplab">Step 2 of 5 · Diagnose</span>
+  <h2 class="sh" id="stepHeading" tabindex="-1">${noGap? esc(L.name)+" shows no readiness gap" : esc(L.name)+" scores well overall, but one gap stands out"}</h2>
+  <p class="sub">${noGap
+      ? "Her knowledge score and her practice evidence agree. That is itself a finding — it is why she ranks low for coaching time today."
+      : "A high knowledge score does not mean ready. Compare what the summary reports against what the practice evidence shows."}</p>
+
+  <div class="contrast">
+    <span class="lab"><span class="tier t-obs">Observation</span> Product knowledge</span>
+    <span class="val hi">${L.knowledge}</span>
+    <span class="lab"><span class="tier t-obs">Observation</span> ${esc(L.practiceLabel)}</span>
+    <span class="val ${noGap?"hi":"lo"}">${L.practice}</span>
+    <span class="gapline"><span class="tier t-int">Interpretation</span> Difference of ${gap} points — ${noGap?"within normal range.":"calculated from the two recorded scores above."}</span>
+  </div>
+
+  <div class="note">
+    <span class="nl">Why you are seeing this now</span>
+    ${esc(L.context)}. ${esc(L.interpretation)}
+  </div>
+
+  <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
+  <div class="row">
+    <button class="btn-primary" id="toStep3" type="button">View the evidence behind this →</button>
+    <button class="btn-ghost" id="backTo1" type="button">← Choose a different learner</button>
+  </div>`;
+}
+
+/* ---------- STEP 3 ---------- */
+function step3(){
+  const L = LEARNERS[state.selectedLearnerId];
+  const cov = L.coverage;
+  const lv = level(cov);
+  const tierClass = lv==="Conclusion" ? "t-con" : "t-hyp";
+  const tierVar = lv==="Conclusion" ? "var(--L4)" : "var(--L3)";
+  const lines = L.transcript.map(t=>
+    `<div class="ln${t.flag?" flag":""}"><span class="who">${esc(t.who)}</span><span class="said">${esc(t.said)}</span></div>`).join("");
+
+  const bars = [
+    cov.obs>=3, cov.families>=2, cov.nonPractice>=1
+  ];
+  const barHtml = bars.map(b=>`<i class="${b?"on":""}"></i>`).join("");
+  const unmet = [];
+  if(cov.obs<3) unmet.push(`needs ≥3 observations (has ${cov.obs})`);
+  if(cov.families<2) unmet.push(`needs ≥2 scenario families (has ${cov.families})`);
+  if(cov.nonPractice<1) unmet.push(`needs ≥1 non-simulation source (has ${cov.nonPractice})`);
+
+  const alts = L.alternatives.length
+    ? `<ul>${L.alternatives.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`
+    : "<p>No competing explanation remains unresolved.</p>";
+
+  return `<span class="steplab">Step 3 of 5 · Evidence</span>
+  <h2 class="sh" id="stepHeading" tabindex="-1">The evidence behind this finding</h2>
+  <p class="sub">What the rubric actually observed, with its source — so you can judge the finding rather than take it on trust.</p>
+
+  <div class="script">${lines}</div>
+  <div class="srcmeta">
+    <span class="m">source: Practice Studio</span>
+    <span class="m">recorded: ${cov.newestDays}d ago</span>
+    <span class="m">transcript quality: unverified</span>
+    <span class="m">provenance: ILLUSTRATIVE</span>
+  </div>
+
+  <div class="note">
+    <span class="nl"><span class="tier t-obs" style="margin-right:.3rem">Observation</span> Observed gap</span>
+    ${esc(L.observedGap)}
+  </div>
+
+  <div class="suff" style="--tc:${tierVar}">
+    <div class="hd"><span class="tier ${tierClass}">${lv}</span>
+      <span style="font-family:var(--font-display);font-weight:700;font-size:.76rem;color:var(--muted)">HIGHEST LEVEL THIS EVIDENCE SUPPORTS</span></div>
+    <p class="claim">${esc(L.claim)}</p>
+    <div class="bar" aria-hidden="true">${barHtml}</div>
+    <p class="cov">${cov.obs} observation${cov.obs>1?"s":""} across ${cov.families} scenario famil${cov.families>1?"ies":"y"} (${esc(L.familyNames)})<br>
+    non-simulation sources: ${cov.nonPractice} · newest evidence: ${cov.newestDays} day${cov.newestDays===1?"":"s"} old</p>
+    ${lv==="Conclusion"
+      ? `<p class="cov" style="color:var(--good)">Promotion rule met — this may be stated as a conclusion, within the scope above.</p>`
+      : `<p class="cov" style="color:var(--warn)">Stays a hypothesis: ${unmet.join("; ")}.</p>`}
+  </div>
+
+  <div class="note warn">
+    <span class="nl">Alternative explanations not yet ruled out</span>
+    ${alts}
+  </div>
+
+  <div class="note ok">
+    <span class="nl">What would change this finding</span>
+    ${esc(L.whatWouldChange)}
+  </div>
+
+  <details class="disc" id="discWrap">
+    <summary id="discBtn" aria-expanded="false" aria-controls="discBody"><span class="caret" aria-hidden="true">▸</span> Supervisor override — mark this finding as unreliable</summary>
+    <div class="db" id="discBody">
+      <label class="fl" for="ovReason">Reason</label>
+      <select id="ovReason">
+        <option value="">Select a reason…</option>
+        ${OVERRIDE_REASONS.map(r=>`<option${state.humanOverride&&state.humanOverride.reason===r?" selected":""}>${esc(r)}</option>`).join("")}
+      </select>
+      <label class="fl" for="ovNote">Note (optional)</label>
+      <textarea id="ovNote" rows="2" placeholder="What do you know that the system doesn't?">${state.humanOverride?esc(state.humanOverride.note||""):""}</textarea>
+      <div class="row" style="margin-top:.8rem">
+        <button class="btn-ghost btn-sm" id="saveOverride" type="button">Record override</button>
+      </div>
+      ${state.evidenceRejected?`<div class="note bad" style="margin-top:.8rem"><span class="nl">Override recorded</span>${esc(state.humanOverride.reason)}${state.humanOverride.note?" — "+esc(state.humanOverride.note):""}. This learner's finding is flagged in the plan below.</div>`:""}
+    </div>
+  </details>
+
+  <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
+  <div class="row">
+    <button class="btn-primary" id="toStep4" type="button">Build a plan with today's resources →</button>
+    <button class="btn-ghost" id="backTo2" type="button">← Back to diagnosis</button>
+  </div>`;
+}
+
+/* ---------- STEP 4 ---------- */
+function step4(){
+  const rows = currentAlloc();
+  const prev = state.prevAlloc;
+  const allocated = allocatedMinutes();
+  const remaining = state.timeBudget - allocated;
+  const sel = state.selectedLearnerId;
+
+  const rowHtml = rows.map(r=>{
+    const L = LEARNERS[r.id];
+    const prevRow = prev ? prev.find(p=>p.id===r.id) : null;
+    const changed = prevRow && prevRow.min !== r.min;
+    const label = r.deferred ? "Deferred" : (r.min===0 ? "0 min" : r.min+" min");
+    const you = r.id===sel ? '<span class="youmark">YOU REVIEWED THIS</span>' : "";
+    const flagged = (r.id===sel && state.evidenceRejected) ? ' <span class="tier t-hyp">finding overridden</span>' : "";
+    const delta = changed ? `<span class="delta">${prevRow.min===0&&prevRow.deferred?"Deferred":prevRow.min+" min"} → ${label}</span>` : "";
+    return `<div class="arow${r.min===0?" zero":""}${changed?" changed":""}">
+      <span class="an">${esc(L.name)} ${you}</span>
+      <span class="am">${label}${delta}</span>
+      <span class="ar">${esc(r.why)}${flagged}</span>
+    </div>`;
+  }).join("");
+
+  const confirmNote = state.planConfirmed
+    ? `<div class="note ok"><span class="nl">Plan confirmed</span>You confirmed this plan. Changing a resource below will invalidate it and require re-confirmation.</div>`
+    : `<div class="note"><span class="nl">Exploring</span>Switch the controls freely to compare options — nothing is committed until you continue. Changed rows are highlighted.</div>`;
+
+  return `<span class="steplab">Step 4 of 5 · Plan</span>
+  <h2 class="sh" id="stepHeading" tabindex="-1">What can you actually spend today?</h2>
+  <p class="sub">Two independent variables. Time budget is a single choice; senior support is a separate yes/no — both can be true at once.</p>
+
+  <div class="ctrls">
+    <fieldset class="cgroup">
+      <legend>Your total coaching time today</legend>
+      <label class="opt" for="t30"><input type="radio" name="tb" id="t30" value="30"${state.timeBudget===30?" checked":""}>
+        <span class="ot">30 minutes total<span class="oh">Across all learners, not per person.</span></span></label>
+      <label class="opt" for="t15"><input type="radio" name="tb" id="t15" value="15"${state.timeBudget===15?" checked":""}>
+        <span class="ot">15 minutes total<span class="oh">A compressed day.</span></span></label>
+    </fieldset>
+    <div class="cgroup">
+      <span class="gl">Additional support available</span>
+      <label class="opt" for="ss"><input type="checkbox" id="ss"${state.seniorSupport?" checked":""}>
+        <span class="ot">A senior colleague can support John<span class="oh">Frees some of your time for Michelle and David.</span></span></label>
+    </div>
+  </div>
+
+  <div class="budget">
+    <div class="bx"><span class="bl">Available</span><span class="bv">${state.timeBudget} min</span></div>
+    <div class="bx"><span class="bl">Allocated</span><span class="bv">${allocated} min</span></div>
+    <div class="bx${remaining<0?" over":""}"><span class="bl">Remaining</span><span class="bv">${remaining} min</span></div>
+  </div>
+
+  ${confirmNote}
+  <div class="alloc">${rowHtml}</div>
+
+  <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
+  <div class="row">
+    <button class="btn-primary" id="toStep5" type="button">Continue with this demo plan →</button>
+    <button class="btn-ghost" id="backTo3" type="button">← Back to evidence</button>
+    <span class="helper">Demo only — no assignments will be sent, and no learner is notified.</span>
+  </div>`;
+}
+
+/* ---------- STEP 5 ---------- */
+function step5(){
+  const L = LEARNERS[state.selectedLearnerId];
+  const rows = currentAlloc().filter(r=>r.min>0);
+  const summary = rows.map(r=>`<div class="arow"><span class="an">${esc(LEARNERS[r.id].name)}</span><span class="am">${r.min} min</span><span class="ar">${esc(r.why)}</span></div>`).join("");
+
+  let out = "";
+  if(state.day7Scenario){
+    const d = L.day7[state.day7Scenario];
+    out = `<div class="simout">
+      <span class="tier t-con">Simulated</span>
+      <p class="sv">${esc(L.practiceLabel)}: ${d.from} → ${d.to}</p>
+      <p class="disclaim">Illustrative outcome — not a prediction, and not drawn from any follow-up data.</p>
+      <div class="note" style="margin-top:.9rem"><span class="nl">Recommended next action</span>${esc(d.next)}</div>
+    </div>`;
+  }
+
+  return `<span class="steplab">Step 5 of 5 · Reassess</span>
+  <h2 class="sh" id="stepHeading" tabindex="-1">Plan confirmed — now look at what happens after</h2>
+  <div class="note ok" style="margin-top:1rem">
+    <span class="nl">Today</span>
+    ✓ Coaching plan selected for ${rows.length} learner${rows.length>1?"s":""}, ${allocatedMinutes()} minutes total. Nothing was sent.
+  </div>
+  <div class="alloc" style="margin-top:.8rem">${summary}</div>
+
+  <div class="timejump"><span class="ln"></span><span class="tx">7 DAYS LATER — SIMULATED</span><span class="ln"></span></div>
+
+  <p class="sub" style="margin-top:0">Choose a scenario to simulate. You are not selecting what really happened — this demo has no follow-up data. It shows how the loop would close.</p>
+  <div class="row">
+    <button class="btn-ghost" id="simBetter" type="button">Simulate: ${esc(L.name)} improves</button>
+    <button class="btn-ghost" id="simWorse" type="button">Simulate: gap remains</button>
+  </div>
+  ${out}
+
+  <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
+  <div class="row">
+    <button class="btn-ghost" id="backTo4" type="button">← Back to the plan</button>
+    <button class="btn-ghost" id="restartBtn2" type="button">Restart demo</button>
+  </div>`;
+}
+
+/* ============================================================
+   WIRING
+   ============================================================ */
+function clearDownstream(){
+  state.evidenceViewed=false;
+  state.planConfirmed=false;
+  state.day7Scenario=null;
+  state.humanOverride=null;
+  state.evidenceRejected=false;
+  state.prevAlloc=null;
+}
+
+function wire(){
+  const $ = id=>document.getElementById(id);
+
+  document.querySelectorAll('input[name="learner"]').forEach(r=>{
+    r.addEventListener("change", e=>{
+      const prev = state.selectedLearnerId;
+      state.selectedLearnerId = e.target.value;
+      if(prev && prev !== e.target.value) clearDownstream();
+      const L = LEARNERS[state.selectedLearnerId];
+      render();
+      announce(`${L.name} selected. Any previous diagnosis was cleared. The evidence step is now available.`);
+      const btn = document.getElementById("toStep2");
+      if(btn) btn.focus();
+    });
+  });
+
+  if($("toStep2")) $("toStep2").onclick = ()=> goStep(2, `Showing the diagnostic view for ${LEARNERS[state.selectedLearnerId].name}.`);
+  if($("backTo1")) $("backTo1").onclick = ()=> goStep(1, "Back to learner selection.");
+  if($("toStep3")) $("toStep3").onclick = ()=>{ state.evidenceViewed=true; goStep(3, "Showing the source evidence and how far it can be taken."); };
+  if($("backTo2")) $("backTo2").onclick = ()=> goStep(2, "Back to the diagnosis.");
+  if($("toStep4")) $("toStep4").onclick = ()=>{ state.prevAlloc=null; goStep(4, "Showing today's plan. Adjust the resources to see the allocation change."); };
+  if($("backTo3")) $("backTo3").onclick = ()=> goStep(3, "Back to the evidence.");
+  if($("backTo4")) $("backTo4").onclick = ()=> goStep(4, "Back to the plan.");
+
+  /* disclosure */
+  const wrap = $("discWrap"), btn = $("discBtn");
+  if(wrap && btn){
+    wrap.addEventListener("toggle", ()=> btn.setAttribute("aria-expanded", wrap.open ? "true":"false"));
+  }
+  if($("saveOverride")) $("saveOverride").onclick = ()=>{
+    const reason = $("ovReason").value;
+    if(!reason){ announce("Select a reason before recording the override. Nothing has been changed."); $("ovReason").focus(); return; }
+    state.humanOverride = {reason, note:$("ovNote").value.trim()};
+    state.evidenceRejected = true;
+    render();
+    const w = document.getElementById("discWrap"); if(w) w.open = true;
+    announce("Override recorded. The finding is flagged, and the reason is kept with the decision.");
+  };
+
+  /* resource controls */
+  document.querySelectorAll('input[name="tb"]').forEach(r=>{
+    r.addEventListener("change", e=>{
+      const before = state.timeBudget;
+      state.prevAlloc = currentAlloc();
+      state.timeBudget = parseInt(e.target.value,10);
+      state.allocationVersion++;
+      const wasConfirmed = state.planConfirmed;
+      state.planConfirmed = false; state.day7Scenario = null;
+      render();
+      announce(`Time budget changed: ${before} → ${state.timeBudget} minutes. Plan recalculated.${wasConfirmed?" Your previous confirmation no longer applies — review and continue again.":""}`);
+    });
+  });
+  if($("ss")) $("ss").addEventListener("change", e=>{
+    state.prevAlloc = currentAlloc();
+    state.seniorSupport = e.target.checked;
+    state.allocationVersion++;
+    const wasConfirmed = state.planConfirmed;
+    state.planConfirmed = false; state.day7Scenario = null;
+    render();
+    announce(`Senior support ${state.seniorSupport?"enabled":"removed"}. Plan recalculated.${wasConfirmed?" Your previous confirmation no longer applies — review and continue again.":""}`);
+  });
+
+  if($("toStep5")) $("toStep5").onclick = ()=>{ state.planConfirmed=true; goStep(5, "Plan confirmed for this demo. No assignments were sent."); };
+
+  if($("simBetter")) $("simBetter").onclick = ()=>{ state.day7Scenario="better"; render(); announce("Simulated scenario shown. This is an illustration, not a prediction."); };
+  if($("simWorse")) $("simWorse").onclick = ()=>{ state.day7Scenario="worse"; render(); announce("Simulated scenario shown. This is an illustration, not a prediction."); };
+
+  if($("restartBtn2")) $("restartBtn2").onclick = doRestart;
+}
+
+function doRestart(){
+  state = freshState();
+  render();
+  announce("Demo restarted. All selections cleared. No real learner data is affected.");
+  const h = document.getElementById("stepHeading");
+  if(h) h.focus();
+}
+document.getElementById("restartBtn").onclick = doRestart;
+
+/* boot */
+state = freshState();
+render();
+</script>
+
+</body></html>
