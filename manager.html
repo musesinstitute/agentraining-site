@@ -57,7 +57,7 @@ applyStaticLanguage();
     const names={michelle:'Michelle',john:'John',david:'David',grace:'Grace',anna:'Anna'};
     const summary=rows.map(([id,m])=>(names[id]||id)+' '+m+' min').join(' · '); const scenario=plan.scenarioId||''; const reason=plan.overrideReason||'AI recommendation accepted';
     const box=document.createElement('section'); box.className='next-action'; box.style.cssText='border-color:#f59e0b;background:linear-gradient(135deg,#fff7ed,#eff6ff)';
-    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>'+(scenario?'Recommended Practice: <b>'+escMission(scenario)+'</b>. ':'')+'Decision reason: <b>'+escMission(reason)+'</b>. Next: invite the real Pilot learners, then assign Practice.</p></div><a href="#invite-panel">Invite Learners</a>';
+    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>'+(scenario?'Recommended Practice: <b>'+escMission(scenario)+'</b>. ':'')+'Decision reason: <b>'+escMission(reason)+'</b>. Next: invite the real Pilot learners, then assign Practice.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap">'+(scenario?'<a href="simulator.html?practice='+encodeURIComponent(scenario)+'&ref=demo">Verify Practice</a>':'')+'<a href="#invite-panel">Invite Learners</a></div>';
     const main=document.querySelector('main'); const first=main&&main.firstElementChild; if(main)main.insertBefore(box,first?first.nextSibling:null);
   }catch(e){}
 })();
@@ -212,7 +212,7 @@ document.getElementById('quickTest').onclick=generateQuickTest;
 document.getElementById('assignPractice').onclick=assignPractice;
 // Invite Learner - a manager-only, PilotCloud-only feature (it provisions
 // real Identity accounts, which makes no sense in local/non-cloud mode).
-document.getElementById('invite-panel').hidden=!PilotCloud.enabled;
+document.getElementById('invite-panel').hidden=!PilotCloud.enabled;if(PilotCloud.enabled&&location.hash==='#invite-panel'){setTimeout(()=>document.getElementById('invite-panel').scrollIntoView({behavior:'smooth',block:'start'}),50);}
 function setInviteStatus(message,kind){const el=document.getElementById('inviteStatus');el.textContent=message;el.className='assign-status '+(kind||'')}
 function fallbackCopyText(text){
   const ta=document.createElement('textarea');
