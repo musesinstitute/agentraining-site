@@ -55,9 +55,9 @@ applyStaticLanguage();
     const raw=sessionStorage.getItem('agentraining_mission_plan'); if(!raw)return;
     const plan=JSON.parse(raw), rows=Object.entries(plan.minutes||{}).filter(([,m])=>Number(m)>0);
     const names={michelle:'Michelle',john:'John',david:'David',grace:'Grace',anna:'Anna'};
-    const summary=rows.map(([id,m])=>(names[id]||id)+' '+m+' min').join(' · '); const scenario=plan.scenarioId||'';
+    const summary=rows.map(([id,m])=>(names[id]||id)+' '+m+' min').join(' · '); const scenario=plan.scenarioId||''; const reason=plan.overrideReason||'AI recommendation accepted';
     const box=document.createElement('section'); box.className='next-action'; box.style.cssText='border-color:#f59e0b;background:linear-gradient(135deg,#fff7ed,#eff6ff)';
-    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>'+(scenario?'Recommended Practice: <b>'+escMission(scenario)+'</b>. ':'')+'Next: invite the real Pilot learners, then assign Practice.</p></div><a href="#invite-panel">Invite Learners</a>';
+    box.innerHTML='<div><small>Mission Control approved plan</small><h2>'+escMission(summary||'Coaching plan ready')+'</h2><p>'+(scenario?'Recommended Practice: <b>'+escMission(scenario)+'</b>. ':'')+'Decision reason: <b>'+escMission(reason)+'</b>. Next: invite the real Pilot learners, then assign Practice.</p></div><a href="#invite-panel">Invite Learners</a>';
     const main=document.querySelector('main'); const first=main&&main.firstElementChild; if(main)main.insertBefore(box,first?first.nextSibling:null);
   }catch(e){}
 })();
