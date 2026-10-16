@@ -585,7 +585,7 @@ function step3(){
   <div class="script">${lines}</div>
   <div class="srcmeta">
     <span class="m">source: Practice Simulation</span>
-    <span class="m">visibility: learner-private unless explicitly shared</span>
+    <span class="m">current demo/backend visibility: manager-readable</span>
     <span class="m">recorded: ${cov.newestDays}d ago</span>
     <span class="m">transcript quality: unverified</span>
     <span class="m">provenance: ILLUSTRATIVE</span>
@@ -733,9 +733,9 @@ function step5(){
   <div class="timejump"><span class="ln"></span><span class="tx">7 DAYS LATER — SIMULATED</span><span class="ln"></span></div>
 
   <p class="sub" style="margin-top:0">Choose a scenario to simulate. You are not selecting what really happened — this demo has no follow-up data. It shows how the loop would close for <strong>${esc(L.name)}</strong>.</p>
-  <div class="note" style="margin-top:.9rem">
-    <span class="nl">Privacy boundary for targeted reassessment</span>
-    Private practice transcripts are not automatically exposed to the supervisor. If AgentTraining proposes a targeted follow-up, the learner is told what will be shared and must explicitly agree before that follow-up result is included in the supervisor report. If the learner declines, the private transcript and follow-up result remain private.
+  <div class="note warn" style="margin-top:.9rem">
+    <span class="nl">Planned privacy control — not yet implemented</span>
+    The intended design is to let a learner know what a targeted reassessment will share and require explicit agreement before that follow-up result is included in a supervisor report. <strong>Current backend behavior does not enforce this:</strong> manager access can include learner practice transcripts. Do not present the consent boundary as a current product capability.
   </div>
   <div class="row">
     <button class="btn-ghost" id="simBetter" type="button">Simulate: ${esc(L.name)} improves</button>
@@ -743,34 +743,26 @@ function step5(){
   </div>
   ${out}
 
-  <div class="longreview" aria-label="Illustrative 60-day review">
-    <div class="lrhead"><span class="tier t-hyp">Illustrative 60-day review</span><strong>Longitudinal Decision Intelligence</strong></div>
-    <p class="sub" style="margin-top:0">At a real review cadence, the system would revisit its own earlier judgement against new evidence — not simply repeat the original score.</p>
-    <div class="lrgrid" style="margin-top:.8rem">
-      <div class="lrcard"><span class="lrlab">1 · What we believed</span><p>${esc(L.claim)}</p></div>
-      <div class="lrcard"><span class="lrlab">2 · What happened</span><p>Compare later practice, manager observations and field outcomes with the original evidence. Demo placeholder — no 60-day follow-up data exists here.</p></div>
-      <div class="lrcard"><span class="lrlab">3 · Where we may have been wrong</span><p>Recheck alternative explanations, evidence-source diversity, manager overrides and any learner dispute before strengthening the claim.</p></div>
-      <div class="lrcard"><span class="lrlab">4 · What changes now</span><p>Revise the coaching priority, evidence status or next action when later evidence contradicts the earlier recommendation. Keep the revision history visible.</p></div>
-    </div>
-    <div class="note warn" style="margin-top:.8rem"><span class="nl">Self-correction, not self-certainty</span>The review should surface which earlier judgements were supported, which were overturned, why supervisors overrode the system, and what evidence would change the current view.</div>
+  <div class="longreview" aria-label="Reassessment and readjustment">
+    <div class="lrhead"><span class="tier t-hyp">Illustrative reassessment</span><strong>${esc(L.name)} · Reassessment &amp; Readjustment</strong></div>
+    <p class="sub" style="margin-top:0">One longitudinal review: what we believed, what changed, where the judgement may have been wrong, and what to do next.</p>
     <div class="row" style="margin-top:.9rem">
-      <button class="btn-primary" id="openReassessReport" type="button" aria-expanded="false" aria-controls="reassessReport">View Reassessment &amp; Readjustment Report →</button>
-      <span class="helper">One report connects the original judgement, new evidence, manager feedback and the revised action.</span>
+      <button class="btn-primary" id="openReassessReport" type="button" aria-expanded="${state.reportOpen?"true":"false"}" aria-controls="reassessReport">${state.reportOpen?"Hide Reassessment & Readjustment Report ↑":"View Reassessment & Readjustment Report →"}</button>
     </div>
-    <div id="reassessReport" class="reassess-report" hidden>
+    <div id="reassessReport" class="reassess-report"${state.reportOpen?"":" hidden"}>
       <span class="tier t-hyp">Illustrative demo report</span>
       <h3 style="margin-top:.55rem">${esc(L.name)} — Reassessment &amp; Readjustment</h3>
-      <p class="sub" style="margin-top:.25rem">This demonstrates the decision record a supervisor would inspect. The follow-up evidence below is illustrative, not real learner data.</p>
+      <p class="sub" style="margin-top:.25rem">This demonstrates the decision record a supervisor would inspect. Follow-up evidence is illustrative, not real learner data.</p>
       <div class="report-grid">
         <div class="report-card"><strong>1 · Original Assessment</strong><p>${esc(L.claim)}</p></div>
         <div class="report-card"><strong>2 · Evidence at the Time</strong><p>${L.coverage.obs} observations across ${L.coverage.families} scenario famil${L.coverage.families>1?"ies":"y"}; ${L.coverage.nonPractice} non-simulation source${L.coverage.nonPractice===1?"":"s"}. Confidence was bounded by this coverage.</p></div>
-        <div class="report-card"><strong>3 · What Happened Since</strong><p>${state.day7Scenario ? esc(L.name)+" completed an illustrative targeted 7-day reassessment. The follow-up above is the new evidence used here; in production it would only be shared after the learner was informed and agreed to share that follow-up result." : "No follow-up scenario selected yet. In production, "+esc(L.name)+" would receive a targeted reassessment; the learner would be told what result will be shared and can decline sharing."}</p></div>
-        <div class="report-card"><strong>4 · Where We May Have Been Wrong</strong><p>${state.humanOverride ? "Supervisor override: "+esc(state.humanOverride.reason)+(state.humanOverride.note?" — "+esc(state.humanOverride.note):"")+". This becomes counter-evidence for reassessment." : "Recheck whether the evidence was too narrow, simulation-heavy, contradicted by field context, or later overturned. No supervisor override is recorded in this demo run."}</p></div>
+        <div class="report-card"><strong>3 · What Happened Since</strong><p>${state.day7Scenario ? esc(L.name)+" completed an illustrative targeted 7-day reassessment. The simulated result above is the new evidence used for this demo." : "No follow-up scenario selected yet. In production, later practice, manager observations and field outcomes would be compared with the original claim."}</p></div>
+        <div class="report-card"><strong>4 · Where We May Have Been Wrong</strong><p>${state.humanOverride ? "Supervisor override recorded: "+esc(state.humanOverride.reason)+(state.humanOverride.note?" — "+esc(state.humanOverride.note):"")+". Treat this as counter-evidence and reassess the original AI judgement." : "Recheck whether the evidence was too narrow, simulation-heavy, contradicted by field context, or later overturned. No supervisor override is recorded in this demo run."}</p></div>
         <div class="report-card"><strong>5 · Updated Assessment — ${esc(L.name)}</strong><p>${state.day7Scenario==="better" ? "Our view of "+esc(L.name)+" has changed: the targeted behavior improved in the simulated follow-up. Do not generalize this into motivation, personality, or field readiness; real-world transfer is still unestablished." : state.day7Scenario==="worse" ? "Our view of "+esc(L.name)+" has changed: the targeted gap remains in the simulated follow-up. Revisit whether this is a knowledge gap, a communication gap, or an intervention mismatch before assigning more of the same practice." : "There is not enough follow-up evidence to change our view of "+esc(L.name)+". Current status: hold the earlier assessment provisionally and do not infer motivation or intent."}</p></div>
         <div class="report-card"><strong>6 · Readjustment Plan</strong><p>${state.day7Scenario ? esc(L.day7[state.day7Scenario].next) : "Collect the next targeted observation, ask for manager feedback, and reassess before changing the learner-level conclusion."}</p></div>
         <div class="report-card full"><strong>Next evidence that could change the view</strong><p>${esc(L.whatWouldChange)}</p></div>
       </div>
-      <div class="note ok" style="margin-top:.8rem"><span class="nl">Trust boundary</span>The supervisor receives the reassessment conclusion and agreed-to evidence, not an automatic copy of private learner conversations. AgentTraining revisits its recommendation as new evidence and supervisor context arrive; it does not claim to know the learner's inner motivation.</div>
+      <div class="note warn" style="margin-top:.8rem"><span class="nl">Current privacy reality</span>The intended learner-consent control is planned, not implemented in the current backend. Manager access can include practice transcripts. This demo must not imply otherwise.</div>
     </div>
   </div>
 
@@ -791,6 +783,7 @@ function clearDownstream(){
   state.humanOverride=null;
   state.evidenceRejected=false;
   state.prevAlloc=null;
+  state.reportOpen=false;
 }
 
 function wire(){
@@ -861,12 +854,10 @@ function wire(){
   if($("simWorse")) $("simWorse").onclick = ()=>{ state.day7Scenario="worse"; render(); announce("Simulated scenario shown. This is an illustration, not a prediction."); };
 
   if($("openReassessReport")) $("openReassessReport").onclick = ()=>{
-    const report=$("reassessReport"), btn=$("openReassessReport");
-    const opening=report.hidden;
-    report.hidden=!opening;
-    btn.setAttribute("aria-expanded", opening?"true":"false");
-    btn.textContent=opening ? "Hide Reassessment & Readjustment Report ↑" : "View Reassessment & Readjustment Report →";
-    if(opening){ report.scrollIntoView({behavior:"smooth",block:"nearest"}); announce("Reassessment and readjustment report opened."); }
+    state.reportOpen=!state.reportOpen;
+    render();
+    if(state.reportOpen){ const report=$("reassessReport"); if(report) report.scrollIntoView({behavior:"smooth",block:"nearest"}); announce("Reassessment and readjustment report opened."); }
+    else announce("Reassessment and readjustment report closed.");
   };
 
   if($("restartBtn2")) $("restartBtn2").onclick = doRestart;
