@@ -9,6 +9,8 @@ const COMPETENCIES = [
   { key: 'closing', label: 'Next-step confirmation' }
 ];
 
+const JUDGMENT_OUTCOMES = ['helpful', 'not_helpful', 'unclear'];
+
 function reply(status, body) {
   return new Response(JSON.stringify(body), { status, headers: jsonHeaders });
 }
@@ -1311,6 +1313,54 @@ export default async function handler(req) {
       const updated = { ...profile, claims, updatedAt: new Date().toISOString() };
       await store.setJSON(profileKey, updated);
       return reply(200, { profile: updated });
+    }
+
+    // Manager-only "did this help?" marks on past assignments. Calibration data
+    // for the product team and the manager; never shown to learners and never
+    // written back into learner profiles, scores, or claims.
+    if (resource === 'judgment-feedback') {
+      if (!actor.isManager) {
+        await writeAudit(store, teamPrefix, actor, `judgment_feedback_${req.method.toLowerCase()}`, 'denied', { reason: 'manager_role_required' });
+        return reply(403, { error: 'Manager access is required.' });
+      }
+      if (req.method === 'GET') {
+        const rows = await listJSON(store, `${teamPrefix}/judgment-feedback/`);
+        rows.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+        return reply(200, { feedback: rows });
+      }
+      if (req.method === 'POST') {
+        verifyRequestOrigin(req);
+        const input = await req.json();
+        const assignmentId = cleanText(input.assignmentId, 100);
+        const outcome = JUDGMENT_OUTCOMES.includes(input.outcome) ? input.outcome : '';
+        if (!assignmentId || !outcome) return reply(400, { error: 'Assignment and outcome (helpful, not_helpful, unclear) are required.' });
+        const assignment = await store.get(`${teamPrefix}/assignments/${safeSegment(assignmentId, 'assignment')}`, { type: 'json' });
+        if (!assignment) return reply(404, { error: 'Assignment not found.' });
+        // One mark per assignment; a manager may change it later.
+        const key = `${teamPrefix}/judgment-feedback/${safeSegment(assignment.id, 'assignment')}`;
+        const previous = await store.get(key, { type: 'json' });
+        const sessions = (await listJSON(store, `${teamPrefix}/sessions/`))
+          .filter(session => normalizeEmail(session.learner) === normalizeEmail(assignment.assignedTo));
+        // Evidence available to the manager when marking. "supported" mirrors the
+        // proposed promotion rule (>=3 sessions across >=2 scenarios); it is a
+        // pilot approximation to be calibrated by these very marks, not a validated threshold.
+        const scenarioCount = new Set(sessions.map(session => session.scenario).filter(Boolean)).size;
+        const level = sessions.length >= 3 && scenarioCount >= 2 ? 'supported' : 'hypothesis';
+        const now = new Date().toISOString();
+        const record = {
+          id: assignment.id, teamId: actor.teamId, assignmentId: assignment.id,
+          learnerEmail: normalizeEmail(assignment.assignedTo),
+          scenarioId: assignment.scenarioId, scenarioName: assignment.scenarioName,
+          assignmentStatus: assignment.status, assignmentScore: assignment.score ?? null,
+          assignedAt: assignment.createdAt,
+          evidenceSnapshot: { sessionCount: sessions.length, scenarioCount, level },
+          outcome, note: cleanText(input.note, 300),
+          markedBy: actor.email, createdAt: previous?.createdAt || now, updatedAt: now
+        };
+        await store.setJSON(key, record);
+        await writeAudit(store, teamPrefix, actor, 'judgment_feedback_mark', 'success', { assignmentId: assignment.id, outcome });
+        return reply(previous ? 200 : 201, { feedback: record });
+      }
     }
 
     return reply(404, { error: 'Unknown pilot data operation.' });
