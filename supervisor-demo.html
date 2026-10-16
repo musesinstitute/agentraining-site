@@ -46,7 +46,7 @@ h1{font-size:38px;margin:0 0 10px;letter-spacing:-1px}
 .ev th{color:var(--mut);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:750}
 .ev .src{color:var(--mut);font-size:12px;margin-top:8px}
 
-ol.flow{margin:24px 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;counter-reset:s}
+ol.flow{margin:24px 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;counter-reset:s}
 ol.flow li{background:white;border:1px solid #dbe2ea;border-radius:13px;padding:15px 10px;text-align:center;font-size:12px;font-weight:700;min-height:76px;display:flex;align-items:center;justify-content:center}
 
 .studios{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -134,6 +134,7 @@ a.studio:hover{transform:translateY(-2px);border-color:var(--b)}
   <li>4. AI Coach evaluates</li>
   <li>5. Apply to client case</li>
   <li>6. Manager sees results</li>
+  <li>7. 30/60-day review & revise</li>
 </ol>
 
 <section class="studios">
@@ -162,7 +163,7 @@ a.studio:hover{transform:translateY(-2px);border-color:var(--b)}
 <section class="bottom">
   <div class="panel">
     <h2 style="margin-top:0">Why not just ChatGPT?</h2>
-    <div class="why"><b>ChatGPT answers an individual question.</b> AgentTraining.ai keeps a record across sessions and over time: company-specific knowledge → assigned practice → AI evaluation → real case follow-through → manager visibility. The difference is not that it can analyse a conversation — it is that every assessment keeps its evidence, so you can check it, disagree with it, and see it revised.
+    <div class="why"><b>ChatGPT answers an individual question.</b> AgentTraining.ai keeps a record across sessions and over time: company-specific knowledge → assigned practice → AI evaluation → real case follow-through → manager visibility. The difference is not that it can analyse a conversation — it is that every assessment keeps its evidence, so you can check it, disagree with it, and see it revised. At 30/60-day reviews, the system revisits earlier judgements against new evidence, manager overrides and outcomes so the next decision can change.
     <div style="margin-top:12px;color:var(--mut);font-size:13px;font-weight:700">Long-form comparison is not part of this demo.</div></div>
   </div>
   <div class="panel">
@@ -195,7 +196,7 @@ a.studio:hover{transform:translateY(-2px);border-color:var(--b)}
 
   document.getElementById('storyBtn').addEventListener('click', function(){
     document.getElementById('story').textContent =
-      'Demo story: a manager sees a possible pricing-objection gap → opens the evidence behind it → assigns practice to the advisors where the evidence supports it → the advisor gets AI feedback → applies it to a live case → the result comes back here, and the original assessment is confirmed or revised.';
+      'Demo story: a manager sees a possible pricing-objection gap → opens the evidence behind it → assigns practice where the evidence supports it → the advisor gets AI feedback → applies it to a live case → the result comes back here → at the 30/60-day review, the system checks what it got right, what was overturned, and revises the next coaching decision.';
   });
 })();
 </script>
