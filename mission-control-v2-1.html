@@ -584,7 +584,8 @@ function step3(){
 
   <div class="script">${lines}</div>
   <div class="srcmeta">
-    <span class="m">source: Practice Studio</span>
+    <span class="m">source: Practice Simulation</span>
+    <span class="m">visibility: learner-private unless explicitly shared</span>
     <span class="m">recorded: ${cov.newestDays}d ago</span>
     <span class="m">transcript quality: unverified</span>
     <span class="m">provenance: ILLUSTRATIVE</span>
@@ -731,7 +732,11 @@ function step5(){
 
   <div class="timejump"><span class="ln"></span><span class="tx">7 DAYS LATER — SIMULATED</span><span class="ln"></span></div>
 
-  <p class="sub" style="margin-top:0">Choose a scenario to simulate. You are not selecting what really happened — this demo has no follow-up data. It shows how the loop would close.</p>
+  <p class="sub" style="margin-top:0">Choose a scenario to simulate. You are not selecting what really happened — this demo has no follow-up data. It shows how the loop would close for <strong>${esc(L.name)}</strong>.</p>
+  <div class="note" style="margin-top:.9rem">
+    <span class="nl">Privacy boundary for targeted reassessment</span>
+    Private practice transcripts are not automatically exposed to the supervisor. If AgentTraining proposes a targeted follow-up, the learner is told what will be shared and must explicitly agree before that follow-up result is included in the supervisor report. If the learner declines, the private transcript and follow-up result remain private.
+  </div>
   <div class="row">
     <button class="btn-ghost" id="simBetter" type="button">Simulate: ${esc(L.name)} improves</button>
     <button class="btn-ghost" id="simWorse" type="button">Simulate: gap remains</button>
@@ -759,13 +764,13 @@ function step5(){
       <div class="report-grid">
         <div class="report-card"><strong>1 · Original Assessment</strong><p>${esc(L.claim)}</p></div>
         <div class="report-card"><strong>2 · Evidence at the Time</strong><p>${L.coverage.obs} observations across ${L.coverage.families} scenario famil${L.coverage.families>1?"ies":"y"}; ${L.coverage.nonPractice} non-simulation source${L.coverage.nonPractice===1?"":"s"}. Confidence was bounded by this coverage.</p></div>
-        <div class="report-card"><strong>3 · What Happened Since</strong><p>${state.day7Scenario ? "The simulated 7-day follow-up is included above. Later practice and manager feedback would be compared with the original claim." : "No follow-up scenario selected yet. In production, later practice, manager observations and field outcomes would appear here."}</p></div>
+        <div class="report-card"><strong>3 · What Happened Since</strong><p>${state.day7Scenario ? esc(L.name)+" completed an illustrative targeted 7-day reassessment. The follow-up above is the new evidence used here; in production it would only be shared after the learner was informed and agreed to share that follow-up result." : "No follow-up scenario selected yet. In production, "+esc(L.name)+" would receive a targeted reassessment; the learner would be told what result will be shared and can decline sharing."}</p></div>
         <div class="report-card"><strong>4 · Where We May Have Been Wrong</strong><p>${state.humanOverride ? "Supervisor override: "+esc(state.humanOverride.reason)+(state.humanOverride.note?" — "+esc(state.humanOverride.note):"")+". This becomes counter-evidence for reassessment." : "Recheck whether the evidence was too narrow, simulation-heavy, contradicted by field context, or later overturned. No supervisor override is recorded in this demo run."}</p></div>
-        <div class="report-card"><strong>5 · Updated Assessment</strong><p>${state.day7Scenario==="better" ? "Later simulated evidence supports improvement, but real-world transfer is not established. Keep the claim provisional until field evidence arrives." : state.day7Scenario==="worse" ? "The simulated gap remains. Reduce confidence in the original intervention and revisit the diagnosis before repeating the same coaching." : "Insufficient follow-up evidence to revise the original assessment. Current status: hold, do not overstate."}</p></div>
+        <div class="report-card"><strong>5 · Updated Assessment — ${esc(L.name)}</strong><p>${state.day7Scenario==="better" ? "Our view of "+esc(L.name)+" has changed: the targeted behavior improved in the simulated follow-up. Do not generalize this into motivation, personality, or field readiness; real-world transfer is still unestablished." : state.day7Scenario==="worse" ? "Our view of "+esc(L.name)+" has changed: the targeted gap remains in the simulated follow-up. Revisit whether this is a knowledge gap, a communication gap, or an intervention mismatch before assigning more of the same practice." : "There is not enough follow-up evidence to change our view of "+esc(L.name)+". Current status: hold the earlier assessment provisionally and do not infer motivation or intent."}</p></div>
         <div class="report-card"><strong>6 · Readjustment Plan</strong><p>${state.day7Scenario ? esc(L.day7[state.day7Scenario].next) : "Collect the next targeted observation, ask for manager feedback, and reassess before changing the learner-level conclusion."}</p></div>
         <div class="report-card full"><strong>Next evidence that could change the view</strong><p>${esc(L.whatWouldChange)}</p></div>
       </div>
-      <div class="note ok" style="margin-top:.8rem"><span class="nl">Manager remains the judge</span>AgentTraining revisits its recommendation as new evidence and supervisor context arrive. It does not claim to know the learner's inner motivation or automatically retrain itself from one feedback event.</div>
+      <div class="note ok" style="margin-top:.8rem"><span class="nl">Trust boundary</span>The supervisor receives the reassessment conclusion and agreed-to evidence, not an automatic copy of private learner conversations. AgentTraining revisits its recommendation as new evidence and supervisor context arrive; it does not claim to know the learner's inner motivation.</div>
     </div>
   </div>
 
