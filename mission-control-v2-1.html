@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Mission Control V2.1</title>
+<title>Mission Control V2.2 — Longitudinal Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
@@ -204,6 +204,13 @@ select,textarea{font:inherit;font-family:var(--font-display);font-size:.9rem;bor
 select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 label.fl{font-family:var(--font-display);font-weight:700;font-size:.78rem;display:block;margin-bottom:.3rem;margin-top:.7rem}
 
+.longreview{margin-top:1.2rem;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:.75rem;background:var(--surface);padding:1rem 1.1rem}
+.longreview .lrhead{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;margin-bottom:.75rem}
+.longreview .lrgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.longreview .lrcard{background:var(--surface-2);border:1px solid var(--border);border-radius:.6rem;padding:.75rem .85rem}
+.longreview .lrlab{font-family:var(--font-display);font-weight:800;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);display:block;margin-bottom:.3rem}
+.longreview .lrcard p{font-size:.88rem;line-height:1.5;color:var(--muted)}
+@media(max-width:620px){.longreview .lrgrid{grid-template-columns:1fr}}
 .foot{color:var(--faint);font-size:.8rem;line-height:1.7;margin-top:1.4rem;max-width:44rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -215,7 +222,7 @@ label.fl{font-family:var(--font-display);font-weight:700;font-size:.78rem;displa
 <header class="topbar">
   <div class="wrap">
     <div class="brandrow">
-      <span class="brand">Mission Control <span class="v">V2.1</span></span>
+      <span class="brand">Mission Control <span class="v">V2.2</span></span>
       <span class="sp">
         <a class="btn-ghost btn-sm" href="supervisor-demo.html" style="display:inline-flex;align-items:center;text-decoration:none">← Supervisor view</a>
         <button class="btn-ghost btn-sm" id="restartBtn" type="button">Restart demo</button>
@@ -722,6 +729,18 @@ function step5(){
     <button class="btn-ghost" id="simWorse" type="button">Simulate: gap remains</button>
   </div>
   ${out}
+
+  <div class="longreview" aria-label="Illustrative 60-day review">
+    <div class="lrhead"><span class="tier t-hyp">Illustrative 60-day review</span><strong>Longitudinal Decision Intelligence</strong></div>
+    <p class="sub" style="margin-top:0">At a real review cadence, the system would revisit its own earlier judgement against new evidence — not simply repeat the original score.</p>
+    <div class="lrgrid" style="margin-top:.8rem">
+      <div class="lrcard"><span class="lrlab">1 · What we believed</span><p>${esc(L.claim)}</p></div>
+      <div class="lrcard"><span class="lrlab">2 · What happened</span><p>Compare later practice, manager observations and field outcomes with the original evidence. Demo placeholder — no 60-day follow-up data exists here.</p></div>
+      <div class="lrcard"><span class="lrlab">3 · Where we may have been wrong</span><p>Recheck alternative explanations, evidence-source diversity, manager overrides and any learner dispute before strengthening the claim.</p></div>
+      <div class="lrcard"><span class="lrlab">4 · What changes now</span><p>Revise the coaching priority, evidence status or next action when later evidence contradicts the earlier recommendation. Keep the revision history visible.</p></div>
+    </div>
+    <div class="note warn" style="margin-top:.8rem"><span class="nl">Self-correction, not self-certainty</span>The review should surface which earlier judgements were supported, which were overturned, why supervisors overrode the system, and what evidence would change the current view.</div>
+  </div>
 
   <p class="status" id="liveStatus" role="status" aria-live="polite">${esc(state.announcement)}</p>
   <div class="row">
