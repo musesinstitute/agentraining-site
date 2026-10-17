@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgentTraining.ai — Team Growth &amp; Retention Hub</title>
+<style>
+:root{--b:#165DFF;--ink:#14213d;--mut:#667085;--bg:#f5f7fb;--card:#fff;--g:#16a34a;--o:#d97706;--r:#dc2626;--amb:#92400e;--ambbg:#fffbeb;--ambbd:#fcd34d}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:var(--b)}
+:focus-visible{outline:3px solid var(--b);outline-offset:3px;border-radius:6px}
+
+/* persistent demo banner — the page never pretends to be live */
+.demobar{background:var(--ambbg);border-bottom:1px solid var(--ambbd);color:var(--amb)}
+.demobar .in{max-width:1180px;margin:auto;padding:9px 24px;display:flex;gap:9px;align-items:flex-start;font-size:13px;font-weight:700;line-height:1.45}
+.demobar .d{width:9px;height:9px;border-radius:50%;background:currentColor;flex:none;margin-top:5px}
+
+header{padding:18px 5%;display:flex;justify-content:space-between;align-items:center;background:white;border-bottom:1px solid #e5e7eb}
+.logo{font-weight:800;color:var(--b);font-size:20px}
+.pill{background:#eef4ff;color:var(--b);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:700}
+main{max-width:1180px;margin:auto;padding:34px 24px 60px}
+.hero{display:grid;grid-template-columns:1.4fr .6fr;gap:22px;align-items:stretch}
+.panel{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:26px;box-shadow:0 8px 30px #1018280b}
+h1{font-size:38px;margin:0 0 10px;letter-spacing:-1px}
+.sub{color:var(--mut);font-size:17px;line-height:1.5}
+.metric{font-size:36px;font-weight:850;color:var(--b)}
+.label{color:var(--mut);font-size:13px}
+
+/* tier tag — matches the labelling used across the Mission Control work */
+.tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;border:1px solid currentColor;border-radius:4px;padding:2px 6px;vertical-align:2px}
+.tag.illus{color:var(--amb)}
+.tag.sys{color:#7c3aed}
+.illusnote{color:var(--amb);font-size:12px;font-weight:600;line-height:1.5;margin-top:6px}
+
+.alert{margin-top:18px;padding:16px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa}
+.alert b{color:#9a3412}
+.alert .hd{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+
+/* evidence disclosure */
+.eb{margin-top:12px;border:0;background:#fff;color:var(--b);font-weight:750;font-size:13px;padding:9px 12px;border-radius:9px;cursor:pointer;border:1px solid #fed7aa;min-height:40px}
+.eb:hover{border-color:var(--b)}
+.ev{margin-top:12px;padding:14px;background:white;border:1px solid #fed7aa;border-radius:10px;font-size:13.5px;line-height:1.65;color:#344054}
+.ev table{width:100%;border-collapse:collapse;margin:8px 0}
+.ev th,.ev td{text-align:left;padding:6px 8px;border-bottom:1px solid #f1f1f1;font-size:13px;vertical-align:top}
+.ev th{color:var(--mut);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:750}
+.ev .src{color:var(--mut);font-size:12px;margin-top:8px}
+
+ol.flow{margin:24px 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;counter-reset:s}
+ol.flow li{background:white;border:1px solid #dbe2ea;border-radius:13px;padding:15px 10px;text-align:center;font-size:12px;font-weight:700;min-height:76px;display:flex;align-items:center;justify-content:center}
+
+.studios{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.studio{display:block;padding:20px;border-radius:16px;background:white;border:1px solid #e5e7eb;text-decoration:none;color:inherit;transition:.2s}
+a.studio:hover{transform:translateY(-2px);border-color:var(--b)}
+.studio h3{margin:7px 0;font-size:17px}
+.studio p{font-size:13px;color:var(--mut);line-height:1.45;margin:0}
+.action{margin-top:12px;color:var(--b);font-size:13px;font-weight:750}
+/* cards with no page behind them are not dressed up as links */
+.studio.soon{opacity:.72;cursor:default}
+.studio.soon .action{color:var(--mut);font-weight:700}
+
+.bottom{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn{border:0;border-radius:10px;padding:12px 16px;background:var(--b);color:white;font-weight:750;cursor:pointer;font-size:14px;min-height:44px}
+.btn.secondary{background:#eef4ff;color:var(--b)}
+.btn:hover{filter:brightness(1.07)}
+#result{display:none;margin-top:14px;padding:14px;background:#fffbeb;border:1px solid var(--ambbd);border-radius:10px;color:var(--amb);font-size:13.5px;line-height:1.6}
+.why{font-size:15px;line-height:1.55;color:#344054}
+.why b{color:var(--ink)}
+.foot{margin-top:26px;color:var(--mut);font-size:12.5px;line-height:1.7;max-width:760px}
+
+@media(max-width:800px){.hero,.bottom{grid-template-columns:1fr}ol.flow{grid-template-columns:repeat(2,1fr)}.studios{grid-template-columns:1fr 1fr}h1{font-size:30px}}
+@media(max-width:480px){.studios{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="demobar"><div class="in"><span class="d" aria-hidden="true"></span>
+<span>Demo — all figures and names on this page are illustrative. Nothing here sends an assignment, and no real team or advisor data is shown.</span></div></div>
+
+<header>
+  <div class="logo">AgentTraining.ai</div>
+  <div class="pill">SUPERVISOR DEMO</div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="panel">
+    <div class="pill" style="display:inline-block;margin-bottom:14px">TEAM GROWTH &amp; RETENTION HUB</div>
+    <h1>See the gap. Coach the team. Measure the improvement.</h1>
+    <div class="sub">One manager view connects training, real client cases, company knowledge, and team performance into a continuous improvement loop.</div>
+
+    <div class="alert">
+      <div class="hd"><span class="tag sys">System assessment</span> <span class="tag illus">Illustrative</span></div>
+      <b>Team signal:</b> “Premium is too high” was the most frequent objection in this sample week. Michelle, John and David look like candidates for reinforcement in value reframing.
+      <button class="eb" id="evBtn" type="button" aria-expanded="false" aria-controls="evPanel">Show what this is based on →</button>
+      <a class="eb" href="mission-control-v2-1.html" style="display:inline-block;text-decoration:none;margin-left:6px">Open Mission Control →</a>
+      <div class="ev" id="evPanel" hidden>
+        <strong>Why these three</strong>
+        <table>
+          <thead><tr><th>Learner</th><th>Observations</th><th>Contexts</th><th>Strength of claim</th></tr></thead>
+          <tbody>
+            <tr><td>Michelle</td><td>4 practice sessions</td><td>2 scenario families</td><td>Supported — consistent across contexts</td></tr>
+            <tr><td>John</td><td>1 practice session</td><td>1 scenario family</td><td>Hypothesis only — a single session is a sample of one</td></tr>
+            <tr><td>David</td><td>2 practice sessions</td><td>1 scenario family</td><td>Hypothesis only — may not generalise</td></tr>
+          </tbody>
+        </table>
+        <p style="margin:10px 0 0"><strong>What would change this:</strong> one more objection scenario with a different client type for John and David, or a supervisor observation of a live call.</p>
+        <p class="src">Source: Practice Studio · newest evidence 3 days old · transcript quality unverified · provenance: illustrative demo data. You can disagree with this assessment and record why — the system keeps your reason with the decision.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="label">TEAM READINESS <span class="tag illus">Illustrative</span></div>
+    <div class="metric">78%</div>
+    <div class="label">+9 points vs. the previous period in this sample</div>
+    <div class="illusnote">Sample figure. This demo does not measure whether practice caused the change.</div>
+
+    <hr style="border:0;border-top:1px solid #eee;margin:22px 0">
+
+    <div class="label">MANAGER ACTION</div>
+    <h3 style="margin:6px 0 12px">Assign targeted coaching</h3>
+    <button class="btn" id="assignBtn" type="button">Assign “Premium is too high” (demo)</button>
+    <div id="result" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<ol class="flow">
+  <li>1. Detect team gap</li>
+  <li>2. Assign training</li>
+  <li>3. Advisor practices</li>
+  <li>4. AI Coach evaluates</li>
+  <li>5. Apply to client case</li>
+  <li>6. Manager sees results</li>
+  <li>7. 30/60-day review & revise</li>
+</ol>
+
+<section class="studios">
+  <a class="studio" href="simulator.html">
+    <div aria-hidden="true">🎯</div><h3>Practice Studio</h3>
+    <p>Targeted role-play for objections, discovery, product conversations, and closing.</p>
+    <div class="action">Train the skill →</div>
+  </a>
+  <div class="studio soon">
+    <div aria-hidden="true">🤝</div><h3>Client Studio</h3>
+    <p>Turn real client objections and next steps into personalized practice and follow-up.</p>
+    <div class="action">Not part of this demo</div>
+  </div>
+  <div class="studio soon">
+    <div aria-hidden="true">📚</div><h3>Knowledge Studio</h3>
+    <p>Ground training in company products, underwriting guidance, and approved materials.</p>
+    <div class="action">Not part of this demo</div>
+  </div>
+  <a class="studio" href="manager.html">
+    <div aria-hidden="true">📈</div><h3>Leadership Studio</h3>
+    <p>See skill gaps, progress, cases, and coaching priorities across the team.</p>
+    <div class="action">Coach the team →</div>
+  </a>
+</section>
+
+<section class="bottom">
+  <div class="panel">
+    <h2 style="margin-top:0">Why not just ChatGPT?</h2>
+    <div class="why"><b>ChatGPT answers an individual question.</b> AgentTraining.ai keeps a record across sessions and over time: company-specific knowledge → assigned practice → AI evaluation → real case follow-through → manager visibility. The difference is not that it can analyse a conversation — it is that every assessment keeps its evidence, so you can check it, disagree with it, and see it revised. At 30/60-day reviews, the system revisits earlier judgements against new evidence, manager overrides and outcomes so the next decision can change.
+    <div style="margin-top:12px;color:var(--mut);font-size:13px;font-weight:700">Long-form comparison is not part of this demo.</div></div>
+  </div>
+  <div class="panel">
+    <h2 style="margin-top:0">The supervisor takeaway</h2>
+    <div class="why">You do not need to listen to every call. The system points at where help may be needed and shows you what that judgement rests on — then you decide whether to act on it. The final call stays yours, and your reasons are kept with it.</div>
+    <button class="btn secondary" style="margin-top:16px" id="storyBtn" type="button">Show 30-second story</button>
+    <div id="story" role="status" aria-live="polite" style="margin-top:12px;font-size:13px;color:#475467;line-height:1.6"></div>
+  </div>
+</section>
+
+<p class="foot">This page is a product demonstration. Advisor names, counts, readiness figures and objection frequencies are illustrative and are not drawn from any real team. No assignment, notification or record is created by anything on this page.</p>
+
+</main>
+
+<script>
+(function(){
+  var ev = document.getElementById('evPanel'), evBtn = document.getElementById('evBtn');
+  evBtn.addEventListener('click', function(){
+    var open = ev.hidden;
+    ev.hidden = !open;
+    evBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    evBtn.textContent = open ? 'Hide the basis for this ←' : 'Show what this is based on →';
+  });
+
+  var res = document.getElementById('result');
+  document.getElementById('assignBtn').addEventListener('click', function(){
+    res.style.display = 'block';
+    res.textContent = 'Demo only — nothing was sent and no advisor was notified. In the product this would create a practice assignment for Michelle, John and David and return their results to this dashboard.';
+  });
+
+  document.getElementById('storyBtn').addEventListener('click', function(){
+    document.getElementById('story').textContent =
+      'Demo story: a manager sees a possible pricing-objection gap → opens the evidence behind it → assigns practice where the evidence supports it → the advisor gets AI feedback → applies it to a live case → the result comes back here → at the 30/60-day review, the system checks what it got right, what was overturned, and revises the next coaching decision.';
+  });
+})();
+</script>
+</body>
+</html>
