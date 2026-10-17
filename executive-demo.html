@@ -120,9 +120,9 @@ h2{font-size:clamp(34px,5vw,58px);line-height:1.05;letter-spacing:-.045em;margin
         <div class="name" style="margin-top:0">Michelle → Premium Is Too High</div>
         <div class="sub">Focus: objection handling + value reframing · Suggested duration: 5–8 minutes · Due before tomorrow’s client meeting.</div>
       </div>
-      <button class="primary" id="assignBtn" onclick="assignPractice()">Assign Practice →</button>
+      <button class="primary" id="assignBtn" onclick="assignPractice()">Preview assignment →</button>
     </div>
-    <div id="assigned" style="display:none;margin-top:18px;padding:16px;border-radius:14px;background:#0e3028;border:1px solid #2b7259;color:#c8ffe9"><b>Assigned.</b> The manager can now track completion, score, transcript evidence, and the next coaching decision.</div>
+    <div id="assigned" style="display:none;margin-top:18px;padding:16px;border-radius:14px;background:#0e3028;border:1px solid #2b7259;color:#c8ffe9"><b>Illustrative preview — no assignment was sent.</b> Open the real Manager Studio to invite a Pilot learner and create the actual Practice assignment.</div>
     <div class="actions"><button id="measureBtn" style="display:none" class="primary" onclick="go(3)">See what the manager gets back →</button><a class="btn" href="manager.html?pilot=1#invite-panel">Open real Manager Studio</a></div>
   </div>
 </section>
@@ -160,14 +160,14 @@ function go(n){
 }
 function assignPractice(){
   const btn=document.getElementById('assignBtn');
-  btn.textContent='✓ Practice assigned';
+  btn.textContent='✓ Illustrative preview';
   btn.disabled=true;
   document.getElementById('assigned').style.display='block';
   document.getElementById('measureBtn').style.display='inline-flex';
 }
 function restart(){
   const btn=document.getElementById('assignBtn');
-  btn.textContent='Assign Practice →';btn.disabled=false;
+  btn.textContent='Preview assignment →';btn.disabled=false;
   document.getElementById('assigned').style.display='none';
   document.getElementById('measureBtn').style.display='none';
   go(0);
