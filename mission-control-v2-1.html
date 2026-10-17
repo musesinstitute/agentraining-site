@@ -856,6 +856,8 @@ function wire(){
   if($("openReassessReport")) $("openReassessReport").onclick = ()=>{
     state.reportOpen=!state.reportOpen;
     render();
+    const toggle=$("openReassessReport");
+    if(toggle) toggle.focus();
     if(state.reportOpen){ const report=$("reassessReport"); if(report) report.scrollIntoView({behavior:"smooth",block:"nearest"}); announce("Reassessment and readjustment report opened."); }
     else announce("Reassessment and readjustment report closed.");
   };
