@@ -42,3 +42,21 @@ Produce a concise English-language 90-second manager-facing video that motivates
 
 ## Scope guardrail
 No redesign, no new product capabilities, no changes to master until reviewed through a separate PR.
+
+## Language rollout — approved priority (2026-10-21)
+**Phase A: English first.** Finalize the English 90-second executive video, English on-screen captions, English call-to-action, and English 3–5 minute walkthrough if needed. Obtain review of English terminology and claims before recording the next language.
+
+**Phase B: Chinese second.** Reuse the *approved* English shot list, timing, demo data, and product claims. Create a natural Chinese voiceover, Chinese subtitles, and a localized CTA. Default written Chinese to Traditional Chinese for review; decide Simplified Chinese subtitles only if the intended audience needs them. Avoid presenting unbuilt Chinese product UI as implemented: if screens remain English, explicitly say the video is Chinese-narrated with English interface screenshots.
+
+### Chinese voiceover adaptation (working draft; NOT yet approved or recorded)
+- 0–12s: 「帶領一個團隊，您能否在問題影響業績之前，就發現誰需要更多輔導？」
+- 12–28s: 「AgentTraining.ai 將練習、客戶、知識與主管管理四個工作室，整合到同一個團隊成長與留任中心。」
+- 28–43s: 「顧問可以練習真實的客戶對話；主管則能根據訓練資訊，作出更有依據的輔導判斷。」
+- 43–58s: 「從發現問題、選擇行動，到追蹤進展，讓團隊管理有更清晰的流程。」
+- 58–76s: 「透過五位顧問的模擬案例，主管可以比較優先順序、分配有限的輔導時間，並思考什麼證據可能改變決策。」
+- 76–90s: 「訓練每一位顧問，支持每一位主管，成長每一個團隊。歡迎洽詢十四天試點計畫。」
+
+### Release order
+1. English script approval → English capture/voice/captions → English UAT → publish/share.
+2. Chinese terminology review → Chinese voice/subtitles on the same validated footage → Chinese UAT → publish/share.
+3. Track separate language versions and links; do not delay English pilot outreach waiting for Chinese localization.
