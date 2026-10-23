@@ -10,11 +10,14 @@ button:focus-visible,.link:focus-visible{outline:3px solid #87b4ff}main{max-widt
 section{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;padding:10px 4px 16px}
 h1{font-size:21px;margin:0 0 8px}p{margin:0 0 6px}small{color:#53657f}.screen{height:65vh;min-height:360px;border:1px solid #c1cde1;border-radius:12px;overflow:hidden;background:#fff}iframe{width:100%;height:100%;border:0}
 footer{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;padding:14px 4px;color:#53657f;font-size:13px}
+.playback-line{display:flex;gap:12px;align-items:center;margin:0 4px 12px;min-height:28px;font-size:13px;color:#244a82;font-weight:700}.playback-line #cue{flex:0 1 290px}.track{height:9px;flex:1;background:#dce5f4;border-radius:999px;overflow:hidden}.track #progress{display:block;height:100%;width:0;background:#245bdd;border-radius:999px;transition:width 1s linear}
+@media(prefers-reduced-motion:reduce){.track #progress{transition:none}}
 @media(max-width:600px){.screen{height:55vh;min-height:310px}.brand{font-size:17px}}
 </style></head><body>
 <header><div><div class="brand">AgentTraining.ai · Guided Supervisor Demo</div><div class="tag">Train Every Advisor · Coach Every Manager · Grow Every Team</div></div>
 <div class="controls"><button id="prev" type="button">← Previous</button><button id="toggle" type="button">▶ Play</button><button id="next" type="button">Next →</button><a class="link" id="open" href="supervisor-demo.html" target="_blank" rel="noopener">Open page ↗</a></div></header>
 <main><section><div><h1 id="title"></h1><p id="script"></p><small id="note"></small></div><strong id="count" aria-live="polite"></strong></section>
+<div class="playback-line" aria-live="polite"><span id="cue">Press Play to start the guided view</span><div class="track" role="progressbar" aria-label="Current scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress"></span></div></div>
 <div class="screen"><iframe id="screen" title="AgentTraining.ai existing feature"></iframe></div>
 <footer><span>Tour only: no automatic clicks, submissions, assignments or changes to training data.</span><span id="time"></span></footer></main>
 <script>
@@ -27,12 +30,76 @@ const scenes=[
 {title:'Mission Control',url:'mission-control-v2-1.html',duration:28,line:'See the broader team picture, select the next coaching step, and review changes after seven days.',note:'Seven-day reassessment is a demonstration concept; verify real persistence and authorization independently.'},
 {title:'Supervisor Next Steps',url:'manager-demo-hub.html',duration:18,line:'One connected workflow: identify gaps, assign practice, coach advisors, and follow through.'}
 ];
-const $=id=>document.getElementById(id);let index=0,remaining=0,timer=null,playing=false;
-function pause(){playing=false;clearInterval(timer);timer=null;$('toggle').textContent='▶ Play';$('time').textContent='Paused';}
-function show(n){index=(n+scenes.length)%scenes.length;const s=scenes[index];$('title').textContent=s.title;$('script').textContent=s.line;$('note').textContent=s.note||'Illustrative navigation through existing pages.';$('count').textContent=(index+1)+' / '+scenes.length;$('open').href=s.url;$('screen').src=s.url;remaining=s.duration;update();}
-function update(){$('time').textContent=playing?'Auto-advance in '+remaining+'s':'Paused · '+remaining+'s on this scene';}
-function tick(){if(!playing)return;remaining--;if(remaining<=0){if(index===scenes.length-1){pause();return;}show(index+1);}update();}
-function start(){if(playing)return;playing=true;$('toggle').textContent='❚❚ Pause';update();timer=setInterval(tick,1000);}
+const $=id=>document.getElementById(id);
+let index=0,remaining=0,timer=null,playing=false,frameReady=false,lastBeat=-1;
+const beats=[
+  {at:0,fraction:0,label:'Overview'},
+  {at:4,fraction:.20,label:'Exploring this page'},
+  {at:9,fraction:.44,label:'Reviewing the details'},
+  {at:14,fraction:.68,label:'Following the workflow'}
+];
+function focusPage(beat){
+  if(!frameReady)return;
+  try{
+    const win=$('screen').contentWindow,doc=win.document;
+    const full=Math.max(doc.body.scrollHeight,doc.documentElement.scrollHeight);
+    const viewport=Math.max(win.innerHeight,$('screen').clientHeight);
+    const travel=Math.max(0,full-viewport);
+    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(travel>10)win.scrollTo({top:Math.round(travel*beat.fraction),behavior:reduced?'auto':'smooth'});
+  }catch(e){
+    $('cue').textContent='Tour running · This page needs direct viewing via Open page';
+  }
+}
+function update(){
+  const pct=Math.round(100*(scenes[index].duration-remaining)/scenes[index].duration);
+  $('time').textContent=playing?'Playing · Next scene in '+remaining+'s':'Paused · '+remaining+'s on this scene';
+  $('progress').style.width=pct+'%';
+  $('progress').parentElement.setAttribute('aria-valuenow',String(pct));
+}
+function focusBeat(){
+  if(!playing)return;
+  const elapsed=scenes[index].duration-remaining;
+  let beatNo=0;
+  for(let k=1;k<beats.length;k++)if(elapsed>=beats[k].at)beatNo=k;
+  if(beatNo===lastBeat)return;
+  lastBeat=beatNo;
+  $('cue').textContent='● '+beats[beatNo].label+' · '+(beatNo+1)+' / '+beats.length;
+  focusPage(beats[beatNo]);
+}
+function pause(){
+  playing=false;clearInterval(timer);timer=null;
+  $('toggle').textContent='▶ Play';$('cue').textContent='Paused · Press Play to resume';
+  update();
+}
+function show(n){
+  index=(n+scenes.length)%scenes.length;const s=scenes[index];
+  $('title').textContent=s.title;$('script').textContent=s.line;
+  $('note').textContent=s.note||'Illustrative navigation through existing pages.';
+  $('count').textContent=(index+1)+' / '+scenes.length;$('open').href=s.url;
+  remaining=s.duration;frameReady=false;lastBeat=-1;
+  $('cue').textContent='Loading '+s.title+'…';
+  $('screen').src=s.url;update();focusBeat();
+}
+function tick(){
+  if(!playing)return;
+  remaining--;
+  if(remaining<=0){
+    if(index===scenes.length-1){remaining=0;pause();$('cue').textContent='Tour complete · Use Previous to replay';return;}
+    show(index+1);
+  }else focusBeat();
+  update();
+}
+function start(){
+  if(playing)return;
+  playing=true;$('toggle').textContent='❚❚ Pause';
+  lastBeat=-1;focusBeat();update();timer=setInterval(tick,1000);
+}
+$('screen').addEventListener('load',()=>{
+  frameReady=true;
+  if(playing){lastBeat=-1;focusBeat();}
+  else $('cue').textContent='Ready · Press Play for motion and automatic navigation';
+});
 $('toggle').addEventListener('click',()=>playing?pause():start());
 $('prev').addEventListener('click',()=>show(index-1));
 $('next').addEventListener('click',()=>show(index+1));
