@@ -1,106 +1,197 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgentTraining.ai | Guided Supervisor Demo</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgentTraining.ai | Executive Manager Guided Demo</title>
 <style>
-:root{font:16px/1.45 Arial,sans-serif;color:#152641;background:#f0f4fb}*{box-sizing:border-box}body{margin:0}
-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:#122d54;color:#fff;padding:16px 22px}
-.brand{font-size:20px;font-weight:700}.tag{font-size:13px;color:#ccddf7}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,.link{border:1px solid #aebed4;border-radius:8px;background:#fff;color:#15345e;padding:10px 14px;cursor:pointer;text-decoration:none;font-weight:700;font-size:14px}
-button:focus-visible,.link:focus-visible{outline:3px solid #87b4ff}main{max-width:1500px;margin:auto;padding:14px}
-section{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;padding:10px 4px 16px}
-h1{font-size:21px;margin:0 0 8px}p{margin:0 0 6px}small{color:#53657f}.screen{height:65vh;min-height:360px;border:1px solid #c1cde1;border-radius:12px;overflow:hidden;background:#fff}iframe{width:100%;height:100%;border:0}
-footer{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;padding:14px 4px;color:#53657f;font-size:13px}
-.playback-line{display:flex;gap:12px;align-items:center;margin:0 4px 12px;min-height:28px;font-size:13px;color:#244a82;font-weight:700}.playback-line #cue{flex:0 1 290px}.track{height:9px;flex:1;background:#dce5f4;border-radius:999px;overflow:hidden}.track #progress{display:block;height:100%;width:0;background:#245bdd;border-radius:999px;transition:width 1s linear}
-@media(prefers-reduced-motion:reduce){.track #progress{transition:none}}
-@media(max-width:600px){.screen{height:55vh;min-height:310px}.brand{font-size:17px}}
-</style></head><body>
-<header><div><div class="brand">AgentTraining.ai · Guided Supervisor Demo</div><div class="tag">Train Every Advisor · Coach Every Manager · Grow Every Team</div></div>
-<div class="controls"><button id="prev" type="button">← Previous</button><button id="toggle" type="button">▶ Play</button><button id="next" type="button">Next →</button><a class="link" id="open" href="supervisor-demo.html" target="_blank" rel="noopener">Open page ↗</a></div></header>
-<main><section><div><h1 id="title"></h1><p id="script"></p><small id="note"></small></div><strong id="count" aria-live="polite"></strong></section>
-<div class="playback-line" aria-live="polite"><span id="cue">Press Play to start the guided view</span><div class="track" role="progressbar" aria-label="Current scene progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress"></span></div></div>
-<div class="screen"><iframe id="screen" title="AgentTraining.ai existing feature"></iframe></div>
-<footer><span>Tour only: no automatic clicks, submissions, assignments or changes to training data.</span><span id="time"></span></footer></main>
+:root{font:16px/1.5 Arial,Helvetica,sans-serif;background:#eff3fa;color:#172b4d}
+*{box-sizing:border-box}body{margin:0}
+header{background:#112b54;color:#fff;padding:16px 22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.brand{font-size:20px;font-weight:800}.tag{font-size:12px;color:#ccdafa;margin-top:3px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button,.link{padding:10px 14px;border:1px solid #b9c7df;border-radius:9px;background:#fff;color:#173a72;font-size:14px;font-weight:750;cursor:pointer;text-decoration:none}
+button:focus-visible,.link:focus-visible,a:focus-visible{outline:3px solid #69a2ff;outline-offset:2px}
+main{padding:16px;max-width:1490px;margin:auto}
+.intro{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;padding:4px 3px 14px}
+h1{font-size:22px;margin:0 0 6px}.intro p{margin:0;max-width:880px}.intro small{color:#566b88;font-size:13px}
+#count{font-weight:800;white-space:nowrap}
+.playback{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;color:#2353a0;padding:0 2px 12px}
+#cue{flex:0 1 360px;min-width:180px}.track{height:10px;background:#d6e2f3;border-radius:10px;overflow:hidden;flex:1}
+#progress{display:block;background:#2e64d9;width:0;height:100%;transition:width .4s linear}
+.frame{background:white;border:1px solid #bccbe0;border-radius:12px;overflow:hidden;height:65vh;min-height:390px}
+iframe{border:0;width:100%;height:100%;display:block}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:#526781;font-size:12px;padding:12px 3px}
+.related{background:white;border:1px solid #d7e1ee;border-radius:10px;padding:13px 16px;margin-top:12px;color:#435b78;font-size:13px}
+.related a{color:#2356ba;margin-left:14px;font-weight:700}
+@media(max-width:640px){.frame{height:55vh;min-height:340px}.brand{font-size:18px}.playback{flex-wrap:wrap}#cue{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){#progress{transition:none}}
+</style>
+</head>
+<body>
+<header>
+ <div><div class="brand">AgentTraining.ai · Executive Manager Demo</div><div class="tag">Train Every Advisor · Coach Every Manager · Grow Every Team</div></div>
+ <div class="controls"><button id="prev" type="button">← Previous chapter</button><button id="toggle" type="button">▶ Play</button><button id="next" type="button">Next chapter →</button><a id="open" class="link" href="manager-demo-opening.html" target="_blank" rel="noopener">Open current page ↗</a></div>
+</header>
+<main>
+ <div class="intro"><div><h1 id="title"></h1><p id="script"></p><small id="note">Guided playback uses existing illustrative pages; it does not send assignments or use real learner data.</small></div><span id="count" aria-live="polite"></span></div>
+ <div class="playback" aria-live="polite"><span id="cue">Press Play for the four-chapter tour</span><div class="track" role="progressbar" aria-label="Chapter progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress"></span></div></div>
+ <div class="frame"><iframe id="screen" title="Existing AgentTraining executive manager demonstration"></iframe></div>
+ <div class="foot"><span>Four original chapters, in their original order. Interactive actions are limited to synthetic demonstration pages.</span><span id="time"></span></div>
+ <div class="related">Optional product details, outside the four-chapter story:
+   <a href="knowledge.html" target="_blank" rel="noopener">Company Training Library ↗</a>
+   <a href="simulator.html?ref=demo" target="_blank" rel="noopener">Practice Studio ↗</a>
+   <a href="supervisor-demo.html" target="_blank" rel="noopener">Supervisor overview ↗</a>
+ </div>
+</main>
 <script>
 (()=>{'use strict';
+// Source-of-truth order: the four pages already present on master (PR #61).
+// Only read-only UI exploration inside three explicitly named illustrative pages is automated.
 const scenes=[
-{title:'Team Growth & Retention Hub',url:'supervisor-demo.html',duration:30,line:'Turn company training into a clear, manager-led path for team growth and retention.'},
-{title:'Company Training Library',url:'knowledge.html',duration:36,line:'Convert approved company learning resources into assignable practice opportunities.',note:'North Star Heritage Life Underwriting is account-specific. Open it only when it is available and authorized.'},
-{title:'Practice Scenario',url:'simulator.html?ref=demo',duration:18,line:'Let advisors practice realistic client conversations and capture meaningful performance evidence.'},
-{title:'AI Coaching',url:'manager-demo-phases.html',duration:32,line:'AI coaching provides suggestions and summaries; the manager decides what to adopt.',note:'This page illustrates management phases, not a recorded live AI coaching session.'},
-{title:'Mission Control',url:'mission-control-v2-1.html',duration:42,line:'See the broader team picture, select the next coaching step, and review changes after seven days.',note:'Seven-day reassessment is a demonstration concept; verify real persistence and authorization independently.'},
-{title:'Supervisor Next Steps',url:'manager-demo-hub.html',duration:28,line:'One connected workflow: identify gaps, assign practice, coach advisors, and follow through.'}
+  {key:'opening',url:'manager-demo-opening.html',duration:43,
+    title:'1 · The Manager Challenge',line:'Why training alone does not reveal who needs help — and how a manager can see risks earlier.',
+    beats:[
+      {at:0,label:'The manager challenge',focus:'top'},
+      {at:8,label:'Four common team risks',focus:'.risk-list'},
+      {at:18,label:'Recognize the team warning signs',focus:'.risk-close'},
+      {at:26,label:'One connected system, four Studios',focus:'.hub-diagram'},
+      {at:36,label:'Invitation to explore the coaching loop',focus:'.cta'}]},
+  {key:'hub',url:'manager-demo-hub.html',duration:41,
+    title:'2 · Team Growth & Retention Hub',line:'Four Studios around one Hub: from skill and client context to manager decisions and reassessment.',
+    beats:[
+      {at:0,label:'The four-Studio architecture',focus:'.architecture'},
+      {at:5,label:'Practice Studio — build the skill',action:'hub',item:0,focus:'.architecture'},
+      {at:13,label:'Client Studio — apply to real conversations',action:'hub',item:1,focus:'.architecture'},
+      {at:21,label:'Knowledge Studio — approved company learning',action:'hub',item:2,focus:'.architecture'},
+      {at:29,label:'Leadership Studio — manager judgment',action:'hub',item:3,focus:'.architecture'},
+      {at:36,label:'One continuous improvement loop',focus:'.explain'}]},
+  {key:'phases',url:'manager-demo-phases.html',duration:65,
+    title:'3 · Three Phases, Seven Steps',line:'Assess & Assign → Practice & Apply → Review & Reassess. All seven steps are shown in sequence.',
+    beats:[
+      {at:0,label:'Three phases, one coaching loop',focus:'.phases'},
+      {at:5,label:'Step 1 / 7 — Identify',action:'phaseStep',item:0,focus:'#steps'},
+      {at:13,label:'Step 2 / 7 — Evidence',action:'phaseStep',item:1,focus:'#steps'},
+      {at:21,label:'Step 3 / 7 — Manager Decision',action:'phaseStep',item:2,focus:'#steps'},
+      {at:29,label:'Step 4 / 7 — Assign',action:'phaseStep',item:3,focus:'#steps'},
+      {at:37,label:'Step 5 / 7 — Practice & Apply',action:'phaseStep',item:4,focus:'#steps'},
+      {at:45,label:'Step 6 / 7 — Review',action:'phaseStep',item:5,focus:'#steps'},
+      {at:53,label:'Step 7 / 7 — Reassess',action:'phaseStep',item:6,focus:'#steps'},
+      {at:60,label:'AI suggests; the manager decides',focus:'.decision'}]},
+  {key:'mission',url:'mission-control-v2-1.html',duration:91,
+    title:'4 · Mission Control: One Learner, Five Decisions',line:'Watch Michelle’s fictional case move through Prioritize, Diagnose, Evidence, Plan, and Reassess.',
+    beats:[
+      {at:0,label:'Step 1 / 5 — Prioritize a learner',focus:'#panel'},
+      {at:3,label:'Select Michelle’s synthetic case',action:'mission',id:'r-michelle',focus:'#panel'},
+      {at:14,label:'Step 2 / 5 — Diagnose the gap',action:'mission',id:'toStep2',focus:'#panel'},
+      {at:28,label:'Step 3 / 5 — Inspect the supporting evidence',action:'mission',id:'toStep3',focus:'#panel'},
+      {at:35,label:'Review evidence sufficiency and alternatives',focus:'.suff'},
+      {at:43,label:'Step 4 / 5 — Plan the coaching time',action:'mission',id:'toStep4',focus:'#panel'},
+      {at:52,label:'Review the manager’s allocation choices',focus:'.alloc'},
+      {at:59,label:'Step 5 / 5 — Reassess (illustrative)',action:'mission',id:'toStep5',focus:'#panel'},
+      {at:69,label:'Seven days later — simulated improvement',action:'mission',id:'simBetter',focus:'.simout'},
+      {at:77,label:'Read the reassessment and readjustment report',action:'mission',id:'openReassessReport',focus:'#reassessReport'},
+      {at:85,label:'The manager reviews and decides what happens next',focus:'#reassessReport'}]}
 ];
 const $=id=>document.getElementById(id);
-let index=0,remaining=0,timer=null,playing=false,frameReady=false,lastBeat=-1;
-const beats=[
-  {at:0,fraction:0,label:'Overview'},
-  {at:.16,fraction:.18,label:'Exploring this page'},
-  {at:.36,fraction:.40,label:'Reviewing the details'},
-  {at:.56,fraction:.62,label:'Following the workflow'},
-  {at:.75,fraction:.82,label:'Reviewing the lower section'},
-  {at:.86,fraction:1,label:'Final details · reading pause'}
-];
-function focusPage(beat){
-  if(!frameReady)return;
-  try{
-    const win=$('screen').contentWindow,doc=win.document;
-    const full=Math.max(doc.body.scrollHeight,doc.documentElement.scrollHeight);
-    const viewport=Math.max(win.innerHeight,$('screen').clientHeight);
-    const travel=Math.max(0,full-viewport);
-    const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(travel>10)win.scrollTo({top:Math.round(travel*beat.fraction),behavior:reduced?'auto':'smooth'});
-  }catch(e){
-    $('cue').textContent='Tour running · This page needs direct viewing via Open page';
+const frame=$('screen');
+let index=0,elapsed=0,playing=false,ready=false,timer=null,seen=new Set(),blocked=false;
+function docForScene(){
+  const w=frame.contentWindow,doc=w&&w.document;
+  if(!doc||!w.location||!w.location.pathname.endsWith('/'+scenes[index].url))return null;
+  return doc;
+}
+function hideLegacyNavigation(){
+  const doc=docForScene();if(!doc)return;
+  if(scenes[index].key==='hub'){const nav=doc.querySelector('nav.nav');if(nav)nav.style.display='none';}
+  if(scenes[index].key==='phases'){const nav=doc.querySelector('nav.actions');if(nav)nav.style.display='none';}
+}
+function focusInside(selector){
+  const doc=docForScene();if(!doc)return;
+  const win=frame.contentWindow,root=doc.scrollingElement||doc.documentElement;
+  const max=Math.max(0,root.scrollHeight-win.innerHeight);
+  let top=0;
+  if(selector==='top'){top=0;}
+  else {
+    const node=doc.querySelector(selector);if(!node)return;
+    const anchor=node.getBoundingClientRect().top+(win.scrollY||root.scrollTop);
+    top=Math.min(max,Math.max(0,anchor-Math.min(150,win.innerHeight*.12)));
+  }
+  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  win.scrollTo({top,behavior:reduced?'auto':'smooth'});
+}
+function safelyShowBeat(beat){
+  const doc=docForScene();if(!doc)return false;
+  const key=scenes[index].key;
+  if(beat.action==='hub'&&key==='hub'){
+    const node=doc.querySelector('[data-studio="'+beat.item+'"]');
+    if(!node)return false;node.click();
+  }else if(beat.action==='phaseStep'&&key==='phases'){
+    const node=doc.querySelector('[data-step="'+beat.item+'"]');
+    if(!node)return false;node.click();
+  }else if(beat.action==='mission'&&key==='mission'){
+    const allowed=['r-michelle','toStep2','toStep3','toStep4','toStep5','simBetter','openReassessReport'];
+    if(!allowed.includes(beat.id))return false;
+    const node=doc.getElementById(beat.id);
+    if(!node||node.disabled)return false;
+    node.click();
+  }else if(beat.action){return false;}
+  if(beat.focus)focusInside(beat.focus);
+  return true;
+}
+function stepBeats(){
+  if(!playing||!ready)return;
+  const scene=scenes[index];
+  for(let n=0;n<scene.beats.length;n++){
+    const beat=scene.beats[n];
+    if(elapsed<beat.at||seen.has(n))continue;
+    try{
+      if(!safelyShowBeat(beat)){blocked=true;pause();$('cue').textContent='Interactive step needs review · Open current page to inspect';return;}
+    }catch(err){blocked=true;pause();$('cue').textContent='Page interaction unavailable · Open current page to inspect';return;}
+    seen.add(n);$('cue').textContent='● '+beat.label;
   }
 }
 function update(){
-  const pct=Math.round(100*(scenes[index].duration-remaining)/scenes[index].duration);
-  $('time').textContent=playing?'Playing · Next scene in '+remaining+'s':'Paused · '+remaining+'s on this scene';
-  $('progress').style.width=pct+'%';
-  $('progress').parentElement.setAttribute('aria-valuenow',String(pct));
-}
-function focusBeat(){
-  if(!playing)return;
-  const elapsed=scenes[index].duration-remaining;
-  let beatNo=0;
-  for(let k=1;k<beats.length;k++)if(elapsed/scenes[index].duration>=beats[k].at)beatNo=k;
-  if(beatNo===lastBeat)return;
-  lastBeat=beatNo;
-  $('cue').textContent='● '+beats[beatNo].label+' · '+(beatNo+1)+' / '+beats.length;
-  focusPage(beats[beatNo]);
+  const s=scenes[index],left=Math.max(0,s.duration-elapsed);
+  const pct=Math.round(100*elapsed/s.duration);
+  $('progress').style.width=pct+'%';$('progress').parentElement.setAttribute('aria-valuenow',String(pct));
+  $('time').textContent=(playing?'Playing':'Paused')+' · '+left+' seconds remaining in this chapter';
 }
 function pause(){
-  playing=false;clearInterval(timer);timer=null;
-  $('toggle').textContent='▶ Play';$('cue').textContent='Paused · Press Play to resume';
-  update();
+  playing=false;if(timer){clearInterval(timer);timer=null;}
+  $('toggle').textContent='▶ Play';if(!blocked)$('cue').textContent='Paused — press Play to resume';update();
 }
 function show(n){
-  index=(n+scenes.length)%scenes.length;const s=scenes[index];
-  $('title').textContent=s.title;$('script').textContent=s.line;
-  $('note').textContent=s.note||'Illustrative navigation through existing pages.';
-  $('count').textContent=(index+1)+' / '+scenes.length;$('open').href=s.url;
-  remaining=s.duration;frameReady=false;lastBeat=-1;
-  $('cue').textContent='Loading '+s.title+'…';
-  $('screen').src=s.url;update();focusBeat();
+  index=Math.max(0,Math.min(scenes.length-1,n));elapsed=0;ready=false;blocked=false;seen=new Set();
+  const s=scenes[index];
+  $('title').textContent=s.title;$('script').textContent=s.line;$('count').textContent='CHAPTER '+(index+1)+' / '+scenes.length;
+  $('open').href=s.url;$('cue').textContent='Loading chapter '+(index+1)+'…';
+  frame.src=s.url;update();
 }
 function tick(){
-  if(!playing)return;
-  remaining--;
-  if(remaining<=0){
-    if(index===scenes.length-1){remaining=0;pause();$('cue').textContent='Tour complete · Use Previous to replay';return;}
+  if(!playing||!ready)return;
+  elapsed=Math.min(elapsed+1,scenes[index].duration);
+  stepBeats();if(!playing)return;
+  if(elapsed>=scenes[index].duration){
+    if(index===scenes.length-1){pause();$('cue').textContent='Complete — all four original chapters shown';return;}
     show(index+1);
-  }else focusBeat();
-  update();
+  }else update();
 }
 function start(){
   if(playing)return;
+  if(blocked){$('cue').textContent='Open this page and inspect the blocked step before resuming';return;}
+  if(index===scenes.length-1&&elapsed===scenes[index].duration)show(0);
   playing=true;$('toggle').textContent='❚❚ Pause';
-  lastBeat=-1;focusBeat();update();timer=setInterval(tick,1000);
+  if(ready)stepBeats();
+  update();timer=setInterval(tick,1000);
 }
-$('screen').addEventListener('load',()=>{
-  frameReady=true;
-  if(playing){lastBeat=-1;focusBeat();}
-  else $('cue').textContent='Ready · Press Play for motion and automatic navigation';
+frame.addEventListener('load',()=>{
+  try{
+    ready=!!docForScene();
+    if(!ready){blocked=true;pause();$('cue').textContent='This page could not load safely inside the tour';return;}
+    hideLegacyNavigation();
+    if(playing)stepBeats();else $('cue').textContent='Ready — press Play to view this chapter';
+  }catch(err){blocked=true;pause();$('cue').textContent='Embedded page unavailable — use Open current page';}
 });
 $('toggle').addEventListener('click',()=>playing?pause():start());
 $('prev').addEventListener('click',()=>show(index-1));
@@ -108,4 +199,6 @@ $('next').addEventListener('click',()=>show(index+1));
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)pause();});
 show(0);
 })();
-</script></body></html>
+</script>
+</body>
+</html>
