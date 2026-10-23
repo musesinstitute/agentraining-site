@@ -160,7 +160,9 @@
         "primary": { "type": "string" },
         "primaryLanguage": { "type": "string" },
         "translation": { "type": "string" },
-        "translationLanguage": { "type": "string" }
+        "translationLanguage": { "type": "string" },
+        "term": { "type": "string", "description": "Added in D-001B: the specific vocabulary term or phrase this note is glossing, when narrower than the full 'primary' text." },
+        "note": { "type": "string", "description": "Added in D-001B: free-text elaboration on the distinction/nuance being taught (e.g. contrasting two similar terms), separate from the literal translation." }
       }
     }
   }

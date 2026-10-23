@@ -1,0 +1,2798 @@
+{
+  "_purpose": "Room 4D — Project 001, D-001B Phase 2 full import. Extracted questions from source S001. Every record's verifiedAnswer is null and verificationStatus is 'unverified' by design. See docs/room-4d/D-001B-IMPORT-REPORT.md.",
+  "projectId": "PROJECT-001",
+  "version": 1,
+  "sourceId": "S001",
+  "pagesProcessed": 12,
+  "questionCount": 55,
+  "questions": [
+    {
+      "questionId": "Q-S001-001",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-PERSONAL-USES-001"
+      ],
+      "questionText": "What does the statement \"Life insurance creates an immediate estate\" mean?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Premiums are due and payable immediately."
+        },
+        {
+          "key": "2",
+          "text": "The total cash value is available immediately."
+        },
+        {
+          "key": "3",
+          "text": "The total death benefit is paid whenever the insured dies."
+        },
+        {
+          "key": "4",
+          "text": "Policy proceeds are automatically paid to the insured's estate."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Mapped to the new knowledge point K03-PERSONAL-USES-001 ('Personal Uses of Life Insurance', added in D-001B Phase 2) - a personal-use/value-proposition concept parallel to the existing 'Business Uses of Life Insurance' topic, which the map previously lacked. See D-001B-IMPORT-REPORT.md.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese heading above the question (illegible/decorative header glyphs in the source render); handwritten note beside choice 3 restating it in Chinese: 'the total death benefit is paid whenever the insured dies'.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-002",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-POLICY-LOANS-001"
+      ],
+      "questionText": "The policyowner, age 50, has been paying the premiums on his whole life policy for fifteen years. He needs the equivalent of one-third of his policy's cash value for two years. He wants to continue to have the same amount of life insurance protection and he can afford to continue to pay the policy's premium. Which of the following would appear to be his BEST course of action?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Look elsewhere. Whole Life policies do not develop cash value."
+        },
+        {
+          "key": "2",
+          "text": "Use the policy loan provision to borrow money from the policy, but keep making the premium payments to keep the policy in force."
+        },
+        {
+          "key": "3",
+          "text": "Surrender the policy, because to get any of the cash he must surrender the policy. He can then buy a new policy with the other two-thirds of the proceeds."
+        },
+        {
+          "key": "4",
+          "text": "Look elsewhere. The insurer is not required to make the cash value available to the policyowner until the policy matures. If they allowed this, most policies would lapse."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss '1/3现金价值' (1/3 cash value) near the stem; Chinese note beside choice 2 restating 'use policy loan to keep the policy in force'.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-003",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-POLICY-DIVIDENDS-001"
+      ],
+      "questionText": "A participating life insurance policy is defined as a contract that",
+      "choices": [
+        {
+          "key": "1",
+          "text": "insures the lives of two ore more persons."
+        },
+        {
+          "key": "2",
+          "text": "gives the beneficiary certain rights under the policy."
+        },
+        {
+          "key": "3",
+          "text": "allows the policyowner to receive a share of surplus in the form of policy dividends."
+        },
+        {
+          "key": "4",
+          "text": "may require the policyowner to pay a periodic assessment in addition to the stated premium."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese label '参加型' (participating type) near the stem; Chinese gloss beside choice 3 restating the share-of-surplus definition.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-004",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-POLICY-ILLUSTRATION-RULES-001"
+      ],
+      "questionText": "Who MUST sign a statement acknowledging that a life insurance policy illustration was given to an applicant?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The applicant and the beneficiary."
+        },
+        {
+          "key": "2",
+          "text": "The applicant and the agent."
+        },
+        {
+          "key": "3",
+          "text": "The applicant."
+        },
+        {
+          "key": "4",
+          "text": "The agent."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 1,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese label '演示文件' (illustration document) near stem; Chinese gloss beside choice 2 ('applicant and agent').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-005",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-BENEFICIARIES-001"
+      ],
+      "questionText": "Creditors have rights to life insurance policy proceeds when the beneficiary is the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "insured's child."
+        },
+        {
+          "key": "2",
+          "text": "insured's estate."
+        },
+        {
+          "key": "3",
+          "text": "insured's spouse."
+        },
+        {
+          "key": "4",
+          "text": "insured's business partner."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese labels above ('债权人的权利' creditors' rights) and beside choice 2 ('insured's estate').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-006",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-SUICIDE-CLAUSE-001",
+        "K06-ADVERSE-SELECTION-001"
+      ],
+      "questionText": "Which policy provision protects the insurer against possible adverse selection?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Nonforfeiture."
+        },
+        {
+          "key": "2",
+          "text": "Reinstatement."
+        },
+        {
+          "key": "3",
+          "text": "Suicide clause."
+        },
+        {
+          "key": "4",
+          "text": "Entire contract."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Mapped to the new knowledge point K04-SUICIDE-CLAUSE-001 (added in D-001B Phase 2) - a standard named policy provision, parallel to Grace Period/Reinstatement/Nonforfeiture which already had dedicated K04 topics, that the D-001A map lacked.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-007",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-VARIABLE-LIFE-001"
+      ],
+      "questionText": "Which policy allows the insured to choose where the assets backing the cash value are invested?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Term life."
+        },
+        {
+          "key": "2",
+          "text": "Variable life."
+        },
+        {
+          "key": "3",
+          "text": "Universal life."
+        },
+        {
+          "key": "4",
+          "text": "Endowment life."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 restating variable life's investment-choice feature.",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-008",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-WAIVER-OF-PREMIUM-001"
+      ],
+      "questionText": "A life insurance policy's waiver of premium takes effect if an insured",
+      "choices": [
+        {
+          "key": "1",
+          "text": "is age 65."
+        },
+        {
+          "key": "2",
+          "text": "becomes totally disabled."
+        },
+        {
+          "key": "3",
+          "text": "becomes terminally ill."
+        },
+        {
+          "key": "4",
+          "text": "is confined to a long-term care facility."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('totally disabled').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-009",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-JOINT-LIFE-001"
+      ],
+      "questionText": "Which policy covering two or more individuals terminates after paying benefits on the first to die?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Family policy."
+        },
+        {
+          "key": "2",
+          "text": "Joint life policy."
+        },
+        {
+          "key": "3",
+          "text": "Survivorship life policy."
+        },
+        {
+          "key": "4",
+          "text": "Limited payment whole life policy."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 2,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss '2人以上' (2 or more people) near stem; Chinese gloss beside choice 2.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-010",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-GROUP-LIFE-001"
+      ],
+      "questionText": "In a group life insurance policy, who are the parties to the master contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The insurer and the employer."
+        },
+        {
+          "key": "2",
+          "text": "The insurer and the employees."
+        },
+        {
+          "key": "3",
+          "text": "The employer and the employees."
+        },
+        {
+          "key": "4",
+          "text": "The employees and their dependents."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to the new K03-GROUP-LIFE-001 knowledge point (added in D-001B Phase 2 - see D-001B-IMPORT-REPORT.md for why Group Life Insurance needed its own topic).",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('insurer and employer').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-011",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "The components of determining policy premiums include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "dividends."
+        },
+        {
+          "key": "2",
+          "text": "insurer expenses."
+        },
+        {
+          "key": "3",
+          "text": "investment return."
+        },
+        {
+          "key": "4",
+          "text": "mortality cost."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('dividends').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-012",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-SURVIVORSHIP-001"
+      ],
+      "questionText": "A husband and wife have a disabled child who is financially dependent upon them. The death of one parent would not result in financial disaster for the disabled child, but the death of both parents would. Which policy should they purchase?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Juvenile policy."
+        },
+        {
+          "key": "2",
+          "text": "First-to-die policy."
+        },
+        {
+          "key": "3",
+          "text": "Second-to-die policy."
+        },
+        {
+          "key": "4",
+          "text": "Family protection policy."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('second-to-die').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-013",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-TERM-LIFE-001"
+      ],
+      "questionText": "If a term life insurance policy is renewable, the renewal provision usually states that:",
+      "choices": [
+        {
+          "key": "1",
+          "text": "a higher premium is payable at each renewal."
+        },
+        {
+          "key": "2",
+          "text": "the policy cash value increases at each renewal."
+        },
+        {
+          "key": "3",
+          "text": "evidence of insurability is required at the time renewal is requested."
+        },
+        {
+          "key": "4",
+          "text": "the policy can be renewed at any time, regardless of the insured's age."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('higher premium').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-014",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-PERSONAL-USES-001",
+        "K03-BUY-SELL-001"
+      ],
+      "questionText": "Which of the following is NOT one of the common personal uses for life insurance?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Funding a buy-sell agreement."
+        },
+        {
+          "key": "2",
+          "text": "Creation of an immediate estate."
+        },
+        {
+          "key": "3",
+          "text": "Helping to fund a person's retirement."
+        },
+        {
+          "key": "4",
+          "text": "Creating emergency funds to avoid the need to liquidate assets."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 3,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Funding a buy-sell agreement is a BUSINESS use, not a personal use - this question directly evidences the Personal-vs-Business-uses distinction and is a second real-content question for K03-PERSONAL-USES-001.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('buy-sell agreement').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-015",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-MODIFIED-ENDOWMENT-CONTRACT-001"
+      ],
+      "questionText": "What is the penalty tax imposed on amounts received from a modified endowment contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "10%"
+        },
+        {
+          "key": "2",
+          "text": "15%"
+        },
+        {
+          "key": "3",
+          "text": "20%"
+        },
+        {
+          "key": "4",
+          "text": "25%"
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside stem ('penalty tax').",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-016",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-SETTLEMENT-OPTIONS-001"
+      ],
+      "questionText": "A beneficiary wants to let the death benefit accumulate and receive only the monthly investment proceeds. Which settlement option should be chosen?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Cash option."
+        },
+        {
+          "key": "2",
+          "text": "Interest option."
+        },
+        {
+          "key": "3",
+          "text": "Fixed amount option."
+        },
+        {
+          "key": "4",
+          "text": "Fixed period option."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('interest option').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-017",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-APPLICATION-001"
+      ],
+      "questionText": "The use of non-medical life insurance accomplishes all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "there is less demand on the medical profession."
+        },
+        {
+          "key": "2",
+          "text": "the processing of life insurance applications is expedited."
+        },
+        {
+          "key": "3",
+          "text": "insureds can avoid answering medical questions on the application."
+        },
+        {
+          "key": "4",
+          "text": "insurer expenses are reduced by the cost of paying for medical examinations."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Subtle: non-medical means no physical EXAM is required, but the applicant still must answer medical-history QUESTIONS on the application itself - choice 3 is the exception.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 restating that medical application questions must still be answered.",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-018",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-RETIREMENT-PLANS-001"
+      ],
+      "questionText": "In a 5-year vesting schedule, what percentage of employer contributions MUST be vested after 5 years of service?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "20%"
+        },
+        {
+          "key": "2",
+          "text": "40%"
+        },
+        {
+          "key": "3",
+          "text": "80%"
+        },
+        {
+          "key": "4",
+          "text": "100%"
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss near stem ('5-year vesting schedule').",
+          "language": "zh",
+          "sourceLocation": "stem"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-019",
+      "domainId": "K02",
+      "knowledgePointIds": [
+        "K02-INSURABLE-INTEREST-001"
+      ],
+      "questionText": "When does an individual have an insurable interest in the life of another person?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The individuals have a common ethnic heritage."
+        },
+        {
+          "key": "2",
+          "text": "The individuals share a common interest in community affairs."
+        },
+        {
+          "key": "3",
+          "text": "The individual depends on the other person for financial support."
+        },
+        {
+          "key": "4",
+          "text": "The individual will succeed the other person as president of an organization."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 4,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('depends on for financial support').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-020",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-NONFORFEITURE-001"
+      ],
+      "questionText": "Under which policy provisions can a policy be surrendered for its net cash value?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Dividend options."
+        },
+        {
+          "key": "2",
+          "text": "Settlement options."
+        },
+        {
+          "key": "3",
+          "text": "Beneficiary options."
+        },
+        {
+          "key": "4",
+          "text": "Nonforfeiture options."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('nonforfeiture options').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-021",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-IMMEDIATE-VS-DEFERRED-ANNUITIES-001",
+        "K04-SETTLEMENT-OPTIONS-001"
+      ],
+      "questionText": "A 10-year certain annuity with an installment refund is purchased. The annuitant dies after receiving monthly payments for 5 years. How many remaining payments MUST the insurer make?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "None."
+        },
+        {
+          "key": "2",
+          "text": "60 payments."
+        },
+        {
+          "key": "3",
+          "text": "120 payments."
+        },
+        {
+          "key": "4",
+          "text": "One lump sum payment."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss near stem ('5 years'); Chinese gloss beside choice 2 ('60 payments').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-022",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-CONVERSION-001"
+      ],
+      "questionText": "The conversion privilege allows a terminating employee to convert",
+      "choices": [
+        {
+          "key": "1",
+          "text": "an annuity into group life insurance."
+        },
+        {
+          "key": "2",
+          "text": "group life insurance into an annuity."
+        },
+        {
+          "key": "3",
+          "text": "permanent insurance into term insurance."
+        },
+        {
+          "key": "4",
+          "text": "term insurance into permanent insurance."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('term into permanent').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-023",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-FREE-LOOK-001",
+        "K07-CALIFORNIA-INSURANCE-CODE-001"
+      ],
+      "questionText": "The California Insurance Code requirements regarding the return of life or annuity contracts issued to seniors",
+      "choices": [
+        {
+          "key": "1",
+          "text": "applies to both individual and group policies."
+        },
+        {
+          "key": "2",
+          "text": "defines seniors as someone 65 years of age or older on the date of purchase of the policy."
+        },
+        {
+          "key": "3",
+          "text": "gives a senior at least 30 days to return specified life and/or annuity contracts for a full refund."
+        },
+        {
+          "key": "4",
+          "text": "1, 2 and 3 are all true."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('30 days').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-024",
+      "domainId": "K07",
+      "knowledgePointIds": [
+        "K07-RECORD-REQUIREMENTS-001"
+      ],
+      "questionText": "Life insurers must include all of the following in their financial statements EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "balance sheet."
+        },
+        {
+          "key": "2",
+          "text": "cash flow statement."
+        },
+        {
+          "key": "3",
+          "text": "summary of operations."
+        },
+        {
+          "key": "4",
+          "text": "policy summary description."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 5,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('policy summary').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-025",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-GRACE-PERIOD-001"
+      ],
+      "questionText": "Which policy provision protects the policyowner from unintentional lapse of the contract?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Grace period."
+        },
+        {
+          "key": "2",
+          "text": "Free look period."
+        },
+        {
+          "key": "3",
+          "text": "Incontestability."
+        },
+        {
+          "key": "4",
+          "text": "Settlement options."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('grace period').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-026",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-ESOP-001"
+      ],
+      "questionText": "What is an ESOP?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Employee Stock Ownership Plan."
+        },
+        {
+          "key": "2",
+          "text": "Employer Simplified Option Plan."
+        },
+        {
+          "key": "3",
+          "text": "Employer Security Ownership Pension."
+        },
+        {
+          "key": "4",
+          "text": "Employee Savings Organization Pension."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('Employee Stock Ownership Plan').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-027",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-GROUP-LIFE-001"
+      ],
+      "questionText": "A group life policy is issued on a contributory basis. This means that the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "employer will contribute all of the premium."
+        },
+        {
+          "key": "2",
+          "text": "insured employees will pay part of the premium."
+        },
+        {
+          "key": "3",
+          "text": "employer will make a contribution whenever an employee dies."
+        },
+        {
+          "key": "4",
+          "text": "employee group members will each make a contribution whenever an employee dies."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('insured employees pay part of the premium').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-028",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-RISK-CLASSIFICATION-001"
+      ],
+      "questionText": "Underwriters classify insurance risks as any of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "standard risks."
+        },
+        {
+          "key": "2",
+          "text": "dividend risks."
+        },
+        {
+          "key": "3",
+          "text": "preferred risks."
+        },
+        {
+          "key": "4",
+          "text": "substandard risks."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        },
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('dividend risks' - not a real classification).",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-029",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-DISTRIBUTION-001"
+      ],
+      "questionText": "Which distribution from an annuity would be subject to a penalty tax?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "A series of substantially equal lifetime periodic payments."
+        },
+        {
+          "key": "2",
+          "text": "A single payment made to a taxpayer who is age 55."
+        },
+        {
+          "key": "3",
+          "text": "Payments made due to the taxpayer's death or disability."
+        },
+        {
+          "key": "4",
+          "text": "A single payment made to a taxpayer who is age 65."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 6,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('age 55').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-030",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-LEGAL-ACTIONS-001"
+      ],
+      "questionText": "Which policy provision protects an insurer against a lawsuit before the insurer has had a reasonable opportunity to investigate a claim?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Grace period."
+        },
+        {
+          "key": "2",
+          "text": "Legal actions."
+        },
+        {
+          "key": "3",
+          "text": "Reinstatement."
+        },
+        {
+          "key": "4",
+          "text": "Incontestability period."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to the new K04-LEGAL-ACTIONS-001 knowledge point (added in D-001B Phase 2) - a standard named policy provision parallel to Grace Period/Reinstatement, which the D-001A map lacked.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('legal actions').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-031",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "From lowest to highest, which is the CORRECT order of initial premiums for life insurance policies?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Single premium, modified premium, ordinary life."
+        },
+        {
+          "key": "2",
+          "text": "Modified premium, ordinary life, single premium."
+        },
+        {
+          "key": "3",
+          "text": "Ordinary life, modified life, single premium."
+        },
+        {
+          "key": "4",
+          "text": "Modified premium, single premium, ordinary life."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over choice 2's three terms; mnemonic notation.",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-032",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-TAXATION-OF-LIFE-INSURANCE-PROCEEDS-001"
+      ],
+      "questionText": "Death benefits that are received by a beneficiary are generally",
+      "choices": [
+        {
+          "key": "1",
+          "text": "subject to capital gains tax."
+        },
+        {
+          "key": "2",
+          "text": "subject to federal income tax."
+        },
+        {
+          "key": "3",
+          "text": "exempt from federal income tax."
+        },
+        {
+          "key": "4",
+          "text": "included in the beneficiary's adjusted gross income."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to the new K05-TAXATION-OF-LIFE-INSURANCE-PROCEEDS-001 knowledge point (added in D-001B Phase 2, new topic under K05 given the domain's name explicitly promises 'Taxation' coverage) - see D-001B-IMPORT-REPORT.md.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('exempt from federal income tax').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-033",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-RIDERS-002",
+        "K03-GROUP-LIFE-001"
+      ],
+      "questionText": "Under a group life insurance policy, acts of war and aviation are examples of:",
+      "choices": [
+        {
+          "key": "1",
+          "text": "optional riders."
+        },
+        {
+          "key": "2",
+          "text": "policy exclusions."
+        },
+        {
+          "key": "3",
+          "text": "required provisions."
+        },
+        {
+          "key": "4",
+          "text": "optional provisions."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "First real content mapped to the new K04-RIDERS-002 knowledge point ('Policy Exclusions', added under the existing 'Riders' topic in D-001B Phase 2, since exclusions are the conceptual opposite of riders and are commonly taught contrasted with them).",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('policy exclusions').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-034",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-ATTENDING-PHYSICIAN-STATEMENT-001"
+      ],
+      "questionText": "What is REQUIRED when an application reveals conditions that require more information?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Agent's report."
+        },
+        {
+          "key": "2",
+          "text": "Physical examination."
+        },
+        {
+          "key": "3",
+          "text": "Investigative consumer report."
+        },
+        {
+          "key": "4",
+          "text": "Attending physician's statement."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 7,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('attending physician statement').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-035",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-IMMEDIATE-VS-DEFERRED-ANNUITIES-001"
+      ],
+      "questionText": "What factor determines the difference between deferred and immediate annuities?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "When annuity benefit payments begin."
+        },
+        {
+          "key": "2",
+          "text": "The number of annuity benefit payments."
+        },
+        {
+          "key": "3",
+          "text": "Who receives the annuity benefit payments."
+        },
+        {
+          "key": "4",
+          "text": "The dollar amount of the annuity benefit payment."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'difference', 'deferred', 'immediate' in the stem; gloss beside choice 1.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-036",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-QUALIFIED-VS-NONQUALIFIED-001"
+      ],
+      "questionText": "Which of the following is a characteristic of nonqualified annuities?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Tax-deductible contributions."
+        },
+        {
+          "key": "2",
+          "text": "Limits on contributions."
+        },
+        {
+          "key": "3",
+          "text": "Mandatory participation."
+        },
+        {
+          "key": "4",
+          "text": "Tax-deferred earnings."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('tax-deferred earnings'); separate handwritten (red/blue) mnemonic block: 'qualified 钱没交税 401K IRA / nonqualified 钱已经交过税' (qualified = pre-tax money, e.g. 401K/IRA; nonqualified = after-tax money).",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [
+        {
+          "content": "qualified 钱没交税 401K IRA / nonqualified 钱已经交过税 (qualified contributions are pre-tax, e.g. 401K/IRA; nonqualified contributions are after-tax).",
+          "language": "zh"
+        }
+      ],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-037",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-COST-BASIS-001"
+      ],
+      "questionText": "How does the cost recovery rule apply when a life insurance policy is surrendered for its cash value?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The insurer retains the cost basis."
+        },
+        {
+          "key": "2",
+          "text": "The entire premium surrender value is taxable."
+        },
+        {
+          "key": "3",
+          "text": "The insured receives only the cost basis."
+        },
+        {
+          "key": "4",
+          "text": "The cost basis of the policy is exempt from taxation."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'cost recovery' and 'surrendered for'; gloss beside choice 4 ('cost basis exempt from taxation').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-038",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-BUY-SELL-001"
+      ],
+      "questionText": "How can partners guarantee a market for their share of the business in the event of death?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Buy-sell agreements."
+        },
+        {
+          "key": "2",
+          "text": "Key person insurance."
+        },
+        {
+          "key": "3",
+          "text": "Split dollar insurance."
+        },
+        {
+          "key": "4",
+          "text": "Deferred compensation agreements."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 8,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('buy-sell agreements').",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-039",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-ACCIDENTAL-DEATH-001",
+        "K04-RIDERS-001"
+      ],
+      "questionText": "The accidental death benefit rider is also known as",
+      "choices": [
+        {
+          "key": "1",
+          "text": "incontestability."
+        },
+        {
+          "key": "2",
+          "text": "double indemnity."
+        },
+        {
+          "key": "3",
+          "text": "waiver of premium."
+        },
+        {
+          "key": "4",
+          "text": "guaranteed insurability."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('double indemnity').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-040",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-IMMEDIATE-VS-DEFERRED-ANNUITIES-001"
+      ],
+      "questionText": "An insured replaces an existing annuity with a new one and must pay a surrender charge for cancelling the existing annuity. The new policy holds no greater financial benefits to the insured than the existing contract. This is an example of",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Nonforfeiture."
+        },
+        {
+          "key": "2",
+          "text": "a deferred annuity."
+        },
+        {
+          "key": "3",
+          "text": "a substandard annuity."
+        },
+        {
+          "key": "4",
+          "text": "an unnecessary replacement."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Approximate mapping under K05-IMMEDIATE-VS-DEFERRED-ANNUITIES-001 (closest existing annuity-domain point); no dedicated \"policy/contract replacement\" knowledge point exists in the current map. Only 2 questions test this specific \"unnecessary replacement\" fact (this one and its exact duplicate in S002) plus one related \"conservation\" question (Q-S002-...) - not yet rich/recurring enough on distinct facts to justify a new permanent point per the \"do not create for a single repeated fact\" rule; flagged as a watch item.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('unnecessary replacement').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-041",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-RETIREMENT-PLANS-001"
+      ],
+      "questionText": "Which statement is TRUE regarding employer contributions to qualified plans?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "They are fully taxable to the employer."
+        },
+        {
+          "key": "2",
+          "text": "They are tax deductible by the employer."
+        },
+        {
+          "key": "3",
+          "text": "They are included in the employee's income."
+        },
+        {
+          "key": "4",
+          "text": "They are subject to Social Security withholding tax."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('tax deductible by the employer').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-042",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-ENDOWMENT-001"
+      ],
+      "questionText": "Which policy pays the face amount if the insured survives to the end of a certain period?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Term insurance."
+        },
+        {
+          "key": "2",
+          "text": "Endowment insurance."
+        },
+        {
+          "key": "3",
+          "text": "Whole life insurance."
+        },
+        {
+          "key": "4",
+          "text": "Universal life insurance."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        },
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('endowment insurance').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-043",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-RIDERS-001"
+      ],
+      "questionText": "Common life insurance policy riders include all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "extended term."
+        },
+        {
+          "key": "2",
+          "text": "accidental death."
+        },
+        {
+          "key": "3",
+          "text": "waiver of premium."
+        },
+        {
+          "key": "4",
+          "text": "guaranteed insurability."
+        }
+      ],
+      "sourceAnswer": "1",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 9,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 1 is starred.",
+          "sourceLocation": "choice 1"
+        },
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 1 ('extended term' - a nonforfeiture option, not a rider).",
+          "language": "zh",
+          "sourceLocation": "choice 1"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-044",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-ATTENDING-PHYSICIAN-STATEMENT-001"
+      ],
+      "questionText": "An insurer's request for an attending physician's report MUST be accompanied by a copy of the",
+      "choices": [
+        {
+          "key": "1",
+          "text": "signed application."
+        },
+        {
+          "key": "2",
+          "text": "policy illustration."
+        },
+        {
+          "key": "3",
+          "text": "signed authorization."
+        },
+        {
+          "key": "4",
+          "text": "underwriting criteria."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('signed authorization').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-045",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-APPLICATION-001"
+      ],
+      "questionText": "What is the difference between a conditional premium receipt and a binding premium receipt?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Premiums must be paid to receive only a conditional receipt."
+        },
+        {
+          "key": "2",
+          "text": "The applicant must be insurable in order to have coverage only under the binding receipt."
+        },
+        {
+          "key": "3",
+          "text": "Only a binding receipt always provides insurance that is effective from the date the receipt is given."
+        },
+        {
+          "key": "4",
+          "text": "Only a conditional receipt always provides insurance that is effective from the date the receipt is given."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'difference between', 'receipt', 'binding'; gloss beside choice 3.",
+          "language": "zh",
+          "sourceLocation": "stem/choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-046",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-GROUP-LIFE-001",
+        "K04-BENEFICIARIES-001"
+      ],
+      "questionText": "Under which group term life provision does an insurer make payments to the guardian of a beneficiary who is a minor?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Survivorship."
+        },
+        {
+          "key": "2",
+          "text": "Incontestability."
+        },
+        {
+          "key": "3",
+          "text": "Facility of payment."
+        },
+        {
+          "key": "4",
+          "text": "Contingent beneficiary."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 3 is starred.",
+          "sourceLocation": "choice 3"
+        },
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 3 ('facility of payment').",
+          "language": "zh",
+          "sourceLocation": "choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-047",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-UNIVERSAL-LIFE-001",
+        "K04-CASH-VALUE-001"
+      ],
+      "questionText": "The adjustments that insurers make to the cash value account in a universal life policy each time a payment is made includes all of the following EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "subtract for mortality and general expense charges."
+        },
+        {
+          "key": "2",
+          "text": "subtract the policy surrender charges."
+        },
+        {
+          "key": "3",
+          "text": "add the current premium paid."
+        },
+        {
+          "key": "4",
+          "text": "add the current interest."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 10,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('surrender charges').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-048",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-FAMILY-POLICIES-001"
+      ],
+      "questionText": "When a family policy covers children, all of the following are true EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "the coverage is term insurance for a fixed amount."
+        },
+        {
+          "key": "2",
+          "text": "there is no additional charge for covering new additions to the family."
+        },
+        {
+          "key": "3",
+          "text": "evidence of insurability is required to convert coverage for children to permanent insurance."
+        },
+        {
+          "key": "4",
+          "text": "all children living with the family are covered even if adopted or born after the policy is issued."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 11,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'covers children' and 'EXCEPT'; gloss beside choice 3 ('convert'/'children').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-049",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-MORTALITY-TABLES-001"
+      ],
+      "questionText": "All of the following are contained in a mortality table EXCEPT",
+      "choices": [
+        {
+          "key": "1",
+          "text": "yearly probability of dying."
+        },
+        {
+          "key": "2",
+          "text": "age at the beginning of the year."
+        },
+        {
+          "key": "3",
+          "text": "number dying during designated year."
+        },
+        {
+          "key": "4",
+          "text": "number living at the end of designated year."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 11,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'number living' and 'designated year'.",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-050",
+      "domainId": "K06",
+      "knowledgePointIds": [
+        "K06-PREMIUM-DETERMINATION-001"
+      ],
+      "questionText": "Which of the following is a correct statement about the premium payment modes? The total premium paid by a life policyowner for one policy year is:",
+      "choices": [
+        {
+          "key": "1",
+          "text": "the same regardless of the frequency of payment."
+        },
+        {
+          "key": "2",
+          "text": "less when paid quarterly than if paid semiannually."
+        },
+        {
+          "key": "3",
+          "text": "greater if the premium is paid semiannually rather than annually."
+        },
+        {
+          "key": "4",
+          "text": "based on the assumption that the insured will pay policy premiums at the end of the policy year in one payment; if paid earlier in the policy year, a discount will be allowed."
+        }
+      ],
+      "sourceAnswer": "3",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 3,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 11,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'correct', 'total premium paid...for one policy'; gloss beside choice 3 ('greater if paid semiannually than annually').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 3"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-051",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-POLICY-DIVIDENDS-001"
+      ],
+      "questionText": "Which of the following statements about policy dividends is TRUE?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "All dividends are taxable."
+        },
+        {
+          "key": "2",
+          "text": "Dividends can be guaranteed."
+        },
+        {
+          "key": "3",
+          "text": "Dividends are payable only in nonparticipating policies."
+        },
+        {
+          "key": "4",
+          "text": "Insureds elect a dividend option at the time of policy purchase."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 11,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'about policy dividends'; gloss beside choice 4 ('at the time of policy purchase').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-052",
+      "domainId": "K04",
+      "knowledgePointIds": [
+        "K04-CASH-VALUE-001"
+      ],
+      "questionText": "What is the limit of liability in a life insurance policy?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "The total cash value."
+        },
+        {
+          "key": "2",
+          "text": "The face amount of the policy."
+        },
+        {
+          "key": "3",
+          "text": "The total amount of premium paid."
+        },
+        {
+          "key": "4",
+          "text": "The face amount plus the premium paid."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 11,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Approximate mapping under K04-CASH-VALUE-001 (contrasts face amount vs. cash value, the closest existing point); no dedicated \"limit of liability/face amount\" knowledge point exists in the current map.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('face amount').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-053",
+      "domainId": "K03",
+      "knowledgePointIds": [
+        "K03-PERSONAL-USES-001"
+      ],
+      "questionText": "In financial planning, the human life value concept is based on an individual's",
+      "choices": [
+        {
+          "key": "1",
+          "text": "age."
+        },
+        {
+          "key": "2",
+          "text": "education."
+        },
+        {
+          "key": "3",
+          "text": "health."
+        },
+        {
+          "key": "4",
+          "text": "income."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 1,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 12,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "Mapped to K03-PERSONAL-USES-001: the human life value approach is a method for sizing an individual's personal life insurance need.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 4 ('income').",
+          "language": "zh",
+          "sourceLocation": "choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": false,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-054",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-TAXATION-OF-LIFE-INSURANCE-PROCEEDS-001",
+        "K03-GROUP-LIFE-001"
+      ],
+      "questionText": "The cost of employer-provided group life insurance above $50,000 is",
+      "choices": [
+        {
+          "key": "1",
+          "text": "taxable to the employer."
+        },
+        {
+          "key": "2",
+          "text": "tax exempt to the employee."
+        },
+        {
+          "key": "3",
+          "text": "tax deductible by the employee."
+        },
+        {
+          "key": "4",
+          "text": "taxable as income to the employee."
+        }
+      ],
+      "sourceAnswer": "4",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 12,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "margin-note",
+          "content": "Chinese glosses over 'employer-provided group' and 'above $50,000'; gloss beside choice 4 ('taxable as income to employee').",
+          "language": "zh",
+          "sourceLocation": "stem/choice 4"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    },
+    {
+      "questionId": "Q-S001-055",
+      "domainId": "K05",
+      "knowledgePointIds": [
+        "K05-RETIREMENT-PLANS-001"
+      ],
+      "questionText": "Which government regulation prevents retirement plans from favoring highly compensated employees?",
+      "choices": [
+        {
+          "key": "1",
+          "text": "Vesting."
+        },
+        {
+          "key": "2",
+          "text": "Nondiscrimination."
+        },
+        {
+          "key": "3",
+          "text": "Minimum distribution rules."
+        },
+        {
+          "key": "4",
+          "text": "Early withdrawal penalties."
+        }
+      ],
+      "sourceAnswer": "2",
+      "verifiedAnswer": null,
+      "answerExplanation": "",
+      "wrongAnswerExplanations": {},
+      "difficulty": 2,
+      "language": "en",
+      "sourceId": "S001",
+      "sourcePage": 12,
+      "sourceQuestionNumber": null,
+      "sourceNotes": "No question number is printed in the source document; sequence is assigned by extraction order within the source PDF for traceability only.",
+      "humanAnnotations": [
+        {
+          "type": "star",
+          "content": "Choice 2 is starred.",
+          "sourceLocation": "choice 2"
+        },
+        {
+          "type": "margin-note",
+          "content": "Chinese gloss beside choice 2 ('nondiscrimination').",
+          "language": "zh",
+          "sourceLocation": "choice 2"
+        }
+      ],
+      "memoryAids": [],
+      "bilingualNotes": [],
+      "verificationStatus": "unverified",
+      "regulatorySensitivity": true,
+      "createdAt": "2026-08-29T19:34:08.954Z",
+      "updatedAt": "2026-08-29T19:34:08.954Z"
+    }
+  ]
+}
