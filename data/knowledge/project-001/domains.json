@@ -11,12 +11,14 @@
       "topics": [
         "Risk",
         "Pure Risk vs Speculative Risk",
+        "Fundamental Risk vs Particular Risk",
         "Hazard",
         "Moral Hazard / Morale Hazard",
         "Law of Large Numbers",
         "Indemnity",
         "Loss Exposure",
-        "Risk Management"
+        "Risk Management",
+        "Insurer Organizational Types"
       ]
     },
     {
@@ -37,7 +39,8 @@
         "Concealment",
         "Materiality",
         "Insurable Interest",
-        "Agency Authority"
+        "Agency Authority",
+        "Warranty"
       ]
     },
     {
@@ -56,7 +59,9 @@
         "Family Policies",
         "Business Uses of Life Insurance",
         "Buy-Sell",
-        "Key Person"
+        "Key Person",
+        "Group Life Insurance",
+        "Personal Uses of Life Insurance"
       ]
     },
     {
@@ -77,7 +82,9 @@
         "Free Look",
         "Policy Loans",
         "Cash Value",
-        "Riders"
+        "Riders",
+        "Legal Actions Clause",
+        "Suicide Clause"
       ]
     },
     {
@@ -94,6 +101,7 @@
         "Tax Deferral",
         "Cost Basis",
         "Modified Endowment Contract",
+        "Taxation of Life Insurance Proceeds",
         "Retirement Plans",
         "ESOP"
       ]
@@ -120,8 +128,8 @@
     {
       "id": "K07",
       "order": 7,
-      "name": "California Insurance Law & Regulation",
-      "description": "California-specific licensing, conduct, and regulatory requirements governing agents and brokers.",
+      "name": "Insurance Law & Regulation",
+      "description": "Renamed in D-001B Phase 2 (pre-flight architecture cleanup) from \"California Insurance Law & Regulation\" - the permanent domain id K07 and its existing knowledgePointIds/topics are unchanged. Covers: California insurance law/regulation (the California Insurance Code, the Insurance Commissioner's authority, licensing and conduct rules for agents/brokers/solicitors); and relevant federal insurance offenses/rules (e.g. 18 U.S.C. Sec.1033-style federal crimes) that recur on the same exam alongside California-specific content.",
       "topics": [
         "Agent",
         "Broker",
@@ -137,7 +145,9 @@
         "Record Requirements",
         "Guaranty Association",
         "Policy Illustration Rules",
-        "Claims Rules"
+        "Claims Rules",
+        "Federal Insurance Offenses",
+        "Rate Regulation"
       ]
     },
     {
