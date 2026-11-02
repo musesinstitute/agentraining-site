@@ -1,0 +1,135 @@
+1
+00:00:00,000 --> 00:00:03,324
+Your agents finish courses and pass tests.
+
+2
+00:00:03,324 --> 00:00:07,662
+But are they ready for the conversations that matter?
+
+3
+00:00:07,662 --> 00:00:13,465
+Usually, you find out only when a real client is on the line.
+
+4
+00:00:13,465 --> 00:00:20,000
+AgentTraining.ai turns your team’s knowledge into AI practice — and practice into stronger agents.
+
+5
+00:00:20,000 --> 00:00:23,518
+Start with your approved company materials.
+
+6
+00:00:23,518 --> 00:00:30,825
+AI pulls out the key points and links each one back to its source.
+
+7
+00:00:30,825 --> 00:00:38,131
+It flags which topics look most important — as suggestions for you to review.
+
+8
+00:00:38,131 --> 00:00:46,047
+Then it creates a question bank and different practice scenarios: different clients, objections, and products.
+
+9
+00:00:46,047 --> 00:00:52,000
+You review what it creates before your team uses it.
+
+10
+00:00:52,000 --> 00:00:58,118
+Now David, a new agent on your team, practices with an AI client.
+
+11
+00:00:58,118 --> 00:01:02,197
+The AI plays Michael, a fictional potential client.
+
+12
+00:01:02,197 --> 00:01:07,388
+Michael says: “I’m not sure we need more life insurance.”
+
+13
+00:01:07,388 --> 00:01:10,478
+David answers in the practice chat.
+
+14
+00:01:10,478 --> 00:01:17,399
+“Our term life policy is affordable, and it protects your family for twenty years.”
+
+15
+00:01:17,399 --> 00:01:25,000
+It is practice, not a live client call — so a weak answer costs nothing.
+
+16
+00:01:25,000 --> 00:01:29,933
+Then the AI Coach looks at what David actually said.
+
+17
+00:01:29,933 --> 00:01:34,676
+“You explained the product before asking about Michael’s needs.”
+
+18
+00:01:34,676 --> 00:01:40,304
+Why it matters: Michael has not said what worries him yet.
+
+19
+00:01:40,304 --> 00:01:49,032
+A better way to say it: “That’s fair. What makes you feel your current coverage may be enough?”
+
+20
+00:01:49,032 --> 00:01:53,206
+David tries again, with the same AI client.
+
+21
+00:01:53,206 --> 00:01:57,000
+Specific feedback, right after each answer.
+
+22
+00:01:57,000 --> 00:02:03,429
+You, the manager, can review the practice transcript and the coaching notes.
+
+23
+00:02:03,429 --> 00:02:09,998
+Empathy, knowledge, next step — the evidence is in David’s own words.
+
+24
+00:02:09,998 --> 00:02:13,631
+Then you choose his next practice.
+
+25
+00:02:13,631 --> 00:02:22,296
+Practice, Client, Knowledge, and Leadership studios are designed to work together in one Team Growth Hub.
+
+26
+00:02:22,296 --> 00:02:26,000
+The AI recommends. You decide.
+
+27
+00:02:26,000 --> 00:02:28,142
+Knowledge becomes practice.
+
+28
+00:02:28,142 --> 00:02:30,285
+Practice becomes coaching.
+
+29
+00:02:30,285 --> 00:02:35,467
+Coaching builds better preparation, and your team keeps developing.
+
+30
+00:02:35,467 --> 00:02:40,305
+Your materials. AI practice. Personal coaching. Your decisions.
+
+31
+00:02:40,305 --> 00:02:46,455
+See how your agents prepare — before the conversations that matter.
+
+32
+00:02:46,455 --> 00:02:51,500
+Start with one team and two important client conversations.
+
+33
+00:02:51,500 --> 00:02:54,264
+Explore how it works.
+
+34
+00:02:54,264 --> 00:03:00,000
+Or request a fourteen-day private pilot for your team.
