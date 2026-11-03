@@ -335,7 +335,9 @@
     .nav-back:hover { color: var(--ink); }
 
     /* LAYOUT */
-    .app { display: grid; grid-template-columns: 300px 1fr 320px; gap: 0; height: calc(100vh - var(--nav-h, 60px)); }
+    /* Left: lesson list (narrow). Center: client role-play. Right: AI coach — the
+       widest it has been, since the coach is where the learning happens. */
+    .app { display: grid; grid-template-columns: 240px minmax(0, 1fr) clamp(340px, 38vw, 600px); gap: 0; height: calc(100vh - var(--nav-h, 60px)); }
 
     /* LEFT PANEL - Scenarios */
     .panel-left {
@@ -740,7 +742,7 @@
       opacity: .6; vertical-align: middle;
     }
     .coach-speak-btn:hover { opacity: 1; }
-    .coach-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; margin-bottom: 8px; }
+    .coach-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 45vh; overflow-y: auto; margin-bottom: 8px; }
     .coach-chat-line { font-size: 13px; line-height: 1.55; padding: 8px 10px; border-radius: 10px; }
     .coach-chat-line.coach { background: #FFFBEB; border-left: 3px solid var(--gold); color: var(--ink); }
     .coach-chat-line.learner { background: var(--accent-lt); color: var(--ink); align-self: flex-end; max-width: 90%; }
