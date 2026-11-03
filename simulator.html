@@ -681,6 +681,65 @@
     }
     .empty-icon { font-size: 36px; margin-bottom: 12px; }
 
+    /* ── ACTIVE AI COACH ── */
+    .coach-mode-card { margin: 16px 16px 0; }
+    .coach-mode-toggle {
+      display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      overflow: hidden; margin-top: 6px;
+    }
+    .coach-mode-btn {
+      flex: 1; padding: 7px 6px; font-size: 12px; font-weight: 600;
+      background: var(--white); color: var(--ink-muted); border: none; cursor: pointer;
+    }
+    .coach-mode-btn + .coach-mode-btn { border-left: 1px solid var(--border); }
+    .coach-mode-btn.active { background: var(--accent); color: var(--white); }
+    .coach-mode-hint { font-size: 11px; color: var(--ink-muted); margin-top: 6px; line-height: 1.5; }
+
+    /* Coach interjection inside the center chat */
+    .msg.coach-msg { justify-content: center; }
+    .coach-bubble {
+      width: 100%; max-width: 92%;
+      background: #FFFBEB; border: 1px solid #FCD34D; border-left: 4px solid var(--gold);
+      border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--ink);
+    }
+    .coach-bubble-title { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #B45309; margin-bottom: 4px; }
+    .coach-better { margin-top: 8px; padding: 8px 10px; background: var(--white); border-radius: 8px; border: 1px dashed #FCD34D; }
+    .coach-better-label { font-size: 11px; font-weight: 700; color: #B45309; margin-bottom: 2px; }
+    .coach-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .coach-action-btn {
+      font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+      border: 1.5px solid var(--gold); background: var(--white); color: #B45309;
+    }
+    .coach-action-btn.primary { background: var(--gold); color: var(--white); }
+    .coach-action-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* Key moments + coach chat in the right panel */
+    .key-moment {
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 10px 12px; margin-bottom: 8px; font-size: 12px; line-height: 1.55; color: var(--ink-soft);
+    }
+    .key-moment-quote { font-style: italic; color: var(--ink); margin-bottom: 4px; }
+    .key-moment-issue { margin-bottom: 4px; }
+    .key-moment-better { color: var(--green); margin-bottom: 6px; }
+    .coach-chat { border-top: 1px solid var(--border); padding: 12px 16px 16px; display: none; }
+    .coach-chat.visible { display: block; }
+    .coach-chat-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .coach-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; margin-bottom: 8px; }
+    .coach-chat-line { font-size: 13px; line-height: 1.55; padding: 8px 10px; border-radius: 10px; }
+    .coach-chat-line.coach { background: #FFFBEB; border-left: 3px solid var(--gold); color: var(--ink); }
+    .coach-chat-line.learner { background: var(--accent-lt); color: var(--ink); align-self: flex-end; max-width: 90%; }
+    .coach-chat-line.pending { color: var(--ink-muted); font-style: italic; background: var(--canvas); }
+    .coach-chat-row { display: flex; gap: 6px; }
+    .coach-chat-input {
+      flex: 1; resize: none; border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 8px 10px; font-size: 13px; font-family: inherit; min-height: 38px;
+    }
+    .coach-chat-send {
+      background: var(--gold); color: var(--white); border: none; border-radius: 8px;
+      padding: 0 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .coach-chat-send:disabled { opacity: .45; cursor: not-allowed; }
+
     .lang-toggle {
       display: flex; border: 1px solid var(--border);
       border-radius: 20px; overflow: hidden; font-size: 12px; font-weight: 600;
@@ -1110,6 +1169,9 @@
       <div id="sum-tips"></div>
     </div>
     <div class="summary-coach-note" id="sum-coach-note"></div>
+    <div class="summary-section" id="sum-debrief-section" style="display:none;">
+      <button class="btn-next-scenario" id="btn-debrief" onclick="closeSummary();openCoachDebrief();" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--gold);background:#FFFBEB;color:#B45309;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
+    </div>
     <div class="summary-section" id="sum-next-section" style="display:none;">
       <div class="summary-section-title" id="sum-next-label">➡️ Next Recommended Scenario</div>
       <button class="btn-next-scenario" id="btn-next-scenario" onclick="goToNextCurriculumScenario()" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
@@ -1216,10 +1278,27 @@
       <div class="coach-stage-label" id="learning-goal-label">Learning Goal</div>
       <div id="learning-goal-text" class="coach-stage-value"></div>
     </div>
+    <div class="coach-stage-card coach-mode-card">
+      <div class="coach-stage-label" id="coach-mode-label">Coaching Style</div>
+      <div class="coach-mode-toggle">
+        <button class="coach-mode-btn active" id="coach-mode-live" onclick="setCoachMode('live')">Live coaching</button>
+        <button class="coach-mode-btn" id="coach-mode-debrief" onclick="setCoachMode('debrief')">Debrief after</button>
+      </div>
+      <div class="coach-mode-hint" id="coach-mode-hint"></div>
+    </div>
     <div class="feedback-body" id="feedback-body">
       <div class="empty-feedback">
         <div class="empty-icon">🎯</div>
         <div id="empty-feedback-msg">Send your first response to get instant coaching feedback from the AI.</div>
+      </div>
+    </div>
+    <div class="coach-chat" id="coach-chat">
+      <div class="coach-chat-title" id="coach-chat-title">🧑‍🏫 Talk to your coach</div>
+      <div class="coach-chat-log" id="coach-chat-log" aria-live="polite"></div>
+      <div class="coach-chat-row">
+        <textarea class="coach-chat-input" id="coach-chat-input" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCoachChat();}"></textarea>
+        <button class="coach-chat-send" id="coach-chat-send" onclick="sendCoachChat()">➤</button>
       </div>
     </div>
   </div>
@@ -1782,6 +1861,294 @@ let currentScenario = null;
 let conversationHistory = [];
 let isLoading = false;
 let turnCount = 0;
+
+// ── ACTIVE AI COACH ──
+// The right-hand coach can (a) step into the role-play when the learner makes a
+// clear mistake ("live" mode), offering a redo of that line, and (b) hold a
+// conversation with the learner — a pause-and-ask during practice, and a
+// line-by-line debrief after the session. Interjection decisions come from the
+// existing per-turn feedback call, so live mode costs no extra API calls.
+const COACH_COMPLIANCE_RULE = 'Licensing boundary (hard rule): the agent holds a general insurance or real estate license, NOT a securities license. Never coach the agent to explain, compare, or recommend specific investments (ETFs, stocks, funds, crypto, variable life or variable annuity products). If the client raises investments, coach the agent to understand the client\'s motivation and bring the conversation back to the value of protection.';
+const COACH_STR = {
+  en: {
+    modeLabel: 'Coaching Style', live: 'Live coaching', debrief: 'Debrief after',
+    hintLive: 'Your coach will step in during the role-play when a line needs rework, and lets you redo it.',
+    hintDebrief: 'Your coach stays quiet during the role-play, then walks through your key moments with you.',
+    interjectTitle: '🧑‍🏫 Coach steps in', tryInstead: 'Try something like:',
+    redo: '↺ Redo my line', useLine: 'Use this as a start', keepGoing: 'Keep going →',
+    redoNote: '↺ Line withdrawn — the client didn\'t hear it. Try again.',
+    chatTitleLive: '🧑‍🏫 Ask your coach (the client can\'t hear this)',
+    chatTitleDebrief: '🧑‍🏫 Debrief with your coach',
+    chatPlaceholderLive: 'e.g. How should I handle this objection?',
+    chatPlaceholderDebrief: 'Type your new version, or ask a question…',
+    keyMoments: '🎯 Key moments to rework', practiceThis: 'Practice this line',
+    youSaid: 'You said', thinking: 'Coach is thinking…',
+    error: '⚠️ The coach couldn\'t respond. Please try again.',
+    debriefOpen: 'Good work finishing the session. Let\'s sharpen it together. Pick a key moment above and tap "Practice this line", or ask me anything about how the conversation went.',
+    debriefNoMoments: 'Good work finishing the session. Ask me anything about how the conversation went, or paste a line you want to improve.',
+    practicePrompt: 'You said: "{said}"\nWhat to adjust: {issue}\n\nHow would you say it now? Type your new version in your own words.',
+    debriefCta: '🧑‍🏫 Review this session with my coach →',
+    askAbout: 'What is the best way to respond to: "{q}"?'
+  },
+  zh: {
+    modeLabel: '教練方式', live: '即時指導', debrief: '結束後複盤',
+    hintLive: '對話中如果有需要調整的說法，教練會直接插話提醒，並讓你重說這一句。',
+    hintDebrief: '對話中教練保持安靜，結束後再與你逐句複盤關鍵時刻。',
+    interjectTitle: '🧑‍🏫 教練插話', tryInstead: '可以試著這樣說：',
+    redo: '↺ 重說這一句', useLine: '以此為起點修改', keepGoing: '繼續對話 →',
+    redoNote: '↺ 已撤回這一句——客戶沒有聽到。請再試一次。',
+    chatTitleLive: '🧑‍🏫 問教練（客戶聽不到）',
+    chatTitleDebrief: '🧑‍🏫 與教練複盤',
+    chatPlaceholderLive: '例如：這個異議我該怎麼處理？',
+    chatPlaceholderDebrief: '輸入你的新說法，或提出問題…',
+    keyMoments: '🎯 需要調整的關鍵時刻', practiceThis: '練習這一句',
+    youSaid: '你說', thinking: '教練思考中…',
+    error: '⚠️ 教練暫時無法回應，請再試一次。',
+    debriefOpen: '辛苦了，完成了這次練習！我們一起把它磨得更好。點選上方關鍵時刻的「練習這一句」，或直接問我任何關於這段對話的問題。',
+    debriefNoMoments: '辛苦了，完成了這次練習！可以問我任何關於這段對話的問題，或貼上你想改進的一句話。',
+    practicePrompt: '你剛才說：「{said}」\n需要調整的地方：{issue}\n\n現在你會怎麼說？請用你自己的話寫出新的版本。',
+    debriefCta: '🧑‍🏫 與教練一起複盤這次練習 →',
+    askAbout: '針對這句話，最好的回應方式是什麼：「{q}」？'
+  }
+};
+let coachMode = 'live';
+try { if (localStorage.getItem('agentraining_coach_mode') === 'debrief') coachMode = 'debrief'; } catch (e) {}
+let coachPhase = 'live';          // 'live' during role-play, 'debrief' after the final evaluation
+let coachChatHistory = [];        // [{ role: 'user'|'assistant', content }]
+let coachKeyMoments = [];
+let coachFinalData = null;
+let coachBusy = false;
+let lastExchange = null;          // { start, agentEl, clientEl, coachEl } for the latest learner turn
+
+function coachT(key) {
+  const lang = (typeof currentLang !== 'undefined' && currentLang === 'zh') ? 'zh' : 'en';
+  return COACH_STR[lang][key];
+}
+
+function setCoachMode(mode) {
+  coachMode = mode === 'debrief' ? 'debrief' : 'live';
+  try { localStorage.setItem('agentraining_coach_mode', coachMode); } catch (e) {}
+  if (coachMode === 'debrief') clearPendingInterjection();
+  updateCoachUI();
+}
+
+function updateCoachUI() {
+  const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  set('coach-mode-label', coachT('modeLabel'));
+  set('coach-mode-live', coachT('live'));
+  set('coach-mode-debrief', coachT('debrief'));
+  set('coach-mode-hint', coachT(coachMode === 'live' ? 'hintLive' : 'hintDebrief'));
+  document.getElementById('coach-mode-live')?.classList.toggle('active', coachMode === 'live');
+  document.getElementById('coach-mode-debrief')?.classList.toggle('active', coachMode === 'debrief');
+  set('coach-chat-title', coachT(coachPhase === 'debrief' ? 'chatTitleDebrief' : 'chatTitleLive'));
+  const input = document.getElementById('coach-chat-input');
+  if (input) input.placeholder = coachT(coachPhase === 'debrief' ? 'chatPlaceholderDebrief' : 'chatPlaceholderLive');
+}
+
+function resetCoach() {
+  coachPhase = 'live';
+  coachChatHistory = [];
+  coachKeyMoments = [];
+  coachFinalData = null;
+  coachBusy = false;
+  lastExchange = null;
+  const log = document.getElementById('coach-chat-log');
+  if (log) log.innerHTML = '';
+  const send = document.getElementById('coach-chat-send');
+  if (send) send.disabled = false;
+  const sec = document.getElementById('sum-debrief-section');
+  if (sec) sec.style.display = 'none';
+  showCoachChat();
+  updateCoachUI();
+}
+
+function showCoachChat() {
+  document.getElementById('coach-chat')?.classList.add('visible');
+}
+
+// ── Live interjection (in the center chat) ──
+function showCoachInterjection(data) {
+  if (!lastExchange || !lastExchange.clientEl) return;
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg coach-msg';
+  div.innerHTML = `
+    <div class="coach-bubble" role="note">
+      <div class="coach-bubble-title">${escapeHtml(coachT('interjectTitle'))}</div>
+      <div>${escapeHtml(data.coachSays)}</div>
+      ${data.betterLine ? `<div class="coach-better"><div class="coach-better-label">${escapeHtml(coachT('tryInstead'))}</div>${escapeHtml(data.betterLine)}</div>` : ''}
+      <div class="coach-actions">
+        <button class="coach-action-btn primary" data-act="redo">${escapeHtml(coachT('redo'))}</button>
+        ${data.betterLine ? `<button class="coach-action-btn" data-act="use">${escapeHtml(coachT('useLine'))}</button>` : ''}
+        <button class="coach-action-btn" data-act="keep">${escapeHtml(coachT('keepGoing'))}</button>
+      </div>
+    </div>`;
+  const exchange = lastExchange;
+  div.querySelector('[data-act="redo"]').onclick = () => redoLastLine(exchange, '');
+  const useBtn = div.querySelector('[data-act="use"]');
+  if (useBtn) useBtn.onclick = () => redoLastLine(exchange, data.betterLine);
+  div.querySelector('[data-act="keep"]').onclick = () => clearPendingInterjection();
+  exchange.coachEl = div;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Hide the redo actions once the learner moves on (the interjection itself stays as a record).
+function clearPendingInterjection() {
+  if (lastExchange && lastExchange.coachEl) {
+    lastExchange.coachEl.querySelector('.coach-actions')?.remove();
+  }
+}
+
+// Withdraw the learner's last line and the client's reply to it, so they can say it again.
+function redoLastLine(exchange, prefill) {
+  if (isLoading || exchange !== lastExchange) return;
+  if (conversationHistory.length !== exchange.start + 2) return; // something newer happened
+  conversationHistory.length = exchange.start;
+  turnCount = Math.max(0, turnCount - 1);
+  exchange.agentEl?.remove();
+  exchange.clientEl?.remove();
+  if (exchange.coachEl) {
+    exchange.coachEl.querySelector('.coach-actions')?.remove();
+    const note = document.createElement('div');
+    note.className = 'coach-better';
+    note.textContent = coachT('redoNote');
+    exchange.coachEl.querySelector('.coach-bubble')?.appendChild(note);
+  }
+  lastExchange = null;
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.disabled = false;
+    input.value = prefill || '';
+    autoResize(input);
+    input.focus();
+  }
+  document.getElementById('send-btn').disabled = false;
+}
+
+// ── Coach conversation (right panel) ──
+function appendCoachLine(role, text, extraClass) {
+  const log = document.getElementById('coach-chat-log');
+  const div = document.createElement('div');
+  div.className = 'coach-chat-line ' + (role === 'user' ? 'learner' : 'coach') + (extraClass ? ' ' + extraClass : '');
+  div.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+
+function startCoachDebrief(data) {
+  coachPhase = 'debrief';
+  coachFinalData = data;
+  coachKeyMoments = Array.isArray(data.keyMoments) ? data.keyMoments.filter(m => m && m.agentSaid).slice(0, 3) : [];
+  clearPendingInterjection();
+  const body = document.getElementById('feedback-body');
+  if (body && coachKeyMoments.length) {
+    const sec = document.createElement('div');
+    sec.className = 'feedback-section';
+    sec.innerHTML = `<div class="feedback-section-title">${escapeHtml(coachT('keyMoments'))}</div>` +
+      coachKeyMoments.map((m, i) => `
+        <div class="key-moment">
+          <div class="key-moment-quote">${escapeHtml(coachT('youSaid'))}: “${escapeHtml(m.agentSaid)}”</div>
+          ${m.issue ? `<div class="key-moment-issue">${escapeHtml(m.issue)}</div>` : ''}
+          ${m.betterLine ? `<div class="key-moment-better">→ ${escapeHtml(m.betterLine)}</div>` : ''}
+          <button class="coach-action-btn" data-moment="${i}">${escapeHtml(coachT('practiceThis'))}</button>
+        </div>`).join('');
+    sec.querySelectorAll('[data-moment]').forEach(btn => {
+      btn.onclick = () => practiceKeyMoment(Number(btn.dataset.moment));
+    });
+    body.appendChild(sec);
+  }
+  const opener = coachT(coachKeyMoments.length ? 'debriefOpen' : 'debriefNoMoments');
+  coachChatHistory.push({ role: 'assistant', content: opener });
+  appendCoachLine('assistant', opener);
+  showCoachChat();
+  updateCoachUI();
+}
+
+function openCoachDebrief() {
+  showCoachChat();
+  const chat = document.getElementById('coach-chat');
+  chat?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  document.getElementById('coach-chat-input')?.focus();
+}
+
+function practiceKeyMoment(i) {
+  const m = coachKeyMoments[i];
+  if (!m || coachBusy) return;
+  const text = coachT('practicePrompt').replace('{said}', m.agentSaid).replace('{issue}', m.issue || '');
+  coachChatHistory.push({ role: 'assistant', content: text });
+  appendCoachLine('assistant', text);
+  openCoachDebrief();
+}
+
+function buildCoachSystemPrompt() {
+  const lang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
+  const transcript = conversationHistory
+    .map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n').slice(-9000);
+  const scenarioName = currentScenario ? (currentScenario.name?.[currentLang] || currentScenario.name?.en || '') : '';
+  const role = coachPhase === 'debrief'
+    ? `The role-play has ended. You are running a post-session debrief. When the learner submits a rewritten line, say in one sentence what improved, in one sentence what is still missing (if anything), then give one model line they could use, and invite them to try again or move to the next moment. If they ask a question, answer it concretely using moments from the transcript.`
+    : `The role-play is paused: the learner stepped aside to ask you something mid-conversation. The client cannot hear this. Answer in 2-4 sentences: name what the client is really worried about, give a direction, and offer one example phrasing — but encourage the learner to say it in their own words. Do not play the client.`;
+  const final = coachFinalData
+    ? `\n\nFinal evaluation: score ${coachFinalData.overallScore}/100. ${coachFinalData.summary || ''}\nKey moments: ${JSON.stringify(coachKeyMoments)}`
+    : '';
+  return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. You coach through Sun Tzu's strategic thinking (understand your counterpart before trying to move them) and Dale Carnegie's principles (genuine interest, let the client reach their own conclusion, never win an argument at the cost of the relationship). Be warm, direct and specific; plain text, no markdown headings, under 120 words.
+
+${role}
+
+${COACH_COMPLIANCE_RULE}
+
+Scenario: ${scenarioName} (${currentScenario?.industry || ''})
+Transcript so far:
+${transcript || '(no messages yet)'}${final}`;
+}
+
+// The API needs alternating turns that start with the learner, so fold the
+// coach's own prompts (opener, "practice this line") into the following turn.
+function buildCoachMessages() {
+  const out = [];
+  coachChatHistory.slice(-14).forEach(m => {
+    if (!out.length && m.role === 'assistant') return;
+    const last = out[out.length - 1];
+    if (last && last.role === m.role) last.content += '\n\n' + m.content;
+    else out.push({ role: m.role, content: m.content });
+  });
+  // Coach lines that preceded the first learner message carry context (e.g. which line to rework).
+  const firstUser = coachChatHistory.slice(-14).findIndex(m => m.role === 'user');
+  const lead = coachChatHistory.slice(-14).slice(0, Math.max(0, firstUser)).map(m => m.content).join('\n\n');
+  if (lead && out.length) out[0].content = `(Coach said earlier: ${lead})\n\n` + out[0].content;
+  return out;
+}
+
+async function sendCoachChat() {
+  const input = document.getElementById('coach-chat-input');
+  const text = input?.value.trim();
+  if (!text || coachBusy || !currentScenario) return;
+  input.value = '';
+  coachChatHistory.push({ role: 'user', content: text });
+  const learnerLine = appendCoachLine('user', text);
+  coachBusy = true;
+  const send = document.getElementById('coach-chat-send');
+  if (send) send.disabled = true;
+  const pending = appendCoachLine('assistant', coachT('thinking'), 'pending');
+  try {
+    const reply = await callClaude(buildCoachMessages(), buildCoachSystemPrompt());
+    pending.remove();
+    coachChatHistory.push({ role: 'assistant', content: reply });
+    appendCoachLine('assistant', reply);
+  } catch (e) {
+    pending.remove();
+    learnerLine.remove();
+    coachChatHistory.pop();
+    appendCoachLine('assistant', coachT('error'), 'pending');
+    input.value = text;
+    console.error('Coach chat error', e);
+  }
+  coachBusy = false;
+  if (send) send.disabled = false;
+}
+
 const ASSIGNMENTS_KEY = 'agentraining_assignments';
 const practiceParams = new URLSearchParams(window.location.search);
 const requestedAssignmentId = practiceParams.get('assignment') || '';
@@ -2498,6 +2865,7 @@ function selectScenario(sc) {
   currentScenario = sc;
   conversationHistory = [];
   turnCount = 0;
+  resetCoach();
 
   updatePracticeModeBanner();
 
@@ -2619,10 +2987,12 @@ function replyToSelection() {
 }
 
 function askCoachAboutSelection() {
+  // Questions for the coach go to the coach panel, not to the AI client.
   const text = document.getElementById('text-select-menu').dataset.selectedText;
-  const input = document.getElementById('chat-input');
-  if (input && text) {
-    input.value = `[Asking coach]: What is the best way to respond to: "${text.slice(0, 80)}"?`;
+  const input = document.getElementById('coach-chat-input');
+  if (input && text && currentScenario) {
+    showCoachChat();
+    input.value = coachT('askAbout').replace('{q}', text.slice(0, 120));
     input.focus();
   }
   document.getElementById('text-select-menu').style.display = 'none';
@@ -2671,6 +3041,7 @@ function appendMessage(type, name, text) {
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
   if (type === 'client') speakText(text);
+  return div;
 }
 
 function showTyping() {
@@ -2704,8 +3075,11 @@ async function sendMessage() {
   if (!text) return;
 
   input.value = ''; input.style.height = 'auto';
-  appendMessage('agent', 'You', text);
+  clearPendingInterjection();
+  const exchangeStart = conversationHistory.length;
+  const agentEl = appendMessage('agent', 'You', text);
   conversationHistory.push({ role: 'user', content: text });
+  lastExchange = { start: exchangeStart, agentEl, clientEl: null, coachEl: null };
 
   isLoading = true;
   document.getElementById('send-btn').disabled = true;
@@ -2732,7 +3106,8 @@ async function sendMessage() {
 
     removeTyping();
     conversationHistory.push({ role: 'assistant', content: clientResp });
-    appendMessage('client', currentScenario.clientName, clientResp);
+    const clientEl = appendMessage('client', currentScenario.clientName, clientResp);
+    if (lastExchange) lastExchange.clientEl = clientEl;
 
     // Get feedback on agent's last response
     await getFeedback(conversationHistory, false);
@@ -2759,11 +3134,13 @@ async function getFeedback(history, isFinal) {
   const coachLang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
   const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}.
 
-You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
+You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.
+
+${COACH_COMPLIANCE_RULE}`;
 
   const prompt = isFinal
-    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment"}\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (Carnegie: see it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (Sun Tzu: win without the fight feeling like a fight).`
-    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"]}\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
+    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (Carnegie: see it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (Sun Tzu: win without the fight feeling like a fight).`
+    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. Set "interject" to true only for a clear, consequential mistake in the agent's last response: pitching or persuading before understanding the client's concern, arguing with the client, ignoring a direct question, pressuring, over-promising or inaccurate claims, or giving investment/securities advice. Do not interject for minor polish. When true, "coachSays" is 1-2 sentences spoken directly to the agent ("you ..."), naming what went wrong and why it matters to this client, and "betterLine" is one example sentence the agent could say instead. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   try {
     const result = await callClaude([{ role: 'user', content: prompt }],
@@ -2772,6 +3149,11 @@ You are trained in two complementary traditions: Sun Tzu's strategic thinking (k
     const clean = result.replace(/```json|```/g, '').trim();
     const data = JSON.parse(clean);
     renderFeedback(data, isFinal);
+    if (isFinal) {
+      startCoachDebrief(data);
+    } else if (coachMode === 'live' && data.interject && data.coachSays) {
+      showCoachInterjection(data);
+    }
   } catch(e) {
     console.error('Feedback parse error', e);
   }
@@ -3293,6 +3675,11 @@ function retrySummarySync() {
 function showSummary(data) {
   lastFinalData = data;
   const isZh = currentLang === 'zh';
+  const debriefSec = document.getElementById('sum-debrief-section');
+  if (debriefSec) {
+    debriefSec.style.display = '';
+    document.getElementById('btn-debrief').textContent = coachT('debriefCta');
+  }
   const name = sessionStorage.getItem('agentraining_name') || 'Agent';
   const ref  = sessionStorage.getItem('agentraining_ref') || '';
   const now  = new Date();
@@ -3694,6 +4081,7 @@ function setLang(lang) {
   const s = strings[lang];
   document.getElementById('scenarios-label').textContent = s.scenariosLabel;
   document.getElementById('feedback-label').textContent = s.feedbackLabel;
+  if (typeof updateCoachUI === 'function') updateCoachUI();
   document.getElementById('back-label').textContent = s.backLabel.replace('← ','');
   const teamMessagesNav=document.getElementById('team-messages-nav');if(teamMessagesNav)teamMessagesNav.textContent=lang==='zh'?'💬 团队消息':'💬 Team Messages';
   const pilotNav=document.getElementById('pilot-home-nav');if(pilotNav)pilotNav.textContent=lang==='zh'?'🏠 试用首页':'🏠 Pilot Home';
