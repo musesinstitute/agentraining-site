@@ -82,40 +82,23 @@
 
 ## 5. `netlify/functions/claude.js`
 
-正確版本（前端 `simulator.html` 送出 `{ system, messages }` 格式，這個函式必須原樣轉發，不要改回舊版單一 `message` 字串格式）：
+前端 `simulator.html` 送出 `{ system, messages, role }`。這個函式把 `system` 和 `messages` **原樣轉發**給 Anthropic，不要改回舊版單一 `message` 字串格式。
 
-```js
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-  try {
-    const body = JSON.parse(event.body);
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: body.system || '',
-        messages: body.messages
-      })
-    });
-    const data = await response.json();
-    return {
-      statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    };
-  } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
-  }
-};
-```
+**模型分工（2026-11 起，為了降低 API 花費）：**
+
+| `role` | 用途 | 模型與設定 |
+|---|---|---|
+| `'client'` | AI 客戶角色扮演 | `claude-haiku-5-5`，thinking 關閉（`{type:'disabled'}`），effort `low`，max_tokens 1000 |
+| 其他（前端送 `'coach'`） | 評分、AI 教練插話、教練對話與複盤、Free Practice | `claude-sonnet-5-5`，adaptive thinking，effort `low`，max_tokens 2000，`fallbacks: "default"`（header `anthropic-beta: server-side-fallback-2026-07-01`） |
+
+規則：
+- **模型只能由伺服器端的 `MODEL_SETTINGS` 決定。** 前端只能選 `role`，不可以讓前端傳 `model`、`max_tokens` 等參數進來（防止被拿去跑昂貴的模型）。
+- **回應只保留 `text` 區塊**，所以前端可以繼續用 `data.content[0].text`。新模型可能先回傳 `thinking` 區塊，不能用位置取答案。
+- `stop_reason: "refusal"` 或沒有文字答案時回傳 502，不要回傳空內容。
+- 不要送 `temperature` / `top_p` / `top_k`（這些模型會回 400）。Sonnet 5.5 不接受 `thinking: {type:'disabled'}`；Haiku 5.5 沒有 server-side fallback，不要加 `fallbacks`。
+- 防濫用保護不可移除：來源網域白名單、每個 IP 每 10 分鐘 40 次、輸入長度上限 20000 字元。
+- 測試：`tests/claude-proxy.test.mjs`（`npm test`）。
+- 其他函式（`knowledge-chat.mjs`、`pilot-data.mjs`、`knowledge-question-bank.mjs`）目前仍使用 `claude-sonnet-4-6`，尚未切換。
 
 ## 6. 編輯 GitHub 網頁檔案編輯器時：只貼純內容
 

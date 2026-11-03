@@ -1,7 +1,12 @@
 // netlify/functions/claude.js
 // Public AI proxy for the (login-free) simulator demo.
-// Contract preserved: forwards { system, messages } verbatim to Anthropic,
-// model 'claude-sonnet-4-6', max_tokens 1000. (See AGENTS.md §5.)
+// Contract: forwards { system, messages } verbatim to Anthropic (See AGENTS.md §5).
+// An optional `role` picks one of two fixed model settings; the browser can never
+// name a model itself:
+//   role 'client'  -> AI client role-play: Claude Haiku 5.5, thinking off (cheap, fast)
+//   anything else  -> scoring + AI coach:   Claude Sonnet 5.5, adaptive thinking, low effort
+// The response keeps the Anthropic shape, but `content` holds only text blocks so
+// callers can keep reading content[0].text (newer models may return thinking blocks first).
 //
 // Abuse protections added (anonymous, but bounded):
 //   1) Origin/Referer allowlist  — blocks other sites & casual cross-site abuse
@@ -21,6 +26,21 @@ const DEFAULT_ORIGIN = 'https://agentraining.ai';
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_REQUESTS = 40;          // per IP, per window
 const MAX_INPUT_CHARS = 20000;    // system + all message content
+
+const MODEL_SETTINGS = {
+  client: {
+    model: 'claude-haiku-5-5',
+    max_tokens: 1000,
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low' }
+  },
+  coach: {
+    model: 'claude-sonnet-5-5',
+    max_tokens: 2000,                      // headroom: thinking counts toward max_tokens
+    output_config: { effort: 'low' },      // low effort skips thinking on most simple requests
+    fallbacks: 'default'                   // server-side retry if a safety classifier declines
+  }
+};
 
 function hostAllowed(host) {
   if (!host) return false;
@@ -148,22 +168,46 @@ exports.handler = async (event) => {
       };
     }
 
+    const settings = body.role === 'client' ? MODEL_SETTINGS.client : MODEL_SETTINGS.coach;
+    const apiHeaders = {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01'
+    };
+    if (settings.fallbacks) apiHeaders['anthropic-beta'] = 'server-side-fallback-2026-07-01';
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: apiHeaders,
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
+        ...settings,
         system: body.system || '',
         messages: body.messages
       })
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        statusCode: response.status >= 500 ? 502 : response.status,
+        headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      };
+    }
+
+    // Keep only text blocks so content[0].text is the answer. A safety decline
+    // (stop_reason "refusal") or an empty answer is reported as an error.
+    const textBlocks = (Array.isArray(data.content) ? data.content : [])
+      .filter((b) => b && b.type === 'text' && b.text);
+    if (data.stop_reason === 'refusal' || textBlocks.length === 0) {
+      return {
+        statusCode: 502,
+        headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'No answer from the model.', stop_reason: data.stop_reason || null })
+      };
+    }
+    data.content = textBlocks;
 
     return {
       statusCode: 200,

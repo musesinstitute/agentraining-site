@@ -723,7 +723,23 @@
     .key-moment-better { color: var(--green); margin-bottom: 6px; }
     .coach-chat { border-top: 1px solid var(--border); padding: 12px 16px 16px; display: none; }
     .coach-chat.visible { display: block; }
-    .coach-chat-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .coach-chat-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .coach-chat-title { font-size: 12px; font-weight: 700; color: var(--ink); }
+    .coach-voice-btn {
+      flex-shrink: 0; border: 1.5px solid var(--border); background: var(--white); color: var(--ink-muted);
+      border-radius: 8px; padding: 4px 9px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .coach-voice-btn.on { border-color: var(--gold); background: #FFFBEB; color: #B45309; }
+    .coach-mic-btn {
+      flex-shrink: 0; width: 38px; border: 1.5px solid var(--border); background: var(--white);
+      border-radius: 8px; font-size: 16px; cursor: pointer;
+    }
+    .coach-mic-btn.recording { border-color: var(--red); background: var(--red-lt); }
+    .coach-speak-btn {
+      border: none; background: none; cursor: pointer; font-size: 13px; padding: 0 0 0 6px;
+      opacity: .6; vertical-align: middle;
+    }
+    .coach-speak-btn:hover { opacity: 1; }
     .coach-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; margin-bottom: 8px; }
     .coach-chat-line { font-size: 13px; line-height: 1.55; padding: 8px 10px; border-radius: 10px; }
     .coach-chat-line.coach { background: #FFFBEB; border-left: 3px solid var(--gold); color: var(--ink); }
@@ -1327,11 +1343,15 @@
       </div>
     </div>
     <div class="coach-chat" id="coach-chat">
-      <div class="coach-chat-title" id="coach-chat-title">🧑‍🏫 Talk to your coach</div>
+      <div class="coach-chat-head">
+        <div class="coach-chat-title" id="coach-chat-title">🧑‍🏫 Talk to your coach</div>
+        <button class="coach-voice-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" aria-pressed="false">🔇</button>
+      </div>
       <div class="coach-chat-log" id="coach-chat-log" aria-live="polite"></div>
       <div class="coach-chat-row">
         <textarea class="coach-chat-input" id="coach-chat-input" rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCoachChat();}"></textarea>
+        <button class="coach-mic-btn" id="coach-mic-btn" onclick="toggleMic('coach-chat-input','coach-mic-btn')" title="Voice input">🎤</button>
         <button class="coach-chat-send" id="coach-chat-send" onclick="sendCoachChat()">➤</button>
       </div>
     </div>
@@ -1928,6 +1948,7 @@ const COACH_STR = {
     remaining: '{n} coach messages left this session.',
     chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
     redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
+    voiceOn: '🔊 Read aloud', voiceOff: '🔇 Read aloud', voiceTitle: 'Read the coach\'s messages aloud', replay: 'Play',
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
   },
   zh: {
@@ -1954,6 +1975,7 @@ const COACH_STR = {
     remaining: '本次練習還可以問教練 {n} 次。',
     chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
     redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
+    voiceOn: '🔊 朗讀', voiceOff: '🔇 朗讀', voiceTitle: '朗讀教練的訊息', replay: '播放',
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
   }
 };
@@ -1973,6 +1995,31 @@ const COACH_REDO_LIMIT = 3;       // "Redo my line" uses per session (each redo 
 let coachChatUsed = 0;
 let coachRedoUsed = 0;
 
+// Coach voice uses the browser's built-in speech (no API cost). It is a separate
+// switch from the client's "Voice" button, and uses a slightly lower pitch so the
+// learner can tell the coach from the client.
+let coachVoiceEnabled = false;
+try { coachVoiceEnabled = localStorage.getItem('agentraining_coach_voice') === 'on'; } catch (e) {}
+
+function speakCoach(text, interrupt) {
+  if (!window.speechSynthesis || !text) return;
+  const clean = String(text).replace(/<[^>]+>/g, '').replace(/[*_#>`]/g, '').trim();
+  if (!clean) return;
+  if (interrupt) window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(clean);
+  u.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+  u.rate = 1.0;
+  u.pitch = 0.85;
+  window.speechSynthesis.speak(u);   // queued after any client speech unless interrupting
+}
+
+function toggleCoachVoice() {
+  coachVoiceEnabled = !coachVoiceEnabled;
+  try { localStorage.setItem('agentraining_coach_voice', coachVoiceEnabled ? 'on' : 'off'); } catch (e) {}
+  if (!coachVoiceEnabled && window.speechSynthesis) window.speechSynthesis.cancel();
+  updateCoachUI();
+}
+
 function coachT(key) {
   const lang = (typeof currentLang !== 'undefined' && currentLang === 'zh') ? 'zh' : 'en';
   return COACH_STR[lang][key];
@@ -1989,6 +2036,13 @@ function updateCoachUI() {
   const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   set('coach-mode-label', coachT('modeLabel'));
   set('mobile-coach-btn-label', coachT('mobileBtn'));
+  const vBtn = document.getElementById('coach-voice-btn');
+  if (vBtn) {
+    vBtn.textContent = coachT(coachVoiceEnabled ? 'voiceOn' : 'voiceOff');
+    vBtn.title = coachT('voiceTitle');
+    vBtn.classList.toggle('on', coachVoiceEnabled);
+    vBtn.setAttribute('aria-pressed', coachVoiceEnabled ? 'true' : 'false');
+  }
   set('mobile-coach-close', coachT('mobileClose'));
   set('coach-mode-live', coachT('live'));
   set('coach-mode-debrief', coachT('debrief'));
@@ -2053,8 +2107,19 @@ function showCoachInterjection(data) {
   div.querySelector('[data-act="keep"]').onclick = () => clearPendingInterjection();
   div.querySelector('[data-act="ask"]').onclick = () => openCoachPanel(coachT('askWhy'));
   exchange.coachEl = div;
+  const spoken = data.coachSays + (data.betterLine ? ' ' + coachT('tryInstead') + ' ' + data.betterLine : '');
+  if (window.speechSynthesis) {
+    const play = document.createElement('button');
+    play.className = 'coach-speak-btn';
+    play.textContent = '🔊';
+    play.title = coachT('replay');
+    play.setAttribute('aria-label', coachT('replay'));
+    play.onclick = () => speakCoach(spoken, true);
+    div.querySelector('.coach-bubble-title')?.appendChild(play);
+  }
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
+  if (coachVoiceEnabled) speakCoach(spoken, false);
 }
 
 // Hide the redo actions once the learner moves on (the interjection itself stays as a record).
@@ -2098,6 +2163,16 @@ function appendCoachLine(role, text, extraClass) {
   const div = document.createElement('div');
   div.className = 'coach-chat-line ' + (role === 'user' ? 'learner' : 'coach') + (extraClass ? ' ' + extraClass : '');
   div.innerHTML = escapeHtml(text).replace(/\n/g, '<br>');
+  if (role !== 'user' && !extraClass && window.speechSynthesis) {
+    const play = document.createElement('button');
+    play.className = 'coach-speak-btn';
+    play.textContent = '🔊';
+    play.title = coachT('replay');
+    play.setAttribute('aria-label', coachT('replay'));
+    play.onclick = () => speakCoach(text, true);
+    div.appendChild(play);
+    if (coachVoiceEnabled) speakCoach(text, false);
+  }
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
   return div;
@@ -2216,6 +2291,8 @@ function setCoachChatEnabled(on) {
   const send = document.getElementById('coach-chat-send');
   if (input) input.disabled = !on;
   if (send) send.disabled = !on;
+  const mic = document.getElementById('coach-mic-btn');
+  if (mic) mic.disabled = !on;
 }
 
 async function sendCoachChat() {
@@ -3206,7 +3283,10 @@ async function sendMessage() {
     // Client response
     const clientResp = await callClaude([
       { role: 'user', content: currentScenario.systemPrompt[currentLang] + '\n\nConversation so far:\n' + conversationHistory.map(m => (m.role === 'user' ? 'Agent: ' : 'You: ') + m.content).join('\n') + '\n\nRespond as the client (2-3 sentences max, stay in character):' }
-    ], 'You are a realistic client. Stay in character. Be concise.');
+    ], 'You are a realistic client. Stay in character. Be concise.',
+    // Role-play runs on the cheaper client model; Free Practice (id 0) is itself
+    // the AI coach persona, so it stays on the coach model.
+    currentScenario.id === 0 ? 'coach' : 'client');
 
     removeTyping();
     conversationHistory.push({ role: 'assistant', content: clientResp });
@@ -3255,7 +3335,8 @@ ${COACH_COMPLIANCE_RULE}`;
     renderFeedback(data, isFinal);
     if (isFinal) {
       startCoachDebrief(data);
-    } else if (coachMode === 'live' && data.interject && data.coachSays) {
+    } else if (coachMode === 'live' && data.interject && data.coachSays && currentScenario?.id !== 0) {
+      // (Free Practice, id 0, is itself the AI coach persona, so no second coach steps in there.)
       showCoachInterjection(data);
     }
   } catch(e) {
@@ -3264,11 +3345,13 @@ ${COACH_COMPLIANCE_RULE}`;
 }
 
 // ── CLAUDE API (via Netlify Function — API key is safe on server) ──
-async function callClaude(messages, system) {
+// role 'client' = AI client role-play (cheaper model); anything else = scoring / coach.
+// The server maps the role to a fixed model; see netlify/functions/claude.js.
+async function callClaude(messages, system, role) {
   const response = await fetch('/.netlify/functions/claude', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system, messages })
+    body: JSON.stringify({ system, messages, role: role === 'client' ? 'client' : 'coach' })
   });
   if (!response.ok) {
     const err = new Error('API error: ' + response.status);
@@ -3977,6 +4060,8 @@ ${(d.tips||[]).map(t=>'• '+t).join('\n')}
 // ── SPEECH RECOGNITION ──
 let recognition = null;
 let isRecording = false;
+// Which input/button the microphone is filling: the client chat (default) or the coach chat.
+let micTarget = { input: 'chat-input', btn: 'mic-btn' };
 
 function initSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3989,7 +4074,7 @@ function initSpeechRecognition() {
   
   r.onstart = () => {
     isRecording = true;
-    const btn = document.getElementById('mic-btn');
+    const btn = document.getElementById(micTarget.btn);
     if (btn) { 
       btn.classList.add('recording'); 
       btn.textContent = '🔴';
@@ -4002,14 +4087,14 @@ function initSpeechRecognition() {
     const result = event.results[event.results.length - 1];
     if (result.isFinal) {
       const transcript = result[0].transcript.trim();
-      const input = document.getElementById('chat-input');
+      const input = document.getElementById(micTarget.input);
       if (input && transcript) input.value = transcript;
     }
   };
   
   r.onend = () => {
     isRecording = false;
-    const btn = document.getElementById('mic-btn');
+    const btn = document.getElementById(micTarget.btn);
     if (btn) { 
       btn.classList.remove('recording'); 
       btn.textContent = '🎤';
@@ -4020,7 +4105,7 @@ function initSpeechRecognition() {
   
   r.onerror = (event) => {
     isRecording = false;
-    const btn = document.getElementById('mic-btn');
+    const btn = document.getElementById(micTarget.btn);
     if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
     if (event.error === 'not-allowed') {
       alert(currentLang === 'zh' 
@@ -4032,7 +4117,8 @@ function initSpeechRecognition() {
   return r;
 }
 
-function toggleMic() {
+function toggleMic(inputId, btnId) {
+  const target = { input: inputId || 'chat-input', btn: btnId || 'mic-btn' };
   // Check if running inside WeChat browser
   const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
   if (isWeChat) {
@@ -4053,6 +4139,9 @@ function toggleMic() {
     if (recognition) recognition.stop();
     return;
   }
+  const targetInput = document.getElementById(target.input);
+  if (targetInput && targetInput.disabled) return;
+  micTarget = target;
   
   recognition = initSpeechRecognition();
   if (!recognition) return;
