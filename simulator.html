@@ -772,9 +772,29 @@
         font-size: 14px; font-weight: 600; cursor: pointer;
         font-family: inherit; color: var(--ink); width: calc(100% - 32px);
       }
+      .panel-right.mobile-open {
+        display: flex !important; position: fixed; inset: 0; z-index: 300;
+        background: var(--white); width: 100%; max-width: 100%; border-left: none;
+        flex-direction: column; overflow-y: auto; padding-bottom: 20px;
+      }
+      .panel-right.mobile-open .coach-chat-log { max-height: none; }
+      .mobile-coach-close { display: flex !important; }
+      .mobile-coach-btn.ready {
+        display: flex !important; position: fixed; right: 16px; bottom: 140px; z-index: 210;
+        background: var(--gold); color: var(--white); border: none; border-radius: 99px;
+        padding: 11px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25); font-family: inherit;
+        align-items: center; gap: 6px;
+      }
+      .mobile-coach-btn .coach-dot {
+        width: 9px; height: 9px; border-radius: 50%; background: var(--red);
+        border: 2px solid var(--white); display: none;
+      }
+      .mobile-coach-btn.has-new .coach-dot { display: inline-block; }
     }
     .mobile-scenario-btn { display: none; }
     .mobile-close-btn { display: none; }
+    .mobile-coach-btn, .mobile-coach-close { display: none; }
 
 
     /* LANGUAGE PICKER */
@@ -1205,6 +1225,7 @@
   <button class="tl-action-btn" id="tl-share-btn" onclick="copyTeamLink()">🔗 Share with Team</button>
 </div>
 
+<button class="mobile-coach-btn" id="mobile-coach-btn" onclick="openCoachPanel()"><span id="mobile-coach-btn-label">🧑‍🏫 Coach</span><span class="coach-dot"></span></button>
 <button class="mobile-scenario-btn" id="mobile-scenario-btn" onclick="toggleMobilePanel()">📋 選擇情境 / Choose Scenario</button>
 
 <div id="practice-mode-banner" class="practice-mode-banner" role="status"></div>
@@ -1264,7 +1285,8 @@
   </div>
 
   <!-- RIGHT: Feedback -->
-  <div class="panel-right">
+  <div class="panel-right" id="panel-right">
+    <button class="mobile-close-btn mobile-coach-close" onclick="closeCoachPanel()" id="mobile-coach-close">✕ Back to the conversation</button>
     <div class="panel-header" id="feedback-label">AI Coach Feedback</div>
     <div class="coach-stage-card">
       <div class="coach-stage-label">Current Industry</div>
@@ -1888,7 +1910,9 @@ const COACH_STR = {
     debriefNoMoments: 'Good work finishing the session. Ask me anything about how the conversation went, or paste a line you want to improve.',
     practicePrompt: 'You said: "{said}"\nWhat to adjust: {issue}\n\nHow would you say it now? Type your new version in your own words.',
     debriefCta: '🧑‍🏫 Review this session with my coach →',
-    askAbout: 'What is the best way to respond to: "{q}"?'
+    askAbout: 'What is the best way to respond to: "{q}"?',
+    askCoach: '💬 Ask coach', askWhy: 'Why is that better? How would you say it in this situation?',
+    mobileBtn: '🧑‍🏫 Coach', mobileClose: '✕ Back to the conversation'
   },
   zh: {
     modeLabel: '教練方式', live: '即時指導', debrief: '結束後複盤',
@@ -1908,7 +1932,9 @@ const COACH_STR = {
     debriefNoMoments: '辛苦了，完成了這次練習！可以問我任何關於這段對話的問題，或貼上你想改進的一句話。',
     practicePrompt: '你剛才說：「{said}」\n需要調整的地方：{issue}\n\n現在你會怎麼說？請用你自己的話寫出新的版本。',
     debriefCta: '🧑‍🏫 與教練一起複盤這次練習 →',
-    askAbout: '針對這句話，最好的回應方式是什麼：「{q}」？'
+    askAbout: '針對這句話，最好的回應方式是什麼：「{q}」？',
+    askCoach: '💬 問教練', askWhy: '為什麼這樣說比較好？在這個情境下你會怎麼說？',
+    mobileBtn: '🧑‍🏫 教練', mobileClose: '✕ 返回對話'
   }
 };
 let coachMode = 'live';
@@ -1935,6 +1961,8 @@ function setCoachMode(mode) {
 function updateCoachUI() {
   const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   set('coach-mode-label', coachT('modeLabel'));
+  set('mobile-coach-btn-label', coachT('mobileBtn'));
+  set('mobile-coach-close', coachT('mobileClose'));
   set('coach-mode-live', coachT('live'));
   set('coach-mode-debrief', coachT('debrief'));
   set('coach-mode-hint', coachT(coachMode === 'live' ? 'hintLive' : 'hintDebrief'));
@@ -1958,6 +1986,8 @@ function resetCoach() {
   if (send) send.disabled = false;
   const sec = document.getElementById('sum-debrief-section');
   if (sec) sec.style.display = 'none';
+  const mBtn = document.getElementById('mobile-coach-btn');
+  if (mBtn) { mBtn.classList.add('ready'); mBtn.classList.remove('has-new'); }
   showCoachChat();
   updateCoachUI();
 }
@@ -1980,6 +2010,7 @@ function showCoachInterjection(data) {
       <div class="coach-actions">
         <button class="coach-action-btn primary" data-act="redo">${escapeHtml(coachT('redo'))}</button>
         ${data.betterLine ? `<button class="coach-action-btn" data-act="use">${escapeHtml(coachT('useLine'))}</button>` : ''}
+        <button class="coach-action-btn" data-act="ask">${escapeHtml(coachT('askCoach'))}</button>
         <button class="coach-action-btn" data-act="keep">${escapeHtml(coachT('keepGoing'))}</button>
       </div>
     </div>`;
@@ -1988,6 +2019,7 @@ function showCoachInterjection(data) {
   const useBtn = div.querySelector('[data-act="use"]');
   if (useBtn) useBtn.onclick = () => redoLastLine(exchange, data.betterLine);
   div.querySelector('[data-act="keep"]').onclick = () => clearPendingInterjection();
+  div.querySelector('[data-act="ask"]').onclick = () => openCoachPanel(coachT('askWhy'));
   exchange.coachEl = div;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
@@ -2059,6 +2091,7 @@ function startCoachDebrief(data) {
     });
     body.appendChild(sec);
   }
+  if (isMobileLayout()) document.getElementById('mobile-coach-btn')?.classList.add('has-new');
   const opener = coachT(coachKeyMoments.length ? 'debriefOpen' : 'debriefNoMoments');
   coachChatHistory.push({ role: 'assistant', content: opener });
   appendCoachLine('assistant', opener);
@@ -2066,11 +2099,30 @@ function startCoachDebrief(data) {
   updateCoachUI();
 }
 
-function openCoachDebrief() {
+function isMobileLayout() {
+  return window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
+}
+
+// Bring the coach into view. On phones the right panel is hidden by default,
+// so it opens full-screen (like the scenario list does on the left).
+// With a prefill, the question is placed in the coach input for the learner to edit and send.
+function openCoachPanel(prefill, focusInput) {
   showCoachChat();
-  const chat = document.getElementById('coach-chat');
-  chat?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  document.getElementById('coach-chat-input')?.focus();
+  const panel = document.getElementById('panel-right');
+  if (isMobileLayout() && panel) panel.classList.add('mobile-open');
+  document.getElementById('mobile-coach-btn')?.classList.remove('has-new');
+  const input = document.getElementById('coach-chat-input');
+  if (input && prefill) input.value = prefill;
+  document.getElementById('coach-chat')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  if (input && (prefill || focusInput)) input.focus();
+}
+
+function closeCoachPanel() {
+  document.getElementById('panel-right')?.classList.remove('mobile-open');
+}
+
+function openCoachDebrief() {
+  openCoachPanel('', true);
 }
 
 function practiceKeyMoment(i) {
@@ -2865,6 +2917,7 @@ function selectScenario(sc) {
   currentScenario = sc;
   conversationHistory = [];
   turnCount = 0;
+  closeCoachPanel();
   resetCoach();
 
   updatePracticeModeBanner();
@@ -2991,9 +3044,7 @@ function askCoachAboutSelection() {
   const text = document.getElementById('text-select-menu').dataset.selectedText;
   const input = document.getElementById('coach-chat-input');
   if (input && text && currentScenario) {
-    showCoachChat();
-    input.value = coachT('askAbout').replace('{q}', text.slice(0, 120));
-    input.focus();
+    openCoachPanel(coachT('askAbout').replace('{q}', text.slice(0, 120)));
   }
   document.getElementById('text-select-menu').style.display = 'none';
 }
