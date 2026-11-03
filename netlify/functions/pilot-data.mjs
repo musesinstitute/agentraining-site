@@ -812,6 +812,21 @@ const RELEVANCE_DIMENSIONS = [
   { key: 'practiceReadiness', weight: 0.20 }
 ];
 const RELEVANCE_VERSION = 'relevance-v1';
+// Netlify synchronous functions are cut off at ~10s by default (504). Abort the
+// model call just before that so the manager gets a retryable message instead.
+function relevanceTimeoutMs() { return Number(process.env.RELEVANCE_TIMEOUT_MS) || 8000; }
+const RELEVANCE_MAX_TOKENS = 900;
+
+// Keep the prompt small so the call fits inside the function time limit: when
+// the source has already been analyzed, its summary + key points carry most of
+// the meaning, so only a head/tail excerpt of the raw text is needed.
+function relevanceExcerpt(record) {
+  const text = String(record.content || '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+  const max = record.analysis?.summary ? 5000 : 8000;
+  if (text.length <= max) return text;
+  const head = Math.floor(max * 0.7);
+  return text.slice(0, head) + '\n[... excerpt ...]\n' + text.slice(-(max - head));
+}
 
 function cleanList(value, maxItems, maxLen) {
   return Array.isArray(value) ? value.slice(0, maxItems).map(x => cleanText(x, maxLen)).filter(Boolean) : [];
@@ -902,7 +917,7 @@ function buildRelevancePrompt(record, profile, snapshot, librarySources) {
     'Do not make autonomous HR, employment, licensing, legal, financial, or compliance decisions. A manager reviews your assessment.',
     'Agents hold general insurance / real-estate licenses and NO securities license. If the source requires agents to explain or recommend specific investment products (ETFs, stocks, funds, crypto allocation, variable life / variable annuity / separate accounts), set licenseScope to "out_of_scope". If it only mentions such topics and redirects to protection value, "ok" or "review" is fine.',
     '',
-    'Score each dimension 1-5 (5 = strongest) and cite a short verbatim evidence phrase from the SOURCE:',
+    'Score each dimension 1-5 (5 = strongest). Keep every field short: reason at most 15 words, evidence a verbatim phrase of at most 10 words from the SOURCE (or empty).',
     '- goalAlignment: how directly the source serves the declared training goals and products.',
     '- skillGapCoverage: how much it strengthens the focus competencies' + (snapshot.weakest ? ` (practice data shows "${snapshot.weakest}" is currently weakest)` : ' (no practice data yet; use the manager-declared focus competencies)') + '.',
     '- objectionCoverage: how well it equips agents for the priority client objections.',
@@ -911,6 +926,7 @@ function buildRelevancePrompt(record, profile, snapshot, librarySources) {
     '',
     'Return JSON only with this exact shape:',
     '{"dimensions":{"goalAlignment":{"score":1,"reason":"...","evidence":"..."},"skillGapCoverage":{...},"objectionCoverage":{...},"novelty":{...},"practiceReadiness":{...}},"matchedGoals":["exact goal text that this source serves"],"competencies":["empathy|accuracy|closing"],"objectionTypes":["' + OBJECTION_TYPES.join('|') + '"],"overlapsWith":["existing source id"],"recommendedAudience":"new_agents|experienced_agents|all","recommendedUse":"one sentence: how the manager should use it in the program","whyItMatters":"2-3 sentences for the manager","gaps":"what the team goals need that this source does not cover","licenseScope":"ok|review|out_of_scope","licenseNote":"..."}',
+    'whyItMatters: at most 2 sentences. recommendedUse and gaps: one short sentence each. licenseNote: empty when licenseScope is ok. Do not add any text outside the JSON.',
     'Write reason, recommendedUse, whyItMatters, gaps and licenseNote in ' + (profile.lang === 'zh' ? 'Traditional Chinese' : 'English') + '.',
     '',
     'TEAM TRAINING PROFILE:',
@@ -932,8 +948,9 @@ function buildRelevancePrompt(record, profile, snapshot, librarySources) {
     'TITLE: ' + record.title,
     'SOURCE TYPE: ' + record.sourceType,
     record.analysis?.summary ? 'AI SUMMARY: ' + record.analysis.summary : '',
-    'CONTENT:',
-    cleanText(record.content, 20000)
+    record.analysis?.keyPoints?.length ? 'KEY POINTS: ' + record.analysis.keyPoints.join(' / ') : '',
+    'CONTENT EXCERPT:',
+    relevanceExcerpt(record)
   ].join('\n');
 }
 
@@ -943,20 +960,32 @@ async function assessKnowledgeRelevance(record, profile, sessions, otherSources)
   if (!profile || !profile.goals?.length) throw Object.assign(new Error('Set the Team Training Profile (at least one training goal) before assessing relevance.'), { status: 400 });
   const snapshot = competencySnapshot(sessions);
   const librarySources = otherSources.filter(s => s.id !== record.id).slice(0, 40).map(s => ({
-    id: s.id, title: cleanText(s.title, 160), keyPoints: cleanList(s.analysis?.keyPoints, 4, 160)
+    id: s.id, title: cleanText(s.title, 160), keyPoints: cleanList(s.analysis?.keyPoints, 2, 90)
   }));
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1800,
-      system: 'Assess training relevance of the provided authorized enterprise material against the provided team profile. Return valid JSON without markdown.',
-      messages: [{ role: 'user', content: buildRelevancePrompt(record, profile, snapshot, librarySources) }]
-    })
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw Object.assign(new Error(payload?.error?.message || 'Relevance assessment failed.'), { status: 502 });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), relevanceTimeoutMs());
+  let payload;
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'content-type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: RELEVANCE_MAX_TOKENS,
+        system: 'Assess training relevance of the provided authorized enterprise material against the provided team profile. Return compact valid JSON only, without markdown.',
+        messages: [{ role: 'user', content: buildRelevancePrompt(record, profile, snapshot, librarySources) }]
+      })
+    });
+    payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw Object.assign(new Error(payload?.error?.message || 'Relevance assessment failed.'), { status: 502 });
+  } catch (error) {
+    if (error?.name === 'AbortError') throw Object.assign(new Error('Relevance assessment took too long. Please retry.'), { status: 503 });
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+  if (payload?.stop_reason === 'max_tokens') throw Object.assign(new Error('Relevance assessment was cut off. Please retry.'), { status: 502 });
   const text = payload?.content?.find(item => item.type === 'text')?.text || '';
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) throw Object.assign(new Error('Relevance assessment returned an invalid format. Please try again.'), { status: 502 });

@@ -65,7 +65,7 @@
 </div></form></section>
 <div class="section-head"><div><h2 data-en="Company Knowledge" data-zh="企業知識">Company Knowledge</h2><p id="librarySubtitle" data-en="Manager-approved knowledge for this team." data-zh="本團隊經主管批准的企業知識。">Manager-approved knowledge for this team.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><a class="btn" href="knowledge-chat.html?pilot=1" data-en="Open Question Bank" data-zh="開啟題庫">Open Question Bank</a><a class="btn secondary" href="pilot.html?pilot=1" data-en="Return to Pilot Home" data-zh="返回Pilot首頁">Return to Pilot Home</a></div></div>
 <div id="relevanceOverview" class="rel-overview"></div>
-<div class="toolbar" id="libraryToolbar" hidden><label for="sortSources" data-en="Sort" data-zh="排序">Sort</label><select id="sortSources"><option value="recent" data-en="Most recent" data-zh="最近更新">Most recent</option><option value="relevance" data-en="Relevance to team" data-zh="與團隊的相關性">Relevance to team</option></select></div>
+<div class="toolbar" id="libraryToolbar" hidden><span class="status" id="bulkStatus" role="status" aria-live="polite" style="margin:0"></span><button class="btn purple" type="button" id="assessAllBtn" data-en="Assess all unassessed" data-zh="評估全部未評估材料">Assess all unassessed</button><label for="sortSources" data-en="Sort" data-zh="排序">Sort</label><select id="sortSources"><option value="recent" data-en="Most recent" data-zh="最近更新">Most recent</option><option value="relevance" data-en="Relevance to team" data-zh="與團隊的相關性">Relevance to team</option></select></div>
 <div id="sourceLibrary" class="empty" data-en="Sign in to load the secure Company Knowledge Library." data-zh="請登入以載入安全的企業知識庫。">Sign in to load the secure Company Knowledge Library.</div>
 <dialog class="assign-dialog" id="assignDialog"><div class="assign-dialog-inner">
 <h3 data-en="Assign approved Practice" data-zh="指派已批准的練習">Assign approved Practice</h3>
@@ -88,14 +88,14 @@
 var currentLang='en', companySources=[], canManage=false, trainingProfile=null, practiceSnapshot=null;
 function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
 function tr(en,zh){return currentLang==='zh'?zh:en}
-function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。','Set the Team Training Profile (at least one training goal) before assessing relevance.':'評估相關性前，請先設定團隊培訓檔案（至少一個培訓目標）。','Add at least one training goal.':'請至少填寫一個培訓目標。','Relevance assessment failed.':'相關性評估未完成，請稍後再試。','Relevance assessment returned an invalid format. Please try again.':'相關性評估格式不正確，請再試一次。','Relevance assessment could not be parsed. Please try again.':'相關性評估結果無法讀取，請再試一次。'};return map[message]||('操作未完成：'+message)}
+function friendlyError(error){var message=(error&&error.message)||tr('The operation could not be completed.','操作未能完成。');if(/\((504|503)\)|took too long/i.test(message))return tr('The AI took too long to respond (the saved source is safe). Please try again in a moment.','AI 回應時間過長（已儲存的材料不受影響），請稍後再試一次。');if(currentLang!=='zh')return message;var map={'Knowledge source title is required.':'請填寫企業知識標題。','Add an authorized transcript, training notes, or source link.':'請加入經授權的逐字稿、培訓筆記或來源連結。','Confirm organizational authorization and AI processing consent.':'請確認企業已授權使用此材料及進行AI處理。','Add at least 80 characters of transcript or training notes before analysis.':'AI分析前，請至少加入80個字元的逐字稿或培訓筆記。','AI analysis failed.':'AI分析未完成，請稍後再試。','AI analysis returned an invalid format. Please try again.':'AI分析格式不正確，請再試一次。','AI analysis could not be parsed. Please try again.':'AI分析結果無法讀取，請再試一次。','Manager access is required.':'此操作需要Manager主管權限。','An approved Company Knowledge Practice Draft is required.':'必須先取得主管批准的企業知識練習草案。','Set the Team Training Profile (at least one training goal) before assessing relevance.':'評估相關性前，請先設定團隊培訓檔案（至少一個培訓目標）。','Add at least one training goal.':'請至少填寫一個培訓目標。','Relevance assessment failed.':'相關性評估未完成，請稍後再試。','Relevance assessment returned an invalid format. Please try again.':'相關性評估格式不正確，請再試一次。','Relevance assessment could not be parsed. Please try again.':'相關性評估結果無法讀取，請再試一次。'};return map[message]||('操作未完成：'+message)}
 function setLang(lang){currentLang=lang;document.documentElement.lang=lang==='zh'?'zh-Hant':'en';document.getElementById('enBtn').classList.toggle('active',lang==='en');document.getElementById('zhBtn').classList.toggle('active',lang==='zh');document.querySelectorAll('[data-en]').forEach(function(el){el.textContent=el.getAttribute(lang==='zh'?'data-zh':'data-en')});document.querySelectorAll('[data-placeholder-en]').forEach(function(el){el.placeholder=el.getAttribute(lang==='zh'?'data-placeholder-zh':'data-placeholder-en')});if(window.PilotCloud&&PilotCloud.enabled){document.getElementById('librarySubtitle').textContent=canManage?tr('Draft, analyze, approve, assign, and govern this team’s knowledge.','建立草稿、AI分析、主管批准、指派練習並管理本團隊知識。'):tr('Only manager-approved knowledge is shown.','只顯示經主管批准的企業知識。')}sessionStorage.setItem('agentraining_lang',lang);renderSources();renderCurriculum()}
 document.getElementById('enBtn').onclick=function(){setLang('en')};document.getElementById('zhBtn').onclick=function(){setLang('zh')};
 function statusLabel(status){var labels=currentLang==='zh'?{draft:'草稿',analyzed:'待主管審核',approved:'已批准'}:{draft:'Draft',analyzed:'Manager review',approved:'Approved'};return labels[status]||status}
 function typeLabel(type){var en={video_transcript:'Training video',document_notes:'Document / notes',sop_script:'Company procedures / scripts',meeting_transcript:'Meeting transcript'};var zh={video_transcript:'培訓影片',document_notes:'文件／筆記',sop_script:'公司操作流程／銷售話術',meeting_transcript:'會議逐字稿'};return (currentLang==='zh'?zh:en)[type]||type}
 function renderSources(){
  renderRelevanceOverview();renderProfile();
- document.getElementById('libraryToolbar').hidden=!(canManage&&companySources.length>1);
+ document.getElementById('libraryToolbar').hidden=!(canManage&&companySources.length>0);document.getElementById('assessAllBtn').hidden=!trainingProfile;
  var root=document.getElementById('sourceLibrary');
  if(!companySources.length){root.className='empty';root.textContent=currentLang==='zh'?(canManage?'尚未加入企業知識。請使用上方表格建立第一個安全草稿。':'目前沒有主管已批准的企業知識。'):(canManage?'No company knowledge yet. Use the form above to create the first secure draft.':'No manager-approved company knowledge is available yet.');return}
  root.className='source-grid';
@@ -383,11 +383,35 @@ document.getElementById('profileForm').addEventListener('submit',async function(
  try{var data=await PilotCloud.request('training-profile',{method:'PUT',requiredRole:'manager',body:JSON.stringify({goals:goals,industry:document.getElementById('profileIndustry').value,tenureMix:document.getElementById('profileTenure').value,products:document.getElementById('profileProducts').value,complianceNotes:document.getElementById('profileCompliance').value,focusCompetencies:checkedValues('comp'),priorityObjections:checkedValues('obj')})});trainingProfile=data.profile;status.className='status ok';status.textContent=tr('Saved. Assess each source to score it against these goals.','已儲存。請逐份評估材料，依這些目標評分。');renderSources()}catch(error){status.className='status error';status.textContent=friendlyError(error)}finally{button.disabled=false}
 });
 document.getElementById('sortSources').addEventListener('change',renderSources);
+document.getElementById('assessAllBtn').addEventListener('click',assessAllPending);
 async function loadTrainingProfile(){try{var data=await PilotCloud.request('training-profile',{requiredRole:'manager'});trainingProfile=data.profile;practiceSnapshot=data.practiceSnapshot}catch(error){trainingProfile=null}}
+function isRetryable(error){var m=String(error&&error.message||'');return /\((502|503|504)\)|took too long|cut off|invalid format|could not be parsed|temporarily/i.test(m)}
+async function requestRelevance(id){
+ var body=JSON.stringify({action:'assess_relevance',id:id,lang:currentLang});
+ try{return await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:body})}
+ catch(error){if(!isRetryable(error))throw error;await new Promise(function(r){setTimeout(r,1200)});return await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:body})}
+}
 async function assessRelevance(id,button){
  if(!trainingProfile){alert(tr('Set the Team Training Profile first.','請先設定團隊培訓檔案。'));document.getElementById('profilePanel').scrollIntoView({behavior:'smooth',block:'start'});return}
  button.disabled=true;button.textContent=tr('Assessing…','評估中…');
- try{var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:'assess_relevance',id:id,lang:currentLang})});companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources()}catch(error){alert(friendlyError(error));button.disabled=false;button.textContent=tr('Assess team relevance','評估團隊相關性')}
+ try{var data=await requestRelevance(id);companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources()}catch(error){alert(friendlyError(error));button.disabled=false;button.textContent=tr('Assess team relevance','評估團隊相關性')}
+}
+var bulkRunning=false;
+async function assessAllPending(){
+ if(bulkRunning)return;
+ if(!trainingProfile){alert(tr('Set the Team Training Profile first.','請先設定團隊培訓檔案。'));return}
+ var stale=function(s){return !s.relevance||(trainingProfile.updatedAt&&s.relevance.profileUpdatedAt&&trainingProfile.updatedAt>s.relevance.profileUpdatedAt)};
+ var queue=companySources.filter(function(s){return String(s.content||'').length>=80&&stale(s)}).map(function(s){return s.id});
+ var status=document.getElementById('bulkStatus');
+ if(!queue.length){status.textContent=tr('Every source is already assessed against the current profile.','所有材料都已依目前的培訓檔案完成評估。');return}
+ bulkRunning=true;document.getElementById('assessAllBtn').disabled=true;var done=0,failed=0;
+ for(var i=0;i<queue.length;i++){
+  status.className='status';status.textContent=tr('Assessing '+(i+1)+' of '+queue.length+'…','正在評估第 '+(i+1)+' / '+queue.length+' 份…');
+  try{var data=await requestRelevance(queue[i]);companySources=companySources.map(function(x){return x.id===queue[i]?data.source:x});done++;renderSources()}catch(error){failed++}
+ }
+ bulkRunning=false;document.getElementById('assessAllBtn').disabled=false;
+ status.className='status '+(failed?'error':'ok');
+ status.textContent=failed?tr(done+' assessed, '+failed+' did not finish. Choose the button again to retry only the remaining ones.','已完成 '+done+' 份，'+failed+' 份未完成。再按一次按鈕，只會重試剩下的材料。'):tr('All '+done+' sources assessed.','已完成全部 '+done+' 份材料的評估。');
 }
 async function relevanceFeedback(id,verdict,button){button.disabled=true;try{var data=await PilotCloud.request('knowledge',{method:'POST',requiredRole:'manager',body:JSON.stringify({action:'relevance_feedback',id:id,verdict:verdict})});companySources=companySources.map(function(x){return x.id===id?data.source:x});renderSources()}catch(error){alert(friendlyError(error));button.disabled=false}}
 var curriculumData=[];

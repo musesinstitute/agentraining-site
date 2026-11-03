@@ -138,6 +138,44 @@ describe('knowledge training relevance', () => {
     assert.equal(r.priority, 'review');
   });
 
+  test('keeps the prompt compact and output bounded so the call fits the function time limit', async () => {
+    await saveProfile();
+    const res = await handler(req('POST', 'knowledge', { action: 'create', title: 'Long manual', sourceType: 'document_notes', content: 'term life premium policy. '.repeat(1200), consentConfirmed: true }));
+    const source = (await res.json()).source;
+    let sentBody;
+    globalThis.fetch = async (url, init) => {
+      sentBody = JSON.parse(init.body);
+      return new Response(JSON.stringify({ content: [{ type: 'text', text: JSON.stringify(GOOD_REPLY) }] }), { status: 200 });
+    };
+    assert.equal((await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }))).status, 200);
+    assert.ok(sentBody.max_tokens <= 900);
+    assert.ok(sentBody.messages[0].content.length < 12000, 'a 30k-char source is excerpted, not sent in full');
+  });
+
+  test('a slow model call is aborted with a retryable 503 instead of a platform 504', async () => {
+    await saveProfile();
+    const source = await createSource();
+    process.env.RELEVANCE_TIMEOUT_MS = '30';
+    globalThis.fetch = (url, init) => new Promise((_, reject) => {
+      init.signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
+    });
+    try {
+      const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+      assert.equal(res.status, 503);
+      assert.match((await res.json()).error, /took too long/);
+    } finally { delete process.env.RELEVANCE_TIMEOUT_MS; }
+  });
+
+  test('a truncated model reply is reported as retryable, not saved', async () => {
+    await saveProfile();
+    const source = await createSource();
+    globalThis.fetch = async () => new Response(JSON.stringify({ stop_reason: 'max_tokens', content: [{ type: 'text', text: '{"dimensions":{' }] }), { status: 200 });
+    const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+    assert.equal(res.status, 502);
+    const store = getStore({ name: 'agentraining-pilot' });
+    assert.equal((await store.get(`teams/acme/knowledge/${source.id}`)).relevance, undefined);
+  });
+
   test('manager can record agree/disagree feedback; learners never see relevance', async () => {
     await saveProfile();
     const source = await createSource();
