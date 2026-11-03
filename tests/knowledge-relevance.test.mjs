@@ -1,17 +1,18 @@
-// Backend tests for the Company Knowledge training-relevance assessment
-// (Team Training Profile + `assess_relevance` action in
-// netlify/functions/pilot-data.mjs).
+// Backend tests for the Company Knowledge training-relevance assessment:
+// Team Training Profile + relevance_feedback in netlify/functions/pilot-data.mjs,
+// and the dedicated assessment endpoint netlify/functions/knowledge-relevance.mjs.
 //
 // Run with: npm test
 // (node --import ./tests/register.mjs --test tests/*.test.mjs)
 //
 // @netlify/blobs and @netlify/identity are stubbed (tests/loader.mjs) and the
 // Anthropic API call is replaced by a fake global fetch, so nothing leaves
-// the machine.
+// the machine. The model call is an OpenAI Responses API fake.
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
 import handler from '../netlify/functions/pilot-data.mjs';
+import relevanceHandler from '../netlify/functions/knowledge-relevance.mjs';
 import { __setUser, __resetIdentityStub } from '../tests/stubs/netlify-identity.mjs';
 import { __resetAllStores, getStore } from '../tests/stubs/netlify-blobs.mjs';
 
@@ -19,6 +20,12 @@ const BASE = 'https://pilot.example.com/.netlify/functions/pilot-data';
 const MANAGER = { id: 'm1', email: 'manager@example.com', roles: ['manager'], appMetadata: { team_id: 'acme' } };
 const LEARNER = { id: 'l1', email: 'learner@example.com', roles: ['learner'], appMetadata: { team_id: 'acme' } };
 const CONTENT = 'When a client says they need to ask their spouse, invite the spouse to the next meeting and confirm a date before leaving. Explain term life as temporary protection for a set period.';
+
+function assessReq(id) {
+  return new Request('https://pilot.example.com/.netlify/functions/knowledge-relevance', { method: 'POST', headers: { origin: 'https://pilot.example.com', 'content-type': 'application/json' }, body: JSON.stringify({ id }) });
+}
+const assess = id => relevanceHandler(assessReq(id));
+function openaiReply(obj) { return new Response(JSON.stringify({ status: 'completed', output_text: JSON.stringify(obj) }), { status: 200 }); }
 
 function req(method, resource, body) {
   const url = new URL(BASE);
@@ -32,9 +39,9 @@ let realFetch, lastPrompt, modelReply;
 function fakeModel(json) {
   modelReply = json;
   globalThis.fetch = async (url, init) => {
-    assert.match(String(url), /api\.anthropic\.com/);
-    lastPrompt = JSON.parse(init.body).messages[0].content;
-    return new Response(JSON.stringify({ content: [{ type: 'text', text: JSON.stringify(modelReply) }] }), { status: 200 });
+    assert.match(String(url), /api\.openai\.com\/v1\/responses/);
+    lastPrompt = JSON.parse(init.body).input;
+    return openaiReply(modelReply);
   };
 }
 
@@ -68,7 +75,7 @@ async function saveProfile(extra = {}) {
 }
 
 describe('knowledge training relevance', () => {
-  beforeEach(() => { __resetAllStores(); __resetIdentityStub(); __setUser(MANAGER); realFetch = globalThis.fetch; lastPrompt = null; });
+  beforeEach(() => { __resetAllStores(); __resetIdentityStub(); __setUser(MANAGER); realFetch = globalThis.fetch; lastPrompt = null; process.env.OPENAI_API_KEY = 'test-key'; });
   afterEach(() => { globalThis.fetch = realFetch; });
 
   test('training profile requires a goal and is normalized', async () => {
@@ -88,9 +95,20 @@ describe('knowledge training relevance', () => {
     assert.equal((await saveProfile()).status, 403);
   });
 
+  test('learners cannot run an assessment', async () => {
+    const source = await createSource();
+    __setUser(LEARNER);
+    assert.equal((await assess(source.id)).status, 403);
+  });
+
+  test('the old pilot-data assess action is gone (single code path)', async () => {
+    const source = await createSource();
+    assert.equal((await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }))).status, 400);
+  });
+
   test('assessment is refused until a training profile exists', async () => {
     const source = await createSource();
-    const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+    const res = await assess(source.id);
     assert.equal(res.status, 400);
     assert.match((await res.json()).error, /Team Training Profile/);
   });
@@ -99,7 +117,7 @@ describe('knowledge training relevance', () => {
     await saveProfile();
     const source = await createSource();
     fakeModel(GOOD_REPLY);
-    const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+    const res = await assess(source.id);
     assert.equal(res.status, 200);
     const r = (await res.json()).source.relevance;
     // 5*.3 + 4*.2 + 5*.15 + 3*.15 + 4*.2 = 4.3 -> 86
@@ -121,7 +139,7 @@ describe('knowledge training relevance', () => {
     await store.setJSON('teams/acme/sessions/s1', { learner: 'a@x.com', transcript: 'SECRET TRANSCRIPT', scores: { overall: 60, empathy: 80, accuracy: 70, closing: 40 } });
     await store.setJSON('teams/acme/sessions/s2', { learner: 'b@x.com', scores: { overall: 70, empathy: 90, accuracy: 60, closing: 50 } });
     fakeModel({ ...GOOD_REPLY, overlapsWith: [other.id] });
-    const r = (await (await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }))).json()).source.relevance;
+    const r = (await (await assess(source.id)).json()).source.relevance;
     assert.equal(r.evidenceBasis, 'declared_goals_and_practice_data');
     assert.equal(r.practiceSessionCount, 2);
     assert.equal(r.overlapsWith[0].id, other.id);
@@ -134,7 +152,7 @@ describe('knowledge training relevance', () => {
     await saveProfile();
     const source = await createSource();
     fakeModel({ ...GOOD_REPLY, licenseScope: 'out_of_scope', licenseNote: 'Recommends ETFs' });
-    const r = (await (await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }))).json()).source.relevance;
+    const r = (await (await assess(source.id)).json()).source.relevance;
     assert.equal(r.priority, 'review');
   });
 
@@ -145,32 +163,33 @@ describe('knowledge training relevance', () => {
     let sentBody;
     globalThis.fetch = async (url, init) => {
       sentBody = JSON.parse(init.body);
-      return new Response(JSON.stringify({ content: [{ type: 'text', text: JSON.stringify(GOOD_REPLY) }] }), { status: 200 });
+      return openaiReply(GOOD_REPLY);
     };
-    assert.equal((await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }))).status, 200);
-    assert.ok(sentBody.max_tokens <= 900);
-    assert.ok(sentBody.messages[0].content.length < 12000, 'a 30k-char source is excerpted, not sent in full');
+    assert.equal((await assess(source.id)).status, 200);
+    assert.ok(sentBody.max_output_tokens <= 1400);
+    assert.equal(sentBody.model, 'gpt-5.4-mini');
+    assert.ok(sentBody.input.length < 12000, 'a 30k-char source is excerpted, not sent in full');
   });
 
-  test('a slow model call is aborted with a retryable 503 instead of a platform 504', async () => {
+  test('a slow model call is aborted at the deadline with a retryable 503', async () => {
     await saveProfile();
     const source = await createSource();
-    process.env.RELEVANCE_TIMEOUT_MS = '30';
+    process.env.RELEVANCE_DEADLINE_MS = '30';
     globalThis.fetch = (url, init) => new Promise((_, reject) => {
       init.signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
     });
     try {
-      const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+      const res = await assess(source.id);
       assert.equal(res.status, 503);
       assert.match((await res.json()).error, /took too long/);
-    } finally { delete process.env.RELEVANCE_TIMEOUT_MS; }
+    } finally { delete process.env.RELEVANCE_DEADLINE_MS; }
   });
 
   test('a truncated model reply is reported as retryable, not saved', async () => {
     await saveProfile();
     const source = await createSource();
-    globalThis.fetch = async () => new Response(JSON.stringify({ stop_reason: 'max_tokens', content: [{ type: 'text', text: '{"dimensions":{' }] }), { status: 200 });
-    const res = await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+    globalThis.fetch = async () => new Response(JSON.stringify({ status: 'incomplete', output_text: '{"dimensions":{' }), { status: 200 });
+    const res = await assess(source.id);
     assert.equal(res.status, 502);
     const store = getStore({ name: 'agentraining-pilot' });
     assert.equal((await store.get(`teams/acme/knowledge/${source.id}`)).relevance, undefined);
@@ -180,7 +199,7 @@ describe('knowledge training relevance', () => {
     await saveProfile();
     const source = await createSource();
     fakeModel(GOOD_REPLY);
-    await handler(req('POST', 'knowledge', { action: 'assess_relevance', id: source.id }));
+    await assess(source.id);
     const fb = await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'disagree', note: 'too basic' }));
     assert.equal((await fb.json()).source.relevance.managerVerdict, 'disagree');
     const store = getStore({ name: 'agentraining-pilot' });
