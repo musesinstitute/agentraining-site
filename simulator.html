@@ -335,7 +335,7 @@
     .nav-back:hover { color: var(--ink); }
 
     /* LAYOUT */
-    .app { display: grid; grid-template-columns: 300px 1fr 320px; gap: 0; height: calc(100vh - 60px); }
+    .app { display: grid; grid-template-columns: 300px 1fr 320px; gap: 0; height: calc(100vh - var(--nav-h, 60px)); }
 
     /* LEFT PANEL - Scenarios */
     .panel-left {
@@ -749,6 +749,16 @@
 
     @media (max-width: 900px) {
       .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
+      /* Phone nav: logo row on top, actions in one horizontally scrollable row below,
+         so the buttons no longer force the page wider than the screen. */
+      nav { height: auto; flex-wrap: wrap; padding: 8px 12px; row-gap: 8px; }
+      .nav-back { white-space: nowrap; }
+      .nav-actions {
+        width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 8px !important;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px;
+      }
+      .nav-actions::-webkit-scrollbar { display: none; }
+      .nav-actions > * { flex-shrink: 0; white-space: nowrap; }
       .panel-left, .panel-right { display: none; }
       .panel-left.mobile-open {
         display: flex !important; position: fixed; inset: 0; z-index: 300;
@@ -779,6 +789,7 @@
       }
       .panel-right.mobile-open .coach-chat-log { max-height: none; }
       .mobile-coach-close { display: flex !important; }
+      .panel-right.mobile-open .mobile-coach-close { position: sticky; top: 8px; z-index: 5; flex-shrink: 0; }
       .mobile-coach-btn.ready {
         display: flex !important; position: fixed; right: 16px; bottom: 140px; z-index: 210;
         background: var(--gold); color: var(--white); border: none; border-radius: 99px;
@@ -1150,7 +1161,7 @@
     </div>
     AgentTraining<span style="color:var(--accent)">AI</span>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;">
+  <div class="nav-actions" style="display:flex;align-items:center;gap:10px;">
     <a id="pilot-home-nav" href="pilot.html?pilot=1" title="Pilot Home" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🏠 Pilot Home</a>
     <a id="learner-profile-nav" href="learner-profile.html?pilot=1" title="Learner Success Profile" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🎯 My Profile</a>
     <a id="coach-chat-nav" href="coach-chat.html?pilot=1" title="Personal AI Coach" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">🤝 My Coach</a><a id="team-messages-nav" href="team-messages.html?pilot=1" title="Team Messages" style="display:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-muted);">💬 Team Messages</a>
@@ -1163,6 +1174,7 @@
     </div>
   </div>
 </nav>
+<script>(function(){var n=document.querySelector('nav');if(!n)return;function u(){document.documentElement.style.setProperty('--nav-h',n.offsetHeight+'px')}u();if(window.ResizeObserver)new ResizeObserver(u).observe(n);else window.addEventListener('resize',u)})();</script>
 <script>if(window.PilotCloud&&PilotCloud.enabled){document.getElementById("pilot-home-nav").style.display="inline-block";document.getElementById("learner-profile-nav").style.display="inline-block";document.getElementById("coach-chat-nav").style.display="inline-block";document.getElementById("team-messages-nav").style.display="inline-block"}</script>
 
 <!-- SESSION SUMMARY MODAL -->
@@ -1912,7 +1924,11 @@ const COACH_STR = {
     debriefCta: '🧑‍🏫 Review this session with my coach →',
     askAbout: 'What is the best way to respond to: "{q}"?',
     askCoach: '💬 Ask coach', askWhy: 'Why is that better? How would you say it in this situation?',
-    mobileBtn: '🧑‍🏫 Coach', mobileClose: '✕ Back to the conversation'
+    mobileBtn: '🧑‍🏫 Coach', mobileClose: '✕ Back to the conversation',
+    remaining: '{n} coach messages left this session.',
+    chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
+    redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
+    busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
   },
   zh: {
     modeLabel: '教練方式', live: '即時指導', debrief: '結束後複盤',
@@ -1934,7 +1950,11 @@ const COACH_STR = {
     debriefCta: '🧑‍🏫 與教練一起複盤這次練習 →',
     askAbout: '針對這句話，最好的回應方式是什麼：「{q}」？',
     askCoach: '💬 問教練', askWhy: '為什麼這樣說比較好？在這個情境下你會怎麼說？',
-    mobileBtn: '🧑‍🏫 教練', mobileClose: '✕ 返回對話'
+    mobileBtn: '🧑‍🏫 教練', mobileClose: '✕ 返回對話',
+    remaining: '本次練習還可以問教練 {n} 次。',
+    chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
+    redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
+    busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
   }
 };
 let coachMode = 'live';
@@ -1945,6 +1965,13 @@ let coachKeyMoments = [];
 let coachFinalData = null;
 let coachBusy = false;
 let lastExchange = null;          // { start, agentEl, clientEl, coachEl } for the latest learner turn
+
+// Cost guardrails. Every coach-chat message and every redo is an extra paid API
+// call, so both are capped per practice session. Raise these only deliberately.
+const COACH_CHAT_LIMIT = 10;      // learner messages to the coach per session (practice + debrief)
+const COACH_REDO_LIMIT = 3;       // "Redo my line" uses per session (each redo = 2 more calls)
+let coachChatUsed = 0;
+let coachRedoUsed = 0;
 
 function coachT(key) {
   const lang = (typeof currentLang !== 'undefined' && currentLang === 'zh') ? 'zh' : 'en';
@@ -1980,6 +2007,9 @@ function resetCoach() {
   coachFinalData = null;
   coachBusy = false;
   lastExchange = null;
+  coachChatUsed = 0;
+  coachRedoUsed = 0;
+  setCoachChatEnabled(true);
   const log = document.getElementById('coach-chat-log');
   if (log) log.innerHTML = '';
   const send = document.getElementById('coach-chat-send');
@@ -2007,15 +2037,17 @@ function showCoachInterjection(data) {
       <div class="coach-bubble-title">${escapeHtml(coachT('interjectTitle'))}</div>
       <div>${escapeHtml(data.coachSays)}</div>
       ${data.betterLine ? `<div class="coach-better"><div class="coach-better-label">${escapeHtml(coachT('tryInstead'))}</div>${escapeHtml(data.betterLine)}</div>` : ''}
+      ${coachRedoUsed >= COACH_REDO_LIMIT ? `<div class="coach-better">${escapeHtml(coachT('redoLimit'))}</div>` : ''}
       <div class="coach-actions">
-        <button class="coach-action-btn primary" data-act="redo">${escapeHtml(coachT('redo'))}</button>
-        ${data.betterLine ? `<button class="coach-action-btn" data-act="use">${escapeHtml(coachT('useLine'))}</button>` : ''}
+        ${coachRedoUsed < COACH_REDO_LIMIT ? `<button class="coach-action-btn primary" data-act="redo">${escapeHtml(coachT('redo'))}</button>` : ''}
+        ${data.betterLine && coachRedoUsed < COACH_REDO_LIMIT ? `<button class="coach-action-btn" data-act="use">${escapeHtml(coachT('useLine'))}</button>` : ''}
         <button class="coach-action-btn" data-act="ask">${escapeHtml(coachT('askCoach'))}</button>
         <button class="coach-action-btn" data-act="keep">${escapeHtml(coachT('keepGoing'))}</button>
       </div>
     </div>`;
   const exchange = lastExchange;
-  div.querySelector('[data-act="redo"]').onclick = () => redoLastLine(exchange, '');
+  const redoBtn = div.querySelector('[data-act="redo"]');
+  if (redoBtn) redoBtn.onclick = () => redoLastLine(exchange, '');
   const useBtn = div.querySelector('[data-act="use"]');
   if (useBtn) useBtn.onclick = () => redoLastLine(exchange, data.betterLine);
   div.querySelector('[data-act="keep"]').onclick = () => clearPendingInterjection();
@@ -2036,6 +2068,8 @@ function clearPendingInterjection() {
 function redoLastLine(exchange, prefill) {
   if (isLoading || exchange !== lastExchange) return;
   if (conversationHistory.length !== exchange.start + 2) return; // something newer happened
+  if (coachRedoUsed >= COACH_REDO_LIMIT) return;
+  coachRedoUsed++;
   conversationHistory.length = exchange.start;
   turnCount = Math.max(0, turnCount - 1);
   exchange.agentEl?.remove();
@@ -2112,9 +2146,13 @@ function openCoachPanel(prefill, focusInput) {
   if (isMobileLayout() && panel) panel.classList.add('mobile-open');
   document.getElementById('mobile-coach-btn')?.classList.remove('has-new');
   const input = document.getElementById('coach-chat-input');
-  if (input && prefill) input.value = prefill;
-  document.getElementById('coach-chat')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  if (input && (prefill || focusInput)) input.focus();
+  if (input && prefill && !input.disabled) input.value = prefill;
+  if (prefill || focusInput) {
+    document.getElementById('coach-chat')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (input && !input.disabled) input.focus();
+  } else if (panel) {
+    panel.scrollTop = 0;
+  }
 }
 
 function closeCoachPanel() {
@@ -2137,7 +2175,7 @@ function practiceKeyMoment(i) {
 function buildCoachSystemPrompt() {
   const lang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
   const transcript = conversationHistory
-    .map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n').slice(-9000);
+    .map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n').slice(-6000);
   const scenarioName = currentScenario ? (currentScenario.name?.[currentLang] || currentScenario.name?.en || '') : '';
   const role = coachPhase === 'debrief'
     ? `The role-play has ended. You are running a post-session debrief. When the learner submits a rewritten line, say in one sentence what improved, in one sentence what is still missing (if anything), then give one model line they could use, and invite them to try again or move to the next moment. If they ask a question, answer it concretely using moments from the transcript.`
@@ -2160,23 +2198,31 @@ ${transcript || '(no messages yet)'}${final}`;
 // coach's own prompts (opener, "practice this line") into the following turn.
 function buildCoachMessages() {
   const out = [];
-  coachChatHistory.slice(-14).forEach(m => {
+  coachChatHistory.slice(-10).forEach(m => {
     if (!out.length && m.role === 'assistant') return;
     const last = out[out.length - 1];
     if (last && last.role === m.role) last.content += '\n\n' + m.content;
     else out.push({ role: m.role, content: m.content });
   });
   // Coach lines that preceded the first learner message carry context (e.g. which line to rework).
-  const firstUser = coachChatHistory.slice(-14).findIndex(m => m.role === 'user');
-  const lead = coachChatHistory.slice(-14).slice(0, Math.max(0, firstUser)).map(m => m.content).join('\n\n');
+  const firstUser = coachChatHistory.slice(-10).findIndex(m => m.role === 'user');
+  const lead = coachChatHistory.slice(-10).slice(0, Math.max(0, firstUser)).map(m => m.content).join('\n\n');
   if (lead && out.length) out[0].content = `(Coach said earlier: ${lead})\n\n` + out[0].content;
   return out;
+}
+
+function setCoachChatEnabled(on) {
+  const input = document.getElementById('coach-chat-input');
+  const send = document.getElementById('coach-chat-send');
+  if (input) input.disabled = !on;
+  if (send) send.disabled = !on;
 }
 
 async function sendCoachChat() {
   const input = document.getElementById('coach-chat-input');
   const text = input?.value.trim();
   if (!text || coachBusy || !currentScenario) return;
+  if (coachChatUsed >= COACH_CHAT_LIMIT) return;
   input.value = '';
   coachChatHistory.push({ role: 'user', content: text });
   const learnerLine = appendCoachLine('user', text);
@@ -2187,18 +2233,25 @@ async function sendCoachChat() {
   try {
     const reply = await callClaude(buildCoachMessages(), buildCoachSystemPrompt());
     pending.remove();
+    coachChatUsed++;
     coachChatHistory.push({ role: 'assistant', content: reply });
     appendCoachLine('assistant', reply);
+    const left = COACH_CHAT_LIMIT - coachChatUsed;
+    if (left <= 0) {
+      appendCoachLine('assistant', coachT('chatLimit').replace('{n}', COACH_CHAT_LIMIT), 'pending');
+    } else if (left <= 3) {
+      appendCoachLine('assistant', coachT('remaining').replace('{n}', left), 'pending');
+    }
   } catch (e) {
     pending.remove();
     learnerLine.remove();
     coachChatHistory.pop();
-    appendCoachLine('assistant', coachT('error'), 'pending');
+    appendCoachLine('assistant', coachT(e && e.status === 429 ? 'busy' : 'error'), 'pending');
     input.value = text;
     console.error('Coach chat error', e);
   }
   coachBusy = false;
-  if (send) send.disabled = false;
+  setCoachChatEnabled(coachChatUsed < COACH_CHAT_LIMIT);
 }
 
 const ASSIGNMENTS_KEY = 'agentraining_assignments';
@@ -3165,7 +3218,7 @@ async function sendMessage() {
 
   } catch (err) {
     removeTyping();
-    appendMessage('system', '', '⚠️ Connection error. Please check your API key in the settings.');
+    appendMessage('system', '', err && err.status === 429 ? coachT('busy') : '⚠️ Connection error. Please check your API key in the settings.');
     console.error(err);
   }
 
@@ -3217,7 +3270,11 @@ async function callClaude(messages, system) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ system, messages })
   });
-  if (!response.ok) throw new Error('API error: ' + response.status);
+  if (!response.ok) {
+    const err = new Error('API error: ' + response.status);
+    err.status = response.status;
+    throw err;
+  }
   const data = await response.json();
   return data.content[0].text;
 }
