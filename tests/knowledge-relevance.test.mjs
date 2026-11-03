@@ -61,6 +61,7 @@ const GOOD_REPLY = {
   recommendedUse: 'Use in week 1',
   whyItMatters: 'It matters.',
   gaps: 'Nothing on price.',
+  learnerNote: { en: 'This helps you keep the appointment when a spouse is involved.', zh: '這能幫你在客戶需要配偶同意時保住約見。' },
   licenseScope: 'ok',
   licenseNote: ''
 };
@@ -211,4 +212,54 @@ describe('knowledge training relevance', () => {
     assert.equal(list.sources.length, 1);
     assert.equal(list.sources[0].relevance, undefined, 'relevance stays manager-only');
   });
+
+  async function approvedAndAssessed(reply) {
+    await saveProfile();
+    const source = await createSource();
+    fakeModel(reply);
+    await assess(source.id);
+    const store = getStore({ name: 'agentraining-pilot' });
+    const key = `teams/acme/knowledge/${source.id}`;
+    await store.setJSON(key, { ...(await store.get(key)), analysis: { summary: 's', keyPoints: [], practiceDraft: { title: 't' } } });
+    await handler(req('POST', 'knowledge', { action: 'approve', id: source.id }));
+    return source;
+  }
+  async function learnerSources() {
+    __setUser(LEARNER);
+    return (await (await handler(req('GET', 'knowledge'))).json()).sources;
+  }
+
+  test('learners see a safe importance rating, never the manager scores', async () => {
+    await approvedAndAssessed(GOOD_REPLY);
+    const [src] = await learnerSources();
+    assert.deepEqual(src.importance, {
+      level: 'must_know', stars: 3,
+      note: GOOD_REPLY.learnerNote,
+      matchedGoals: ['Handle spouse objection'],
+      recommendedAudience: 'new_agents',
+      assessedAt: src.importance.assessedAt
+    });
+    const json = JSON.stringify(src);
+    for (const secret of ['dimensions', 'overall', 'whyItMatters', 'gaps', 'licenseNote', 'overlapsWith', 'managerVerdict', 'practiceSessionCount']) {
+      assert.ok(!json.includes(secret), `${secret} must not reach learners`);
+    }
+  });
+
+  test('P2 / P3 map to Important / Reference', async () => {
+    await approvedAndAssessed({ ...GOOD_REPLY, dimensions: Object.fromEntries(Object.keys(GOOD_REPLY.dimensions).map(k => [k, { score: 1 }])) });
+    const [src] = await learnerSources();
+    assert.equal(src.importance.level, 'reference');
+    assert.equal(src.importance.stars, 1);
+  });
+
+  test('no learner importance when the manager disagreed or compliance review is needed', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'disagree' }));
+    assert.equal((await learnerSources())[0].importance, null);
+
+    __resetAllStores(); __setUser(MANAGER);
+    await approvedAndAssessed({ ...GOOD_REPLY, licenseScope: 'out_of_scope' });
+    assert.equal((await learnerSources())[0].importance, null);
+  });
 });
+

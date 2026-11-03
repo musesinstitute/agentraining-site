@@ -1,6 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
-import { normalizeTrainingProfile, competencySnapshot } from './lib/knowledge-relevance-core.mjs';
+import { normalizeTrainingProfile, competencySnapshot, learnerImportanceView } from './lib/knowledge-relevance-core.mjs';
 
 const STORE_NAME = 'agentraining-pilot';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -722,6 +722,7 @@ function approvedKnowledgeView(record) {
     sourceUrl: record.sourceUrl,
     status: record.status,
     analysis: record.analysis,
+    importance: learnerImportanceView(record.relevance),
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     approvedAt: record.approvedAt

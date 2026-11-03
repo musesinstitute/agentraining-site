@@ -30,7 +30,7 @@ export const RELEVANCE_DIMENSIONS = [
   { key: 'novelty', weight: 0.15 },
   { key: 'practiceReadiness', weight: 0.20 }
 ];
-export const RELEVANCE_VERSION = 'relevance-v1';
+export const RELEVANCE_VERSION = 'relevance-v2';
 
 // Keep the prompt small so the call fits inside the function time limit: when
 // the source has already been analyzed, its summary + key points carry most of
@@ -109,6 +109,7 @@ export function normalizeRelevance(value, { librarySources = [], snapshot, profi
     recommendedAudience: ['new_agents', 'experienced_agents', 'all'].includes(value?.recommendedAudience) ? value.recommendedAudience : 'all',
     recommendedUse: cleanText(value?.recommendedUse, 500),
     whyItMatters: cleanText(value?.whyItMatters, 800),
+    learnerNote: { en: cleanText(value?.learnerNote?.en, 300), zh: cleanText(value?.learnerNote?.zh, 300) },
     gaps: cleanText(value?.gaps, 500),
     licenseScope,
     licenseNote: cleanText(value?.licenseNote, 400),
@@ -140,7 +141,8 @@ export function buildRelevancePrompt(record, profile, snapshot, librarySources) 
     '- practiceReadiness: how readily it converts into realistic role-play Practice.',
     '',
     'Return JSON only with this exact shape:',
-    '{"dimensions":{"goalAlignment":{"score":1,"reason":"...","evidence":"..."},"skillGapCoverage":{...},"objectionCoverage":{...},"novelty":{...},"practiceReadiness":{...}},"matchedGoals":["exact goal text that this source serves"],"competencies":["empathy|accuracy|closing"],"objectionTypes":["' + OBJECTION_TYPES.join('|') + '"],"overlapsWith":["existing source id"],"recommendedAudience":"new_agents|experienced_agents|all","recommendedUse":"one sentence: how the manager should use it in the program","whyItMatters":"2-3 sentences for the manager","gaps":"what the team goals need that this source does not cover","licenseScope":"ok|review|out_of_scope","licenseNote":"..."}',
+    '{"dimensions":{"goalAlignment":{"score":1,"reason":"...","evidence":"..."},"skillGapCoverage":{...},"objectionCoverage":{...},"novelty":{...},"practiceReadiness":{...}},"matchedGoals":["exact goal text that this source serves"],"competencies":["empathy|accuracy|closing"],"objectionTypes":["' + OBJECTION_TYPES.join('|') + '"],"overlapsWith":["existing source id"],"recommendedAudience":"new_agents|experienced_agents|all","recommendedUse":"one sentence: how the manager should use it in the program","whyItMatters":"2-3 sentences for the manager","gaps":"what the team goals need that this source does not cover","learnerNote":{"en":"...","zh":"..."},"licenseScope":"ok|review|out_of_scope","licenseNote":"..."}',
+    'learnerNote: ONE encouraging sentence addressed directly to the sales agent ("you"), saying why this material matters for their daily client conversations. Give it in English (en) and Traditional Chinese (zh). Never mention scores, priorities, team weaknesses, Practice results, or any individual\'s performance.',
     'whyItMatters: at most 2 sentences. recommendedUse and gaps: one short sentence each. licenseNote: empty when licenseScope is ok. Do not add any text outside the JSON.',
     'Write reason, recommendedUse, whyItMatters, gaps and licenseNote in ' + (profile.lang === 'zh' ? 'Traditional Chinese' : 'English') + '.',
     '',
@@ -174,4 +176,24 @@ export function librarySnapshot(sources, excludeId) {
   return sources.filter(s => s && s.id !== excludeId).slice(0, 40).map(s => ({
     id: s.id, title: cleanText(s.title, 160), keyPoints: cleanList(s.analysis?.keyPoints, 2, 90)
   }));
+}
+
+// Learner-facing "importance": a small, safe projection of the manager-only
+// relevance assessment. Learners never see scores, dimensions, gaps, overlaps,
+// license notes, Practice-based reasoning or the manager's review. Nothing is
+// shown when the manager disagreed with the assessment or it needs compliance
+// review.
+export const IMPORTANCE_LEVELS = { P1: { level: 'must_know', stars: 3 }, P2: { level: 'important', stars: 2 }, P3: { level: 'reference', stars: 1 } };
+export function learnerImportanceView(relevance) {
+  if (!relevance || relevance.managerVerdict === 'disagree') return null;
+  const level = IMPORTANCE_LEVELS[relevance.priority];
+  if (!level) return null;
+  return {
+    level: level.level,
+    stars: level.stars,
+    note: { en: cleanText(relevance.learnerNote?.en, 300), zh: cleanText(relevance.learnerNote?.zh, 300) },
+    matchedGoals: cleanList(relevance.matchedGoals, 5, 300),
+    recommendedAudience: relevance.recommendedAudience || 'all',
+    assessedAt: relevance.assessedAt || ''
+  };
 }
