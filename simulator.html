@@ -1430,7 +1430,7 @@ IMPORTANT RULES:
    - Judge how much effort this client deserves
    - If closing probability is low, be honest: "Based on your description, this client's closing probability is currently low. I'd suggest..."
    Keep this assessment brief (3-4 sentences), then ask if they still want to practice this client or switch to a higher-potential scenario.
-   The point is to help agents judge which clients are worth their energy and which to let go for now. Say this in plain words; do not cite Sun Tzu, Dale Carnegie or any book or "principle" (learners find that preachy), unless the agent asks, and then at most once in the conversation.
+   The point is to help agents judge which clients are worth their energy and which to let go for now. Say this in plain words; whether you may ever name a book, author or "principle" is decided by the coaching style memo you are given.
 
 Start with EXACTLY this opening message — warm, personal, encouraging:
 
@@ -1469,7 +1469,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
    - 判斷這個客戶值得投入多少精力
    - 如果成交可能性低，坦誠告訴用戶：「根據您的描述，這位客戶目前成交可能性較低，建議您……」
    這個評估要簡短（3-4句），然後再問用戶是否仍想繼續練習這個客戶，或者換一個更值得的情境。
-   目的是幫助業務員判斷哪些客戶值得投入精力、哪些可以先放下。請用平實的話說明；不要引用孫子兵法、卡內基或任何書名、作者、「原則」（學員會覺得說教、生厭），除非業務員主動問起，而且整段對話最多提一次。
+   目的是幫助業務員判斷哪些客戶值得投入精力、哪些可以先放下。請用平實的話說明；能不能提到任何書名、作者或「原則」，一律依照另外提供的「教練風格備忘錄」。
 
 用這個確切的開場白——溫暖、親切、充滿鼓勵：
 
@@ -1935,6 +1935,40 @@ const COACH_COMPLIANCE_RULE = 'Licensing boundary (hard rule): the agent holds a
 // coach keeps naming them. Apply the ideas; don't cite the sources.
 const COACH_STYLE_MEMO_STRICT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas only through concrete, plain-language advice about THIS client and THIS line. Never name or quote Sun Tzu, The Art of War, Dale Carnegie, or any book, author or "principle"; learners find repeated references preachy and formulaic. Talk like an experienced colleague, not a textbook.';
 const COACH_STYLE_MEMO_CHAT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas through concrete, plain-language advice about THIS client and THIS line, like an experienced colleague, not a textbook. Do not name or quote Sun Tzu, The Art of War, Dale Carnegie or any book or author by default; learners find repeated references preachy. The only exceptions: the learner asks about them, or, very rarely, a reference adds something plain advice cannot. Even then, at most once in this whole conversation: check the conversation so far and never mention them if they already came up.';
+// "At most once or twice a week" (product owner's rule) needs memory across
+// sessions, which a single AI request doesn't have, so the page counts: each coach
+// reply that names Sun Tzu / The Art of War / Carnegie is recorded in this browser,
+// and once the weekly limit is reached (or a mention already happened in the current
+// conversation) the coach gets the strict "never name them" memo instead.
+const COACH_NAME_RE = /sun\s*tzu|sunzi|art of war|carnegie|孫子|孙子|卡內基|卡内基/i;
+const COACH_NAME_WEEKLY_LIMIT = 2;
+const COACH_NAME_KEY = 'agentraining_coach_name_mentions';
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+function coachNameMentionsThisWeek() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(COACH_NAME_KEY) || '[]');
+    const now = Date.now();
+    return (Array.isArray(raw) ? raw : []).filter(t => typeof t === 'number' && now - t < WEEK_MS);
+  } catch (e) { return []; }
+}
+
+function recordCoachNameMentionIfAny(text) {
+  if (!text || !COACH_NAME_RE.test(text)) return;
+  const list = coachNameMentionsThisWeek();
+  list.push(Date.now());
+  try { localStorage.setItem(COACH_NAME_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+// Memo for conversational coach replies (coach chat, debrief, Free Practice).
+function coachNameMemoForChat(conversationTexts) {
+  const usedHere = (conversationTexts || []).some(t => COACH_NAME_RE.test(t || ''));
+  if (usedHere || coachNameMentionsThisWeek().length >= COACH_NAME_WEEKLY_LIMIT) {
+    return COACH_STYLE_MEMO_STRICT + ' This applies even if the learner asks about them: answer the substance in plain words instead.';
+  }
+  return COACH_STYLE_MEMO_CHAT;
+}
+
 const COACH_STR = {
   en: {
     modeLabel: 'Coaching Style', live: 'Live coaching', debrief: 'Debrief after',
@@ -2276,7 +2310,7 @@ function buildCoachSystemPrompt() {
     : '';
   return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. Be warm, direct and specific; plain text, no markdown headings, under 120 words.
 
-${COACH_STYLE_MEMO_CHAT}
+${coachNameMemoForChat(coachChatHistory.map(m => m.content))}
 
 ${role}
 
@@ -2329,6 +2363,7 @@ async function sendCoachChat() {
     const reply = await callClaude(buildCoachMessages(), buildCoachSystemPrompt());
     pending.remove();
     coachChatUsed++;
+    recordCoachNameMentionIfAny(reply);
     coachChatHistory.push({ role: 'assistant', content: reply });
     appendCoachLine('assistant', reply);
     const left = COACH_CHAT_LIMIT - coachChatUsed;
@@ -3301,12 +3336,15 @@ async function sendMessage() {
     // Client response
     const clientResp = await callClaude([
       { role: 'user', content: currentScenario.systemPrompt[currentLang] + '\n\nConversation so far:\n' + conversationHistory.map(m => (m.role === 'user' ? 'Agent: ' : 'You: ') + m.content).join('\n') + '\n\nRespond as the client (2-3 sentences max, stay in character):' }
-    ], 'You are a realistic client. Stay in character. Be concise.',
+    ], currentScenario.id === 0
+      ? 'You are a realistic client. Stay in character. Be concise.\n\n' + coachNameMemoForChat(conversationHistory.filter(m => m.role === 'assistant').map(m => m.content))
+      : 'You are a realistic client. Stay in character. Be concise.',
     // Role-play runs on the cheaper client model; Free Practice (id 0) is itself
     // the AI coach persona, so it stays on the coach model.
     currentScenario.id === 0 ? 'coach' : 'client');
 
     removeTyping();
+    if (currentScenario.id === 0) recordCoachNameMentionIfAny(clientResp);
     conversationHistory.push({ role: 'assistant', content: clientResp });
     const clientEl = appendMessage('client', currentScenario.clientName, clientResp);
     if (lastExchange) lastExchange.clientEl = clientEl;
