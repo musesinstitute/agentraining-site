@@ -1990,6 +1990,11 @@ const COACH_METHOD = [
   '- Notice and name improvement, even small, especially after a redo or rewrite.',
   '- Speak to them as a capable professional with a good reputation to live up to; be warm, brief and concrete about THIS client and THIS line.'
 ].join('\n');
+// Learners often speak (voice chat or dictation) or type fast. Slips are not sales
+// skills: the coach and the client must understand the intended meaning and never
+// penalise or nitpick fragments, fillers, self-corrections or transcription errors.
+const SPOKEN_INPUT_RULE = 'Spoken-language rule: the agent\'s lines often come from speech recognition or quick typing. Expect fragments, unfinished sentences, filler words, repetitions, missing punctuation, misheard words and self-corrections (e.g. "300, no, 500 a month" means 500). Understand the intended meaning the way an attentive person in a real conversation would; when the agent corrects themselves, use the correction. Never lower a score, interject, or comment on grammar, fluency, speaking pace, unfinished sentences, slips of the tongue, transcription errors, or a number they misspoke or corrected. These are not sales skills. Judge only the sales communication itself: understanding the client, handling the concern, and the substance of what was offered. Raise a factual point only when a clearly wrong, material claim was made deliberately and stood uncorrected, and then gently, as something to double-check.';
+const CLIENT_LISTENING_RULE = 'The agent is talking to you, often through speech recognition: their words may be fragmented, repeated or slightly misheard, and they may correct themselves mid-sentence. Understand what they mean the way a real person would, use their correction, and never point out their verbal slips.';
 const COACH_STYLE_MEMO_STRICT = COACH_METHOD + '\n\nNaming rule: Never name or quote Sun Tzu, The Art of War, Dale Carnegie, or any book, author or "principle"; learners find repeated references preachy and formulaic. Talk like an experienced colleague, not a textbook.';
 const COACH_STYLE_MEMO_CHAT = COACH_METHOD + '\n\nNaming rule: Do not name or quote Sun Tzu, The Art of War, Dale Carnegie or any book or author by default; learners find repeated references preachy. The only exceptions: the learner asks about them, or, very rarely, a reference adds something plain advice cannot. Even then, at most once in this whole conversation: check the conversation so far and never mention them if they already came up.';
 // "At most once or twice a week" (product owner's rule) needs memory across
@@ -2055,7 +2060,8 @@ const COACH_STR = {
     voiceIntro: 'Voice chat is on. Just talk to reply to the client. To ask me something, start with "Coach".',
     voiceListening: 'Listening…', voiceThinking: 'Thinking…', voiceSpeaking: 'Speaking…', voiceInterrupt: '⏹ Interrupt',
     voicePaused: 'Paused (no speech heard).', voiceResume: '▶ Continue', voiceEnd: 'End',
-    voiceHint: 'Say "Coach, …" to ask the coach · after a coach note, say "redo" or "keep going"',
+    voiceHint: 'Take your time; a pause is fine. Say "Coach, …" to ask the coach · say "take that back" to redo your last line',
+    voiceDone: '✅ Done', voiceNothingToRedo: 'There is no line to take back right now.',
     voiceRedoPrompt: 'OK, say it again.', voiceCoachHere: 'Yes? What would you like to ask?',
     voiceUnsupported: 'This browser does not support voice chat. Please use Chrome, Edge or Safari.',
     voiceWeChat: 'WeChat\'s built-in browser does not support voice chat. Tap ··· → Open in Browser.',
@@ -2093,7 +2099,8 @@ const COACH_STR = {
     voiceIntro: '語音對話已開啟。直接說話就是回應客戶；想問我問題，就先說「教練」。',
     voiceListening: '正在聽…', voiceThinking: '思考中…', voiceSpeaking: '說話中…', voiceInterrupt: '⏹ 打斷',
     voicePaused: '已暫停（沒有聽到聲音）。', voiceResume: '▶ 繼續說話', voiceEnd: '結束',
-    voiceHint: '說「教練，……」可以問教練 · 教練插話後，說「重說」或「繼續」',
+    voiceHint: '慢慢說，中間停頓沒關係。說「教練，……」可以問教練 · 說「撤回」可以收回剛才那句重講',
+    voiceDone: '✅ 說完了', voiceNothingToRedo: '現在沒有可以撤回的句子。',
     voiceRedoPrompt: '好，請再說一次。', voiceCoachHere: '我在，想問什麼？',
     voiceUnsupported: '這個瀏覽器不支援語音對話，請使用 Chrome、Edge 或 Safari。',
     voiceWeChat: '微信內建瀏覽器不支援語音對話。請點右上角「...」→「在瀏覽器中打開」。',
@@ -2116,7 +2123,7 @@ let lastExchange = null;          // { start, agentEl, clientEl, coachEl } for t
 // Cost guardrails. Every coach-chat message and every redo is an extra paid API
 // call, so both are capped per practice session. Raise these only deliberately.
 const COACH_CHAT_LIMIT = 10;      // learner messages to the coach per session (practice + debrief)
-const COACH_REDO_LIMIT = 3;       // "Redo my line" uses per session (each redo = 2 more calls)
+const COACH_REDO_LIMIT = 5;       // "Redo my line" / voice "take that back" per session (each = 2 more calls)
 let coachChatUsed = 0;
 let coachRedoUsed = 0;
 
@@ -2148,7 +2155,10 @@ function speakCoach(text, interrupt) {
 // while the AI speaks (otherwise it would hear itself); "Interrupt" stops speech.
 const voiceConvo = { on: false, rec: null, loop: false, paused: false, silentRounds: 0, denied: false, heard: '' };
 const COACH_WAKE_RE = /^\s*(教練|教练|老師|老师|coach)[\s,，:：、。.!！?？]*/i;
-const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|redo|try again)[\s。.!！]*$/i;
+const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|再说一次|撤回|收回|說錯了|说错了|redo|try again|take that back|scratch that)[\s。.!！,，]*$/i;
+// Same words at the END of a longer utterance ("…500 a month, no wait, take that back"):
+// the learner is retracting what they just said, so it is dropped before sending.
+const VOICE_RETRACT_TAIL_RE = /(撤回|收回|重說|重说|重來|重来|再說一次|再说一次|take that back|scratch that)[\s。.!！,，]*$/i;
 const VOICE_KEEP_RE = /^\s*(繼續|继续|keep going|continue)[\s。.!！]*$/i;
 
 function pickVoice(role) {
@@ -2173,7 +2183,8 @@ function setVoiceStatus(state) {
   if (!voiceConvo.on) { box.innerHTML = ''; return; }
   let html = '';
   if (state === 'listening') {
-    html = `<span class="voice-dot"></span><span class="voice-status-text">🎙️ ${escapeHtml(coachT('voiceListening'))} <span class="voice-heard">${escapeHtml(voiceConvo.heard)}</span></span>`;
+    html = `<span class="voice-dot"></span><span class="voice-status-text">🎙️ ${escapeHtml(coachT('voiceListening'))} <span class="voice-heard">${escapeHtml(voiceConvo.heard)}</span></span>` +
+      (voiceConvo.heard ? `<button onclick="finishSpeakingNow()">${escapeHtml(coachT('voiceDone'))}</button>` : '');
   } else if (state === 'speaking') {
     html = `<span class="voice-status-text">🔊 ${escapeHtml(coachT('voiceSpeaking'))}</span><button onclick="interruptVoice()">${escapeHtml(coachT('voiceInterrupt'))}</button>`;
   } else if (state === 'paused') {
@@ -2214,6 +2225,7 @@ function startVoiceConvo() {
 
 function stopVoiceConvo() {
   voiceConvo.on = false;
+  if (voiceConvo.finishNow) voiceConvo.finishNow();
   voiceConvo.paused = false;
   try { if (voiceConvo.rec) voiceConvo.rec.abort(); } catch (e) {}
   voiceConvo.rec = null;
@@ -2247,30 +2259,80 @@ function waitForVoiceTurn() {
   });
 }
 
+// Patient listening: the browser's recogniser stops at the first short pause, which
+// cut learners off mid-sentence. We keep listening (restarting the recogniser if
+// the browser stops it) and only end the turn after VOICE_SILENCE_MS of quiet once
+// the learner has started talking, or when they tap "Done".
+const VOICE_SILENCE_MS = 2500;
+const VOICE_START_TIMEOUT_MS = 9000;
+const VOICE_MAX_MS = 120000;
+
 function listenOnce() {
   return new Promise(resolve => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const r = new SR();
-    r.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
-    r.continuous = false;
-    r.interimResults = true;
-    r.maxAlternatives = 1;
-    let finalText = '';
+    const startedAt = Date.now();
+    let committed = '';     // text from recogniser sessions that already ended
+    let sessionText = '';   // text (final + interim) of the current session
+    let lastHeardAt = 0;
+    let done = false;
+    let timer = null;
     voiceConvo.heard = '';
-    r.onresult = (e) => {
-      let interim = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText += t; else interim += t;
-      }
-      voiceConvo.heard = (finalText + interim).trim();
-      setVoiceStatus('listening');
+
+    const fullText = () => (committed + ' ' + sessionText).replace(/\s+/g, ' ').trim();
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearInterval(timer);
+      voiceConvo.finishNow = null;
+      const rec = voiceConvo.rec;
+      voiceConvo.rec = null;
+      try { if (rec) rec.abort(); } catch (e) {}
+      resolve(fullText());
     };
-    r.onerror = (e) => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') voiceConvo.denied = true; };
-    r.onend = () => { voiceConvo.rec = null; resolve(finalText.trim()); };
-    voiceConvo.rec = r;
-    try { r.start(); } catch (e) { voiceConvo.rec = null; resolve(''); }
+    voiceConvo.finishNow = finish;
+
+    const startRecogniser = () => {
+      const r = new SR();
+      r.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+      r.continuous = true;
+      r.interimResults = true;
+      r.maxAlternatives = 1;
+      r.onresult = (e) => {
+        let text = '';
+        for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
+        sessionText = text;
+        lastHeardAt = Date.now();
+        voiceConvo.heard = fullText();
+        setVoiceStatus('listening');
+      };
+      r.onerror = (e) => {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { voiceConvo.denied = true; finish(); }
+      };
+      r.onend = () => {
+        if (done) return;
+        committed = fullText();
+        sessionText = '';
+        // The browser stopped on its own (a pause, or a mobile time limit): keep listening.
+        try { startRecogniser(); } catch (e) { finish(); }
+      };
+      voiceConvo.rec = r;
+      r.start();
+    };
+
+    timer = setInterval(() => {
+      if (!voiceConvo.on) return finish();
+      const now = Date.now();
+      if (lastHeardAt && now - lastHeardAt > VOICE_SILENCE_MS) finish();
+      else if (!lastHeardAt && now - startedAt > VOICE_START_TIMEOUT_MS) finish();
+      else if (now - startedAt > VOICE_MAX_MS) finish();
+    }, 200);
+
+    try { startRecogniser(); } catch (e) { finish(); }
   });
+}
+
+function finishSpeakingNow() {
+  if (voiceConvo.finishNow) voiceConvo.finishNow();
 }
 
 async function runVoiceLoop() {
@@ -2301,9 +2363,21 @@ async function runVoiceLoop() {
 
 async function handleVoiceUtterance(text) {
   const pending = lastExchange && lastExchange.coachEl && lastExchange.coachEl.querySelector('.coach-actions');
-  if (pending && VOICE_REDO_RE.test(text) && lastExchange.coachEl.querySelector('[data-act="redo"]')) {
-    redoLastLine(lastExchange, '');
+  const sessionEnded = coachPhase === 'debrief' || turnCount >= maxPracticeTurns;
+  if (!VOICE_REDO_RE.test(text) && VOICE_RETRACT_TAIL_RE.test(text)) {
+    // "…, take that back" → nothing is sent (no API call); just ask them to say it again.
     speakCoach(coachT('voiceRedoPrompt'), true);
+    return;
+  }
+  if (VOICE_REDO_RE.test(text) && !sessionEnded) {
+    // Withdraw the last line at any time (not only after a coach note), so a slip can be fixed.
+    const canRedo = lastExchange && conversationHistory.length === lastExchange.start + 2 && coachRedoUsed < COACH_REDO_LIMIT;
+    if (canRedo) {
+      redoLastLine(lastExchange, '');
+      speakCoach(coachT('voiceRedoPrompt'), true);
+    } else {
+      speakCoach(coachT(coachRedoUsed >= COACH_REDO_LIMIT ? 'redoLimit' : 'voiceNothingToRedo'), true);
+    }
     return;
   }
   if (pending && VOICE_KEEP_RE.test(text)) { clearPendingInterjection(); return; }
@@ -2581,6 +2655,8 @@ function buildCoachSystemPrompt() {
   return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. Be warm, direct and specific; plain text, no markdown headings, under 120 words.
 
 ${coachNameMemoForChat(coachChatHistory.map(m => m.content))}
+
+${SPOKEN_INPUT_RULE}
 
 ${role}
 
@@ -3609,8 +3685,8 @@ async function sendMessage() {
     const clientResp = await callClaude([
       { role: 'user', content: currentScenario.systemPrompt[currentLang] + '\n\nConversation so far:\n' + conversationHistory.map(m => (m.role === 'user' ? 'Agent: ' : 'You: ') + m.content).join('\n') + '\n\nRespond as the client (2-3 sentences max, stay in character):' }
     ], currentScenario.id === 0
-      ? 'You are a realistic client. Stay in character. Be concise.\n\n' + coachNameMemoForChat(conversationHistory.filter(m => m.role === 'assistant').map(m => m.content))
-      : 'You are a realistic client. Stay in character. Be concise.',
+      ? 'You are a realistic client. Stay in character. Be concise.\n\n' + coachNameMemoForChat(conversationHistory.filter(m => m.role === 'assistant').map(m => m.content)) + '\n\n' + SPOKEN_INPUT_RULE
+      : 'You are a realistic client. Stay in character. Be concise.\n\n' + CLIENT_LISTENING_RULE,
     // Role-play runs on the cheaper client model; Free Practice (id 0) is itself
     // the AI coach persona, so it stays on the coach model.
     currentScenario.id === 0 ? 'coach' : 'client');
@@ -3650,11 +3726,13 @@ Evaluate the agent's response not as a script-following exercise, but as a test 
 
 ${COACH_STYLE_MEMO_STRICT}
 
+${SPOKEN_INPUT_RULE}
+
 ${COACH_COMPLIANCE_RULE}`;
 
   const prompt = isFinal
     ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
-    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. Set "interject" to true only for a clear, consequential mistake in the agent's last response: pitching or persuading before understanding the client's concern, arguing with the client, ignoring a direct question, pressuring, over-promising or inaccurate claims, or giving investment/securities advice. Do not interject for minor polish. When true, "coachSays" is 1-2 sentences spoken directly to the agent ("you ..."), naming what went wrong and why it matters to this client, and "betterLine" is one example sentence the agent could say instead. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
+    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. Set "interject" to true only for a clear, consequential mistake in the agent's last response: pitching or persuading before understanding the client's concern, arguing with the client, ignoring a direct question, pressuring, over-promising or inaccurate claims, or giving investment/securities advice. Do not interject for minor polish, and never for speech slips, fragments, self-corrections or transcription errors. When true, "coachSays" is 1-2 sentences spoken directly to the agent ("you ..."), naming what went wrong and why it matters to this client, and "betterLine" is one example sentence the agent could say instead. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   try {
     const result = await callClaude([{ role: 'user', content: prompt }],
