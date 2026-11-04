@@ -1430,7 +1430,7 @@ IMPORTANT RULES:
    - Judge how much effort this client deserves
    - If closing probability is low, be honest: "Based on your description, this client's closing probability is currently low. I'd suggest..."
    Keep this assessment brief (3-4 sentences), then ask if they still want to practice this client or switch to a higher-potential scenario.
-   This is Sun Tzu's principle in action: "Know which battles to fight and which to avoid." Help agents judge where to invest their energy.
+   The point is to help agents judge which clients are worth their energy and which to let go for now. Say this in plain words; do not cite Sun Tzu, Dale Carnegie or any book or "principle" (learners find that preachy), unless the agent asks, and then at most once in the conversation.
 
 Start with EXACTLY this opening message — warm, personal, encouraging:
 
@@ -1469,7 +1469,7 @@ Then play that exact client — be realistic, push back naturally. Stay in chara
    - 判斷這個客戶值得投入多少精力
    - 如果成交可能性低，坦誠告訴用戶：「根據您的描述，這位客戶目前成交可能性較低，建議您……」
    這個評估要簡短（3-4句），然後再問用戶是否仍想繼續練習這個客戶，或者換一個更值得的情境。
-   這是孫子兵法「知可以戰與不可以戰者勝」的實踐——幫助業務員判斷哪一仗該打、哪一仗不該打。
+   目的是幫助業務員判斷哪些客戶值得投入精力、哪些可以先放下。請用平實的話說明；不要引用孫子兵法、卡內基或任何書名、作者、「原則」（學員會覺得說教、生厭），除非業務員主動問起，而且整段對話最多提一次。
 
 用這個確切的開場白——溫暖、親切、充滿鼓勵：
 
@@ -1930,6 +1930,11 @@ let turnCount = 0;
 // line-by-line debrief after the session. Interjection decisions come from the
 // existing per-turn feedback call, so live mode costs no extra API calls.
 const COACH_COMPLIANCE_RULE = 'Licensing boundary (hard rule): the agent holds a general insurance or real estate license, NOT a securities license. Never coach the agent to explain, compare, or recommend specific investments (ETFs, stocks, funds, crypto, variable life or variable annuity products). If the client raises investments, coach the agent to understand the client\'s motivation and bring the conversation back to the value of protection.';
+// Coaching style memo (product owner's instruction). The coaching method draws on
+// Sun Tzu and Dale Carnegie, but learners find it preachy and formulaic when the
+// coach keeps naming them. Apply the ideas; don't cite the sources.
+const COACH_STYLE_MEMO_STRICT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas only through concrete, plain-language advice about THIS client and THIS line. Never name or quote Sun Tzu, The Art of War, Dale Carnegie, or any book, author or "principle"; learners find repeated references preachy and formulaic. Talk like an experienced colleague, not a textbook.';
+const COACH_STYLE_MEMO_CHAT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas through concrete, plain-language advice about THIS client and THIS line, like an experienced colleague, not a textbook. Do not name or quote Sun Tzu, The Art of War, Dale Carnegie or any book or author by default; learners find repeated references preachy. The only exceptions: the learner asks about them, or, very rarely, a reference adds something plain advice cannot. Even then, at most once in this whole conversation: check the conversation so far and never mention them if they already came up.';
 const COACH_STR = {
   en: {
     modeLabel: 'Coaching Style', live: 'Live coaching', debrief: 'Debrief after',
@@ -2269,7 +2274,9 @@ function buildCoachSystemPrompt() {
   const final = coachFinalData
     ? `\n\nFinal evaluation: score ${coachFinalData.overallScore}/100. ${coachFinalData.summary || ''}\nKey moments: ${JSON.stringify(coachKeyMoments)}`
     : '';
-  return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. You coach through Sun Tzu's strategic thinking (understand your counterpart before trying to move them) and Dale Carnegie's principles (genuine interest, let the client reach their own conclusion, never win an argument at the cost of the relationship). Be warm, direct and specific; plain text, no markdown headings, under 120 words.
+  return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. Be warm, direct and specific; plain text, no markdown headings, under 120 words.
+
+${COACH_STYLE_MEMO_CHAT}
 
 ${role}
 
@@ -3329,12 +3336,14 @@ async function getFeedback(history, isFinal) {
   const coachLang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
   const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}.
 
-You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.
+Evaluate the agent's response not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them: the best outcomes come from understanding, not forcing; genuine interest in the other person; letting the client arrive at their own conclusion; never winning an argument at the cost of the relationship.
+
+${COACH_STYLE_MEMO_STRICT}
 
 ${COACH_COMPLIANCE_RULE}`;
 
   const prompt = isFinal
-    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (Carnegie: see it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (Sun Tzu: win without the fight feeling like a fight).`
+    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
     : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. Set "interject" to true only for a clear, consequential mistake in the agent's last response: pitching or persuading before understanding the client's concern, arguing with the client, ignoring a direct question, pressuring, over-promising or inaccurate claims, or giving investment/securities advice. Do not interject for minor polish. When true, "coachSays" is 1-2 sentences spoken directly to the agent ("you ..."), naming what went wrong and why it matters to this client, and "betterLine" is one example sentence the agent could say instead. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   try {
