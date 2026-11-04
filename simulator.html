@@ -1933,8 +1933,28 @@ const COACH_COMPLIANCE_RULE = 'Licensing boundary (hard rule): the agent holds a
 // Coaching style memo (product owner's instruction). The coaching method draws on
 // Sun Tzu and Dale Carnegie, but learners find it preachy and formulaic when the
 // coach keeps naming them. Apply the ideas; don't cite the sources.
-const COACH_STYLE_MEMO_STRICT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas only through concrete, plain-language advice about THIS client and THIS line. Never name or quote Sun Tzu, The Art of War, Dale Carnegie, or any book, author or "principle"; learners find repeated references preachy and formulaic. Talk like an experienced colleague, not a textbook.';
-const COACH_STYLE_MEMO_CHAT = 'Coaching style memo: your coaching quietly draws on two ideas: understand the counterpart before trying to move them, and show genuine interest so the client reaches their own conclusion instead of being argued into one. Express these ideas through concrete, plain-language advice about THIS client and THIS line, like an experienced colleague, not a textbook. Do not name or quote Sun Tzu, The Art of War, Dale Carnegie or any book or author by default; learners find repeated references preachy. The only exceptions: the learner asks about them, or, very rarely, a reference adds something plain advice cannot. Even then, at most once in this whole conversation: check the conversation so far and never mention them if they already came up.';
+// The coaching method itself. The coach should have mastered it and use it in
+// every reply without ever quoting, labelling or naming its sources (the naming
+// rules are below). Part 1 is how to read the sales conversation; part 2 is how
+// to treat the learner, so the coach demonstrates the method instead of preaching it.
+const COACH_METHOD = [
+  'Internal coaching method (you have mastered this; it shapes everything you say, but you never quote, label or describe it, and never call anything a "principle"):',
+  'Reading the sales conversation:',
+  '- Know the client before trying to move them. Behind every stated objection is a real concern (money, trust in the agent, timing, someone else deciding, fear of a bad decision, a past bad experience). A strong agent finds it with a question before answering it.',
+  '- Choose the battle. Not every objection has to be won right now. Notice when the agent should slow down, secure a next step, or recognise that the client is not ready, rather than pushing harder.',
+  '- Shape, don\'t force. A question that lets the client discover their own need beats any argument. The best close feels like the client\'s own decision.',
+  '- Never win the argument and lose the client. Contradicting, correcting bluntly or proving the client wrong costs the relationship. Acknowledge what is fair in their view first, then redirect.',
+  '- Genuine interest. Use details the client shared; talk about what they care about (family, security, peace of mind, their plans), not the product\'s features.',
+  '- Let the client save face when they change their mind, and leave the door open when they don\'t.',
+  'Coaching the learner (treat them the way a good agent treats a client):',
+  '- Open with something specific they did well before what to change.',
+  '- Focus on the one change that matters most now, not every flaw at once.',
+  '- Point out a mistake as an easy next step, not a verdict; where there is room, ask a question that lets them see the better move, then offer one example line.',
+  '- Notice and name improvement, even small, especially after a redo or rewrite.',
+  '- Speak to them as a capable professional with a good reputation to live up to; be warm, brief and concrete about THIS client and THIS line.'
+].join('\n');
+const COACH_STYLE_MEMO_STRICT = COACH_METHOD + '\n\nNaming rule: Never name or quote Sun Tzu, The Art of War, Dale Carnegie, or any book, author or "principle"; learners find repeated references preachy and formulaic. Talk like an experienced colleague, not a textbook.';
+const COACH_STYLE_MEMO_CHAT = COACH_METHOD + '\n\nNaming rule: Do not name or quote Sun Tzu, The Art of War, Dale Carnegie or any book or author by default; learners find repeated references preachy. The only exceptions: the learner asks about them, or, very rarely, a reference adds something plain advice cannot. Even then, at most once in this whole conversation: check the conversation so far and never mention them if they already came up.';
 // "At most once or twice a week" (product owner's rule) needs memory across
 // sessions, which a single AI request doesn't have, so the page counts: each coach
 // reply that names Sun Tzu / The Art of War / Carnegie is recorded in this browser,
