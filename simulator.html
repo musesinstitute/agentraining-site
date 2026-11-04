@@ -485,6 +485,33 @@
       padding: 16px 20px;
     }
     .input-row { display: flex; gap: 10px; align-items: flex-end; }
+    /* Hands-free voice conversation */
+    .voice-convo-btn {
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
+      border: 1.5px solid var(--accent); background: var(--white); color: var(--accent);
+      border-radius: 10px; padding: 10px 12px; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: inherit; white-space: nowrap;
+    }
+    .voice-convo-btn.on { background: var(--accent); color: var(--white); }
+    .voice-status {
+      display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 10px; padding: 8px 12px; border-radius: 10px;
+      background: var(--accent-lt); color: var(--accent); font-size: 13px; font-weight: 600;
+    }
+    .voice-status.visible { display: flex; }
+    .voice-status .voice-status-text { flex: 1; min-width: 0; }
+    .voice-status .voice-heard { font-weight: 400; color: var(--ink-soft); font-style: italic; }
+    .voice-status button {
+      border: 1.5px solid var(--accent); background: var(--white); color: var(--accent);
+      border-radius: 8px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .voice-status.listening { background: #ECFDF5; color: var(--green); }
+    .voice-status.listening .voice-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: var(--green);
+      animation: voicePulse 1s ease-in-out infinite;
+    }
+    @keyframes voicePulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+    @media (max-width: 600px) { .voice-convo-btn .voice-convo-label { display: none; } }
     .chat-input {
       flex: 1; padding: 11px 14px; font-size: 14px;
       border: 1.5px solid var(--border); border-radius: 10px;
@@ -817,8 +844,16 @@
       .panel-right.mobile-open .coach-chat-log { max-height: none; }
       .mobile-coach-close { display: flex !important; }
       .panel-right.mobile-open .mobile-coach-close { position: sticky; top: 8px; z-index: 5; flex-shrink: 0; }
+      /* Phone: the scenario and coach buttons sit side by side in a bottom strip,
+         and the app leaves room for it, so they never cover the input or voice bar. */
+      .app { padding-bottom: 68px; box-sizing: border-box; }
+      .mobile-scenario-btn {
+        bottom: 12px !important; left: 12px !important; transform: none !important;
+        padding: 12px 16px !important; font-size: 13px !important; max-width: calc(100% - 150px);
+        overflow: hidden; text-overflow: ellipsis;
+      }
       .mobile-coach-btn.ready {
-        display: flex !important; position: fixed; right: 16px; bottom: 140px; z-index: 210;
+        display: flex !important; position: fixed; right: 12px; bottom: 12px; z-index: 210;
         background: var(--gold); color: var(--white); border: none; border-radius: 99px;
         padding: 11px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
         box-shadow: 0 4px 20px rgba(0,0,0,0.25); font-family: inherit;
@@ -1312,11 +1347,13 @@
       </div>
     </div>
     <div class="chat-input-area">
+      <div class="voice-status" id="voice-status" aria-live="polite"></div>
       <div class="input-row">
         <textarea class="chat-input" id="chat-input" rows="1"
           placeholder="Type your response to the client..." disabled
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Voice input">🎤</button>
+        <button class="voice-convo-btn" id="voice-convo-btn" onclick="toggleVoiceConvo()" aria-pressed="false">🎙️ <span class="voice-convo-label" id="voice-convo-label">Voice chat</span></button>
         <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>Send</button>
       </div>
       <p class="input-hint" id="input-hint">Press Enter to send · Shift+Enter for new line</p>
@@ -2014,6 +2051,16 @@ const COACH_STR = {
     remaining: '{n} coach messages left this session.',
     chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
     redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
+    voiceConvo: 'Voice chat', voiceConvoOn: 'End voice chat',
+    voiceIntro: 'Voice chat is on. Just talk to reply to the client. To ask me something, start with "Coach".',
+    voiceListening: 'Listening…', voiceThinking: 'Thinking…', voiceSpeaking: 'Speaking…', voiceInterrupt: '⏹ Interrupt',
+    voicePaused: 'Paused (no speech heard).', voiceResume: '▶ Continue', voiceEnd: 'End',
+    voiceHint: 'Say "Coach, …" to ask the coach · after a coach note, say "redo" or "keep going"',
+    voiceRedoPrompt: 'OK, say it again.', voiceCoachHere: 'Yes? What would you like to ask?',
+    voiceUnsupported: 'This browser does not support voice chat. Please use Chrome, Edge or Safari.',
+    voiceWeChat: 'WeChat\'s built-in browser does not support voice chat. Tap ··· → Open in Browser.',
+    voiceDenied: 'Microphone access was blocked. Please allow the microphone for this site and try again.',
+    voicePickScenario: 'Choose a scenario first, then start voice chat.',
     industryLabel: 'Industry', stageLabel: 'Stage', finalScore: 'Final Score', finalGrade: 'Final Grade',
     voiceOn: '🔊 Read aloud', voiceOff: '🔇 Read aloud', voiceTitle: 'Read the coach\'s messages aloud', replay: 'Play',
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
@@ -2042,6 +2089,16 @@ const COACH_STR = {
     remaining: '本次練習還可以問教練 {n} 次。',
     chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
     redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
+    voiceConvo: '語音對話', voiceConvoOn: '結束語音',
+    voiceIntro: '語音對話已開啟。直接說話就是回應客戶；想問我問題，就先說「教練」。',
+    voiceListening: '正在聽…', voiceThinking: '思考中…', voiceSpeaking: '說話中…', voiceInterrupt: '⏹ 打斷',
+    voicePaused: '已暫停（沒有聽到聲音）。', voiceResume: '▶ 繼續說話', voiceEnd: '結束',
+    voiceHint: '說「教練，……」可以問教練 · 教練插話後，說「重說」或「繼續」',
+    voiceRedoPrompt: '好，請再說一次。', voiceCoachHere: '我在，想問什麼？',
+    voiceUnsupported: '這個瀏覽器不支援語音對話，請使用 Chrome、Edge 或 Safari。',
+    voiceWeChat: '微信內建瀏覽器不支援語音對話。請點右上角「...」→「在瀏覽器中打開」。',
+    voiceDenied: '麥克風權限被封鎖了。請允許這個網站使用麥克風後再試一次。',
+    voicePickScenario: '請先選擇一個情境，再開始語音對話。',
     industryLabel: '行業', stageLabel: '階段', finalScore: '最終分數', finalGrade: '最終等級',
     voiceOn: '🔊 朗讀', voiceOff: '🔇 朗讀', voiceTitle: '朗讀教練的訊息', replay: '播放',
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
@@ -2078,7 +2135,198 @@ function speakCoach(text, interrupt) {
   u.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
   u.rate = 1.0;
   u.pitch = 0.85;
+  const v = pickVoice('coach');
+  if (v) u.voice = v;
   window.speechSynthesis.speak(u);   // queued after any client speech unless interrupting
+}
+
+// ── HANDS-FREE VOICE CONVERSATION ──
+// Browser speech only (no API cost). One tap starts it; after that the learner
+// just talks: each utterance is sent automatically, the reply is spoken, and
+// listening resumes. "Coach, …" goes to the coach instead of the client; after a
+// coach interjection, "redo" / "keep going" work as voice commands. The mic is off
+// while the AI speaks (otherwise it would hear itself); "Interrupt" stops speech.
+const voiceConvo = { on: false, rec: null, loop: false, paused: false, silentRounds: 0, denied: false, heard: '' };
+const COACH_WAKE_RE = /^\s*(教練|教练|老師|老师|coach)[\s,，:：、。.!！?？]*/i;
+const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|redo|try again)[\s。.!！]*$/i;
+const VOICE_KEEP_RE = /^\s*(繼續|继续|keep going|continue)[\s。.!！]*$/i;
+
+function pickVoice(role) {
+  if (!window.speechSynthesis) return null;
+  const prefix = currentLang === 'zh' ? 'zh' : 'en';
+  const voices = (window.speechSynthesis.getVoices() || []).filter(v => (v.lang || '').toLowerCase().startsWith(prefix));
+  if (!voices.length) return null;
+  // Prefer Taiwan/Mandarin voices for 中文; use a different voice for the coach when available.
+  const zhTW = prefix === 'zh' ? voices.filter(v => /tw|hant/i.test(v.lang)) : [];
+  const pool = zhTW.length ? zhTW.concat(voices.filter(v => !zhTW.includes(v))) : voices;
+  return role === 'coach' ? (pool[1] || pool[0]) : pool[0];
+}
+
+function voiceSupported() {
+  return !!((window.SpeechRecognition || window.webkitSpeechRecognition) && window.speechSynthesis);
+}
+
+function setVoiceStatus(state) {
+  const box = document.getElementById('voice-status');
+  if (!box) return;
+  box.className = 'voice-status' + (voiceConvo.on ? ' visible ' + state : '');
+  if (!voiceConvo.on) { box.innerHTML = ''; return; }
+  let html = '';
+  if (state === 'listening') {
+    html = `<span class="voice-dot"></span><span class="voice-status-text">🎙️ ${escapeHtml(coachT('voiceListening'))} <span class="voice-heard">${escapeHtml(voiceConvo.heard)}</span></span>`;
+  } else if (state === 'speaking') {
+    html = `<span class="voice-status-text">🔊 ${escapeHtml(coachT('voiceSpeaking'))}</span><button onclick="interruptVoice()">${escapeHtml(coachT('voiceInterrupt'))}</button>`;
+  } else if (state === 'paused') {
+    html = `<span class="voice-status-text">⏸ ${escapeHtml(coachT('voicePaused'))}</span><button onclick="resumeVoiceConvo()">${escapeHtml(coachT('voiceResume'))}</button>`;
+  } else {
+    html = `<span class="voice-status-text">⏳ ${escapeHtml(coachT('voiceThinking'))}</span>`;
+  }
+  html += `<button onclick="stopVoiceConvo()">${escapeHtml(coachT('voiceEnd'))}</button>`;
+  box.innerHTML = html + `<div style="flex-basis:100%;font-size:11px;font-weight:400;opacity:.8;">${escapeHtml(coachT('voiceHint'))}</div>`;
+}
+
+function updateVoiceUI() {
+  const btn = document.getElementById('voice-convo-btn');
+  const label = document.getElementById('voice-convo-label');
+  if (btn) {
+    btn.classList.toggle('on', voiceConvo.on);
+    btn.setAttribute('aria-pressed', voiceConvo.on ? 'true' : 'false');
+    btn.title = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
+  }
+  if (label) label.textContent = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
+  if (!voiceConvo.on) setVoiceStatus('');
+}
+
+function toggleVoiceConvo() {
+  if (voiceConvo.on) stopVoiceConvo(); else startVoiceConvo();
+}
+
+function startVoiceConvo() {
+  if (!currentScenario) { alert(coachT('voicePickScenario')); return; }
+  if (/MicroMessenger/i.test(navigator.userAgent)) { alert(coachT('voiceWeChat')); return; }
+  if (!voiceSupported()) { alert(coachT('voiceUnsupported')); return; }
+  Object.assign(voiceConvo, { on: true, paused: false, silentRounds: 0, denied: false, heard: '' });
+  if (typeof isRecording !== 'undefined' && isRecording && recognition) { try { recognition.stop(); } catch (e) {} }
+  updateVoiceUI();
+  speakCoach(coachT('voiceIntro'), true);   // also unlocks speech on iOS (runs inside the tap)
+  runVoiceLoop();
+}
+
+function stopVoiceConvo() {
+  voiceConvo.on = false;
+  voiceConvo.paused = false;
+  try { if (voiceConvo.rec) voiceConvo.rec.abort(); } catch (e) {}
+  voiceConvo.rec = null;
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  updateVoiceUI();
+}
+
+function interruptVoice() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function resumeVoiceConvo() {
+  voiceConvo.paused = false;
+  voiceConvo.silentRounds = 0;
+  runVoiceLoop();
+}
+
+// Wait until nothing is loading or being spoken, showing what is happening.
+function waitForVoiceTurn() {
+  return new Promise(resolve => {
+    const started = Date.now();
+    const tick = () => {
+      if (!voiceConvo.on) return resolve();
+      const speaking = window.speechSynthesis && (window.speechSynthesis.speaking || window.speechSynthesis.pending);
+      if (speaking) setVoiceStatus('speaking');
+      else if (isLoading || coachBusy) setVoiceStatus('thinking');
+      if ((speaking || isLoading || coachBusy) && Date.now() - started < 120000) setTimeout(tick, 250);
+      else setTimeout(resolve, 250);   // short gap so the mic doesn't catch the tail of the speech
+    };
+    tick();
+  });
+}
+
+function listenOnce() {
+  return new Promise(resolve => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const r = new SR();
+    r.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
+    r.continuous = false;
+    r.interimResults = true;
+    r.maxAlternatives = 1;
+    let finalText = '';
+    voiceConvo.heard = '';
+    r.onresult = (e) => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += t; else interim += t;
+      }
+      voiceConvo.heard = (finalText + interim).trim();
+      setVoiceStatus('listening');
+    };
+    r.onerror = (e) => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') voiceConvo.denied = true; };
+    r.onend = () => { voiceConvo.rec = null; resolve(finalText.trim()); };
+    voiceConvo.rec = r;
+    try { r.start(); } catch (e) { voiceConvo.rec = null; resolve(''); }
+  });
+}
+
+async function runVoiceLoop() {
+  if (voiceConvo.loop) return;
+  voiceConvo.loop = true;
+  try {
+    while (voiceConvo.on && !voiceConvo.paused) {
+      await waitForVoiceTurn();
+      if (!voiceConvo.on) break;
+      setVoiceStatus('listening');
+      const text = await listenOnce();
+      if (!voiceConvo.on) break;
+      if (voiceConvo.denied) { stopVoiceConvo(); alert(coachT('voiceDenied')); break; }
+      if (!text) {
+        // Pause after a few silent rounds instead of listening (and beeping) forever.
+        if (++voiceConvo.silentRounds >= 3) { voiceConvo.paused = true; setVoiceStatus('paused'); }
+        continue;
+      }
+      voiceConvo.silentRounds = 0;
+      voiceConvo.heard = '';
+      setVoiceStatus('thinking');
+      await handleVoiceUtterance(text);
+    }
+  } finally {
+    voiceConvo.loop = false;
+  }
+}
+
+async function handleVoiceUtterance(text) {
+  const pending = lastExchange && lastExchange.coachEl && lastExchange.coachEl.querySelector('.coach-actions');
+  if (pending && VOICE_REDO_RE.test(text) && lastExchange.coachEl.querySelector('[data-act="redo"]')) {
+    redoLastLine(lastExchange, '');
+    speakCoach(coachT('voiceRedoPrompt'), true);
+    return;
+  }
+  if (pending && VOICE_KEEP_RE.test(text)) { clearPendingInterjection(); return; }
+
+  const wake = text.match(COACH_WAKE_RE);
+  const sessionOver = coachPhase === 'debrief' || turnCount >= maxPracticeTurns;
+  if (wake || sessionOver) {
+    // To the coach. After the session ends, everything goes to the coach (debrief).
+    const question = wake ? text.slice(wake[0].length).trim() : text;
+    if (!question) { speakCoach(coachT('voiceCoachHere'), true); return; }
+    const input = document.getElementById('coach-chat-input');
+    if (!input || input.disabled) { speakCoach(coachT('chatLimit').replace('{n}', COACH_CHAT_LIMIT), true); return; }
+    showCoachChat();
+    if (isMobileLayout()) document.getElementById('mobile-coach-btn')?.classList.add('has-new');
+    input.value = question;
+    await sendCoachChat();
+    return;
+  }
+
+  const chatInput = document.getElementById('chat-input');
+  if (!chatInput || chatInput.disabled) return;
+  chatInput.value = text;
+  await sendMessage();
 }
 
 function toggleCoachVoice() {
@@ -2106,6 +2354,7 @@ function updateCoachUI() {
   set('industry-chip-label', coachT('industryLabel'));
   set('stage-chip-label', coachT('stageLabel'));
   set('mobile-coach-btn-label', coachT('mobileBtn'));
+  if (typeof updateVoiceUI === 'function') updateVoiceUI();
   const vBtn = document.getElementById('coach-voice-btn');
   if (vBtn) {
     vBtn.textContent = coachT(coachVoiceEnabled ? 'voiceOn' : 'voiceOff');
@@ -2134,6 +2383,7 @@ function resetCoach() {
   coachChatUsed = 0;
   coachRedoUsed = 0;
   setCoachChatEnabled(true);
+  if (typeof stopVoiceConvo === 'function' && voiceConvo.on) stopVoiceConvo();
   const log = document.getElementById('coach-chat-log');
   if (log) log.innerHTML = '';
   const send = document.getElementById('coach-chat-send');
@@ -2189,7 +2439,7 @@ function showCoachInterjection(data) {
   }
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
-  if (coachVoiceEnabled) speakCoach(spoken, false);
+  if (coachVoiceEnabled || voiceConvo.on) speakCoach(spoken, false);
 }
 
 // Hide the redo actions once the learner moves on (the interjection itself stays as a record).
@@ -2241,7 +2491,7 @@ function appendCoachLine(role, text, extraClass) {
     play.setAttribute('aria-label', coachT('replay'));
     play.onclick = () => speakCoach(text, true);
     div.appendChild(play);
-    if (coachVoiceEnabled) speakCoach(text, false);
+    if (coachVoiceEnabled || voiceConvo.on) speakCoach(text, false);
   }
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
@@ -3186,11 +3436,13 @@ let voiceEnabled = false;
 const synth = window.speechSynthesis;
 
 function speakText(text) {
-  if (!voiceEnabled || !synth) return;
+  const inVoiceChat = typeof voiceConvo !== 'undefined' && voiceConvo.on;
+  if ((!voiceEnabled && !inVoiceChat) || !synth) return;
   synth.cancel();
   const clean = text.replace(/💡[^\n]*/g, '').replace(/<[^>]+>/g, '').replace(/[①②③④⑤]/g, '').trim();
   const utter = new SpeechSynthesisUtterance(clean);
-  utter.lang = obLang === 'zh' ? 'zh-TW' : 'en-US';
+  utter.lang = inVoiceChat ? (currentLang === 'zh' ? 'zh-TW' : 'en-US') : (obLang === 'zh' ? 'zh-TW' : 'en-US');
+  if (inVoiceChat) { const v = pickVoice('client'); if (v) utter.voice = v; }
   utter.rate = 0.95;
   synth.speak(utter);
 }
