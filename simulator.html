@@ -768,6 +768,14 @@
       border-radius: 8px; padding: 4px 9px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
     .coach-voice-btn.on { border-color: var(--gold); background: #FFFBEB; color: #B45309; }
+    .coach-talk-btn { border-color: var(--gold); color: #B45309; }
+    .coach-talk-btn.on { background: var(--gold); color: var(--white); }
+    #coach-voice-status { margin: 0 0 8px; }
+    .voice-target { display: inline-flex; border: 1px solid currentColor; border-radius: 99px; overflow: hidden; }
+    .voice-target button { border: none !important; border-radius: 0 !important; background: transparent !important; color: inherit !important; padding: 3px 9px !important; font-weight: 600 !important; }
+    .voice-target button.active { background: currentColor !important; }
+    .voice-target button.active span { color: var(--white); }
+    .voice-wait { font-size: 11px; border: 1px solid currentColor; border-radius: 6px; background: transparent; color: inherit; padding: 1px 4px; font-family: inherit; }
     .coach-mic-btn {
       flex-shrink: 0; width: 38px; border: 1.5px solid var(--border); background: var(--white);
       border-radius: 8px; font-size: 16px; cursor: pointer;
@@ -1389,8 +1397,12 @@
     <div class="coach-chat" id="coach-chat">
       <div class="coach-chat-head">
         <div class="coach-chat-title" id="coach-chat-title">🧑‍🏫 Talk to your coach</div>
-        <button class="coach-voice-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" aria-pressed="false">🔇</button>
+        <span style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="coach-voice-btn coach-talk-btn" id="coach-talk-btn" onclick="talkToCoach()">🎙️</button>
+          <button class="coach-voice-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" aria-pressed="false">🔇</button>
+        </span>
       </div>
+      <div class="voice-status" id="coach-voice-status" aria-live="polite"></div>
       <div class="coach-chat-log" id="coach-chat-log" aria-live="polite"></div>
       <div class="coach-chat-row">
         <textarea class="coach-chat-input" id="coach-chat-input" rows="1"
@@ -2057,10 +2069,15 @@ const COACH_STR = {
     chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
     redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
     voiceConvo: 'Voice chat', voiceConvoOn: 'End voice chat',
-    voiceIntro: 'Voice chat is on. Just talk to reply to the client. To ask me something, start with "Coach".',
+    voiceIntro: 'Voice chat is on. You are talking to the client now. Take your time. When you want to talk with me, just say "Coach".',
+    voiceIntroCoach: 'I\'m here. Talk to me about anything, at your own pace. Say "back to the client" when you want to continue the practice.',
+    voiceBackToClient: 'OK, back to your client. Go ahead.',
+    voiceTargetClient: 'Client', voiceTargetCoach: 'Coach', voiceTalkToCoach: '🎙️ Talk to coach',
+    voiceWaitLabel: 'Send after', voiceWaitShort: '2.5s quiet', voiceWaitMedium: '4s quiet', voiceWaitLong: '6s quiet', voiceWaitManual: 'only when I tap Done',
+    voiceSendingIn: 'sending in {n}s…', voiceTapDone: 'tap Done when finished',
     voiceListening: 'Listening…', voiceThinking: 'Thinking…', voiceSpeaking: 'Speaking…', voiceInterrupt: '⏹ Interrupt',
     voicePaused: 'Paused (no speech heard).', voiceResume: '▶ Continue', voiceEnd: 'End',
-    voiceHint: 'Take your time; a pause is fine. Say "Coach, …" to ask the coach · say "take that back" to redo your last line',
+    voiceHint: 'Say "Coach" to talk with your coach · "back to the client" to return · "take that back" to redo your last line',
     voiceDone: '✅ Done', voiceNothingToRedo: 'There is no line to take back right now.',
     voiceRedoPrompt: 'OK, say it again.', voiceCoachHere: 'Yes? What would you like to ask?',
     voiceUnsupported: 'This browser does not support voice chat. Please use Chrome, Edge or Safari.',
@@ -2096,10 +2113,15 @@ const COACH_STR = {
     chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
     redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
     voiceConvo: '語音對話', voiceConvoOn: '結束語音',
-    voiceIntro: '語音對話已開啟。直接說話就是回應客戶；想問我問題，就先說「教練」。',
+    voiceIntro: '語音對話已開啟，你現在是在跟客戶說話，慢慢說沒關係。想跟我聊的時候，說「教練」就可以。',
+    voiceIntroCoach: '我在。想聊什麼都可以，慢慢說。想回到練習時，說「回到客戶」就好。',
+    voiceBackToClient: '好，回到你的客戶，請繼續。',
+    voiceTargetClient: '客戶', voiceTargetCoach: '教練', voiceTalkToCoach: '🎙️ 跟教練說話',
+    voiceWaitLabel: '送出時機', voiceWaitShort: '安靜 2.5 秒', voiceWaitMedium: '安靜 4 秒', voiceWaitLong: '安靜 6 秒', voiceWaitManual: '按「說完了」才送',
+    voiceSendingIn: '{n} 秒後送出…', voiceTapDone: '說完請按「說完了」',
     voiceListening: '正在聽…', voiceThinking: '思考中…', voiceSpeaking: '說話中…', voiceInterrupt: '⏹ 打斷',
     voicePaused: '已暫停（沒有聽到聲音）。', voiceResume: '▶ 繼續說話', voiceEnd: '結束',
-    voiceHint: '慢慢說，中間停頓沒關係。說「教練，……」可以問教練 · 說「撤回」可以收回剛才那句重講',
+    voiceHint: '說「教練」就能跟教練聊 · 說「回到客戶」回到練習 · 說「撤回」收回剛才那句',
     voiceDone: '✅ 說完了', voiceNothingToRedo: '現在沒有可以撤回的句子。',
     voiceRedoPrompt: '好，請再說一次。', voiceCoachHere: '我在，想問什麼？',
     voiceUnsupported: '這個瀏覽器不支援語音對話，請使用 Chrome、Edge 或 Safari。',
@@ -2122,7 +2144,7 @@ let lastExchange = null;          // { start, agentEl, clientEl, coachEl } for t
 
 // Cost guardrails. Every coach-chat message and every redo is an extra paid API
 // call, so both are capped per practice session. Raise these only deliberately.
-const COACH_CHAT_LIMIT = 10;      // learner messages to the coach per session (practice + debrief)
+const COACH_CHAT_LIMIT = 30;      // learner messages to the coach per session (practice + debrief); ~US$0.005 each
 const COACH_REDO_LIMIT = 5;       // "Redo my line" / voice "take that back" per session (each = 2 more calls)
 let coachChatUsed = 0;
 let coachRedoUsed = 0;
@@ -2153,12 +2175,13 @@ function speakCoach(text, interrupt) {
 // listening resumes. "Coach, …" goes to the coach instead of the client; after a
 // coach interjection, "redo" / "keep going" work as voice commands. The mic is off
 // while the AI speaks (otherwise it would hear itself); "Interrupt" stops speech.
-const voiceConvo = { on: false, rec: null, loop: false, paused: false, silentRounds: 0, denied: false, heard: '' };
+const voiceConvo = { on: false, rec: null, loop: false, paused: false, silentRounds: 0, denied: false, heard: '', target: 'client' };
 const COACH_WAKE_RE = /^\s*(教練|教练|老師|老师|coach)[\s,，:：、。.!！?？]*/i;
 const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|再说一次|撤回|收回|說錯了|说错了|redo|try again|take that back|scratch that)[\s。.!！,，]*$/i;
 // Same words at the END of a longer utterance ("…500 a month, no wait, take that back"):
 // the learner is retracting what they just said, so it is dropped before sending.
 const VOICE_RETRACT_TAIL_RE = /(撤回|收回|重說|重说|重來|重来|再說一次|再说一次|take that back|scratch that)[\s。.!！,，]*$/i;
+const VOICE_BACK_TO_CLIENT_RE = /^\s*(回到客戶|回到客户|回到練習|回到练习|繼續練習|继续练习|back to the client|back to (the )?practice)[\s。.!！]*$/i;
 const VOICE_KEEP_RE = /^\s*(繼續|继续|keep going|continue)[\s。.!！]*$/i;
 
 function pickVoice(role) {
@@ -2176,24 +2199,77 @@ function voiceSupported() {
   return !!((window.SpeechRecognition || window.webkitSpeechRecognition) && window.speechSynthesis);
 }
 
+function voiceStatusBox() {
+  return document.getElementById(voiceConvo.target === 'coach' ? 'coach-voice-status' : 'voice-status');
+}
+
 function setVoiceStatus(state) {
-  const box = document.getElementById('voice-status');
+  // Show the status where the conversation is: center for the client, right panel for the coach.
+  ['voice-status', 'coach-voice-status'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el !== voiceStatusBox()) { el.className = 'voice-status'; el.innerHTML = ''; el.dataset.key = ''; }
+  });
+  const box = voiceStatusBox();
   if (!box) return;
-  box.className = 'voice-status' + (voiceConvo.on ? ' visible ' + state : '');
-  if (!voiceConvo.on) { box.innerHTML = ''; return; }
-  let html = '';
-  if (state === 'listening') {
-    html = `<span class="voice-dot"></span><span class="voice-status-text">🎙️ ${escapeHtml(coachT('voiceListening'))} <span class="voice-heard">${escapeHtml(voiceConvo.heard)}</span></span>` +
-      (voiceConvo.heard ? `<button onclick="finishSpeakingNow()">${escapeHtml(coachT('voiceDone'))}</button>` : '');
-  } else if (state === 'speaking') {
-    html = `<span class="voice-status-text">🔊 ${escapeHtml(coachT('voiceSpeaking'))}</span><button onclick="interruptVoice()">${escapeHtml(coachT('voiceInterrupt'))}</button>`;
-  } else if (state === 'paused') {
-    html = `<span class="voice-status-text">⏸ ${escapeHtml(coachT('voicePaused'))}</span><button onclick="resumeVoiceConvo()">${escapeHtml(coachT('voiceResume'))}</button>`;
-  } else {
-    html = `<span class="voice-status-text">⏳ ${escapeHtml(coachT('voiceThinking'))}</span>`;
+  if (!voiceConvo.on) { box.className = 'voice-status'; box.innerHTML = ''; box.dataset.key = ''; return; }
+  box.className = 'voice-status visible ' + state;
+  const key = state + '|' + voiceConvo.target + '|' + currentLang + '|' + voiceWait;
+  if (box.dataset.key !== key) {
+    box.dataset.key = key;
+    let main = '';
+    if (state === 'listening') {
+      main = `<span class="voice-dot"></span><span class="voice-status-text">🎙️ ${escapeHtml(coachT('voiceListening'))} <span class="voice-heard" data-role="heard"></span> <span class="voice-heard" data-role="countdown"></span></span><button data-role="done" onclick="finishSpeakingNow()" style="display:none">${escapeHtml(coachT('voiceDone'))}</button>`;
+    } else if (state === 'speaking') {
+      main = `<span class="voice-status-text">🔊 ${escapeHtml(coachT('voiceSpeaking'))}</span><button onclick="interruptVoice()">${escapeHtml(coachT('voiceInterrupt'))}</button>`;
+    } else if (state === 'paused') {
+      main = `<span class="voice-status-text">⏸ ${escapeHtml(coachT('voicePaused'))}</span><button onclick="resumeVoiceConvo()">${escapeHtml(coachT('voiceResume'))}</button>`;
+    } else {
+      main = `<span class="voice-status-text">⏳ ${escapeHtml(coachT('voiceThinking'))}</span>`;
+    }
+    const t = voiceConvo.target;
+    const target = `<span class="voice-target"><button class="${t === 'client' ? 'active' : ''}" onclick="setVoiceTarget('client', true)"><span>👤 ${escapeHtml(coachT('voiceTargetClient'))}</span></button><button class="${t === 'coach' ? 'active' : ''}" onclick="setVoiceTarget('coach', true)"><span>🧑‍🏫 ${escapeHtml(coachT('voiceTargetCoach'))}</span></button></span>`;
+    const opts = ['short', 'medium', 'long', 'manual'].map(w => `<option value="${w}"${w === voiceWait ? ' selected' : ''}>${escapeHtml(coachT('voiceWait' + w[0].toUpperCase() + w.slice(1)))}</option>`).join('');
+    box.innerHTML = target + main + `<button onclick="stopVoiceConvo()">${escapeHtml(coachT('voiceEnd'))}</button>` +
+      `<div style="flex-basis:100%;font-size:11px;font-weight:400;opacity:.85;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">` +
+      `<label>${escapeHtml(coachT('voiceWaitLabel'))}: <select class="voice-wait" onchange="setVoiceWait(this.value)">${opts}</select></label>` +
+      `<span>${escapeHtml(coachT('voiceHint'))}</span></div>`;
   }
-  html += `<button onclick="stopVoiceConvo()">${escapeHtml(coachT('voiceEnd'))}</button>`;
-  box.innerHTML = html + `<div style="flex-basis:100%;font-size:11px;font-weight:400;opacity:.8;">${escapeHtml(coachT('voiceHint'))}</div>`;
+  const heard = box.querySelector('[data-role="heard"]');
+  if (heard) heard.textContent = voiceConvo.heard;
+  const done = box.querySelector('[data-role="done"]');
+  if (done) done.style.display = voiceConvo.heard ? '' : 'none';
+}
+
+function updateVoiceCountdown(note) {
+  const el = voiceStatusBox()?.querySelector('[data-role="countdown"]');
+  if (el) el.textContent = note ? '· ' + note : '';
+}
+
+// Who the learner is talking to in voice chat.
+function setVoiceTarget(target, announce) {
+  const t = target === 'coach' ? 'coach' : 'client';
+  if (voiceConvo.target === t) return;
+  voiceConvo.target = t;
+  document.getElementById('coach-talk-btn')?.classList.toggle('on', voiceConvo.on && t === 'coach');
+  if (t === 'coach') openCoachPanel();
+  else if (isMobileLayout()) closeCoachPanel();
+  if (announce) coachSay(coachT(t === 'coach' ? 'voiceIntroCoach' : 'voiceBackToClient'));
+  setVoiceStatus('listening');
+}
+
+// A short coach line in the coach panel (right side), spoken in voice chat.
+function coachSay(text) {
+  showCoachChat();
+  appendCoachLine('assistant', text);
+  if (isMobileLayout() && !document.getElementById('panel-right')?.classList.contains('mobile-open')) {
+    document.getElementById('mobile-coach-btn')?.classList.add('has-new');
+  }
+}
+
+// "🎙️ Talk to coach" in the coach panel: start voice chat with the coach, or switch to it.
+function talkToCoach() {
+  if (voiceConvo.on) { setVoiceTarget(voiceConvo.target === 'coach' ? 'client' : 'coach', true); return; }
+  startVoiceConvo('coach');
 }
 
 function updateVoiceUI() {
@@ -2205,6 +2281,11 @@ function updateVoiceUI() {
     btn.title = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
   }
   if (label) label.textContent = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
+  const talk = document.getElementById('coach-talk-btn');
+  if (talk) {
+    talk.textContent = coachT('voiceTalkToCoach');
+    talk.classList.toggle('on', voiceConvo.on && voiceConvo.target === 'coach');
+  }
   if (!voiceConvo.on) setVoiceStatus('');
 }
 
@@ -2212,14 +2293,17 @@ function toggleVoiceConvo() {
   if (voiceConvo.on) stopVoiceConvo(); else startVoiceConvo();
 }
 
-function startVoiceConvo() {
+function startVoiceConvo(target) {
   if (!currentScenario) { alert(coachT('voicePickScenario')); return; }
   if (/MicroMessenger/i.test(navigator.userAgent)) { alert(coachT('voiceWeChat')); return; }
   if (!voiceSupported()) { alert(coachT('voiceUnsupported')); return; }
-  Object.assign(voiceConvo, { on: true, paused: false, silentRounds: 0, denied: false, heard: '' });
+  const t = target === 'coach' ? 'coach' : 'client';
+  Object.assign(voiceConvo, { on: true, paused: false, silentRounds: 0, denied: false, heard: '', target: t });
   if (typeof isRecording !== 'undefined' && isRecording && recognition) { try { recognition.stop(); } catch (e) {} }
   updateVoiceUI();
-  speakCoach(coachT('voiceIntro'), true);   // also unlocks speech on iOS (runs inside the tap)
+  if (t === 'coach') openCoachPanel();
+  // The intro is a coach line in the coach panel (right), spoken; speaking inside the tap also unlocks iOS audio.
+  coachSay(coachT(t === 'coach' ? 'voiceIntroCoach' : 'voiceIntro'));
   runVoiceLoop();
 }
 
@@ -2263,8 +2347,15 @@ function waitForVoiceTurn() {
 // cut learners off mid-sentence. We keep listening (restarting the recogniser if
 // the browser stops it) and only end the turn after VOICE_SILENCE_MS of quiet once
 // the learner has started talking, or when they tap "Done".
-const VOICE_SILENCE_MS = 2500;
-const VOICE_START_TIMEOUT_MS = 9000;
+const VOICE_WAIT_OPTIONS = { short: 2500, medium: 4000, long: 6000, manual: 0 };   // 0 = only the Done button
+let voiceWait = 'medium';
+try { const w = localStorage.getItem('agentraining_voice_wait'); if (w && w in VOICE_WAIT_OPTIONS) voiceWait = w; } catch (e) {}
+function setVoiceWait(w) {
+  if (!(w in VOICE_WAIT_OPTIONS)) return;
+  voiceWait = w;
+  try { localStorage.setItem('agentraining_voice_wait', w); } catch (e) {}
+}
+const VOICE_START_TIMEOUT_MS = 12000;
 const VOICE_MAX_MS = 120000;
 
 function listenOnce() {
@@ -2322,9 +2413,16 @@ function listenOnce() {
     timer = setInterval(() => {
       if (!voiceConvo.on) return finish();
       const now = Date.now();
-      if (lastHeardAt && now - lastHeardAt > VOICE_SILENCE_MS) finish();
-      else if (!lastHeardAt && now - startedAt > VOICE_START_TIMEOUT_MS) finish();
-      else if (now - startedAt > VOICE_MAX_MS) finish();
+      const wait = VOICE_WAIT_OPTIONS[voiceWait];
+      const quiet = lastHeardAt ? now - lastHeardAt : 0;
+      if (wait && lastHeardAt && quiet > wait) return finish();
+      if (!lastHeardAt && now - startedAt > VOICE_START_TIMEOUT_MS) return finish();
+      if (now - startedAt > VOICE_MAX_MS) return finish();
+      // Let the learner see that a pause is fine and when the line will be sent.
+      let note = '';
+      if (lastHeardAt && !wait) note = coachT('voiceTapDone');
+      else if (lastHeardAt && quiet > 800) note = coachT('voiceSendingIn').replace('{n}', Math.ceil((wait - quiet) / 1000));
+      updateVoiceCountdown(note);
     }, 200);
 
     try { startRecogniser(); } catch (e) { finish(); }
@@ -2362,38 +2460,40 @@ async function runVoiceLoop() {
 }
 
 async function handleVoiceUtterance(text) {
-  const pending = lastExchange && lastExchange.coachEl && lastExchange.coachEl.querySelector('.coach-actions');
   const sessionEnded = coachPhase === 'debrief' || turnCount >= maxPracticeTurns;
-  if (!VOICE_REDO_RE.test(text) && VOICE_RETRACT_TAIL_RE.test(text)) {
-    // "…, take that back" → nothing is sent (no API call); just ask them to say it again.
-    speakCoach(coachT('voiceRedoPrompt'), true);
+
+  // ── Talking with the coach (free conversation, no wake word needed) ──
+  if (voiceConvo.target === 'coach' || sessionEnded) {
+    if (VOICE_BACK_TO_CLIENT_RE.test(text) && !sessionEnded) { setVoiceTarget('client', true); return; }
+    const wake = text.match(COACH_WAKE_RE);
+    const message = wake ? text.slice(wake[0].length).trim() : text;
+    if (!message) { coachSay(coachT('voiceCoachHere')); return; }
+    await sendVoiceToCoach(message);
     return;
   }
-  if (VOICE_REDO_RE.test(text) && !sessionEnded) {
+
+  // ── Talking with the client ──
+  const pending = lastExchange && lastExchange.coachEl && lastExchange.coachEl.querySelector('.coach-actions');
+  if (!VOICE_REDO_RE.test(text) && VOICE_RETRACT_TAIL_RE.test(text)) {
+    // "…, take that back" → nothing is sent (no API call); just ask them to say it again.
+    coachSay(coachT('voiceRedoPrompt'));
+    return;
+  }
+  if (VOICE_REDO_RE.test(text)) {
     // Withdraw the last line at any time (not only after a coach note), so a slip can be fixed.
     const canRedo = lastExchange && conversationHistory.length === lastExchange.start + 2 && coachRedoUsed < COACH_REDO_LIMIT;
-    if (canRedo) {
-      redoLastLine(lastExchange, '');
-      speakCoach(coachT('voiceRedoPrompt'), true);
-    } else {
-      speakCoach(coachT(coachRedoUsed >= COACH_REDO_LIMIT ? 'redoLimit' : 'voiceNothingToRedo'), true);
-    }
+    if (canRedo) { redoLastLine(lastExchange, ''); coachSay(coachT('voiceRedoPrompt')); }
+    else coachSay(coachT(coachRedoUsed >= COACH_REDO_LIMIT ? 'redoLimit' : 'voiceNothingToRedo'));
     return;
   }
   if (pending && VOICE_KEEP_RE.test(text)) { clearPendingInterjection(); return; }
 
   const wake = text.match(COACH_WAKE_RE);
-  const sessionOver = coachPhase === 'debrief' || turnCount >= maxPracticeTurns;
-  if (wake || sessionOver) {
-    // To the coach. After the session ends, everything goes to the coach (debrief).
-    const question = wake ? text.slice(wake[0].length).trim() : text;
-    if (!question) { speakCoach(coachT('voiceCoachHere'), true); return; }
-    const input = document.getElementById('coach-chat-input');
-    if (!input || input.disabled) { speakCoach(coachT('chatLimit').replace('{n}', COACH_CHAT_LIMIT), true); return; }
-    showCoachChat();
-    if (isMobileLayout()) document.getElementById('mobile-coach-btn')?.classList.add('has-new');
-    input.value = question;
-    await sendCoachChat();
+  if (wake) {
+    const question = text.slice(wake[0].length).trim();
+    // "Coach" on its own switches to a conversation with the coach; "Coach, <question>" asks once.
+    if (!question) { setVoiceTarget('coach', true); return; }
+    await sendVoiceToCoach(question);
     return;
   }
 
@@ -2401,6 +2501,17 @@ async function handleVoiceUtterance(text) {
   if (!chatInput || chatInput.disabled) return;
   chatInput.value = text;
   await sendMessage();
+}
+
+async function sendVoiceToCoach(message) {
+  const input = document.getElementById('coach-chat-input');
+  if (!input || input.disabled) { coachSay(coachT('chatLimit').replace('{n}', COACH_CHAT_LIMIT)); return; }
+  showCoachChat();
+  if (isMobileLayout() && !document.getElementById('panel-right')?.classList.contains('mobile-open')) {
+    document.getElementById('mobile-coach-btn')?.classList.add('has-new');
+  }
+  input.value = message;
+  await sendCoachChat();
 }
 
 function toggleCoachVoice() {
@@ -2647,12 +2758,12 @@ function buildCoachSystemPrompt() {
     .map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n').slice(-6000);
   const scenarioName = currentScenario ? (currentScenario.name?.[currentLang] || currentScenario.name?.en || '') : '';
   const role = coachPhase === 'debrief'
-    ? `The role-play has ended. You are running a post-session debrief. When the learner submits a rewritten line, say in one sentence what improved, in one sentence what is still missing (if anything), then give one model line they could use, and invite them to try again or move to the next moment. If they ask a question, answer it concretely using moments from the transcript.`
-    : `The role-play is paused: the learner stepped aside to ask you something mid-conversation. The client cannot hear this. Answer in 2-4 sentences: name what the client is really worried about, give a direction, and offer one example phrasing — but encourage the learner to say it in their own words. Do not play the client.`;
+    ? `The role-play has ended. You are running a post-session debrief. When the learner submits a rewritten line, say in one sentence what improved, in one sentence what is still missing (if anything), then give one model line they could use, and invite them to try again or move to the next moment. If they ask a question or want to talk about something else, follow their lead naturally and use moments from the transcript where it helps.`
+    : `The learner is talking with you directly, as with a trusted mentor, by voice or text; the client cannot hear this. Have a natural, free-flowing conversation and follow their lead: this client and role-play, how to handle an objection, their sales career, confidence, motivation, how to practise, anything they raise. If they ask about the current client, use the transcript. If their point is unclear, ask one short question instead of guessing. Do not play the client unless they explicitly ask you to demonstrate a line.`;
   const final = coachFinalData
     ? `\n\nFinal evaluation: score ${coachFinalData.overallScore}/100. ${coachFinalData.summary || ''}\nKey moments: ${JSON.stringify(coachKeyMoments)}`
     : '';
-  return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. Be warm, direct and specific; plain text, no markdown headings, under 120 words.
+  return `You are the learner's personal AI sales coach. Respond ONLY in ${lang}. Talk the way people talk in a real conversation: warm, direct and specific, plain text, no headings or bullet lists, usually 2-5 sentences (short enough to be read aloud), and often end with a question or a next step that keeps the conversation going.
 
 ${coachNameMemoForChat(coachChatHistory.map(m => m.content))}
 
@@ -2671,15 +2782,15 @@ ${transcript || '(no messages yet)'}${final}`;
 // coach's own prompts (opener, "practice this line") into the following turn.
 function buildCoachMessages() {
   const out = [];
-  coachChatHistory.slice(-10).forEach(m => {
+  coachChatHistory.slice(-16).forEach(m => {
     if (!out.length && m.role === 'assistant') return;
     const last = out[out.length - 1];
     if (last && last.role === m.role) last.content += '\n\n' + m.content;
     else out.push({ role: m.role, content: m.content });
   });
   // Coach lines that preceded the first learner message carry context (e.g. which line to rework).
-  const firstUser = coachChatHistory.slice(-10).findIndex(m => m.role === 'user');
-  const lead = coachChatHistory.slice(-10).slice(0, Math.max(0, firstUser)).map(m => m.content).join('\n\n');
+  const firstUser = coachChatHistory.slice(-16).findIndex(m => m.role === 'user');
+  const lead = coachChatHistory.slice(-16).slice(0, Math.max(0, firstUser)).map(m => m.content).join('\n\n');
   if (lead && out.length) out[0].content = `(Coach said earlier: ${lead})\n\n` + out[0].content;
   return out;
 }
