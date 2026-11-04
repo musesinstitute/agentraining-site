@@ -740,6 +740,11 @@
       background: #FFFBEB; border: 1px solid #FCD34D; border-left: 4px solid var(--gold);
       border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.6; color: var(--ink);
     }
+    .coach-note .coach-bubble { max-width: 100%; }
+    .coach-note-pointer {
+      margin: 0 auto; border: 1px dashed #FCD34D; background: #FFFBEB; color: #B45309;
+      border-radius: 99px; padding: 5px 12px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
     .coach-bubble-title { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #B45309; margin-bottom: 4px; }
     .coach-better { margin-top: 8px; padding: 8px 10px; background: var(--white); border-radius: 8px; border: 1px dashed #FCD34D; }
     .coach-better-label { font-size: 11px; font-weight: 700; color: #B45309; margin-bottom: 2px; }
@@ -2084,6 +2089,7 @@ const COACH_STR = {
     voiceWeChat: 'WeChat\'s built-in browser does not support voice chat. Tap ··· → Open in Browser.',
     voiceDenied: 'Microphone access was blocked. Please allow the microphone for this site and try again.',
     voicePickScenario: 'Choose a scenario first, then start voice chat.',
+    noteWaiting: '🧑‍🏫 Your coach has a note — tap to view',
     industryLabel: 'Industry', stageLabel: 'Stage', finalScore: 'Final Score', finalGrade: 'Final Grade',
     voiceOn: '🔊 Read aloud', voiceOff: '🔇 Read aloud', voiceTitle: 'Read the coach\'s messages aloud', replay: 'Play',
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
@@ -2128,6 +2134,7 @@ const COACH_STR = {
     voiceWeChat: '微信內建瀏覽器不支援語音對話。請點右上角「...」→「在瀏覽器中打開」。',
     voiceDenied: '麥克風權限被封鎖了。請允許這個網站使用麥克風後再試一次。',
     voicePickScenario: '請先選擇一個情境，再開始語音對話。',
+    noteWaiting: '🧑‍🏫 教練有建議，點這裡查看',
     industryLabel: '行業', stageLabel: '階段', finalScore: '最終分數', finalGrade: '最終等級',
     voiceOn: '🔊 朗讀', voiceOff: '🔇 朗讀', voiceTitle: '朗讀教練的訊息', replay: '播放',
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
@@ -2586,11 +2593,14 @@ function showCoachChat() {
 }
 
 // ── Live interjection (in the center chat) ──
+// The coach's notes live in the coach panel (right), never in the client conversation,
+// so the learner always knows who is talking.
 function showCoachInterjection(data) {
   if (!lastExchange || !lastExchange.clientEl) return;
-  const msgs = document.getElementById('chat-messages');
+  showCoachChat();
+  const msgs = document.getElementById('coach-chat-log');
   const div = document.createElement('div');
-  div.className = 'msg coach-msg';
+  div.className = 'coach-note';
   div.innerHTML = `
     <div class="coach-bubble" role="note">
       <div class="coach-bubble-title">${escapeHtml(coachT('interjectTitle'))}</div>
@@ -2624,6 +2634,20 @@ function showCoachInterjection(data) {
   }
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
+  if (isMobileLayout()) {
+    // On phones the coach panel is closed: flag it, and leave a one-line pointer in the chat.
+    if (!document.getElementById('panel-right')?.classList.contains('mobile-open')) {
+      document.getElementById('mobile-coach-btn')?.classList.add('has-new');
+      const hint = document.createElement('div');
+      hint.className = 'msg';
+      hint.innerHTML = `<button class="coach-note-pointer" type="button">${escapeHtml(coachT('noteWaiting'))}</button>`;
+      hint.querySelector('button').onclick = () => openCoachPanel();
+      document.getElementById('chat-messages').appendChild(hint);
+      exchange.pointerEl = hint;
+    }
+  } else {
+    document.getElementById('coach-chat')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
   if (coachVoiceEnabled || voiceConvo.on) speakCoach(spoken, false);
 }
 
@@ -2644,6 +2668,7 @@ function redoLastLine(exchange, prefill) {
   turnCount = Math.max(0, turnCount - 1);
   exchange.agentEl?.remove();
   exchange.clientEl?.remove();
+  exchange.pointerEl?.remove();
   if (exchange.coachEl) {
     exchange.coachEl.querySelector('.coach-actions')?.remove();
     const note = document.createElement('div');
