@@ -528,6 +528,15 @@
       font-size: 13px; font-weight: 600; color: var(--ink);
       overflow-wrap: break-word;
     }
+    /* Industry + stage as two small chips on one line (was two full cards). */
+    .coach-context-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 16px 0; }
+    .coach-chip {
+      display: inline-flex; align-items: baseline; gap: 5px; max-width: 100%;
+      padding: 3px 9px; border: 1px solid var(--border); border-radius: 99px;
+      background: var(--canvas); font-size: 12px; font-weight: 600; color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    .coach-chip-label { font-size: 10px; font-weight: 700; color: var(--ink-muted); letter-spacing: .4px; }
     /* TEAM LEADER MODE */
     .team-leader-badge {
       display: none; position: fixed; top: 70px; left: 50%;
@@ -1318,13 +1327,9 @@
   <div class="panel-right" id="panel-right">
     <button class="mobile-close-btn mobile-coach-close" onclick="closeCoachPanel()" id="mobile-coach-close">✕ Back to the conversation</button>
     <div class="panel-header" id="feedback-label">AI Coach Feedback</div>
-    <div class="coach-stage-card">
-      <div class="coach-stage-label">Current Industry</div>
-      <div id="current-industry-text" class="coach-stage-value">All Industries</div>
-    </div>
-    <div class="coach-stage-card">
-      <div class="coach-stage-label">Current Stage</div>
-      <div id="current-stage-text" class="coach-stage-value">General Practice</div>
+    <div class="coach-context-row">
+      <span class="coach-chip"><span class="coach-chip-label" id="industry-chip-label">Industry</span><span id="current-industry-text">All Industries</span></span>
+      <span class="coach-chip"><span class="coach-chip-label" id="stage-chip-label">Stage</span><span id="current-stage-text">General Practice</span></span>
     </div>
     <div class="coach-stage-card" id="learning-goal-card" style="display:none;">
       <div class="coach-stage-label" id="learning-goal-label">Learning Goal</div>
@@ -1950,6 +1955,7 @@ const COACH_STR = {
     remaining: '{n} coach messages left this session.',
     chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
     redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
+    industryLabel: 'Industry', stageLabel: 'Stage', finalScore: 'Final Score', finalGrade: 'Final Grade',
     voiceOn: '🔊 Read aloud', voiceOff: '🔇 Read aloud', voiceTitle: 'Read the coach\'s messages aloud', replay: 'Play',
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
   },
@@ -1977,6 +1983,7 @@ const COACH_STR = {
     remaining: '本次練習還可以問教練 {n} 次。',
     chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
     redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
+    industryLabel: '行業', stageLabel: '階段', finalScore: '最終分數', finalGrade: '最終等級',
     voiceOn: '🔊 朗讀', voiceOff: '🔇 朗讀', voiceTitle: '朗讀教練的訊息', replay: '播放',
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
   }
@@ -2037,6 +2044,8 @@ function setCoachMode(mode) {
 function updateCoachUI() {
   const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   set('coach-mode-label', coachT('modeLabel'));
+  set('industry-chip-label', coachT('industryLabel'));
+  set('stage-chip-label', coachT('stageLabel'));
   set('mobile-coach-btn-label', coachT('mobileBtn'));
   const vBtn = document.getElementById('coach-voice-btn');
   if (vBtn) {
@@ -4199,8 +4208,8 @@ function renderFeedback(data, isFinal) {
   document.getElementById('feedback-body').innerHTML = `
     <div class="score-card">
       <div class="score-num" style="color:${scoreColor}">${score}</div>
-      <div class="score-label">${isFinal ? 'Final Score' : s.scoreLabel} ${s.outOf}</div>
-      <span class="score-grade ${grade.css}">${isFinal ? 'Final Grade ' : ''}${grade.label}</span>
+      <div class="score-label">${isFinal ? coachT('finalScore') : s.scoreLabel} ${s.outOf}</div>
+      <span class="score-grade ${grade.css}">${isFinal ? coachT('finalGrade') + ' ' : ''}${grade.label}</span>
     </div>
     <div class="score-bars">
       ${bars.map(b => `
