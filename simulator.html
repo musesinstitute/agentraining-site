@@ -2426,7 +2426,14 @@ function stopVoiceConvo() {
 }
 
 function interruptVoice() {
+  // An explicit interruption must not leave the conversation stuck waiting
+  // for a speechSynthesis end event that some mobile browsers never dispatch.
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (voiceConvo.on && !voiceConvo.paused) {
+    setVoiceStatus('listening');
+    // The current loop's waitForVoiceTurn observes that synthesis stopped
+    // and proceeds to listen without starting a competing recognizer.
+  }
 }
 
 function resumeVoiceConvo() {
