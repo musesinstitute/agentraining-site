@@ -2100,6 +2100,11 @@ const COACH_STR = {
     voiceDenied: 'Microphone access was blocked. Please allow the microphone for this site and try again.',
     voicePickScenario: 'Choose a scenario first, then start voice chat.',
     noteWaiting: '🧑‍🏫 Your coach has a note — tap to view',
+    finalEvalFailed: '⚠️ The final evaluation could not be completed. Your conversation is saved; tap Retry to evaluate it again.',
+    finalEvalRateLimited: '⚠️ Too many requests right now, so the final evaluation was not completed. Your conversation is saved. Wait about a minute, then tap Retry.',
+    retryFinal: '↻ Retry final evaluation', finalEvalChatNote: '⚠️ Final evaluation didn\'t finish — tap to retry', finalEvalRetrying: 'Evaluating your conversation…',
+    turnFeedbackFailed: '⚠️ Feedback for your last turn couldn\'t load. The practice can continue.',
+    scoreRestored: '↺ Your last turn was withdrawn — the feedback below is from your previous turn.',
     industryLabel: 'Industry', stageLabel: 'Stage', finalScore: 'Final Score', finalGrade: 'Final Grade',
     voiceOn: '🔊 Read aloud', voiceOff: '🔇 Read aloud', voiceTitle: 'Read the coach\'s messages aloud', replay: 'Play',
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
@@ -2146,6 +2151,11 @@ const COACH_STR = {
     voiceDenied: '麥克風權限被封鎖了。請允許這個網站使用麥克風後再試一次。',
     voicePickScenario: '請先選擇一個情境，再開始語音對話。',
     noteWaiting: '🧑‍🏫 教練有建議，點這裡查看',
+    finalEvalFailed: '⚠️ 最終評分沒有完成。你的對話已保留，請按「重試」重新評分。',
+    finalEvalRateLimited: '⚠️ 目前請求太多，最終評分沒有完成。你的對話已保留，請等約一分鐘後再按「重試」。',
+    retryFinal: '↻ 重試最終評分', finalEvalChatNote: '⚠️ 最終評分沒有完成——點這裡重試', finalEvalRetrying: '正在評分你的整段對話…',
+    turnFeedbackFailed: '⚠️ 上一輪的評分暫時無法載入，練習可以繼續。',
+    scoreRestored: '↺ 你撤回了上一輪——下方的評分是你上上一輪的。',
     industryLabel: '行業', stageLabel: '階段', finalScore: '最終分數', finalGrade: '最終等級',
     voiceOn: '🔊 朗讀', voiceOff: '🔇 朗讀', voiceTitle: '朗讀教練的訊息', replay: '播放',
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
@@ -2750,6 +2760,24 @@ function redoLastLine(exchange, prefill) {
     note.className = 'coach-better';
     note.textContent = coachT('redoNote');
     exchange.coachEl.querySelector('.coach-bubble')?.appendChild(note);
+  }
+  // Roll the scoreboard back to what it showed before the withdrawn turn, so it never shows a score
+  // for a line that no longer exists, and give back the interjection that line used.
+  const fb = document.getElementById('feedback-body');
+  if (fb && typeof exchange.feedbackBefore === 'string') {
+    fb.innerHTML = exchange.feedbackBefore;
+    if (fb.querySelector('.score-card')) {
+      const note = document.createElement('div');
+      note.id = 'feedback-rollback-note';
+      note.className = 'feedback-item';
+      note.style.cssText = 'background:var(--canvas);font-style:italic;font-size:12px;';
+      note.textContent = coachT('scoreRestored');
+      fb.insertBefore(note, fb.firstChild);
+    }
+  }
+  if (exchange.interjectBefore) {
+    coachInterjectCount = exchange.interjectBefore.count;
+    coachLastInterjectTurn = exchange.interjectBefore.last;
   }
   lastExchange = null;
   const input = document.getElementById('chat-input');
@@ -3872,7 +3900,12 @@ async function sendMessage() {
   const exchangeStart = conversationHistory.length;
   const agentEl = appendMessage('agent', 'You', text);
   conversationHistory.push({ role: 'user', content: text });
-  lastExchange = { start: exchangeStart, agentEl, clientEl: null, coachEl: null };
+  lastExchange = {
+    start: exchangeStart, agentEl, clientEl: null, coachEl: null,
+    // what to put back if this line is withdrawn: the scoreboard as it was, and the interjection budget
+    feedbackBefore: document.getElementById('feedback-body')?.innerHTML ?? null,
+    interjectBefore: { count: coachInterjectCount, last: coachLastInterjectTurn }
+  };
 
   isLoading = true;
   document.getElementById('send-btn').disabled = true;
@@ -3945,24 +3978,86 @@ ${COACH_COMPLIANCE_RULE}`;
     ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
     : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. The live coach is deliberately rare: most turns need no interruption, and the agent should be left to keep the conversation flowing. Set "interject" to true ONLY for a serious, clear-cut mistake that would damage this conversation if left alone: pitching or pressuring before understanding the client's concern, arguing with the client, ignoring a direct question, over-promising or a materially wrong claim, or giving investment/securities advice. When in doubt, set it to false; anything that can wait for the end-of-session debrief should wait. Never interject for minor polish, tone, wording preferences, or speech slips, fragments, self-corrections or transcription errors. When true, "coachSays" is ONE short sentence (about 15 words, or at most 30 Chinese characters) said directly to the agent: name the single issue and nothing more, with no praise and no explanation. "betterLine" is a short example phrase, or an empty string if the sentence is enough. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
-  try {
-    const result = await callClaude([{ role: 'user', content: prompt }],
-      'You are a sales training coach. Always respond with valid JSON only, no markdown, no explanation.');
-
-    const clean = result.replace(/```json|```/g, '').trim();
-    const data = JSON.parse(clean);
-    renderFeedback(data, isFinal);
-    if (isFinal) {
-      startCoachDebrief(data);
-    } else if (coachMode === 'live' && data.interject && data.coachSays && currentScenario?.id !== 0 && coachMayInterject()) {
-      // (Free Practice, id 0, is itself the AI coach persona, so no second coach steps in there.)
-      coachInterjectCount++;
-      coachLastInterjectTurn = turnCount;
-      showCoachInterjection(data);
+  // The per-turn score is nice to have; the FINAL evaluation completes the exercise, so it is
+  // retried once automatically for transient failures and, if it still fails, shown to the learner
+  // with a Retry button that re-runs it from the transcript we kept (the role-play is not repeated).
+  const attempts = isFinal ? 2 : 1;
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const result = await callClaude([{ role: 'user', content: prompt }],
+        'You are a sales training coach. Always respond with valid JSON only, no markdown, no explanation.');
+      const data = parseFeedbackJson(result);
+      if (isFinal) clearFinalEvalFailure();
+      renderFeedback(data, isFinal);
+      if (isFinal) {
+        startCoachDebrief(data);
+      } else if (coachMode === 'live' && data.interject && data.coachSays && currentScenario?.id !== 0 && coachMayInterject()) {
+        // (Free Practice, id 0, is itself the AI coach persona, so no second coach steps in there.)
+        coachInterjectCount++;
+        coachLastInterjectTurn = turnCount;
+        showCoachInterjection(data);
+      }
+      return true;
+    } catch (e) {
+      lastError = e;
+      console.error('Feedback error (attempt ' + attempt + ')', e);
+      const retryable = !e || e.status === undefined || e.status >= 500;   // parse errors and 5xx; never auto-retry a 429
+      if (!retryable) break;
     }
-  } catch(e) {
-    console.error('Feedback parse error', e);
   }
+  if (isFinal) showFinalEvalFailure(lastError); else showTurnFeedbackWarning();
+  return false;
+}
+
+// The model sometimes wraps the JSON in a sentence or code fence: take the outermost {...} if a straight parse fails.
+function parseFeedbackJson(text) {
+  const clean = String(text || '').replace(/```json|```/g, '').trim();
+  try { return JSON.parse(clean); } catch (e) {}
+  const start = clean.indexOf('{'), end = clean.lastIndexOf('}');
+  if (start >= 0 && end > start) return JSON.parse(clean.slice(start, end + 1));
+  throw new SyntaxError('No JSON object in the evaluation response');
+}
+
+let finalEvalBusy = false;
+function clearFinalEvalFailure() {
+  document.getElementById('final-eval-retry-row')?.remove();
+}
+function showFinalEvalFailure(err) {
+  const rateLimited = !!err && err.status === 429;
+  const msg = coachT(rateLimited ? 'finalEvalRateLimited' : 'finalEvalFailed');
+  const body = document.getElementById('feedback-body');
+  if (body) {
+    body.innerHTML = `<div class="feedback-item warn" role="alert" id="final-eval-failure">${escapeHtml(msg)}<div style="margin-top:8px;"><button class="coach-action-btn primary" type="button" onclick="retryFinalEvaluation()">${escapeHtml(coachT('retryFinal'))}</button></div></div>`;
+  }
+  // Also in the client chat (the coach panel is closed on phones), once.
+  if (!document.getElementById('final-eval-retry-row')) {
+    const msgs = document.getElementById('chat-messages');
+    const row = document.createElement('div');
+    row.className = 'msg';
+    row.id = 'final-eval-retry-row';
+    row.innerHTML = `<button class="coach-note-pointer" type="button">${escapeHtml(coachT('finalEvalChatNote'))}</button>`;
+    row.querySelector('button').onclick = retryFinalEvaluation;
+    msgs.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+  if (isMobileLayout()) document.getElementById('mobile-coach-btn')?.classList.add('has-new');
+}
+async function retryFinalEvaluation() {
+  if (finalEvalBusy || !currentScenario || conversationHistory.length === 0) return;
+  finalEvalBusy = true;
+  const body = document.getElementById('feedback-body');
+  if (body) body.innerHTML = `<div class="empty-feedback"><div class="empty-icon">⏳</div><div>${escapeHtml(coachT('finalEvalRetrying'))}</div></div>`;
+  try { await getFeedback(conversationHistory, true); } finally { finalEvalBusy = false; }
+}
+function showTurnFeedbackWarning() {
+  const body = document.getElementById('feedback-body');
+  if (!body || body.querySelector('#turn-feedback-warning')) return;
+  const warn = document.createElement('div');
+  warn.id = 'turn-feedback-warning';
+  warn.className = 'feedback-item warn';
+  warn.textContent = coachT('turnFeedbackFailed');
+  body.insertBefore(warn, body.firstChild);
 }
 
 // ── CLAUDE API (via Netlify Function — API key is safe on server) ──

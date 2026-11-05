@@ -112,8 +112,13 @@
 - **回應只保留 `text` 區塊**，所以前端可以繼續用 `data.content[0].text`。新模型可能先回傳 `thinking` 區塊，不能用位置取答案。
 - `stop_reason: "refusal"` 或沒有文字答案時回傳 502，不要回傳空內容。
 - 不要送 `temperature` / `top_p` / `top_k`（這些模型會回 400）。Sonnet 5.5 不接受 `thinking: {type:'disabled'}`；Haiku 5.5 沒有 server-side fallback，不要加 `fallbacks`。
-- 防濫用保護不可移除：來源網域白名單、每個 IP 每 10 分鐘 40 次、輸入長度上限 20000 字元。
-- 測試：`tests/claude-proxy.test.mjs`（`npm test`）。
+- 防濫用保護不可移除：來源網域白名單、輸入長度上限 20000 字元，以及**每個 IP 每 10 分鐘的雙重限制**：
+  1. **依費用加權的預算**：Sonnet 呼叫（評分、教練）算 1 單位，Haiku 呼叫（AI 客戶）算 0.1 單位，預設上限 100 單位（環境變數 `CLAUDE_RATE_LIMIT_UNITS`）。一場完整 10 輪練習約 12 單位，用滿 30 則教練對話和 5 次撤回約 50 單位，所以同一個辦公室 Wi-Fi 的幾位學員不會互相擋住。同一個 IP 的最壞花費約為「單位數 × 約 US$0.007」每 10 分鐘。
+  2. **原始請求數上限**：預設 250 次（`CLAUDE_RATE_LIMIT_REQUESTS`），避免用大量小呼叫灌爆函式。
+  - 調整上限請改環境變數，不要拿掉限制。被限制時回 429（附 `Retry-After`），前端會顯示清楚的提示；無效的 JSON 回 400。
+  - 限制以 Netlify Blobs 記錄；Blobs 暫時故障時採「放行」（既有設計）。
+- 測試：`tests/claude-proxy.test.mjs`（模型分流、回應處理、費用加權限制）；Practice Studio 的瀏覽器回歸測試在 `tests/practice-studio.test.mjs`（最終評分失敗與重試、撤回後還原分數）。皆由 `npm test` 執行。
+- **最終評分不可以無聲失敗**：429、5xx 或格式錯誤都要在畫面上顯示，並提供「重試最終評分」，用保留的對話重新評分，不可重複角色扮演。
 - 其他函式（`knowledge-chat.mjs`、`pilot-data.mjs`、`knowledge-question-bank.mjs`）目前仍使用 `claude-sonnet-4-6`，尚未切換。
 
 ## 6. 編輯 GitHub 網頁檔案編輯器時：只貼純內容
