@@ -27,8 +27,10 @@ describe('Practice Studio (browser)', { skip: !chromium && 'playwright is not in
 
   // script.final: array of replies for successive FINAL evaluation calls: {status} | {text}
   // script.turn: function(turnNumber) -> object for the per-turn score
-  async function openStudio(script) {
+  // mode: 'live' (per-turn scoring + interruptions), 'debrief' (full run), or null = the default
+  async function openStudio(script, mode = 'live') {
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+    await page.addInitScript((m) => { if (m) localStorage.setItem('agentraining_coach_mode', m); }, mode);
     const stats = { client: 0, turn: 0, final: 0 };
     await page.route('**/.netlify/functions/claude', async (route) => {
       const body = JSON.parse(route.request().postData());
@@ -110,6 +112,7 @@ describe('Practice Studio (browser)', { skip: !chromium && 'playwright is not in
 
   test('a failed per-turn score shows a small notice and the practice continues', async () => {
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+    await page.addInitScript(() => localStorage.setItem('agentraining_coach_mode', 'live'));
     await page.route('**/.netlify/functions/claude', (route) => {
       const body = JSON.parse(route.request().postData());
       if (body.role === 'client') return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ content: [{ type: 'text', text: 'ok' }] }) });
@@ -152,6 +155,80 @@ describe('Practice Studio (browser)', { skip: !chromium && 'playwright is not in
     await page.click('#coach-chat-log [data-act="redo"]');
     assert.equal(await page.locator('#feedback-body .score-card').count(), 0);
     assert.equal(await page.locator('#feedback-body .empty-feedback').count(), 1);
+    await page.close();
+  });
+
+  test('"Full run (Recommended)" is the first option and the default; nothing is scored per turn', async () => {
+    const { page, stats } = await openStudio({}, null);
+    const labels = await page.locator('.coach-mode-toggle .coach-mode-btn').allTextContents();
+    assert.match(labels[0], /Full run \(Recommended\)/);
+    assert.match(labels[1], /Live coaching/);
+    assert.match(await page.getAttribute('.coach-mode-toggle .coach-mode-btn:first-child', 'class'), /active/);
+    await say(page, 'one'); await say(page, 'two');
+    assert.equal(stats.turn, 0, 'no per-turn scoring calls in full-run mode');
+    assert.equal(stats.client, 2);
+    assert.match(await page.textContent('#feedback-body'), /whole conversation in one go/);
+    await say(page, 'three');
+    await summaryOpen(page);
+    assert.equal(stats.turn, 0);
+    assert.equal(stats.final, 1, 'one overall evaluation at the end');
+    assert.ok(await page.isVisible('#btn-try-again'), 'the summary offers Try again');
+    assert.ok(await page.isVisible('#btn-try-again-panel'), 'and so does the coach panel');
+    await page.close();
+  });
+
+  test('Live coaching still scores every turn', async () => {
+    const { page, stats } = await openStudio({}, 'live');
+    await say(page, 'one'); await say(page, 'two');
+    assert.equal(stats.turn, 2);
+    await page.close();
+  });
+
+  test('Try again restarts the same conversation with the coach\'s focus points and shows the improvement', async () => {
+    const first = { ...GOOD_FINAL, overallScore: 62, tips: ['Ask first', 'Acknowledge the price worry', 'Offer one next step'] };
+    const second = { ...GOOD_FINAL, overallScore: 75 };
+    const { page } = await openStudio({ final: [{ text: JSON.stringify(first) }, { text: JSON.stringify(second) }] }, null);
+    await playToFinal(page);
+    await summaryOpen(page);
+    await page.waitForFunction(() => /saved/i.test(document.getElementById('sum-sync').textContent));
+    const records = () => page.evaluate(() => JSON.parse(localStorage.getItem('agentraining_manager_sessions') || '[]').length);
+    assert.equal(await records(), 1, 'the first attempt is the recorded result');
+
+    await page.click('#btn-try-again');
+    assert.equal(await page.isVisible('#summary-modal'), false);
+    assert.equal(await page.evaluate(() => conversationHistory.length), 1, 'back to the opening line');
+    assert.equal(await page.evaluate(() => turnCount), 0);
+    assert.ok(await page.locator('#retry-focus').isVisible(), 'focus points are shown');
+    assert.match(await page.textContent('#retry-focus'), /Ask first/);
+    assert.match(await page.textContent('#retry-focus'), /Attempt 2/);
+    assert.match(await page.textContent('#chat-messages'), /Attempt 2/);
+
+    await playToFinal(page);
+    await summaryOpen(page);
+    assert.match(await page.textContent('#sum-attempt'), /62 → 75 \(\+13\)/);
+    assert.match(await page.textContent('#feedback-body'), /62 → 75/);
+    await page.waitForFunction(() => /practice only/i.test(document.getElementById('sum-sync').textContent));
+    assert.equal(await records(), 1, 'the retry did not overwrite or add to the recorded result');
+    await page.close();
+  });
+
+  test('a weaker retry does not lower the lesson\'s saved best score', async () => {
+    const { page } = await openStudio({ final: [{ text: JSON.stringify({ ...GOOD_FINAL, overallScore: 80 }) }, { text: JSON.stringify({ ...GOOD_FINAL, overallScore: 55 }) }] }, null);
+    const saved = () => page.evaluate(() => { saveCurriculumProgress; return getCurriculumProgress()[1]?.score ?? null; });
+    await page.evaluate(() => { scenarios.find((s) => s.id === 1).isCurriculum = true; selectScenario(scenarios.find((s) => s.id === 1)); });
+    await playToFinal(page); await summaryOpen(page);
+    assert.equal(await saved(), 80);
+    await page.click('#btn-try-again');
+    await playToFinal(page);
+    await page.waitForFunction(() => /55/.test(document.getElementById('sum-overall-num').textContent));
+    assert.equal(await saved(), 80, 'best score kept');
+    await page.close();
+  });
+
+  test('Free Practice has no Try again (it is open-ended)', async () => {
+    const { page } = await openStudio({}, null);
+    await page.evaluate(() => selectScenario(scenarios.find((s) => s.id === 0)));
+    assert.equal(await page.evaluate(() => retryContext), null);
     await page.close();
   });
 });

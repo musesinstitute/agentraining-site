@@ -1274,6 +1274,7 @@
       <div class="summary-overall-num" id="sum-overall-num"></div>
       <div class="summary-overall-label" id="sum-overall-label">Overall Score / 100</div>
     </div>
+    <div id="sum-attempt" style="display:none;text-align:center;font-size:13px;font-weight:700;color:var(--accent);margin:-4px 0 10px;"></div>
     <div class="summary-scores" id="sum-scores"></div>
     <div class="summary-section" id="sum-strengths-section">
       <div class="summary-section-title" id="sum-strengths-label">✅ Strengths</div>
@@ -1284,6 +1285,10 @@
       <div id="sum-tips"></div>
     </div>
     <div class="summary-coach-note" id="sum-coach-note"></div>
+    <div class="summary-section" id="sum-retry-section" style="display:none;">
+      <div id="sum-retry-text" style="font-size:13px;color:var(--ink-soft);margin-bottom:8px;line-height:1.5;"></div>
+      <button class="btn-next-scenario" id="btn-try-again" type="button" onclick="tryAgain()" style="width:100%;text-align:center;padding:12px 14px;border-radius:10px;border:none;background:var(--accent);color:var(--white);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;"></button>
+    </div>
     <div class="summary-section" id="sum-debrief-section" style="display:none;">
       <button class="btn-next-scenario" id="btn-debrief" onclick="closeSummary();openCoachDebrief();" style="width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:1.5px solid var(--gold);background:#FFFBEB;color:#B45309;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;"></button>
     </div>
@@ -1397,8 +1402,8 @@
     <div class="coach-stage-card coach-mode-card">
       <div class="coach-stage-label" id="coach-mode-label">Coaching Style</div>
       <div class="coach-mode-toggle">
-        <button class="coach-mode-btn active" id="coach-mode-live" onclick="setCoachMode('live')">Live coaching</button>
-        <button class="coach-mode-btn" id="coach-mode-debrief" onclick="setCoachMode('debrief')">Debrief after</button>
+        <button class="coach-mode-btn active" id="coach-mode-debrief" onclick="setCoachMode('debrief')">Full run (Recommended)</button>
+        <button class="coach-mode-btn" id="coach-mode-live" onclick="setCoachMode('live')">Live coaching</button>
       </div>
       <div class="coach-mode-hint" id="coach-mode-hint"></div>
     </div>
@@ -2059,9 +2064,15 @@ function coachNameMemoForChat(conversationTexts) {
 
 const COACH_STR = {
   en: {
-    modeLabel: 'Coaching Style', live: 'Live coaching', debrief: 'Debrief after',
-    hintLive: 'Your coach will step in during the role-play when a line needs rework, and lets you redo it.',
-    hintDebrief: 'Your coach stays quiet during the role-play, then walks through your key moments with you.',
+    modeLabel: 'Practice Style', live: 'Live coaching', debrief: 'Full run (Recommended)',
+    hintLive: 'Your coach steps in during the role-play when a line needs rework, and lets you redo it. Good when you\'re unsure.',
+    hintDebrief: 'Do the whole conversation in one go. Your coach stays out of the way, then gives you a full review and a chance to try again. You can still ask your coach for help any time.',
+    emptyFull: 'Take your time and finish the whole conversation in one go. Your coach will give you a full review at the end, and you can try again. Not sure about something? Ask your coach any time.',
+    retryTitle: 'Ready for another go?', retryText: 'Apply your coach\'s suggestions and run this same conversation again. Repetition is how a skill sticks.', retryBtn: '🔁 Try again',
+    retryFocusTitle: 'Attempt {n} · last score {score}. This time, focus on:',
+    retryChatNote: '🔁 Attempt {n} — last score {score}. Coach\'s focus this time: {tips}',
+    attemptDelta: '↗ Attempt {n}: {prev} → {score} ({delta})',
+    retryNotRecorded: 'Attempt {n} is practice only — your first attempt stays as your recorded result.',
     interjectTitle: '🧑‍🏫 Coach steps in', tryInstead: 'Try something like:',
     redo: '↺ Redo my line', useLine: 'Use this as a start', keepGoing: 'Keep going →',
     redoNote: '↺ Line withdrawn — the client didn\'t hear it. Try again.',
@@ -2110,9 +2121,15 @@ const COACH_STR = {
     busy: '⚠️ Too many requests right now (the practice limit is shared by everyone on the same network). Please wait a few minutes and try again.'
   },
   zh: {
-    modeLabel: '教練方式', live: '即時指導', debrief: '結束後複盤',
-    hintLive: '對話中如果有需要調整的說法，教練會直接插話提醒，並讓你重說這一句。',
-    hintDebrief: '對話中教練保持安靜，結束後再與你逐句複盤關鍵時刻。',
+    modeLabel: '練習方式', live: '即時指導', debrief: '一次完成（推薦）',
+    hintLive: '對話中如果有需要調整的說法，教練會直接插話提醒，並讓你重說這一句。沒把握的時候很適合。',
+    hintDebrief: '一口氣完成整段對話。教練不打斷你，結束後給你完整的總評，並讓你再試一次。需要幫忙時，隨時可以問教練。',
+    emptyFull: '放輕鬆，一口氣完成整段對話。結束後教練會給你完整的總評，你也可以再試一次。沒把握的地方，隨時可以問教練。',
+    retryTitle: '要不要再試一次？', retryText: '帶著教練的建議，把這段對話再練一次。反覆練習，技巧才會真正內化。', retryBtn: '🔁 再試一次',
+    retryFocusTitle: '第 {n} 次嘗試 · 上次得分 {score}。這次請特別注意：',
+    retryChatNote: '🔁 第 {n} 次嘗試——上次得分 {score}。這次教練建議你注意：{tips}',
+    attemptDelta: '↗ 第 {n} 次：{prev} → {score}（{delta}）',
+    retryNotRecorded: '第 {n} 次嘗試只作練習——你的第一次結果仍是正式紀錄。',
     interjectTitle: '🧑‍🏫 教練插話', tryInstead: '可以試著這樣說：',
     redo: '↺ 重說這一句', useLine: '以此為起點修改', keepGoing: '繼續對話 →',
     redoNote: '↺ 已撤回這一句——客戶沒有聽到。請再試一次。',
@@ -2161,8 +2178,22 @@ const COACH_STR = {
     busy: '⚠️ 目前請求太多（同一個網路的所有使用者共用練習次數上限），請等幾分鐘後再試。'
   }
 };
-let coachMode = 'live';
-try { if (localStorage.getItem('agentraining_coach_mode') === 'debrief') coachMode = 'debrief'; } catch (e) {}
+// 'debrief' = "Full run (Recommended)": the learner does the whole conversation in one go, the coach stays
+// out of the way (no per-turn scores, no interruptions), then gives one overall review and a chance to
+// try again. 'live' = live coaching during the role-play. Full run is the default.
+let coachMode = 'debrief';
+try { if (localStorage.getItem('agentraining_coach_mode') === 'live') coachMode = 'live'; } catch (e) {}
+// Per-turn scoring is the largest API cost (one Sonnet call per learner line). In full-run mode it is off;
+// set this to true to show the per-turn score panel in full-run mode as well.
+const FULL_RUN_SHOWS_TURN_SCORES = false;
+function perTurnFeedbackWanted() { return coachMode === 'live' || FULL_RUN_SHOWS_TURN_SCORES; }
+
+// Attempts at the same scenario during this page session: the first finished attempt is the recorded
+// result; "Try again" attempts are practice and don't overwrite what the manager sees.
+const attemptsDone = {};          // scenario id -> finished attempts
+const lastAttemptResult = {};     // scenario id -> { score, tips } of the latest finished attempt
+let retryContext = null;          // { attempt, score, tips } while retrying a scenario
+let lastFinalAttempt = null;      // { attempt, prevScore } of the evaluation just shown
 let coachPhase = 'live';          // 'live' during role-play, 'debrief' after the final evaluation
 let coachChatHistory = [];        // [{ role: 'user'|'assistant', content }]
 let coachKeyMoments = [];
@@ -2624,6 +2655,8 @@ function setCoachMode(mode) {
 function updateCoachUI() {
   const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
   set('coach-mode-label', coachT('modeLabel'));
+  const fbBody = document.getElementById('feedback-body');
+  if (fbBody && fbBody.querySelector('.empty-feedback') && !fbBody.querySelector('.score-card') && typeof resetFeedback === 'function') resetFeedback();
   set('industry-chip-label', coachT('industryLabel'));
   set('stage-chip-label', coachT('stageLabel'));
   set('mobile-coach-btn-label', coachT('mobileBtn'));
@@ -2832,6 +2865,14 @@ function startCoachDebrief(data) {
       btn.onclick = () => practiceKeyMoment(Number(btn.dataset.moment));
     });
     body.appendChild(sec);
+  }
+  if (body && currentScenario && currentScenario.id !== 0) {
+    const card = document.createElement('div');
+    card.className = 'feedback-section retry-card';
+    card.innerHTML = `<div class="feedback-section-title">🔁 ${escapeHtml(coachT('retryTitle'))}</div>` +
+      `<div class="feedback-item" style="background:var(--accent-lt);">${escapeHtml(coachT('retryText'))}</div>` +
+      `<button class="coach-action-btn primary" type="button" id="btn-try-again-panel" onclick="tryAgain()">${escapeHtml(coachT('retryBtn'))}</button>`;
+    body.appendChild(card);
   }
   if (isMobileLayout()) document.getElementById('mobile-coach-btn')?.classList.add('has-new');
   const opener = coachT(coachKeyMoments.length ? 'debriefOpen' : 'debriefNoMoments');
@@ -3404,7 +3445,11 @@ function getCurriculumProgress() {
 function saveCurriculumProgress(lessonId, score) {
   try {
     const progress = getCurriculumProgress();
-    progress[lessonId] = { completed: true, score: score, date: new Date().toISOString().slice(0, 10) };
+    const prev = progress[lessonId];
+    // Keep the best finished score: a weaker "Try again" must not lower the lesson's result.
+    progress[lessonId] = (prev && typeof prev.score === 'number' && prev.score > score)
+      ? Object.assign({}, prev, { completed: true })
+      : { completed: true, score: score, date: new Date().toISOString().slice(0, 10) };
     localStorage.setItem(CURRICULUM_PROGRESS_KEY, JSON.stringify(progress));
   } catch (e) { console.error('[Curriculum] Could not save progress to localStorage:', e); }
 }
@@ -3687,6 +3732,10 @@ function selectScenario(sc) {
   turnCount = 0;
   closeCoachPanel();
   resetCoach();
+  // Restarting a scenario that was already finished in this session is a retry of it.
+  retryContext = (sc.id !== 0 && lastAttemptResult[sc.id])
+    ? { attempt: (attemptsDone[sc.id] || 0) + 1, score: lastAttemptResult[sc.id].score, tips: lastAttemptResult[sc.id].tips }
+    : null;
 
   updatePracticeModeBanner();
 
@@ -3742,6 +3791,9 @@ function selectScenario(sc) {
     const opening = openingSource ? openingSource[currentLang] : (currentLang === 'zh' ? '你好，我們開始吧。' : "Hello, let's get started.");
     conversationHistory.push({ role: 'assistant', content: opening });
     appendMessage('client', sc.clientName, opening);
+    if (retryContext) {
+      appendMessage('system', '', coachT('retryChatNote').replace('{n}', retryContext.attempt).replace('{score}', retryContext.score).replace('{tips}', retryContext.tips.join(' · ')));
+    }
   }
 }
 
@@ -3941,8 +3993,8 @@ async function sendMessage() {
     const clientEl = appendMessage('client', currentScenario.clientName, clientResp);
     if (lastExchange) lastExchange.clientEl = clientEl;
 
-    // Get feedback on agent's last response
-    await getFeedback(conversationHistory, false);
+    // Get feedback on agent's last response (live coaching only; full-run mode waits for the final review)
+    if (perTurnFeedbackWanted()) await getFeedback(conversationHistory, false);
 
   } catch (err) {
     removeTyping();
@@ -3975,7 +4027,7 @@ ${SPOKEN_INPUT_RULE}
 ${COACH_COMPLIANCE_RULE}`;
 
   const prompt = isFinal
-    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
+    ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short. "tips" are the 2-3 most useful things to focus on if the agent tries this same conversation again: each one a concrete action, not a general principle.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
     : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. The live coach is deliberately rare: most turns need no interruption, and the agent should be left to keep the conversation flowing. Set "interject" to true ONLY for a serious, clear-cut mistake that would damage this conversation if left alone: pitching or pressuring before understanding the client's concern, arguing with the client, ignoring a direct question, over-promising or a materially wrong claim, or giving investment/securities advice. When in doubt, set it to false; anything that can wait for the end-of-session debrief should wait. Never interject for minor polish, tone, wording preferences, or speech slips, fragments, self-corrections or transcription errors. When true, "coachSays" is ONE short sentence (about 15 words, or at most 30 Chinese characters) said directly to the agent: name the single issue and nothing more, with no praise and no explanation. "betterLine" is a short example phrase, or an empty string if the sentence is enough. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   // The per-turn score is nice to have; the FINAL evaluation completes the exercise, so it is
@@ -4554,6 +4606,10 @@ function updateSummarySyncStatus(state, message) {
 }
 
 async function syncCompletedPractice(data) {
+  if (lastFinalAttempt && lastFinalAttempt.attempt > 1) {
+    updateSummarySyncStatus('success', coachT('retryNotRecorded').replace('{n}', lastFinalAttempt.attempt));
+    return;
+  }
   updateSummarySyncStatus('saving', currentLang === 'zh'
     ? '正在保存分数、完整对话记录和完成状态…'
     : 'Saving the score, transcript, and completion status…');
@@ -4586,6 +4642,21 @@ function showSummary(data) {
   if (debriefSec) {
     debriefSec.style.display = '';
     document.getElementById('btn-debrief').textContent = coachT('debriefCta');
+  }
+  const retrySec = document.getElementById('sum-retry-section');
+  if (retrySec) {
+    const canRetry = !!currentScenario && currentScenario.id !== 0;
+    retrySec.style.display = canRetry ? '' : 'none';
+    if (canRetry) {
+      document.getElementById('sum-retry-text').textContent = coachT('retryTitle') + ' ' + coachT('retryText');
+      document.getElementById('btn-try-again').textContent = coachT('retryBtn');
+    }
+  }
+  const attemptEl = document.getElementById('sum-attempt');
+  if (attemptEl) {
+    const t = attemptDeltaText(data.overallScore || 0);
+    attemptEl.textContent = t;
+    attemptEl.style.display = t ? '' : 'none';
   }
   const name = sessionStorage.getItem('agentraining_name') || 'Agent';
   const ref  = sessionStorage.getItem('agentraining_ref') || '';
@@ -4873,7 +4944,28 @@ function toggleMic(inputId, btnId) {
 }
 
 // ── RENDER FEEDBACK ──
+function recordFinalAttempt(data) {
+  const id = currentScenario?.id;
+  if (id === undefined || id === null) { lastFinalAttempt = null; return; }
+  const prev = lastAttemptResult[id] || null;
+  const attempt = (attemptsDone[id] || 0) + 1;
+  attemptsDone[id] = attempt;
+  lastAttemptResult[id] = { score: data.overallScore || 0, tips: Array.isArray(data.tips) ? data.tips.slice(0, 3).map(String) : [] };
+  lastFinalAttempt = { attempt, prevScore: prev ? prev.score : null };
+}
+function attemptDeltaText(score) {
+  if (!lastFinalAttempt || lastFinalAttempt.attempt < 2 || lastFinalAttempt.prevScore === null) return '';
+  const d = score - lastFinalAttempt.prevScore;
+  return coachT('attemptDelta').replace('{n}', lastFinalAttempt.attempt).replace('{prev}', lastFinalAttempt.prevScore).replace('{score}', score).replace('{delta}', (d > 0 ? '+' : '') + d);
+}
+function tryAgain() {
+  if (!currentScenario) return;
+  closeSummary();
+  resetChat();   // same scenario again; selectScenario turns it into attempt N+1 with the coach's focus points
+}
+
 function renderFeedback(data, isFinal) {
+  if (isFinal && currentScenario) recordFinalAttempt(data);
   // A curriculum lesson is completed only after the full session
   // has ended and a final evaluation has been returned.
   if (isFinal && currentScenario && currentScenario.isCurriculum) {
@@ -4915,6 +5007,7 @@ function renderFeedback(data, isFinal) {
       <div class="score-num" style="color:${scoreColor}">${score}</div>
       <div class="score-label">${isFinal ? coachT('finalScore') : s.scoreLabel} ${s.outOf}</div>
       <span class="score-grade ${grade.css}">${isFinal ? coachT('finalGrade') + ' ' : ''}${grade.label}</span>
+      ${isFinal && attemptDeltaText(score) ? `<div class="score-label" style="margin-top:8px;font-weight:700;">${escapeHtml(attemptDeltaText(score))}</div>` : ''}
     </div>
     <div class="score-bars">
       ${bars.map(b => `
@@ -4940,10 +5033,15 @@ function renderFeedback(data, isFinal) {
 
 function resetFeedback() {
   const s = strings[currentLang];
-  document.getElementById('feedback-body').innerHTML = `
+  const msg = coachMode === 'live' ? s.emptyFeedback : coachT('emptyFull');
+  let focus = '';
+  if (retryContext && retryContext.tips.length) {
+    focus = `<div class="feedback-item tip" id="retry-focus"><strong>${escapeHtml(coachT('retryFocusTitle').replace('{n}', retryContext.attempt).replace('{score}', retryContext.score))}</strong><ul style="margin:6px 0 0 18px;">${retryContext.tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul></div>`;
+  }
+  document.getElementById('feedback-body').innerHTML = focus + `
     <div class="empty-feedback">
       <div class="empty-icon">🎯</div>
-      <div>${s.emptyFeedback}</div>
+      <div>${escapeHtml(msg)}</div>
     </div>`;
 }
 
