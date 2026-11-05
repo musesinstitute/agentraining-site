@@ -1,6 +1,7 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
 import { normalizeTrainingProfile, competencySnapshot, learnerImportanceView } from './lib/knowledge-relevance-core.mjs';
+import { updateKnowledgeRecord, knowledgeUpdateFailure } from './lib/knowledge-record.mjs';
 
 const STORE_NAME = 'agentraining-pilot';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -713,7 +714,7 @@ function knowledgeRecord(input, actor) {
   };
 }
 
-function approvedKnowledgeView(record) {
+function approvedKnowledgeView(record, profile) {
   return {
     id: record.id,
     teamId: record.teamId,
@@ -722,7 +723,7 @@ function approvedKnowledgeView(record) {
     sourceUrl: record.sourceUrl,
     status: record.status,
     analysis: record.analysis,
-    importance: learnerImportanceView(record.relevance),
+    importance: learnerImportanceView(record.relevance, profile),
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     approvedAt: record.approvedAt
@@ -910,7 +911,8 @@ export default async function handler(req) {
     if (req.method === 'GET' && resource === 'knowledge') {
       const rows = await listJSON(store, `${teamPrefix}/knowledge/`);
       rows.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
-      const visible = actor.isManager ? rows : rows.filter(row => row.status === 'approved').map(approvedKnowledgeView);
+      const profile = actor.isManager ? null : await store.get(`${teamPrefix}/training-profile`, { type: 'json' });
+      const visible = actor.isManager ? rows : rows.filter(row => row.status === 'approved').map(row => approvedKnowledgeView(row, profile));
       await writeAudit(store, teamPrefix, actor, 'knowledge_list', 'success', { resultCount: visible.length });
       return reply(200, {
         sources: visible,
@@ -951,25 +953,32 @@ export default async function handler(req) {
       }
 
       if (action === 'relevance_feedback') {
-        if (!record.relevance) return reply(400, { error: 'Assess relevance before recording manager feedback.' });
         const verdict = ['agree', 'disagree'].includes(input.verdict) ? input.verdict : null;
         if (!verdict) return reply(400, { error: 'Feedback must be agree or disagree.' });
-        const updated = { ...record, relevance: { ...record.relevance, managerVerdict: verdict, managerNote: cleanText(input.note, 500), reviewedBy: actor.email, reviewedAt: new Date().toISOString() }, updatedAt: new Date().toISOString() };
-        await store.setJSON(key, updated);
+        const assessmentId = cleanText(input.assessmentId, 60), assessedAt = cleanText(input.assessedAt, 40);
+        // "Agree" publishes the rating to learners, so it must apply to the
+        // exact assessment the manager looked at, not one that landed since.
+        const result = await updateKnowledgeRecord(store, key, current => {
+          if (!current.relevance) return { error: { status: 400, message: 'Assess relevance before recording manager feedback.' } };
+          const sameAssessment = current.relevance.assessmentId ? assessmentId === current.relevance.assessmentId : (assessedAt && assessedAt === current.relevance.assessedAt);
+          if (!sameAssessment) return { error: { status: 409, message: 'This assessment was updated. Review the new assessment before deciding.' } };
+          return { record: { ...current, relevance: { ...current.relevance, managerVerdict: verdict, managerNote: cleanText(input.note, 500), reviewedBy: actor.email, reviewedAt: new Date().toISOString() }, updatedAt: new Date().toISOString() } };
+        });
+        const failure = knowledgeUpdateFailure(result);
+        if (failure) return reply(failure.status, { error: failure.error });
+        const updated = result.record;
         await writeAudit(store, teamPrefix, actor, 'knowledge_relevance_feedback', 'success', { knowledgeId: id, verdict });
         return reply(200, { source: updated });
       }
 
       if (action === 'approve') {
-        if (!record.analysis?.summary || !record.analysis?.practiceDraft?.title) return reply(400, { error: 'Analyze the source before approving it.' });
-        const updated = {
-          ...record,
-          status: 'approved',
-          approvedAt: new Date().toISOString(),
-          approvedBy: actor.email,
-          updatedAt: new Date().toISOString()
-        };
-        await store.setJSON(key, updated);
+        const result = await updateKnowledgeRecord(store, key, current => {
+          if (!current.analysis?.summary || !current.analysis?.practiceDraft?.title) return { error: { status: 400, message: 'Analyze the source before approving it.' } };
+          return { record: { ...current, status: 'approved', approvedAt: new Date().toISOString(), approvedBy: actor.email, updatedAt: new Date().toISOString() } };
+        });
+        const failure = knowledgeUpdateFailure(result);
+        if (failure) return reply(failure.status, { error: failure.error });
+        const updated = result.record;
         await writeAudit(store, teamPrefix, actor, 'knowledge_approve', 'success', { knowledgeId: id });
         return reply(200, { source: updated });
       }

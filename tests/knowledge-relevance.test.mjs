@@ -13,6 +13,7 @@ import assert from 'node:assert/strict';
 
 import handler from '../netlify/functions/pilot-data.mjs';
 import relevanceHandler from '../netlify/functions/knowledge-relevance.mjs';
+import { updateKnowledgeRecord } from '../netlify/functions/lib/knowledge-record.mjs';
 import { __setUser, __resetIdentityStub } from '../tests/stubs/netlify-identity.mjs';
 import { __resetAllStores, getStore } from '../tests/stubs/netlify-blobs.mjs';
 
@@ -36,9 +37,10 @@ function req(method, resource, body) {
 }
 
 let realFetch, lastPrompt, modelReply;
-function fakeModel(json) {
+function fakeModel(json, duringCall) {
   modelReply = json;
   globalThis.fetch = async (url, init) => {
+    if (duringCall) await duringCall();
     assert.match(String(url), /api\.openai\.com\/v1\/responses/);
     lastPrompt = JSON.parse(init.body).input;
     return openaiReply(modelReply);
@@ -196,41 +198,81 @@ describe('knowledge training relevance', () => {
     assert.equal((await store.get(`teams/acme/knowledge/${source.id}`)).relevance, undefined);
   });
 
-  test('manager can record agree/disagree feedback; learners never see relevance', async () => {
-    await saveProfile();
-    const source = await createSource();
-    fakeModel(GOOD_REPLY);
-    await assess(source.id);
-    const fb = await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'disagree', note: 'too basic' }));
-    assert.equal((await fb.json()).source.relevance.managerVerdict, 'disagree');
-    const store = getStore({ name: 'agentraining-pilot' });
-    const key = `teams/acme/knowledge/${source.id}`;
-    await store.setJSON(key, { ...(await store.get(key)), analysis: { summary: 's', keyPoints: [], practiceDraft: { title: 't' } } });
-    assert.equal((await handler(req('POST', 'knowledge', { action: 'approve', id: source.id }))).status, 200);
-    __setUser(LEARNER);
-    const list = await (await handler(req('GET', 'knowledge'))).json();
-    assert.equal(list.sources.length, 1);
-    assert.equal(list.sources[0].relevance, undefined, 'relevance stays manager-only');
-  });
-
+  // ---- publication gate, feedback, concurrency ------------------------------
+  const store = () => getStore({ name: 'agentraining-pilot' });
+  const keyOf = id => `teams/acme/knowledge/${id}`;
+  async function giveAnalysis(id) {
+    const rec = await store().get(keyOf(id));
+    await store().setJSON(keyOf(id), { ...rec, analysis: { summary: 's', keyPoints: [], generatedAt: '2026-11-01T00:00:00Z', practiceDraft: { title: 't' } } });
+  }
+  const approve = id => handler(req('POST', 'knowledge', { action: 'approve', id }));
+  async function feedback(id, verdict, assessmentId) {
+    const rel = (await store().get(keyOf(id))).relevance;
+    return handler(req('POST', 'knowledge', { action: 'relevance_feedback', id, verdict, assessmentId: assessmentId ?? rel.assessmentId, note: 'n' }));
+  }
+  // approved + assessed, but the manager has NOT yet agreed with the rating
   async function approvedAndAssessed(reply) {
     await saveProfile();
     const source = await createSource();
+    await giveAnalysis(source.id);
     fakeModel(reply);
-    await assess(source.id);
-    const store = getStore({ name: 'agentraining-pilot' });
-    const key = `teams/acme/knowledge/${source.id}`;
-    await store.setJSON(key, { ...(await store.get(key)), analysis: { summary: 's', keyPoints: [], practiceDraft: { title: 't' } } });
-    await handler(req('POST', 'knowledge', { action: 'approve', id: source.id }));
+    assert.equal((await assess(source.id)).status, 200);
+    assert.equal((await approve(source.id)).status, 200);
     return source;
   }
   async function learnerSources() {
     __setUser(LEARNER);
-    return (await (await handler(req('GET', 'knowledge'))).json()).sources;
+    try { return (await (await handler(req('GET', 'knowledge'))).json()).sources; }
+    finally { __setUser(MANAGER); }
   }
+  const ratingOf = async () => (await learnerSources())[0].importance;
+
+  test('manager can record agree/disagree feedback on the assessment they reviewed', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    const res = await feedback(source.id, 'disagree');
+    assert.equal(res.status, 200);
+    assert.equal((await res.json()).source.relevance.managerVerdict, 'disagree');
+    assert.equal((await feedback(source.id, 'agree')).status, 200, 'a verdict can be changed');
+    assert.equal((await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'maybe', assessmentId: 'x' }))).status, 400);
+  });
+
+  test('feedback must name the exact assessment; a newer assessment cannot be agreed to blindly', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    const oldId = (await store().get(keyOf(source.id))).relevance.assessmentId;
+    fakeModel(GOOD_REPLY);
+    await assess(source.id); // a new assessment lands after the manager loaded the page
+    const res = await feedback(source.id, 'agree', oldId);
+    assert.equal(res.status, 409);
+    assert.match((await res.json()).error, /assessment was updated/);
+    assert.equal((await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'agree' }))).status, 409, 'no assessment id at all');
+    assert.equal((await ratingOf()), null, 'nothing was published');
+  });
+
+  test('P1: an approved source is NOT shown to learners until the manager agrees with the rating', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    assert.equal(await ratingOf(), null, 'assessed + approved but unreviewed: hidden');
+    await feedback(source.id, 'agree');
+    const rating = await ratingOf();
+    assert.equal(rating.level, 'must_know');
+    assert.equal(rating.stars, 3);
+  });
+
+  test('a source approved BEFORE it was assessed also waits for the manager', async () => {
+    await saveProfile();
+    const source = await createSource();
+    await giveAnalysis(source.id);
+    await approve(source.id);
+    assert.equal(await ratingOf(), null, 'approved, never assessed');
+    fakeModel(GOOD_REPLY);
+    await assess(source.id);
+    assert.equal(await ratingOf(), null, 'late assessment does not auto-publish');
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf());
+  });
 
   test('learners see a safe importance rating, never the manager scores', async () => {
-    await approvedAndAssessed(GOOD_REPLY);
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    await feedback(source.id, 'agree');
     const [src] = await learnerSources();
     assert.deepEqual(src.importance, {
       level: 'must_know', stars: 3,
@@ -240,26 +282,108 @@ describe('knowledge training relevance', () => {
       assessedAt: src.importance.assessedAt
     });
     const json = JSON.stringify(src);
-    for (const secret of ['dimensions', 'overall', 'whyItMatters', 'gaps', 'licenseNote', 'overlapsWith', 'managerVerdict', 'practiceSessionCount']) {
+    for (const secret of ['relevance', 'dimensions', 'overall', 'whyItMatters', 'gaps', 'licenseNote', 'overlapsWith', 'managerVerdict', 'managerNote', 'assessmentId', 'practiceSessionCount']) {
       assert.ok(!json.includes(secret), `${secret} must not reach learners`);
     }
   });
 
   test('P2 / P3 map to Important / Reference', async () => {
-    await approvedAndAssessed({ ...GOOD_REPLY, dimensions: Object.fromEntries(Object.keys(GOOD_REPLY.dimensions).map(k => [k, { score: 1 }])) });
-    const [src] = await learnerSources();
-    assert.equal(src.importance.level, 'reference');
-    assert.equal(src.importance.stars, 1);
+    const source = await approvedAndAssessed({ ...GOOD_REPLY, dimensions: Object.fromEntries(Object.keys(GOOD_REPLY.dimensions).map(k => [k, { score: 1 }])) });
+    await feedback(source.id, 'agree');
+    const rating = await ratingOf();
+    assert.equal(rating.level, 'reference');
+    assert.equal(rating.stars, 1);
   });
 
-  test('no learner importance when the manager disagreed or compliance review is needed', async () => {
+  test('disagreeing, withdrawing an agreement, or compliance review all hide the rating', async () => {
     const source = await approvedAndAssessed(GOOD_REPLY);
-    await handler(req('POST', 'knowledge', { action: 'relevance_feedback', id: source.id, verdict: 'disagree' }));
-    assert.equal((await learnerSources())[0].importance, null);
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf());
+    await feedback(source.id, 'disagree');
+    assert.equal(await ratingOf(), null, 'agreement withdrawn');
 
     __resetAllStores(); __setUser(MANAGER);
-    await approvedAndAssessed({ ...GOOD_REPLY, licenseScope: 'out_of_scope' });
-    assert.equal((await learnerSources())[0].importance, null);
+    const flagged = await approvedAndAssessed({ ...GOOD_REPLY, licenseScope: 'out_of_scope' });
+    await feedback(flagged.id, 'agree');
+    assert.equal(await ratingOf(), null, 'compliance review is never published');
+  });
+
+  test('reassessing a source requires a fresh agreement', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf());
+    fakeModel(GOOD_REPLY);
+    await assess(source.id);
+    assert.equal(await ratingOf(), null, 'new AI judgment is unreviewed');
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf());
+  });
+
+  test('P2: changing the training profile hides the learner rating until reassessed and agreed again', async () => {
+    const source = await approvedAndAssessed(GOOD_REPLY);
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf());
+    await new Promise(r => setTimeout(r, 5));
+    assert.equal((await saveProfile({ goals: ['A completely different goal'] })).status, 200);
+    assert.equal(await ratingOf(), null, 'stale rating suppressed');
+    fakeModel(GOOD_REPLY);
+    await assess(source.id);
+    await feedback(source.id, 'agree');
+    assert.ok(await ratingOf(), 'visible again after reassessment + agreement');
+  });
+
+  test('P1 race: a manager approving during the model call is not overwritten by the late assessment', async () => {
+    await saveProfile();
+    const source = await createSource();
+    await giveAnalysis(source.id);
+    fakeModel(GOOD_REPLY, async () => { assert.equal((await approve(source.id)).status, 200); });
+    assert.equal((await assess(source.id)).status, 200);
+    const rec = await store().get(keyOf(source.id));
+    assert.equal(rec.status, 'approved', 'approval made during the call survives');
+    assert.equal(rec.approvedBy, 'manager@example.com');
+    assert.ok(rec.relevance, 'and the assessment is saved too');
+  });
+
+  test('P1 race: a source deleted during the model call is not resurrected', async () => {
+    await saveProfile();
+    const source = await createSource();
+    fakeModel(GOOD_REPLY, async () => { await store().delete(keyOf(source.id)); });
+    const res = await assess(source.id);
+    assert.equal(res.status, 404);
+    assert.equal(await store().get(keyOf(source.id)), null);
+  });
+
+  test('P1 race: an assessment of content that changed during the call is rejected, not saved', async () => {
+    await saveProfile();
+    const source = await createSource();
+    fakeModel(GOOD_REPLY, async () => {
+      await store().setJSON(keyOf(source.id), { ...(await store().get(keyOf(source.id))), content: 'Entirely different replacement text. '.repeat(5) });
+    });
+    const res = await assess(source.id);
+    assert.equal(res.status, 409);
+    assert.match((await res.json()).error, /changed while it was being assessed/);
+    assert.equal((await store().get(keyOf(source.id))).relevance, undefined);
+  });
+
+  test('updateKnowledgeRecord reloads and re-applies after losing an ETag race, and gives up after repeated conflicts', async () => {
+    const s = store();
+    await s.setJSON('k', { n: 0, tags: [] });
+    let calls = 0;
+    const ok = await updateKnowledgeRecord(s, 'k', async current => {
+      calls++;
+      if (calls === 1) await s.setJSON('k', { ...current, tags: ['other-writer'] }); // concurrent write
+      return { record: { ...current, n: current.n + 1 } };
+    });
+    assert.equal(ok.status, 'ok');
+    assert.equal(calls, 2, 'mutate re-ran against the fresh record');
+    assert.deepEqual(await s.get('k'), { n: 1, tags: ['other-writer'] }, 'neither writer lost');
+
+    const gaveUp = await updateKnowledgeRecord(s, 'k', async current => {
+      await s.setJSON('k', { ...current, bump: Math.random() });
+      return { record: { ...current, n: 99 } };
+    }, { attempts: 2 });
+    assert.equal(gaveUp.status, 'conflict');
+    assert.notEqual((await s.get('k')).n, 99);
+    assert.equal((await updateKnowledgeRecord(s, 'missing', () => ({ record: {} }))).status, 'missing');
   });
 });
-

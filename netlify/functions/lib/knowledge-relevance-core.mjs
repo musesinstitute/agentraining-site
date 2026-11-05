@@ -99,6 +99,8 @@ export function normalizeRelevance(value, { librarySources = [], snapshot, profi
     .map(id => ({ id, title: librarySources.find(s => s.id === id)?.title || '' }));
   return {
     version: RELEVANCE_VERSION,
+    // Unique per assessment: manager feedback must name the exact assessment it judged.
+    assessmentId: crypto.randomUUID(),
     overall,
     priority: relevancePriority(overall, licenseScope),
     dimensions: dims,
@@ -180,12 +182,17 @@ export function librarySnapshot(sources, excludeId) {
 
 // Learner-facing "importance": a small, safe projection of the manager-only
 // relevance assessment. Learners never see scores, dimensions, gaps, overlaps,
-// license notes, Practice-based reasoning or the manager's review. Nothing is
-// shown when the manager disagreed with the assessment or it needs compliance
-// review.
+// license notes, Practice-based reasoning or the manager's review.
+//
+// Publication gate (AI-rating approval is separate from content approval): a
+// rating reaches learners only when ALL of these hold - the manager explicitly
+// agreed with THIS assessment, the assessment is not a compliance "review",
+// and the Team Training Profile has not changed since it was made (a stale
+// rating is hidden until the source is reassessed and agreed again).
 export const IMPORTANCE_LEVELS = { P1: { level: 'must_know', stars: 3 }, P2: { level: 'important', stars: 2 }, P3: { level: 'reference', stars: 1 } };
-export function learnerImportanceView(relevance) {
-  if (!relevance || relevance.managerVerdict === 'disagree') return null;
+export function learnerImportanceView(relevance, profile) {
+  if (!relevance || relevance.managerVerdict !== 'agree') return null;
+  if (!profile?.updatedAt || relevance.profileUpdatedAt !== profile.updatedAt) return null;
   const level = IMPORTANCE_LEVELS[relevance.priority];
   if (!level) return null;
   return {

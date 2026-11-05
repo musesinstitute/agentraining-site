@@ -8,6 +8,7 @@
 import { getStore } from '@netlify/blobs';
 import { getUser, verifyRequestOrigin } from '@netlify/identity';
 import { normalizeRelevance, buildRelevancePrompt, competencySnapshot, librarySnapshot } from './lib/knowledge-relevance-core.mjs';
+import { updateKnowledgeRecord, knowledgeUpdateFailure } from './lib/knowledge-record.mjs';
 
 const STORE_NAME = 'agentraining-pilot';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -101,8 +102,20 @@ export default async (req) => {
     const { parsed, model } = await callModel(buildRelevancePrompt(record, { ...profile, lang }, snapshot, librarySources));
     const relevance = normalizeRelevance(parsed, { librarySources, snapshot, profile, model });
 
-    const updated = { ...record, relevance, updatedAt: new Date().toISOString() };
-    await store.setJSON(key, updated);
+    // The model call above can take many seconds. Save against the CURRENT
+    // record (ETag-checked), not the snapshot read before the call, so a
+    // manager approving / giving feedback / deleting in the meantime is never
+    // overwritten or undone. If the source's content or analysis changed, this
+    // assessment describes a different document: reject instead of saving it.
+    const result = await updateKnowledgeRecord(store, key, current => {
+      if (current.content !== record.content || current.analysis?.generatedAt !== record.analysis?.generatedAt) {
+        return { error: { status: 409, message: 'This source changed while it was being assessed. Please assess it again.' } };
+      }
+      return { record: { ...current, relevance, updatedAt: new Date().toISOString() } };
+    });
+    const failure = knowledgeUpdateFailure(result);
+    if (failure) return reply(failure.status, { error: failure.error });
+    const updated = result.record;
     const event = { id: crypto.randomUUID(), action: 'knowledge_relevance_assess', outcome: 'success', actorId: actor.id, actorEmail: actor.email, actorRoles: actor.roles, occurredAt: new Date().toISOString(), details: { knowledgeId: id, overall: relevance.overall, priority: relevance.priority, evidenceBasis: relevance.evidenceBasis, model } };
     await store.setJSON(`${prefix}/audit/${event.occurredAt}-${event.id}`, event);
     return reply(200, { source: updated });
