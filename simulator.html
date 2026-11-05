@@ -773,8 +773,16 @@
       border-radius: 8px; padding: 4px 9px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
     .coach-voice-btn.on { border-color: var(--gold); background: #FFFBEB; color: #B45309; }
-    .coach-talk-btn { border-color: var(--gold); color: #B45309; }
-    .coach-talk-btn.on { background: var(--gold); color: var(--white); }
+    .talk-row { margin-bottom: 8px; }
+    .talk-switch { display: inline-flex; flex-shrink: 0; border: 1.5px solid var(--border); border-radius: 99px; overflow: hidden; background: var(--white); }
+    .talk-opt {
+      border: none; background: transparent; color: var(--ink-muted); cursor: pointer;
+      padding: 5px 12px; font-size: 12px; font-weight: 700; font-family: inherit; white-space: nowrap;
+    }
+    .talk-opt.active.client { background: var(--accent); color: var(--white); }
+    .talk-opt.active.coach { background: var(--gold); color: var(--white); }
+    .talk-switch.flash { animation: talkFlash .9s ease-out; }
+    @keyframes talkFlash { 0% { box-shadow: 0 0 0 0 rgba(26,86,219,.55); } 100% { box-shadow: 0 0 0 10px rgba(26,86,219,0); } }
     #coach-voice-status { margin: 0 0 8px; }
     .voice-target { display: inline-flex; border: 1px solid currentColor; border-radius: 99px; overflow: hidden; }
     .voice-target button { border: none !important; border-radius: 0 !important; background: transparent !important; color: inherit !important; padding: 3px 9px !important; font-weight: 600 !important; }
@@ -1360,6 +1368,7 @@
       </div>
     </div>
     <div class="chat-input-area">
+      <div class="talk-row"><span class="talk-switch" data-talk-switch></span></div>
       <div class="voice-status" id="voice-status" aria-live="polite"></div>
       <div class="input-row">
         <textarea class="chat-input" id="chat-input" rows="1"
@@ -1403,7 +1412,7 @@
       <div class="coach-chat-head">
         <div class="coach-chat-title" id="coach-chat-title">🧑‍🏫 Talk to your coach</div>
         <span style="display:flex;gap:6px;flex-shrink:0;">
-          <button class="coach-voice-btn coach-talk-btn" id="coach-talk-btn" onclick="talkToCoach()">🎙️</button>
+          <span class="talk-switch" data-talk-switch></span>
           <button class="coach-voice-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" aria-pressed="false">🔇</button>
         </span>
       </div>
@@ -2074,15 +2083,16 @@ const COACH_STR = {
     chatLimit: 'You\'ve used all {n} coach messages for this session. Start a new session to keep practicing with your coach.',
     redoLimit: 'Redo limit reached for this session — keep going and we\'ll review it in the debrief.',
     voiceConvo: 'Voice chat', voiceConvoOn: 'End voice chat',
-    voiceIntro: 'Voice chat is on. You are talking to the client now. Take your time. When you want to talk with me, just say "Coach".',
-    voiceIntroCoach: 'I\'m here. Talk to me about anything, at your own pace. Say "back to the client" when you want to continue the practice.',
+    voiceIntro: 'Voice chat is on. You are talking to the client now. Take your time. Whenever you want me, say "switch to coach mode".',
+    voiceIntroCoach: 'I\'m here. Talk to me about anything, at your own pace. Say "switch to client mode" to go back to the practice.',
+    voiceSwitchedClient: 'Client mode', voiceSwitchedCoach: 'Coach mode',
     voiceBackToClient: 'OK, back to your client. Go ahead.',
     voiceTargetClient: 'Client', voiceTargetCoach: 'Coach', voiceTalkToCoach: '🎙️ Talk to coach',
     voiceWaitLabel: 'Send after', voiceWaitShort: '2.5s quiet', voiceWaitMedium: '4s quiet', voiceWaitLong: '6s quiet', voiceWaitManual: 'only when I tap Done',
     voiceSendingIn: 'sending in {n}s…', voiceTapDone: 'tap Done when finished',
     voiceListening: 'Listening…', voiceThinking: 'Thinking…', voiceSpeaking: 'Speaking…', voiceInterrupt: '⏹ Interrupt',
     voicePaused: 'Paused (no speech heard).', voiceResume: '▶ Continue', voiceEnd: 'End',
-    voiceHint: 'Say "Coach" to talk with your coach · "back to the client" to return · "take that back" to redo your last line',
+    voiceHint: 'Say "switch to coach mode" / "switch to client mode" any time · "take that back" to redo your last line',
     voiceDone: '✅ Done', voiceNothingToRedo: 'There is no line to take back right now.',
     voiceRedoPrompt: 'OK, say it again.', voiceCoachHere: 'Yes? What would you like to ask?',
     voiceUnsupported: 'This browser does not support voice chat. Please use Chrome, Edge or Safari.',
@@ -2119,15 +2129,16 @@ const COACH_STR = {
     chatLimit: '本次練習的 {n} 次教練對話已用完。開始新的練習即可繼續與教練對話。',
     redoLimit: '本次練習的重說次數已用完——先繼續對話，結束後的複盤會再一起檢討。',
     voiceConvo: '語音對話', voiceConvoOn: '結束語音',
-    voiceIntro: '語音對話已開啟，你現在是在跟客戶說話，慢慢說沒關係。想跟我聊的時候，說「教練」就可以。',
-    voiceIntroCoach: '我在。想聊什麼都可以，慢慢說。想回到練習時，說「回到客戶」就好。',
+    voiceIntro: '語音對話已開啟，你現在是在跟客戶說話，慢慢說沒關係。想找我的時候，說「切換到教練模式」就可以。',
+    voiceIntroCoach: '我在。想聊什麼都可以，慢慢說。想回到練習時，說「切換到客戶模式」就好。',
+    voiceSwitchedClient: '客戶模式', voiceSwitchedCoach: '教練模式',
     voiceBackToClient: '好，回到你的客戶，請繼續。',
     voiceTargetClient: '客戶', voiceTargetCoach: '教練', voiceTalkToCoach: '🎙️ 跟教練說話',
     voiceWaitLabel: '送出時機', voiceWaitShort: '安靜 2.5 秒', voiceWaitMedium: '安靜 4 秒', voiceWaitLong: '安靜 6 秒', voiceWaitManual: '按「說完了」才送',
     voiceSendingIn: '{n} 秒後送出…', voiceTapDone: '說完請按「說完了」',
     voiceListening: '正在聽…', voiceThinking: '思考中…', voiceSpeaking: '說話中…', voiceInterrupt: '⏹ 打斷',
     voicePaused: '已暫停（沒有聽到聲音）。', voiceResume: '▶ 繼續說話', voiceEnd: '結束',
-    voiceHint: '說「教練」就能跟教練聊 · 說「回到客戶」回到練習 · 說「撤回」收回剛才那句',
+    voiceHint: '隨時說「切換到教練模式」或「切換到客戶模式」 · 說「撤回」收回剛才那句',
     voiceDone: '✅ 說完了', voiceNothingToRedo: '現在沒有可以撤回的句子。',
     voiceRedoPrompt: '好，請再說一次。', voiceCoachHere: '我在，想問什麼？',
     voiceUnsupported: '這個瀏覽器不支援語音對話，請使用 Chrome、Edge 或 Safari。',
@@ -2152,6 +2163,13 @@ let lastExchange = null;          // { start, agentEl, clientEl, coachEl } for t
 // Cost guardrails. Every coach-chat message and every redo is an extra paid API
 // call, so both are capped per practice session. Raise these only deliberately.
 const COACH_CHAT_LIMIT = 30;      // learner messages to the coach per session (practice + debrief); ~US$0.005 each
+const COACH_INTERJECT_LIMIT = 3;  // live-coach interruptions per session (it should stay rare)
+const COACH_INTERJECT_GAP = 3;    // at least this many learner turns between two interruptions
+let coachInterjectCount = 0;
+let coachLastInterjectTurn = -99;
+function coachMayInterject() {
+  return coachInterjectCount < COACH_INTERJECT_LIMIT && turnCount - coachLastInterjectTurn >= COACH_INTERJECT_GAP;
+}
 const COACH_REDO_LIMIT = 5;       // "Redo my line" / voice "take that back" per session (each = 2 more calls)
 let coachChatUsed = 0;
 let coachRedoUsed = 0;
@@ -2182,13 +2200,43 @@ function speakCoach(text, interrupt) {
 // listening resumes. "Coach, …" goes to the coach instead of the client; after a
 // coach interjection, "redo" / "keep going" work as voice commands. The mic is off
 // while the AI speaks (otherwise it would hear itself); "Interrupt" stops speech.
+const voiceFlash = { until: 0, text: '' };
 const voiceConvo = { on: false, rec: null, loop: false, paused: false, silentRounds: 0, denied: false, heard: '', target: 'client' };
 const COACH_WAKE_RE = /^\s*(教練|教练|老師|老师|coach)[\s,，:：、。.!！?？]*/i;
 const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|再说一次|撤回|收回|說錯了|说错了|redo|try again|take that back|scratch that)[\s。.!！,，]*$/i;
 // Same words at the END of a longer utterance ("…500 a month, no wait, take that back"):
 // the learner is retracting what they just said, so it is dropped before sending.
 const VOICE_RETRACT_TAIL_RE = /(撤回|收回|重說|重说|重來|重来|再說一次|再说一次|take that back|scratch that)[\s。.!！,，]*$/i;
-const VOICE_BACK_TO_CLIENT_RE = /^\s*(回到客戶|回到客户|回到練習|回到练习|繼續練習|继续练习|back to the client|back to (the )?practice)[\s。.!！]*$/i;
+// "Switch to coach mode" / "I want to switch to client mode" / 切換到教練模式 / 我要跟教練說話 ...
+const SWITCH_CMD_RES = [
+  /\b(?:switch|change|go|move|turn|get)\s+(?:back\s+)?(?:over\s+)?to\s+(?:the\s+|my\s+)?(client|coach|practice)(?:\s+mode)?\b/i,
+  /\b(?:back\s+to|talk\s+(?:to|with)|speak\s+(?:to|with))\s+(?:the\s+|my\s+)?(client|coach|practice)\b/i,
+  /\b(client|coach)\s+mode\b/i,
+  /(?:切換|切换|換成|换成|換到|换到|轉到|转到|回到|改成|切到)\s*(?:到)?\s*(客戶|客户|教練|教练|練習|练习)\s*(?:模式)?/,
+  /(?:跟|和|與|与|找)\s*(客戶|客户|教練|教练)\s*(?:說話|说话|講話|讲话|聊天|聊聊|聊|對話|对话)/,
+  /(客戶|客户|教練|教练)\s*模式/
+];
+const SWITCH_FILLER_RE = /^(?:ok(?:ay)?|alright|well|so|um+|uh+|please|now|right now|i\s+want\s+to|i\s*'?d\s+like\s+to|i\s+would\s+like\s+to|i\s+need\s+to|let'?s|let\s+me|can\s+(?:you|we)|could\s+(?:you|we)|好的?|好吧|那麼|那么|那|請|请|現在|现在|馬上|马上|立刻|我要|我想要|我想|麻煩|麻烦|幫我|帮我|讓我|让我|可以|能不能)[\s,，.。!！、]*/i;
+const SWITCH_TAIL_RE = /[\s,，.。!！、]*(?:please|now|thanks|thank you|吧|一下|謝謝|谢谢|好嗎|好吗|可以嗎|可以吗)?[\s,，.。!！、]*$/i;
+function stripSwitchFiller(str) {
+  let out = (str || '').trim();
+  for (let i = 0; i < 6; i++) { const n = out.replace(SWITCH_FILLER_RE, ''); if (n === out) break; out = n; }
+  return out.replace(SWITCH_TAIL_RE, '').replace(/^[\s,，.。!！、:：]+/, '').trim();
+}
+// Returns { target, before, after } when the learner is asking to switch (at the start or the end of what they said).
+function detectSwitchCommand(text) {
+  for (const re of SWITCH_CMD_RES) {
+    const m = text.match(re);
+    if (!m) continue;
+    const noun = (m[1] || '').toLowerCase();
+    const target = /coach|教練|教练/.test(noun) ? 'coach' : 'client';
+    const before = stripSwitchFiller(text.slice(0, m.index));
+    const after = stripSwitchFiller(text.slice(m.index + m[0].length));
+    if (before && after) return null;   // in the middle of a sentence: ordinary speech
+    return { target, before, after };
+  }
+  return null;
+}
 const VOICE_KEEP_RE = /^\s*(繼續|继续|keep going|continue)[\s。.!！]*$/i;
 
 function pickVoice(role) {
@@ -2233,10 +2281,8 @@ function setVoiceStatus(state) {
     } else {
       main = `<span class="voice-status-text">⏳ ${escapeHtml(coachT('voiceThinking'))}</span>`;
     }
-    const t = voiceConvo.target;
-    const target = `<span class="voice-target"><button class="${t === 'client' ? 'active' : ''}" onclick="setVoiceTarget('client', true)"><span>👤 ${escapeHtml(coachT('voiceTargetClient'))}</span></button><button class="${t === 'coach' ? 'active' : ''}" onclick="setVoiceTarget('coach', true)"><span>🧑‍🏫 ${escapeHtml(coachT('voiceTargetCoach'))}</span></button></span>`;
     const opts = ['short', 'medium', 'long', 'manual'].map(w => `<option value="${w}"${w === voiceWait ? ' selected' : ''}>${escapeHtml(coachT('voiceWait' + w[0].toUpperCase() + w.slice(1)))}</option>`).join('');
-    box.innerHTML = target + main + `<button onclick="stopVoiceConvo()">${escapeHtml(coachT('voiceEnd'))}</button>` +
+    box.innerHTML = main + `<button onclick="stopVoiceConvo()">${escapeHtml(coachT('voiceEnd'))}</button>` +
       `<div style="flex-basis:100%;font-size:11px;font-weight:400;opacity:.85;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">` +
       `<label>${escapeHtml(coachT('voiceWaitLabel'))}: <select class="voice-wait" onchange="setVoiceWait(this.value)">${opts}</select></label>` +
       `<span>${escapeHtml(coachT('voiceHint'))}</span></div>`;
@@ -2252,17 +2298,41 @@ function updateVoiceCountdown(note) {
   if (el) el.textContent = note ? '· ' + note : '';
 }
 
-// Who the learner is talking to in voice chat.
-function setVoiceTarget(target, announce) {
-  const t = target === 'coach' ? 'coach' : 'client';
-  if (voiceConvo.target === t) return;
-  voiceConvo.target = t;
-  document.getElementById('coach-talk-btn')?.classList.toggle('on', voiceConvo.on && t === 'coach');
-  if (t === 'coach') openCoachPanel();
-  else if (isMobileLayout()) closeCoachPanel();
-  if (announce) coachSay(coachT(t === 'coach' ? 'voiceIntroCoach' : 'voiceBackToClient'));
-  setVoiceStatus('listening');
+// Who the learner is talking to: the client (practice) or the coach. One switch, shown on both
+// sides (under the client chat and in the coach panel), also driven by voice commands.
+function renderTalkSwitches(flash) {
+  document.querySelectorAll('[data-talk-switch]').forEach(el => {
+    const t = voiceConvo.target;
+    el.innerHTML =
+      `<button type="button" class="talk-opt client ${t === 'client' ? 'active' : ''}" onclick="switchTalkTarget('client')">👤 ${escapeHtml(coachT('voiceTargetClient'))}</button>` +
+      `<button type="button" class="talk-opt coach ${t === 'coach' ? 'active' : ''}" onclick="switchTalkTarget('coach')">🧑‍🏫 ${escapeHtml(coachT('voiceTargetCoach'))}</button>`;
+    el.setAttribute('role', 'group');
+    if (flash) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  });
 }
+
+function switchTalkTarget(target) {
+  const t = target === 'coach' ? 'coach' : 'client';
+  const changed = voiceConvo.target !== t;
+  voiceConvo.target = t;
+  renderTalkSwitches(changed);
+  if (!changed) return;
+  if (t === 'coach') {
+    showCoachChat();
+    openCoachPanel('', !voiceConvo.on);
+  } else {
+    if (isMobileLayout()) closeCoachPanel();
+    const ci = document.getElementById('chat-input');
+    if (!voiceConvo.on && ci && !ci.disabled) ci.focus();
+  }
+  if (voiceConvo.on) {
+    // Silent and instant: confirm on screen, then keep listening.
+    voiceFlash.text = '→ ' + coachT(t === 'coach' ? 'voiceSwitchedCoach' : 'voiceSwitchedClient');
+    voiceFlash.until = Date.now() + 2500;
+    setVoiceStatus('listening');
+  }
+}
+function setVoiceTarget(target) { switchTalkTarget(target); }
 
 // A short coach line in the coach panel (right side), spoken in voice chat.
 function coachSay(text) {
@@ -2271,12 +2341,6 @@ function coachSay(text) {
   if (isMobileLayout() && !document.getElementById('panel-right')?.classList.contains('mobile-open')) {
     document.getElementById('mobile-coach-btn')?.classList.add('has-new');
   }
-}
-
-// "🎙️ Talk to coach" in the coach panel: start voice chat with the coach, or switch to it.
-function talkToCoach() {
-  if (voiceConvo.on) { setVoiceTarget(voiceConvo.target === 'coach' ? 'client' : 'coach', true); return; }
-  startVoiceConvo('coach');
 }
 
 function updateVoiceUI() {
@@ -2288,11 +2352,7 @@ function updateVoiceUI() {
     btn.title = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
   }
   if (label) label.textContent = coachT(voiceConvo.on ? 'voiceConvoOn' : 'voiceConvo');
-  const talk = document.getElementById('coach-talk-btn');
-  if (talk) {
-    talk.textContent = coachT('voiceTalkToCoach');
-    talk.classList.toggle('on', voiceConvo.on && voiceConvo.target === 'coach');
-  }
+  renderTalkSwitches();
   if (!voiceConvo.on) setVoiceStatus('');
 }
 
@@ -2300,12 +2360,12 @@ function toggleVoiceConvo() {
   if (voiceConvo.on) stopVoiceConvo(); else startVoiceConvo();
 }
 
-function startVoiceConvo(target) {
+function startVoiceConvo() {
   if (!currentScenario) { alert(coachT('voicePickScenario')); return; }
   if (/MicroMessenger/i.test(navigator.userAgent)) { alert(coachT('voiceWeChat')); return; }
   if (!voiceSupported()) { alert(coachT('voiceUnsupported')); return; }
-  const t = target === 'coach' ? 'coach' : 'client';
-  Object.assign(voiceConvo, { on: true, paused: false, silentRounds: 0, denied: false, heard: '', target: t });
+  const t = voiceConvo.target === 'coach' ? 'coach' : 'client';
+  Object.assign(voiceConvo, { on: true, paused: false, silentRounds: 0, denied: false, heard: '' });
   if (typeof isRecording !== 'undefined' && isRecording && recognition) { try { recognition.stop(); } catch (e) {} }
   updateVoiceUI();
   if (t === 'coach') openCoachPanel();
@@ -2427,7 +2487,8 @@ function listenOnce() {
       if (now - startedAt > VOICE_MAX_MS) return finish();
       // Let the learner see that a pause is fine and when the line will be sent.
       let note = '';
-      if (lastHeardAt && !wait) note = coachT('voiceTapDone');
+      if (Date.now() < voiceFlash.until) note = voiceFlash.text;
+      else if (lastHeardAt && !wait) note = coachT('voiceTapDone');
       else if (lastHeardAt && quiet > 800) note = coachT('voiceSendingIn').replace('{n}', Math.ceil((wait - quiet) / 1000));
       updateVoiceCountdown(note);
     }, 200);
@@ -2466,12 +2527,22 @@ async function runVoiceLoop() {
   }
 }
 
-async function handleVoiceUtterance(text) {
+async function handleVoiceUtterance(text, skipCommands) {
   const sessionEnded = coachPhase === 'debrief' || turnCount >= maxPracticeTurns;
+
+  // ── Switching who they talk to: instant, no API call, no speech ──
+  if (!skipCommands && !sessionEnded) {
+    const cmd = detectSwitchCommand(text);
+    if (cmd) {
+      if (cmd.before) await handleVoiceUtterance(cmd.before, true);   // words said before the command go to whoever they were talking to
+      switchTalkTarget(cmd.target);
+      if (cmd.after) await handleVoiceUtterance(cmd.after, true);     // words after it go to the new person
+      return;
+    }
+  }
 
   // ── Talking with the coach (free conversation, no wake word needed) ──
   if (voiceConvo.target === 'coach' || sessionEnded) {
-    if (VOICE_BACK_TO_CLIENT_RE.test(text) && !sessionEnded) { setVoiceTarget('client', true); return; }
     const wake = text.match(COACH_WAKE_RE);
     const message = wake ? text.slice(wake[0].length).trim() : text;
     if (!message) { coachSay(coachT('voiceCoachHere')); return; }
@@ -2499,7 +2570,7 @@ async function handleVoiceUtterance(text) {
   if (wake) {
     const question = text.slice(wake[0].length).trim();
     // "Coach" on its own switches to a conversation with the coach; "Coach, <question>" asks once.
-    if (!question) { setVoiceTarget('coach', true); return; }
+    if (!question) { switchTalkTarget('coach'); return; }
     await sendVoiceToCoach(question);
     return;
   }
@@ -2547,6 +2618,7 @@ function updateCoachUI() {
   set('stage-chip-label', coachT('stageLabel'));
   set('mobile-coach-btn-label', coachT('mobileBtn'));
   if (typeof updateVoiceUI === 'function') updateVoiceUI();
+  if (typeof renderTalkSwitches === 'function') renderTalkSwitches();
   const vBtn = document.getElementById('coach-voice-btn');
   if (vBtn) {
     vBtn.textContent = coachT(coachVoiceEnabled ? 'voiceOn' : 'voiceOff');
@@ -2574,8 +2646,11 @@ function resetCoach() {
   lastExchange = null;
   coachChatUsed = 0;
   coachRedoUsed = 0;
+  coachInterjectCount = 0;
+  coachLastInterjectTurn = -99;
   setCoachChatEnabled(true);
   if (typeof stopVoiceConvo === 'function' && voiceConvo.on) stopVoiceConvo();
+  voiceConvo.target = 'client';
   const log = document.getElementById('coach-chat-log');
   if (log) log.innerHTML = '';
   const send = document.getElementById('coach-chat-send');
@@ -2648,7 +2723,7 @@ function showCoachInterjection(data) {
   } else {
     document.getElementById('coach-chat')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
-  if (coachVoiceEnabled || voiceConvo.on) speakCoach(spoken, false);
+  if (coachVoiceEnabled || voiceConvo.on) speakCoach(data.coachSays, false);   // brief: just the one sentence
 }
 
 // Hide the redo actions once the learner moves on (the interjection itself stays as a record).
@@ -3868,7 +3943,7 @@ ${COACH_COMPLIANCE_RULE}`;
 
   const prompt = isFinal
     ? `${coachPhilosophy}\n\nEvaluate this full sales conversation between an agent and a ${currentScenario.industry} client. Scenario: ${currentScenario.name[currentLang]}.\n\nConversation:\n${fullConvo}\n\nProvide a FINAL evaluation in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["point1","point2"],"tips":["tip1","tip2"],"summary":"One sentence overall assessment","keyMoments":[{"agentSaid":"short exact quote of what the agent said","issue":"what to adjust and why, one sentence","betterLine":"one stronger sentence the agent could have said"}]}\n\n"keyMoments" lists the 1-3 agent lines that most need a different wording, most important first. Keep every string short.\n\nWhen scoring "empathy", weight whether the agent genuinely understood the client's underlying concern before responding (seeing it from their point of view) rather than just being polite. When scoring "closing", weight whether the agent guided the client toward their own conclusion rather than pushing or arguing (winning without the conversation ever feeling like a fight).`
-    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. Set "interject" to true only for a clear, consequential mistake in the agent's last response: pitching or persuading before understanding the client's concern, arguing with the client, ignoring a direct question, pressuring, over-promising or inaccurate claims, or giving investment/securities advice. Do not interject for minor polish, and never for speech slips, fragments, self-corrections or transcription errors. When true, "coachSays" is 1-2 sentences spoken directly to the agent ("you ..."), naming what went wrong and why it matters to this client, and "betterLine" is one example sentence the agent could say instead. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
+    : `${coachPhilosophy}\n\nEvaluate only the agent's LAST response in this sales conversation. Scenario: ${currentScenario.name[currentLang]}. Industry: ${currentScenario.industry}.\n\nAgent's last response: "${lastAgent}"\n\nFull context:\n${fullConvo}\n\nProvide feedback in JSON format only:\n{"overallScore":85,"empathy":80,"accuracy":75,"closing":70,"strengths":["specific point about what was good"],"tips":["specific actionable tip to improve"],"interject":false,"coachSays":"","betterLine":""}\n\nAlso decide whether a live coach should step in RIGHT NOW, before the agent's next turn. The live coach is deliberately rare: most turns need no interruption, and the agent should be left to keep the conversation flowing. Set "interject" to true ONLY for a serious, clear-cut mistake that would damage this conversation if left alone: pitching or pressuring before understanding the client's concern, arguing with the client, ignoring a direct question, over-promising or a materially wrong claim, or giving investment/securities advice. When in doubt, set it to false; anything that can wait for the end-of-session debrief should wait. Never interject for minor polish, tone, wording preferences, or speech slips, fragments, self-corrections or transcription errors. When true, "coachSays" is ONE short sentence (about 15 words, or at most 30 Chinese characters) said directly to the agent: name the single issue and nothing more, with no praise and no explanation. "betterLine" is a short example phrase, or an empty string if the sentence is enough. When false, both are empty strings.\n\nIf the agent jumped straight to persuading without first acknowledging or understanding the client's stated concern, note this directly in tips — this is the single most common mistake. If the agent argued rather than asked a clarifying question, note that too.`;
 
   try {
     const result = await callClaude([{ role: 'user', content: prompt }],
@@ -3879,8 +3954,10 @@ ${COACH_COMPLIANCE_RULE}`;
     renderFeedback(data, isFinal);
     if (isFinal) {
       startCoachDebrief(data);
-    } else if (coachMode === 'live' && data.interject && data.coachSays && currentScenario?.id !== 0) {
+    } else if (coachMode === 'live' && data.interject && data.coachSays && currentScenario?.id !== 0 && coachMayInterject()) {
       // (Free Practice, id 0, is itself the AI coach persona, so no second coach steps in there.)
+      coachInterjectCount++;
+      coachLastInterjectTurn = turnCount;
       showCoachInterjection(data);
     }
   } catch(e) {
