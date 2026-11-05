@@ -2482,6 +2482,9 @@ function listenOnce() {
     let lastHeardAt = 0;
     let done = false;
     let timer = null;
+    let restartTimer = null;
+    let recognizerGeneration = 0;
+    let consecutiveEmptyEnds = 0;
     voiceConvo.heard = '';
 
     const fullText = () => (committed + ' ' + sessionText).replace(/\s+/g, ' ').trim();
@@ -2489,6 +2492,8 @@ function listenOnce() {
       if (done) return;
       done = true;
       clearInterval(timer);
+      clearTimeout(restartTimer);
+      recognizerGeneration++; // invalidate late mobile recognition callbacks
       voiceConvo.finishNow = null;
       const rec = voiceConvo.rec;
       voiceConvo.rec = null;
@@ -2498,28 +2503,50 @@ function listenOnce() {
     voiceConvo.finishNow = finish;
 
     const startRecogniser = () => {
+      if (done || !voiceConvo.on) return;
+      const generation = ++recognizerGeneration;
       const r = new SR();
       r.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
       r.continuous = true;
       r.interimResults = true;
       r.maxAlternatives = 1;
       r.onresult = (e) => {
+        if (done || generation !== recognizerGeneration) return;
+        // SpeechRecognition results are cumulative within one recognizer session.
+        // Rebuild instead of appending each event (which duplicates interim speech).
         let text = '';
         for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
         sessionText = text;
-        lastHeardAt = Date.now();
+        if (text.trim()) {
+          lastHeardAt = Date.now();
+          consecutiveEmptyEnds = 0;
+        }
         voiceConvo.heard = fullText();
         setVoiceStatus('listening');
       };
       r.onerror = (e) => {
-        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { voiceConvo.denied = true; finish(); }
+        if (done || generation !== recognizerGeneration) return;
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+          voiceConvo.denied = true;
+          finish();
+        } else if (e.error === 'audio-capture') {
+          // No microphone is available; do not endlessly restart the recognizer.
+          finish();
+        }
       };
       r.onend = () => {
-        if (done) return;
+        if (done || generation !== recognizerGeneration) return;
+        const hadText = !!sessionText.trim();
         committed = fullText();
         sessionText = '';
-        // The browser stopped on its own (a pause, or a mobile time limit): keep listening.
-        try { startRecogniser(); } catch (e) { finish(); }
+        // Some mobile browsers immediately end a recognizer without speech.
+        // Back off instead of spinning through rapid start/end cycles.
+        consecutiveEmptyEnds = hadText ? 0 : consecutiveEmptyEnds + 1;
+        const delay = hadText ? 100 : Math.min(1500, 200 * consecutiveEmptyEnds);
+        restartTimer = setTimeout(() => {
+          if (done || generation !== recognizerGeneration || !voiceConvo.on) return;
+          try { startRecogniser(); } catch (e) { finish(); }
+        }, delay);
       };
       voiceConvo.rec = r;
       r.start();
