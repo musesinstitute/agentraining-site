@@ -45,3 +45,9 @@ test('manual Done mode does not rely on the pause extension', () => {
   const manualWait = 0;
   assert.equal(manualWait ? manualWait + voicePauseExtensionMs('我觉得') : 0, 0);
 });
+
+test('ordinary English words ending in connector substrings do not delay replies', () => {
+  for (const sample of ['brand', 'thousand', 'sand', 'understand', 'insurance plan']) {
+    assert.equal(voicePauseExtensionMs(sample), 0, sample);
+  }
+});
