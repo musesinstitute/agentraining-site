@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Realtime Voice Lab — AgentTraining.ai</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    :root {font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#0f172a;background:#f6f8fc}
+    *{box-sizing:border-box}body{margin:0}main{max-width:860px;margin:30px auto;padding:26px;background:white;border-radius:18px;box-shadow:0 8px 28px #0f172a18}
+    h1{margin:0 0 6px;font-size:28px}p{line-height:1.6;color:#475569}.row{display:flex;flex-wrap:wrap;gap:12px;margin:15px 0}
+    label{display:block;font-size:14px;font-weight:650;flex:1;min-width:180px}select{display:block;margin-top:8px;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;background:#fff}
+    button{padding:12px 18px;border:0;border-radius:9px;font-weight:700;cursor:pointer}button:disabled{opacity:.48;cursor:default}
+    #start{background:#155eef;color:white}#stop{background:#fee2e2;color:#991b1b}#coach{background:#fff7e6;color:#92400e}
+    #status{padding:13px;border-radius:9px;background:#eff6ff;font-weight:650}#transcript{min-height:130px;max-height:300px;overflow:auto;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;white-space:pre-wrap;line-height:1.6}
+    .notice{padding:12px 16px;border-left:4px solid #f59e0b;background:#fffbeb}.subtle{font-size:13px}.turn{margin:6px 0}.learner{color:#065f46}.ai{color:#1d4ed8}
+  </style>
+</head>
+<body><main>
+  <a href="/simulator.html?ref=demo">← Back to Practice Studio / 返回练习室</a>
+  <h1>🎙️ Realtime Voice Lab <small style="font-size:14px">Experimental / 实验版</small></h1>
+  <p>OpenAI speech-to-speech with semantic turn detection and natural interruptions. Speak naturally, pause to think, repeat yourself, or mix Chinese and English.</p>
+  <div class="notice"><b>Private pilot test only.</b> This page is not yet connected to Practice scores, transcripts or manager reports. Audio is processed by the OpenAI API when you press Start. The local transcript preview is not uploaded to our case system. A session ends automatically after 5 minutes to reduce costs.</div>
+  <div class="row">
+    <label>Practice scenario / 练习场景
+      <select id="scenario">
+        <option value="premium">Premium is too high / 保费太高</option>
+        <option value="think">I'll think about it / 我再考虑</option>
+        <option value="already">I already have insurance / 已有保险</option>
+      </select>
+    </label>
+    <label>Conversation language / 语言
+      <select id="lang">
+        <option value="zh">中文（可夹英文）</option>
+        <option value="en">English (Chinese welcome)</option>
+      </select>
+    </label>
+  </div>
+  <div class="row">
+    <button id="start">🎙 Start realtime voice / 开始</button>
+    <button id="coach" disabled>Ask AI Coach / 切换教练</button>
+    <button id="stop" disabled>■ End / 结束</button>
+    <button id="login" type="button">Sign in / 登录</button>
+  </div>
+  <p id="status" role="status" aria-live="polite">Ready. Sign in to the private pilot, then press Start. / 请先登录试点，再开始。</p>
+  <audio id="remote" autoplay playsinline controls style="width:100%;margin:10px 0"></audio>
+  <h2>Live transcript preview / 对话文字预览</h2>
+  <div id="transcript" aria-live="polite"></div>
+  <p class="subtle">This is an isolated technical prototype. The original browser voice option in Practice Studio is unchanged. Microphone permissions and provider API access are required. Client/Coach role switching here is experimental and does not write scores.</p>
+</main>
+<script>
+(function(){
+'use strict';
+const byId = id => document.getElementById(id);
+const startBtn=byId('start'),stopBtn=byId('stop'),coachBtn=byId('coach'),loginBtn=byId('login');
+const scenario=byId('scenario'),lang=byId('lang'),status=byId('status'),transcript=byId('transcript'),audio=byId('remote');
+const cases={
+  premium: {en:'The insurance premium feels too expensive for my budget.',zh:'我觉得保费太贵了，预算不够。'},
+  think: {en:'I am hesitant and want to think before deciding.',zh:'我还不确定，想再考虑一下。'},
+  already:{en:'I already own life insurance and do not see the need for another policy.',zh:'我已经买了保险，不觉得需要新的保险。'}
+};
+let pc=null,channel=null,stream=null,deadline=null,role='client',run=0,historyCount=0;
+function setStatus(text){status.textContent=text;}
+function append(who,text,cls){
+  const div=document.createElement('div'); div.className='turn '+cls;
+  div.textContent=who+': '+text; transcript.appendChild(div);
+  transcript.scrollTop=transcript.scrollHeight;
+}
+function promptFor(roleName){
+  const zh=lang.value==='zh',customer=cases[scenario.value][zh?'zh':'en'];
+  const language=zh?'Use natural conversational Mandarin Chinese, with English when the learner uses it.':'Use natural conversational English, with Chinese when the learner uses it.';
+  if(roleName==='coach') return 'You are a supportive AI sales practice coach. '+language+
+    ' Speak briefly and practically. Give one specific feedback point drawn from this conversation and invite the learner to try again. Avoid named theories, quotes, lectures or rigid frameworks. Do not give unlicensed investment advice. Preserve the established client scenario and conversation context.';
+  return 'You are a believable, thoughtful, somewhat skeptical prospective insurance customer. '+language+
+    ' You feel this concern: '+customer+
+    ' Stay in character. Respond to the learner as a real human prospect, not a teacher, rubric, motivational speaker, or compliance advisor. Give short varied replies, occasional realistic follow-up questions, and natural emotional reactions. Never cite Sun Tzu, Dale Carnegie, or any sales doctrine. Be patient with hesitations, self-corrections and mixed languages. Never invent insurance guarantees or claim a product is suitable without facts.';
+}
+function send(event){if(channel && channel.readyState==='open')channel.send(JSON.stringify(event));}
+function applyRole(){
+  send({type:'session.update',session:{type:'realtime',instructions:promptFor(role)}});
+  coachBtn.textContent=role==='coach'?'Return to AI Client / 返回客户':'Ask AI Coach / 切换教练';
+}
+function reset(){
+  run++; clearTimeout(deadline); deadline=null;
+  try{if(channel)channel.close();}catch(_){}
+  try{if(pc)pc.close();}catch(_){}
+  if(stream)for(const t of stream.getTracks())t.stop();
+  channel=null;pc=null;stream=null;audio.srcObject=null;
+  startBtn.disabled=false;stopBtn.disabled=true;coachBtn.disabled=true;
+  scenario.disabled=false;lang.disabled=false;role='client';
+}
+function end(message){reset();setStatus(message||'Session ended / 已结束。');}
+function onEvent(evt){
+  let e;try{e=JSON.parse(evt.data);}catch(_){return;}
+  switch(e.type){
+    case 'session.created':setStatus('Connected; speak naturally / 已连接，请自然讲话。');break;
+    case 'input_audio_buffer.speech_started':setStatus('Listening to you / 正在听你说话……');break;
+    case 'input_audio_buffer.speech_stopped':setStatus('Processing your turn / 正在理解你的话……');break;
+    case 'conversation.item.input_audio_transcription.completed':
+      if(e.transcript)append('Learner / 学员',e.transcript,'learner');break;
+    case 'response.output_audio_transcript.done':
+      if(e.transcript)append(role==='coach'?'AI Coach':'AI Client',e.transcript,'ai');break;
+    case 'response.done':
+      historyCount++;setStatus('Ready for your next turn / 可以继续说话。');break;
+    case 'error':setStatus('Provider error: '+String(e.error?.message||'Unknown error').slice(0,180));break;
+  }
+}
+async function start(){
+  if(pc)return;
+  if(!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection){
+    setStatus('This browser does not support WebRTC microphone audio / 浏览器不支持实时麦克风。');return;
+  }
+  const id=++run;startBtn.disabled=true;scenario.disabled=true;lang.disabled=true;setStatus('Requesting microphone / 正在请求麦克风……');
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    if(id!==run)return;
+    const u=window.netlifyIdentity?.currentUser?.();
+    if(!u)throw Error('Please sign in to the private pilot first.');
+    const jwt=await u.jwt();
+    const tokenResponse=await fetch('/api/realtime-voice-token',{method:'POST',headers:{authorization:'Bearer '+jwt,'content-type':'application/json'},body:'{}'});
+    const tokenData=await tokenResponse.json().catch(()=>({}));
+    if(!tokenResponse.ok)throw Error(tokenData.error||'Voice service unavailable ('+tokenResponse.status+').');
+    if(!tokenData.value)throw Error('No voice session token returned');
+    if(id!==run)return;
+    pc=new RTCPeerConnection();
+    pc.ontrack=e=>{audio.srcObject=e.streams[0];audio.play().catch(()=>setStatus('Tap the audio player if sound is blocked. / 请点击播放器启用声音。'));};
+    pc.onconnectionstatechange=()=>{if(pc && ['failed','closed','disconnected'].includes(pc.connectionState))end('Connection ended / 连接已结束。');};
+    pc.addTrack(stream.getAudioTracks()[0],stream);
+    channel=pc.createDataChannel('oai-events');
+    channel.addEventListener('message',onEvent);
+    channel.addEventListener('open',()=>{applyRole();setStatus('Connected. Start speaking! / 已连接，请开始说话。');});
+    const offer=await pc.createOffer();await pc.setLocalDescription(offer);
+    const answer=await fetch('https://api.openai.com/v1/realtime/calls',{
+      method:'POST',headers:{authorization:'Bearer '+tokenData.value,'content-type':'application/sdp'},body:offer.sdp
+    });
+    if(!answer.ok)throw Error('WebRTC provider connection failed ('+answer.status+').');
+    const sdp=await answer.text();
+    if(id!==run)return;
+    await pc.setRemoteDescription({type:'answer',sdp});
+    if(id!==run)return;
+    stopBtn.disabled=false;coachBtn.disabled=false;
+    deadline=setTimeout(()=>end('Five-minute test limit reached / 5分钟测试已结束。'),Math.min(300,tokenData.maxSeconds||300)*1000);
+  }catch(e){end('Could not start voice: '+String(e.message||e).slice(0,200));}
+}
+startBtn.addEventListener('click',start);
+stopBtn.addEventListener('click',()=>end('Session ended / 已结束。'));
+coachBtn.addEventListener('click',()=>{
+  role=role==='coach'?'client':'coach';applyRole();
+  setStatus(role==='coach'?'Now ask your coach / 现在可以问教练。':'Back to the client / 已返回客户。');
+});
+loginBtn.addEventListener('click',()=>window.netlifyIdentity?.open('login'));
+window.addEventListener('pagehide',()=>reset());
+})();
+</script>
+</body></html>
