@@ -2529,10 +2529,15 @@ function listenOnce() {
         // Rebuild instead of appending each event (which duplicates interim speech).
         let text = '';
         for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
-        sessionText = text;
-        if (text.trim()) {
-          lastHeardAt = Date.now();
-          consecutiveEmptyEnds = 0;
+        // Some browsers emit the same cumulative transcript more than once.
+        // Only new/changed words count as activity; repeated callbacks must
+        // not postpone end-of-turn forever.
+        if (text !== sessionText) {
+          sessionText = text;
+          if (text.trim()) {
+            lastHeardAt = Date.now();
+            consecutiveEmptyEnds = 0;
+          }
         }
         voiceConvo.heard = fullText();
         setVoiceStatus('listening');
