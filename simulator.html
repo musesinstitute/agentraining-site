@@ -2470,6 +2470,19 @@ function setVoiceWait(w) {
   voiceWait = w;
   try { localStorage.setItem('agentraining_voice_wait', w); } catch (e) {}
 }
+// Conservative pause extension for unfinished spoken thoughts. This is a
+// browser-speech heuristic, not semantic voice activity detection.
+function voicePauseExtensionMs(text) {
+  const t = String(text || '').trim();
+  if (!t) return 0;
+  // Explicit final punctuation normally indicates a completed thought.
+  if (/[。！？!?．.]$/.test(t)) return 0;
+  // Mid-thought connectors, hesitation, and unfinished corrections deserve
+  // more time than the normal quiet threshold (especially in Chinese).
+  if (/(?:但是|不过|不過|因为|因為|所以|然后|然後|就是|那个|那個|比如|比方说|比方說|我想|我觉得|我覺得|等一下|不是|应该是|應該是|呃|嗯|啊|and|but|because|so|well|um+|uh+|actually|I mean|let me think|for example|no wait)[,，、…\\s]*$/i.test(t)) return 3500;
+  if (/[,，、:：;；…—-]$/.test(t)) return 2500;
+  return 0;
+}
 const VOICE_START_TIMEOUT_MS = 12000;
 const VOICE_MAX_MS = 120000;
 
@@ -2557,14 +2570,17 @@ function listenOnce() {
       const now = Date.now();
       const wait = VOICE_WAIT_OPTIONS[voiceWait];
       const quiet = lastHeardAt ? now - lastHeardAt : 0;
-      if (wait && lastHeardAt && quiet > wait) return finish();
+      // Keep the learner's chosen base wait. Extend only when the recognized
+      // phrase looks unfinished, and never extend the explicit Done/manual mode.
+      const effectiveWait = wait ? wait + voicePauseExtensionMs(fullText()) : 0;
+      if (effectiveWait && lastHeardAt && quiet > effectiveWait) return finish();
       if (!lastHeardAt && now - startedAt > VOICE_START_TIMEOUT_MS) return finish();
       if (now - startedAt > VOICE_MAX_MS) return finish();
       // Let the learner see that a pause is fine and when the line will be sent.
       let note = '';
       if (Date.now() < voiceFlash.until) note = voiceFlash.text;
       else if (lastHeardAt && !wait) note = coachT('voiceTapDone');
-      else if (lastHeardAt && quiet > 800) note = coachT('voiceSendingIn').replace('{n}', Math.ceil((wait - quiet) / 1000));
+      else if (lastHeardAt && quiet > 800) note = coachT('voiceSendingIn').replace('{n}', Math.max(0, Math.ceil((effectiveWait - quiet) / 1000)));
       updateVoiceCountdown(note);
     }, 200);
 
