@@ -61,7 +61,7 @@ export default async function handler(req) {
         expires_after: { anchor: 'created_at', seconds: 60 },
         session: {
           type: 'realtime',
-          model: 'gpt-realtime',
+          model: 'gpt-realtime-2.1',
           instructions: 'You are a natural, patient, respectful sales-practice conversation partner. Let users pause, self-correct, and mix Chinese and English. Keep responses brief and specific. Do not lecture about business books or named sales doctrines. Never invent product guarantees or legal claims.',
           audio: {
             input: {
