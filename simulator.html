@@ -2479,7 +2479,7 @@ function voicePauseExtensionMs(text) {
   if (/[。！？!?．.]$/.test(t)) return 0;
   // Mid-thought connectors, hesitation, and unfinished corrections deserve
   // more time than the normal quiet threshold (especially in Chinese).
-  if (/(?:但是|不过|不過|因为|因為|所以|然后|然後|就是|那个|那個|比如|比方说|比方說|我想|我觉得|我覺得|等一下|不是|应该是|應該是|呃|嗯|啊|and|but|because|so|well|um+|uh+|actually|I mean|let me think|for example|no wait)[,，、…\\s]*$/i.test(t)) return 3500;
+  if (/(?:但是|不过|不過|因为|因為|所以|然后|然後|就是|那个|那個|比如|比方说|比方說|我想|我觉得|我覺得|等一下|不是|应该是|應該是|呃|嗯|啊|and|but|because|so|well|um+|uh+|actually|I mean|let me think|for example|no wait)[,，、…\s]*$/i.test(t)) return 3500;
   if (/[,，、:：;；…—-]$/.test(t)) return 2500;
   return 0;
 }
