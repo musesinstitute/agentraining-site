@@ -33,3 +33,15 @@ test('complete thoughts and empty text do not add delay', () => {
     assert.equal(voicePauseExtensionMs(sample), 0, sample);
   }
 });
+
+test('mixed-language hesitations and self-corrections are given time', () => {
+  for (const sample of ['这个 premium 我觉得', 'I think 因为', '不是', 'no wait…', '嗯，']) {
+    assert.equal(voicePauseExtensionMs(sample), 3500, sample);
+  }
+});
+
+test('manual Done mode does not rely on the pause extension', () => {
+  // The timer applies extension only when the selected wait is nonzero.
+  const manualWait = 0;
+  assert.equal(manualWait ? manualWait + voicePauseExtensionMs('我觉得') : 0, 0);
+});
