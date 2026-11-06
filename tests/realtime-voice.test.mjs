@@ -66,7 +66,7 @@ test('Only an ephemeral key reaches the browser, with semantic VAD low eagerness
   assert.equal(upstream.opts.headers.authorization,'Bearer test-server-secret');
   const session=JSON.parse(upstream.opts.body).session;
   assert.equal(session.type,'realtime');
-  assert.equal(session.model,'gpt-realtime');
+  assert.equal(session.model,'gpt-realtime-2.1');
   assert.equal(session.audio.input.turn_detection.type,'semantic_vad');
   assert.equal(session.audio.input.turn_detection.eagerness,'low');
   assert.equal(session.audio.input.turn_detection.interrupt_response,true);
