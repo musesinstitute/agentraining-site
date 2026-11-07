@@ -99,6 +99,8 @@ test('WebRTC lab links from simulator, supports cleanup and coach switching', ()
   assert.match(browser,/Five-minute test limit reached/);
   assert.match(browser,/if\(id!==run\)\{for\(const t of granted\.getTracks\(\)\)t\.stop\(\);return;\}/);
   assert.match(browser,/connectAbort\.abort\(\)/);
+  assert.match(browser,/if\(responding\)send\(\{type:'response\.cancel'\}\)/);
+  assert.match(browser,/if\(playing\)send\(\{type:'output_audio_buffer\.clear'\}\)/);
   assert.match(browser,/stopBtn\.disabled=false;scenario\.disabled=true/);
   assert.doesNotMatch(browser,/sk-[a-zA-Z0-9]/);
   const simulator=readFileSync(new URL('../simulator.html',import.meta.url),'utf8');
