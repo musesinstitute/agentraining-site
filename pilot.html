@@ -7,6 +7,22 @@
 <script src="pilot-cloud.js?v=20260821-guide1"></script>
 <style>
 :root{--blue:#1a56db;--ink:#111827;--muted:#64748b;--bg:#f7f8fc;--line:#e2e8f0;--green:#047857;--amber:#b45309;--red:#b91c1c;--white:#fff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Arial,sans-serif}nav{height:64px;padding:0 5%;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.logo{color:var(--blue);font-size:20px;font-weight:800;text-decoration:none}.logo span{color:#f59e0b}.nav-right{display:flex;align-items:center;gap:10px}.identity{color:var(--muted);font-size:11px}.signout,.lang-btn{border:1px solid var(--line);background:#fff;color:#475569;border-radius:8px;padding:7px 10px;cursor:pointer}.lang-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd;font-weight:800}.lang-switch{display:flex;gap:4px}.hero{padding:38px 5%;background:linear-gradient(135deg,#eff6ff 0%,#ecfdf5 100%)}.hero-inner{max-width:1180px;margin:auto}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}.hero h1{font-size:36px;margin:8px 0}.hero p{color:var(--muted);line-height:1.55;margin:0;max-width:720px}.role{display:inline-block;margin-top:13px;padding:6px 10px;border-radius:99px;background:#fff;color:#1d4ed8;font-size:11px;font-weight:800;border:1px solid #bfdbfe}.shell{max-width:1180px;margin:24px auto;padding:0 18px}.status{background:#fff;border:1px dashed var(--line);border-radius:13px;padding:36px;text-align:center;color:var(--muted)}.next{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:18px;box-shadow:0 8px 24px rgba(15,23,42,.05)}.next-label{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.6px}.next h2{font-size:23px;margin:6px 0}.next p{margin:0;color:var(--muted);line-height:1.5}.primary{display:inline-block;white-space:nowrap;text-decoration:none;background:var(--blue);color:#fff;padding:12px 17px;border-radius:10px;font-weight:800}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px}.metric strong{display:block;font-size:27px;color:var(--blue);margin-bottom:4px}.metric span{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px}.panel h2{font-size:18px;margin:0 0 14px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.step{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:14px}.step b{display:block;color:var(--blue);margin-bottom:6px}.step p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.actions{display:grid;gap:9px}.action{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink)}.action:hover{border-color:#93c5fd;background:#eff6ff}.action small{display:block;color:var(--muted);margin-top:3px}.arrow{color:var(--blue);font-weight:800}.result{background:#f8fafc;border-radius:10px;padding:13px;line-height:1.5}.result b{display:block;margin-bottom:4px}.result small{color:var(--muted)}.trust{margin-top:18px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px;color:#065f46;font-size:12px;line-height:1.55}.empty{color:var(--muted);background:#f8fafc;border-radius:10px;padding:15px}@media(max-width:800px){.metrics{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.next{align-items:flex-start;flex-direction:column}.hero h1{font-size:29px}.primary{width:100%;text-align:center}.identity{display:none}}@media(max-width:450px){.metrics{grid-template-columns:1fr}.hero{padding:28px 5%}.shell{padding:0 12px}}
+
+/* Manager AI Guide v1: role-gated, guided introduction (not a claim of full agentic navigation). */
+.ai-guide{background:#fff;border:1px solid #bfdbfe;border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+.ai-guide .guide-kicker{font-size:11px;letter-spacing:.7px;color:#1d4ed8;font-weight:800;text-transform:uppercase}
+.ai-guide h2{font-size:22px;margin:8px 0}.ai-guide p{line-height:1.55;color:#475569;margin:0 0 14px}
+.ai-guide-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:15px 0}
+.ai-guide-choice{border:1px solid #cbd5e1;border-radius:11px;padding:13px 9px;background:#f8fafc;color:#1e3a8a;font-weight:700;text-align:left;cursor:pointer;font-size:13px;min-height:74px}
+.ai-guide-choice:hover,.ai-guide-choice:focus-visible{border-color:#1a56db;outline:2px solid transparent;background:#eff6ff}
+.ai-guide-choice[aria-pressed="true"]{border-color:#1a56db;background:#dbeafe}
+.ai-guide-result{background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;padding:15px;margin-top:10px}
+.ai-guide-result[hidden]{display:none}.ai-guide-result h3{margin:0 0 6px;color:#1e3a8a;font-size:17px}
+.ai-guide-result p{margin:0 0 10px}.ai-guide-links{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ai-guide-links a{padding:10px 13px;border-radius:9px;font-weight:700;text-decoration:none}
+.ai-guide-open{background:#1a56db;color:white}.ai-guide-chat{background:#e7edff;color:#1e40af}
+.ai-guide .guide-note{font-size:12px;margin:12px 0 0;color:#64748b}
+@media(max-width:800px){.ai-guide-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:460px){.ai-guide-choices{grid-template-columns:1fr}.ai-guide-links a{width:100%;text-align:center}}
 </style>
 </head>
 <body>
@@ -26,6 +42,62 @@ document.getElementById('subtitle').textContent=t('One clear place to see what m
 document.getElementById('roleBadge').textContent=t('Loading role…','正在读取账号角色…');
 document.querySelector('#app .status').textContent=t('Loading your secure workspace…','正在载入您的安全工作区…');
 const active=a=>(a||[]).filter(x=>x.status!=='Completed');
+
+const GUIDE_TOPICS=[
+ {id:'practice',titleEn:'🎯 Practice Studio',titleZh:'🎯 练习工作室',
+  detailEn:'See how an advisor rehearses a client conversation and receives a score, transcript, and coaching feedback. The manager can review authorized training evidence.',
+  detailZh:'看看学员怎样模拟客户对话，获得评分、完整记录和教练反馈；主管可查看已授权的练习证据。',
+  href:'simulator.html?ref=demo&pilot=1',
+  askEn:'I am exploring Practice Studio as a manager. Help me understand how to use an existing Practice result to coach a learner, one step at a time. Only use authorized work evidence.',
+  askZh:'我正在了解 Practice Studio。请一步一步指导我怎样根据已有的练习结果辅导学员；只能使用已授权的工作证据。'},
+ {id:'client',titleEn:'👥 Client Studio',titleZh:'👥 客户工作室',
+  detailEn:'See how client opportunities and recruiting candidates are tracked and connected to scenario practice. AI-led client discovery and evolving client profiles are planned, not yet live.',
+  detailZh:'了解潜在客户与招募候选人的跟进档案，以及如何连接到情境练习。AI 主动访谈与动态客户档案仍在规划中，尚未上线。',
+  href:'simulator.html?ref=demo&pilot=1&studio=client',
+  askEn:'I am exploring Client Studio. Guide me through what the existing client case and linked Practice workflow can do today. Do not describe AI-led client discovery as an existing feature.',
+  askZh:'我正在了解 Client Studio。请指导我使用目前已有的客户档案与 Practice 连接流程。AI 主动了解客户的功能还未上线，请不要当作现成功能介绍。'},
+ {id:'knowledge',titleEn:'📚 Knowledge Studio',titleZh:'📚 知识工作室',
+  detailEn:'Explore curriculum and company-approved training materials. Managers can review how knowledge informs targeted Practice.',
+  detailZh:'查看课程与经过企业审核的培训资料，以及知识如何支持有针对性的练习。',
+  href:'knowledge.html?pilot=1',
+  askEn:'Help me explore how Knowledge Studio can support relevant, manager-approved training and how it connects to Practice. Guide me step by step.',
+  askZh:'请一步一步介绍 Knowledge Studio 怎样支持主管审核的培训知识，以及怎样与 Practice Studio 连接。'},
+ {id:'leadership',titleEn:'📊 Leadership Studio',titleZh:'📊 主管工作室',
+  detailEn:'Review assignments, completed results, and team coaching actions. Managers confirm decisions; the guide never assigns work on their behalf.',
+  detailZh:'查看团队任务、完成结果和辅导行动。所有指派由主管确认，Guide 不会代替主管发布任务。',
+  href:'manager.html?pilot=1',
+  askEn:'Help me explore Leadership Studio: review one authorized learner result, choose a coaching focus, and explain how I approve a next assignment.',
+  askZh:'请指导我探索 Leadership Studio：查看一项已授权的练习结果、选择辅导重点，以及由主管确认下一次指派。'}
+];
+function managerGuide(){
+ const choices=GUIDE_TOPICS.map(function(topic){
+  return '<button type="button" class="ai-guide-choice" data-guide-topic="'+topic.id+'" aria-pressed="false">'+esc(t(topic.titleEn,topic.titleZh))+'</button>';
+ }).join('');
+ return '<section class="ai-guide" id="ai-guide" aria-labelledby="ai-guide-title">'
+  +'<div class="guide-kicker">'+t('AI Guide · Manager orientation preview','AI Guide · 主管导览预览')+'</div>'
+  +'<h2 id="ai-guide-title">'+t('What would you like to explore first?','您想先了解哪一部分？')+'</h2>'
+  +'<p>'+t('Pick one Studio. I will explain the next step, then you can open it or continue the conversation with Manager AI.','请选择一个工作室。我会说明下一步，您可以直接进入，也可以继续向主管 AI 提问。')+'</p>'
+  +'<div class="ai-guide-choices" role="group" aria-label="'+t('Choose a Studio','选择工作室')+'">'+choices+'</div>'
+  +'<div id="ai-guide-result" class="ai-guide-result" hidden aria-live="polite"><h3 id="ai-guide-topic-title"></h3><p id="ai-guide-topic-description"></p>'
+  +'<div class="ai-guide-links"><a id="ai-guide-open" class="ai-guide-open" href="#">'+t('Open this Studio →','进入这个工作室 →')+'</a>'
+  +'<a id="ai-guide-chat" class="ai-guide-chat" href="manager-chat.html?pilot=1">'+t('Ask Manager AI →','继续咨询主管 AI →')+'</a></div></div>'
+  +'<p class="guide-note">'+t('This first version is a guided introduction connected to the existing AI Copilot, not an autonomous platform-wide assistant.','第一版提供分步导览，并连接现有 AI Copilot；还不是能够自主操作整个平台的智能助手。')+'</p></section>';
+}
+function activateManagerGuide(){
+ const root=document.getElementById('ai-guide');if(!root)return;
+ const buttons=Array.from(root.querySelectorAll('[data-guide-topic]'));
+ buttons.forEach(function(button){button.addEventListener('click',function(){
+  const topic=GUIDE_TOPICS.find(function(item){return item.id===button.dataset.guideTopic});
+  if(!topic)return;
+  buttons.forEach(function(b){b.setAttribute('aria-pressed',String(b===button))});
+  document.getElementById('ai-guide-topic-title').textContent=t(topic.titleEn,topic.titleZh);
+  document.getElementById('ai-guide-topic-description').textContent=t(topic.detailEn,topic.detailZh);
+  document.getElementById('ai-guide-open').href=topic.href;
+  document.getElementById('ai-guide-chat').href='manager-chat.html?pilot=1&guide='+encodeURIComponent(topic.id)+'&lang='+encodeURIComponent(currentLang);
+  document.getElementById('ai-guide-result').hidden=false;
+ })});
+}
+
 function managerView(me,assignments,sessions,profiles){
   const open=active(assignments),completed=(assignments||[]).filter(x=>x.status==='Completed'),recent=sessions?.[0];
   const attention=(profiles||[]).filter(p=>(p.claims||[]).some(c=>c.status==='active'&&c.claimType==='growth_area')).length;
@@ -56,7 +128,8 @@ async function loadHome(){
     document.getElementById('identity').textContent=me.email;document.getElementById('roleBadge').textContent=isManager?t('Manager Pilot','主管试用账号'):t('Learner Pilot','学员试用账号');
     document.getElementById('welcome').textContent=isManager?t('Welcome, Manager','主管，欢迎您'):t('Welcome back','欢迎回来');
     document.getElementById('subtitle').textContent=isManager?t('See what needs attention, make one evidence-based coaching decision, and keep the team moving.','查看需要关注的事项，根据练习证据作出一项辅导决定，并推动团队继续进步。'):t('See your next assignment, practice with purpose, and understand your progress.','查看下一项练习任务，有目标地练习，并了解自己的进步。');
-    document.getElementById('app').innerHTML=isManager?managerView(me,assignmentData.assignments||[],sessionData.sessions||[],profileData.profiles||[]):learnerView(me,assignmentData.assignments||[],sessionData.sessions||[],profileData.profiles||[]);
+    document.getElementById('app').innerHTML=isManager?managerGuide()+managerView(me,assignmentData.assignments||[],sessionData.sessions||[],profileData.profiles||[]):learnerView(me,assignmentData.assignments||[],sessionData.sessions||[],profileData.profiles||[]);
+    if(isManager)activateManagerGuide();
     document.getElementById('app').insertAdjacentHTML('beforeend','<div class="trust"><b>'+t('Human-centered and secure:','以人为中心并保护隐私：')+'</b> '+t('Pilot records persist in the authenticated team workspace. Managers see authorized work evidence; private Learner Coach conversations remain learner-only. Learners can review and dispute AI-recorded profile observations.','试用记录保存在经过登录验证的团队工作区。主管只能查看已授权的练习证据；学员与私人 AI 教练的对话仅学员本人可见。学员可以查看并对 AI 记录的能力表现提出异议。')+'</div>');
   }catch(error){document.getElementById('app').innerHTML='<div class="status">'+esc(t('Could not load the secure workspace: ','无法载入安全工作区：')+error.message)+'</div>'}
 }
