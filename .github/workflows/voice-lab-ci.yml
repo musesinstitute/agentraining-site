@@ -1,0 +1,25 @@
+name: Realtime Voice Lab contract checks
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'netlify/functions/realtime-voice-token.mjs'
+      - 'voice-realtime-lab.html'
+      - 'tests/realtime-voice.test.mjs'
+      - '.github/workflows/voice-lab-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  voice-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: node --check netlify/functions/realtime-voice-token.mjs
+      - name: Verify offline voice contracts (no paid API calls)
+        run: node --test tests/realtime-voice.test.mjs
