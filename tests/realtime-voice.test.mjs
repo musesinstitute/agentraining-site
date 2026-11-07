@@ -44,7 +44,14 @@ test('Realtime requires a signed-in user and allowed origin', async () => {
   assert.equal((await setup({user:false}).handler({method:'POST'})).status, 401);
   assert.equal((await setup({origin:false}).handler({method:'POST'})).status, 403);
   assert.equal((await setup({roles:[]}).handler({method:'POST'})).status, 403);
-  assert.equal((await setup().handler({method:'GET'})).status, 405);
+  const ready=await setup().handler({method:'GET'});
+  assert.equal(ready.status,200);
+  assert.deepEqual(await ready.json(),{enabled:true,preview:true});
+  const off=await setup({active:false}).handler({method:'GET'});
+  assert.equal((await off.json()).enabled,false);
+  const noKey=await setup({key:false}).handler({method:'GET'});
+  assert.equal((await noKey.json()).enabled,false);
+  assert.equal((await setup().handler({method:'PUT'})).status, 405);
 });
 
 test('Realtime is OFF unless enabled and configured by the deploy operator', async () => {
@@ -92,6 +99,10 @@ test('Learner may start at most five paid sessions per hour', async () => {
 
 test('WebRTC lab links from simulator, supports cleanup and coach switching', () => {
   assert.match(browser,/RTCPeerConnection/);
+  assert.match(browser,/checkReadiness\(\)/);
+  assert.match(browser,/NEW OpenAI realtime voice|NEW VERSION/);
+  assert.match(browser,/Signing in cannot enable it/);
+  assert.match(browser,/startBtn\.disabled=!serviceEnabled/);
   assert.match(browser,/\/api\/realtime-voice-token/);
   assert.match(browser,/input_audio_buffer\.speech_started/);
   assert.match(browser,/session\.update/);
