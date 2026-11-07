@@ -32,10 +32,15 @@ export default async function handler(req) {
   }
   const user = await getUser().catch(() => null);
   if (!user || !user.id) return respond(401, { error: 'Sign in to the private pilot first.' });
+  const roles = Array.isArray(user.roles) ? user.roles : [];
+  if (!roles.some(r => ['learner', 'manager', 'admin'].includes(r))) {
+    return respond(403, { error: 'An invited Pilot learner or manager account is required.' });
+  }
   if (process.env.OPENAI_REALTIME_ENABLED !== '1') {
     return respond(503, { error: 'Realtime voice testing has not been enabled for this deploy.' });
   }
   const key = process.env.OPENAI_API_KEY;
+  const model = process.env.OPENAI_REALTIME_MODEL === 'gpt-realtime-2.1-mini' ? 'gpt-realtime-2.1-mini' : 'gpt-realtime-2.1';
   if (!key) return respond(503, { error: 'OPENAI_API_KEY is not configured on Netlify.' });
   try {
     const allowed = await reserveSession(user.id);
@@ -61,7 +66,7 @@ export default async function handler(req) {
         expires_after: { anchor: 'created_at', seconds: 60 },
         session: {
           type: 'realtime',
-          model: 'gpt-realtime-2.1',
+          model,
           instructions: 'You are a natural, patient, respectful sales-practice conversation partner. Let users pause, self-correct, and mix Chinese and English. Keep responses brief and specific. Do not lecture about business books or named sales doctrines. Never invent product guarantees or legal claims.',
           audio: {
             input: {
