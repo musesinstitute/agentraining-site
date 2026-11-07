@@ -60,7 +60,7 @@ const cases={
   think: {en:'I am hesitant and want to think before deciding.',zh:'我还不确定，想再考虑一下。'},
   already:{en:'I already own life insurance and do not see the need for another policy.',zh:'我已经买了保险，不觉得需要新的保险。'}
 };
-let pc=null,channel=null,stream=null,deadline=null,connectTimer=null,connectAbort=null,role='client',run=0,historyCount=0;
+let pc=null,channel=null,stream=null,deadline=null,connectTimer=null,connectAbort=null,role='client',run=0,historyCount=0,responding=false,playing=false;
 function setStatus(text){status.textContent=text;}
 function append(who,text,cls){
   const div=document.createElement('div'); div.className='turn '+cls;
@@ -90,7 +90,7 @@ function reset(){
   if(stream)for(const t of stream.getTracks())t.stop();
   channel=null;pc=null;stream=null;audio.srcObject=null;
   startBtn.disabled=false;stopBtn.disabled=true;coachBtn.disabled=true;
-  scenario.disabled=false;lang.disabled=false;role='client';
+  scenario.disabled=false;lang.disabled=false;role='client';responding=false;playing=false;
 }
 function end(message){reset();setStatus(message||'Session ended / 已结束。');}
 function onEvent(evt){
@@ -99,12 +99,15 @@ function onEvent(evt){
     case 'session.created':setStatus('Connected; speak naturally / 已连接，请自然讲话。');break;
     case 'input_audio_buffer.speech_started':setStatus('Listening to you / 正在听你说话……');break;
     case 'input_audio_buffer.speech_stopped':setStatus('Processing your turn / 正在理解你的话……');break;
+    case 'response.created':responding=true;break;
+    case 'output_audio_buffer.started':playing=true;setStatus('AI is speaking; you can interrupt / AI正在讲话，可以插话。');break;
+    case 'output_audio_buffer.stopped':case 'output_audio_buffer.cleared':playing=false;break;
     case 'conversation.item.input_audio_transcription.completed':
       if(e.transcript)append('Learner / 学员',e.transcript,'learner');break;
     case 'response.output_audio_transcript.done':
       if(e.transcript)append(role==='coach'?'AI Coach':'AI Client',e.transcript,'ai');break;
     case 'response.done':
-      historyCount++;setStatus('Ready for your next turn / 可以继续说话。');break;
+      responding=false;historyCount++;setStatus('Ready for your next turn / 可以继续说话。');break;
     case 'error':setStatus('Provider error: '+String(e.error?.message||'Unknown error').slice(0,180));break;
   }
 }
@@ -156,6 +159,10 @@ async function start(){
 startBtn.addEventListener('click',start);
 stopBtn.addEventListener('click',()=>end('Session ended / 已结束。'));
 coachBtn.addEventListener('click',()=>{
+  // A role switch should not finish an old client/coach answer in the new role.
+  if(responding)send({type:'response.cancel'});
+  if(playing)send({type:'output_audio_buffer.clear'});
+  responding=false;playing=false;
   role=role==='coach'?'client':'coach';applyRole();
   setStatus(role==='coach'?'Now ask your coach / 现在可以问教练。':'Back to the client / 已返回客户。');
 });
