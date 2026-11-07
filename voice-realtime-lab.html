@@ -18,7 +18,9 @@
 </head>
 <body><main>
   <a href="/simulator.html?ref=demo">← Back to Practice Studio / 返回练习室</a>
-  <h1>🎙️ Realtime Voice Lab <small style="font-size:14px">Experimental / 实验版</small></h1>
+  <h1>🎙️ OpenAI Realtime Voice — NEW VERSION <small style="font-size:14px">PR #72 Preview / 新版实验</small></h1>
+  <p class="notice"><b>Version guide / 版本说明：</b> This page is the <b>NEW OpenAI realtime voice</b> test. “Back to Practice Studio” opens the <b>EXISTING browser-voice</b> experience, not this new realtime engine. / 本页是新版 OpenAI 实时语音测试；返回 Practice Studio 进入的是原有浏览器语音版本。</p>
+  <p id="readiness" role="status" aria-live="polite">Checking whether the new voice service is enabled… / 正在检查新版语音服务是否启用……</p>
   <p>OpenAI speech-to-speech with semantic turn detection and natural interruptions. Speak naturally, pause to think, repeat yourself, or mix Chinese and English.</p>
   <div class="notice"><b>Private pilot test only.</b> This page is not yet connected to Practice scores, transcripts or manager reports. Audio is processed by the OpenAI API when you press Start. The local transcript preview is not uploaded to our case system. A session ends automatically after 5 minutes to reduce costs.</div>
   <div class="row">
@@ -42,7 +44,7 @@
     <button id="stop" disabled>■ End / 结束</button>
     <button id="login" type="button">Sign in / 登录</button>
   </div>
-  <p id="status" role="status" aria-live="polite">Ready. Sign in to the private pilot, then press Start. / 请先登录试点，再开始。</p>
+  <p id="status" role="status" aria-live="polite">Checking readiness / 正在检查服务状态……</p>
   <audio id="remote" autoplay playsinline controls style="width:100%;margin:10px 0"></audio>
   <h2>Live transcript preview / 对话文字预览</h2>
   <div id="transcript" aria-live="polite"></div>
@@ -54,7 +56,25 @@
 'use strict';
 const byId = id => document.getElementById(id);
 const startBtn=byId('start'),stopBtn=byId('stop'),coachBtn=byId('coach'),loginBtn=byId('login');
-const scenario=byId('scenario'),lang=byId('lang'),status=byId('status'),transcript=byId('transcript'),audio=byId('remote');
+const scenario=byId('scenario'),lang=byId('lang'),status=byId('status'),transcript=byId('transcript'),audio=byId('remote'),readiness=byId('readiness');
+let serviceEnabled=false;startBtn.disabled=true;
+async function checkReadiness(){
+  try{
+    const res=await fetch('/api/realtime-voice-token',{method:'GET',cache:'no-store'});
+    if(!res.ok)throw Error('Cannot check voice service');
+    const data=await res.json();serviceEnabled=data.enabled===true;
+    if(serviceEnabled){
+      readiness.textContent='✓ New OpenAI Realtime is enabled. Sign in as a pilot learner, then press Start. / 新版实时语音已启用；请登录试点学员账号后开始。';
+      setStatus('Voice service ready / 实时语音服务已就绪。');startBtn.disabled=false;
+    }else{
+      readiness.textContent='⚠ New OpenAI Realtime is NOT ENABLED on this deploy. The owner must configure OPENAI_REALTIME_ENABLED=1 and a server-only OPENAI_API_KEY in Netlify before testing. Signing in cannot enable it. / 此部署尚未启用新版语音；必须先在 Netlify 安全配置环境变量。登录学员账号无法启用。';
+      setStatus('New voice is not enabled yet; do not press Start / 新版语音尚未启用。');startBtn.disabled=true;
+    }
+  }catch(e){
+    readiness.textContent='⚠ Could not verify new voice availability; please retry later. / 无法确认新版语音状态，请稍后再试。';
+    setStatus('Voice readiness check failed / 语音状态检查失败。');startBtn.disabled=true;
+  }
+}
 const cases={
   premium: {en:'The insurance premium feels too expensive for my budget.',zh:'我觉得保费太贵了，预算不够。'},
   think: {en:'I am hesitant and want to think before deciding.',zh:'我还不确定，想再考虑一下。'},
@@ -89,7 +109,7 @@ function reset(){
   try{if(pc)pc.close();}catch(_){}
   if(stream)for(const t of stream.getTracks())t.stop();
   channel=null;pc=null;stream=null;audio.srcObject=null;
-  startBtn.disabled=false;stopBtn.disabled=true;coachBtn.disabled=true;
+  startBtn.disabled=!serviceEnabled;stopBtn.disabled=true;coachBtn.disabled=true;
   scenario.disabled=false;lang.disabled=false;role='client';responding=false;playing=false;
 }
 function end(message){reset();setStatus(message||'Session ended / 已结束。');}
@@ -112,7 +132,7 @@ function onEvent(evt){
   }
 }
 async function start(){
-  if(pc || startBtn.disabled)return;
+  if(pc || startBtn.disabled || !serviceEnabled)return;
   if(!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection){
     setStatus('This browser does not support WebRTC microphone audio / 浏览器不支持实时麦克风。');return;
   }
@@ -168,6 +188,7 @@ coachBtn.addEventListener('click',()=>{
 });
 loginBtn.addEventListener('click',()=>window.netlifyIdentity?.open('login'));
 window.addEventListener('pagehide',()=>reset());
+checkReadiness();
 })();
 </script>
 </body></html>
