@@ -24,6 +24,11 @@ async function reserveSession(userId) {
 }
 
 export default async function handler(req) {
+  // Public readiness flag only: no identity details, keys or credentials are returned.
+  if (req.method === 'GET') return respond(200, {
+    enabled: process.env.OPENAI_REALTIME_ENABLED === '1' && Boolean(process.env.OPENAI_API_KEY),
+    preview: true
+  });
   if (req.method !== 'POST') return respond(405, { error: 'POST only' });
   try {
     verifyRequestOrigin(req);
