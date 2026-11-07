@@ -46,6 +46,7 @@
   <audio id="remote" autoplay playsinline controls style="width:100%;margin:10px 0"></audio>
   <h2>Live transcript preview / 对话文字预览</h2>
   <div id="transcript" aria-live="polite"></div>
+  <p class="subtle">Press End at any time, including while a connection is being established. / 随时可以按“结束”，包括正在连接时。</p>
   <p class="subtle">This is an isolated technical prototype. The original browser voice option in Practice Studio is unchanged. Microphone permissions and provider API access are required. Client/Coach role switching here is experimental and does not write scores.</p>
 </main>
 <script>
@@ -59,7 +60,7 @@ const cases={
   think: {en:'I am hesitant and want to think before deciding.',zh:'我还不确定，想再考虑一下。'},
   already:{en:'I already own life insurance and do not see the need for another policy.',zh:'我已经买了保险，不觉得需要新的保险。'}
 };
-let pc=null,channel=null,stream=null,deadline=null,role='client',run=0,historyCount=0;
+let pc=null,channel=null,stream=null,deadline=null,connectTimer=null,connectAbort=null,role='client',run=0,historyCount=0;
 function setStatus(text){status.textContent=text;}
 function append(who,text,cls){
   const div=document.createElement('div'); div.className='turn '+cls;
@@ -82,6 +83,8 @@ function applyRole(){
 }
 function reset(){
   run++; clearTimeout(deadline); deadline=null;
+  clearTimeout(connectTimer);connectTimer=null;
+  if(connectAbort){connectAbort.abort();connectAbort=null;}
   try{if(channel)channel.close();}catch(_){}
   try{if(pc)pc.close();}catch(_){}
   if(stream)for(const t of stream.getTracks())t.stop();
@@ -106,41 +109,49 @@ function onEvent(evt){
   }
 }
 async function start(){
-  if(pc)return;
+  if(pc || startBtn.disabled)return;
   if(!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection){
     setStatus('This browser does not support WebRTC microphone audio / 浏览器不支持实时麦克风。');return;
   }
-  const id=++run;startBtn.disabled=true;scenario.disabled=true;lang.disabled=true;setStatus('Requesting microphone / 正在请求麦克风……');
+  const id=++run;startBtn.disabled=true;stopBtn.disabled=false;scenario.disabled=true;lang.disabled=true;
+  deadline=setTimeout(()=>end('Five-minute test limit reached / 5分钟测试已结束。'),300000);
+  connectTimer=setTimeout(()=>end('Voice connection timed out / 连接超时，请重试。'),90000);
+  connectAbort=new AbortController();
+  setStatus('Requesting microphone / 正在请求麦克风……');
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-    if(id!==run)return;
+    const granted=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    if(id!==run){for(const t of granted.getTracks())t.stop();return;}
+    stream=granted;
     const u=window.netlifyIdentity?.currentUser?.();
     if(!u)throw Error('Please sign in to the private pilot first.');
     const jwt=await u.jwt();
-    const tokenResponse=await fetch('/api/realtime-voice-token',{method:'POST',headers:{authorization:'Bearer '+jwt,'content-type':'application/json'},body:'{}'});
+    if(id!==run)return;
+    const tokenResponse=await fetch('/api/realtime-voice-token',{method:'POST',headers:{authorization:'Bearer '+jwt,'content-type':'application/json'},body:'{}',signal:connectAbort.signal});
     const tokenData=await tokenResponse.json().catch(()=>({}));
     if(!tokenResponse.ok)throw Error(tokenData.error||'Voice service unavailable ('+tokenResponse.status+').');
     if(!tokenData.value)throw Error('No voice session token returned');
     if(id!==run)return;
     pc=new RTCPeerConnection();
     pc.ontrack=e=>{audio.srcObject=e.streams[0];audio.play().catch(()=>setStatus('Tap the audio player if sound is blocked. / 请点击播放器启用声音。'));};
-    pc.onconnectionstatechange=()=>{if(pc && ['failed','closed','disconnected'].includes(pc.connectionState))end('Connection ended / 连接已结束。');};
+    const currentPc=pc;
+    pc.onconnectionstatechange=()=>{if(id===run && pc===currentPc && ['failed','closed'].includes(currentPc.connectionState))end('Connection ended / 连接已结束。');};
     pc.addTrack(stream.getAudioTracks()[0],stream);
     channel=pc.createDataChannel('oai-events');
     channel.addEventListener('message',onEvent);
     channel.addEventListener('open',()=>{applyRole();setStatus('Connected. Start speaking! / 已连接，请开始说话。');});
     const offer=await pc.createOffer();await pc.setLocalDescription(offer);
     const answer=await fetch('https://api.openai.com/v1/realtime/calls',{
-      method:'POST',headers:{authorization:'Bearer '+tokenData.value,'content-type':'application/sdp'},body:offer.sdp
+      method:'POST',headers:{authorization:'Bearer '+tokenData.value,'content-type':'application/sdp'},body:offer.sdp,signal:connectAbort.signal
     });
     if(!answer.ok)throw Error('WebRTC provider connection failed ('+answer.status+').');
     const sdp=await answer.text();
     if(id!==run)return;
     await pc.setRemoteDescription({type:'answer',sdp});
     if(id!==run)return;
+    clearTimeout(connectTimer);connectTimer=null;
+    connectAbort=null;
     stopBtn.disabled=false;coachBtn.disabled=false;
-    deadline=setTimeout(()=>end('Five-minute test limit reached / 5分钟测试已结束。'),Math.min(300,tokenData.maxSeconds||300)*1000);
-  }catch(e){end('Could not start voice: '+String(e.message||e).slice(0,200));}
+  }catch(e){if(id===run)end('Could not start voice: '+String(e.message||e).slice(0,200));}
 }
 startBtn.addEventListener('click',start);
 stopBtn.addEventListener('click',()=>end('Session ended / 已结束。'));
