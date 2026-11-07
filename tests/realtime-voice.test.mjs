@@ -11,7 +11,7 @@ const wrapped = server
   .replace('export default async function handler', 'async function handler')
   + '\nreturn handler;';
 
-function setup({ active = true, user = true, origin = true, key = true, storageOk = true } = {}) {
+function setup({ active = true, user = true, origin = true, key = true, storageOk = true, roles = ['learner'], model = '' } = {}) {
   let count = 0, records = null, forwarded = null;
   const getStore = () => ({
     async get() {
@@ -27,12 +27,13 @@ function setup({ active = true, user = true, origin = true, key = true, storageO
   };
   const env = {
     OPENAI_REALTIME_ENABLED: active ? '1' : '0',
-    OPENAI_API_KEY: key ? 'test-server-secret' : ''
+    OPENAI_API_KEY: key ? 'test-server-secret' : '',
+    OPENAI_REALTIME_MODEL: model
   };
   const handler = new Function('createHash','getUser','verifyRequestOrigin','getStore','fetch','Response',
     'process','AbortController','setTimeout','clearTimeout','console',wrapped)(
     createHash,
-    async () => user ? { id: 'pilot-learner' } : null,
+    async () => user ? { id: 'pilot-learner', roles } : null,
     () => { if (!origin) throw Error('untrusted origin'); },
     getStore,fetch,Response,{ env },AbortController,setTimeout,clearTimeout,{ error() {} }
   );
@@ -42,6 +43,7 @@ function setup({ active = true, user = true, origin = true, key = true, storageO
 test('Realtime requires a signed-in user and allowed origin', async () => {
   assert.equal((await setup({user:false}).handler({method:'POST'})).status, 401);
   assert.equal((await setup({origin:false}).handler({method:'POST'})).status, 403);
+  assert.equal((await setup({roles:[]}).handler({method:'POST'})).status, 403);
   assert.equal((await setup().handler({method:'GET'})).status, 405);
 });
 
@@ -72,6 +74,15 @@ test('Only an ephemeral key reaches the browser, with semantic VAD low eagerness
   assert.equal(session.audio.input.turn_detection.interrupt_response,true);
 });
 
+test('Model selection is server-only and mini requires explicit server configuration', async () => {
+  const full=setup({model:'unsupported-user-model'});
+  assert.equal((await full.handler({method:'POST'})).status,200);
+  assert.equal(JSON.parse(full.forwarded().opts.body).session.model,'gpt-realtime-2.1');
+  const mini=setup({model:'gpt-realtime-2.1-mini'});
+  assert.equal((await mini.handler({method:'POST'})).status,200);
+  assert.equal(JSON.parse(mini.forwarded().opts.body).session.model,'gpt-realtime-2.1-mini');
+});
+
 test('Learner may start at most five paid sessions per hour', async () => {
   const app=setup();
   for(let i=0;i<5;i++)assert.equal((await app.handler({method:'POST'})).status,200);
@@ -86,6 +97,9 @@ test('WebRTC lab links from simulator, supports cleanup and coach switching', ()
   assert.match(browser,/session\.update/);
   assert.match(browser,/stream\.getTracks\(\)/);
   assert.match(browser,/Five-minute test limit reached/);
+  assert.match(browser,/if\(id!==run\)\{for\(const t of granted\.getTracks\(\)\)t\.stop\(\);return;\}/);
+  assert.match(browser,/connectAbort\.abort\(\)/);
+  assert.match(browser,/stopBtn\.disabled=false;scenario\.disabled=true/);
   assert.doesNotMatch(browser,/sk-[a-zA-Z0-9]/);
   const simulator=readFileSync(new URL('../simulator.html',import.meta.url),'utf8');
   assert.match(simulator,/href="\/voice-realtime-lab\.html"/);
