@@ -48,6 +48,7 @@
   <audio id="remote" autoplay playsinline controls style="width:100%;margin:10px 0"></audio>
   <h2>Live transcript preview / 对话文字预览</h2>
   <div id="transcript" aria-live="polite"></div>
+  <p class="subtle">Say “Switch to Coach Mode” or “Switch to Client Mode” to change roles. You can also use the role button. / 可以直接说“切换到教练模式”或“切换到客户模式”，也可以使用按钮。</p>
   <p class="subtle">Press End at any time, including while a connection is being established. / 随时可以按“结束”，包括正在连接时。</p>
   <p class="subtle">This is an isolated technical prototype. The original browser voice option in Practice Studio is unchanged. Microphone permissions and provider API access are required. Client/Coach role switching here is experimental and does not write scores.</p>
 </main>
@@ -97,6 +98,27 @@ function promptFor(roleName){
     ' Stay in character. Respond to the learner as a real human prospect, not a teacher, rubric, motivational speaker, or compliance advisor. Give short varied replies, occasional realistic follow-up questions, and natural emotional reactions. Never cite Sun Tzu, Dale Carnegie, or any sales doctrine. Be patient with hesitations, self-corrections and mixed languages. Never invent insurance guarantees or claim a product is suitable without facts.';
 }
 function send(event){if(channel && channel.readyState==='open')channel.send(JSON.stringify(event));}
+// Voice commands are app controls, NOT advice requests for the AI character.
+// When coaching, ASR may mistake "client" for "climb" or "calm".
+function voiceRoleCommand(raw){
+  const text=String(raw||'').toLowerCase().replace(/[.,!?。，！？]/g,' ').replace(/\s+/g,' ').trim();
+  const direct=/^(?:(?:okay|ok|um|uh|please|now|well)\s+)*(?:(?:switch|change|go|return|move)\s+(?:back\s+)?to\s+|back\s+to\s+)(?:the\s+|my\s+)?(client|coach|practice|climb|calm|cliant|clent)(?:\s+mode)?(?:\s+please)?$/i.exec(text);
+  const short=/^(client|coach)\s+mode$/i.exec(text);
+  const zh=/^(?:(?:请|請|我要|我想|现在|現在)\s*)*(?:切换|切換|回到|返回|切到|换到|換到)\s*(?:到)?\s*(客户|客戶|教练|教練)(?:模式)?$/.exec(text);
+  const noun=direct?.[1]||short?.[1]||zh?.[1];
+  if(!noun)return null;
+  if(/coach|教练|教練/.test(noun))return 'coach';
+  if(/climb|calm|cliant|clent/.test(noun) && role!=='coach')return null;
+  return 'client';
+}
+function setRole(target){
+  if(target===role)return;
+  if(responding)send({type:'response.cancel'});
+  if(playing)send({type:'output_audio_buffer.clear'});
+  responding=false;playing=false;role=target;applyRole();
+  setStatus(role==='coach'?'Coach mode / 教练模式。':'Client mode / 客户模式。');
+  append('System / 系统',role==='coach'?'Switched to Coach / 已切到教练':'Switched to Client / 已切到客户','ai');
+}
 function applyRole(){
   send({type:'session.update',session:{type:'realtime',instructions:promptFor(role)}});
   coachBtn.textContent=role==='coach'?'Return to AI Client / 返回客户':'Ask AI Coach / 切换教练';
@@ -123,7 +145,8 @@ function onEvent(evt){
     case 'output_audio_buffer.started':playing=true;setStatus('AI is speaking; you can interrupt / AI正在讲话，可以插话。');break;
     case 'output_audio_buffer.stopped':case 'output_audio_buffer.cleared':playing=false;break;
     case 'conversation.item.input_audio_transcription.completed':
-      if(e.transcript)append('Learner / 学员',e.transcript,'learner');break;
+      if(e.transcript){append('Learner / 学员',e.transcript,'learner');const target=voiceRoleCommand(e.transcript);if(target)setRole(target);}
+      break;
     case 'response.output_audio_transcript.done':
       if(e.transcript)append(role==='coach'?'AI Coach':'AI Client',e.transcript,'ai');break;
     case 'response.done':
@@ -179,12 +202,7 @@ async function start(){
 startBtn.addEventListener('click',start);
 stopBtn.addEventListener('click',()=>end('Session ended / 已结束。'));
 coachBtn.addEventListener('click',()=>{
-  // A role switch should not finish an old client/coach answer in the new role.
-  if(responding)send({type:'response.cancel'});
-  if(playing)send({type:'output_audio_buffer.clear'});
-  responding=false;playing=false;
-  role=role==='coach'?'client':'coach';applyRole();
-  setStatus(role==='coach'?'Now ask your coach / 现在可以问教练。':'Back to the client / 已返回客户。');
+  setRole(role==='coach'?'client':'coach');
 });
 loginBtn.addEventListener('click',()=>window.netlifyIdentity?.open('login'));
 window.addEventListener('pagehide',()=>reset());
