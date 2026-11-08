@@ -2250,6 +2250,9 @@ const VOICE_REDO_RE = /^\s*(重說|重说|重來|重来|再說一次|再说一�
 // the learner is retracting what they just said, so it is dropped before sending.
 const VOICE_RETRACT_TAIL_RE = /(撤回|收回|重說|重说|重來|重来|再說一次|再说一次|take that back|scratch that)[\s。.!！,，]*$/i;
 // "Switch to coach mode" / "I want to switch to client mode" / 切換到教練模式 / 我要跟教練說話 ...
+// Recover “client” when browser ASR produces “climb” or “calm”.
+// Only an explicit mode-switch imperative is eligible.
+const SWITCH_CLIENT_ASR_RE = /\b(?:switch|change|go|move|return|get|take\s+me)\s+(?:back\s+)?(?:over\s+)?to\s+(?:(?:the|my)\s+)?(?:climb|calm|cliant|clent|client)(?:\s+mode)?\b|\b(?:back|return)\s+to\s+(?:the\s+|my\s+)?(?:climb|calm|cliant|clent|client)(?:\s+mode)?\b/i;
 const SWITCH_CMD_RES = [
   /\b(?:switch|change|go|move|turn|get)\s+(?:back\s+)?(?:over\s+)?to\s+(?:the\s+|my\s+)?(client|coach|practice)(?:\s+mode)?\b/i,
   /\b(?:back\s+to|talk\s+(?:to|with)|speak\s+(?:to|with))\s+(?:the\s+|my\s+)?(client|coach|practice)\b/i,
@@ -2267,6 +2270,15 @@ function stripSwitchFiller(str) {
 }
 // Returns { target, before, after } when the learner is asking to switch (at the start or the end of what they said).
 function detectSwitchCommand(text) {
+  // Recover likely client only in coach mode, never from ordinary calm-related talk.
+  if (voiceConvo.target === 'coach') {
+    const m = text.match(SWITCH_CLIENT_ASR_RE);
+    if (m) {
+      const before = stripSwitchFiller(text.slice(0, m.index));
+      const after = stripSwitchFiller(text.slice(m.index + m[0].length));
+      if (!before || !after) return { target: 'client', before, after };
+    }
+  }
   for (const re of SWITCH_CMD_RES) {
     const m = text.match(re);
     if (!m) continue;
