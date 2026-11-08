@@ -4337,7 +4337,9 @@ function startPracticeFromCase(caseId) {
   closeClientStudio();
   setPanelMode('curriculum');
 
-  const matched = getCaseType(c) === 'client' ? matchScenarioForObjection(c.objection, c.industry) : null;
+  // Discovery-generated demo cases must rehearse the *specific* client context;
+  // a generic curriculum match would discard facts collected in the AI interview.
+  const matched = !c.clientDiscovery && getCaseType(c) === 'client' ? matchScenarioForObjection(c.objection, c.industry) : null;
   let mapped;
   if (matched) {
     mapped = {
