@@ -2512,9 +2512,10 @@ function selectScenario(sc) {
   updateCurrentIndustry(sc?.industry);
   updateLearningGoal(sc);
   updateLinkedCaseBanner(sc?.linkedCaseId ? getClientCases().find(c => c.id === sc.linkedCaseId) : null);
+  if (typeof showLinkedCasePracticeTools === 'function') showLinkedCasePracticeTools(sc);
 
   // Auto-trigger welcome for free practice (id=0)
-  if (sc.id === 0) {
+  if (sc.id === 0 && !sc.linkedCaseId) {
     setTimeout(() => {
       const inputEl = document.getElementById('chat-input');
       if (inputEl) {
@@ -2548,7 +2549,7 @@ function selectScenario(sc) {
     6: { en: "I really love this neighborhood, but with rates at 7%, my monthly payment would be brutal. I'm thinking of waiting another year or two.", zh: "我真的很喜歡這個社區，但7%的利率，我的月付會很艱難。我在考慮再等一兩年。" }
   };
 
-  if (sc.id !== 0) {
+  if (sc.id !== 0 || sc.linkedCaseId) {
     const openingSource = sc.greeting || openingMap[sc.id];
     const opening = openingSource ? openingSource[currentLang] : (currentLang === 'zh' ? '你好，我們開始吧。' : "Hello, let's get started.");
     conversationHistory.push({ role: 'assistant', content: opening });
@@ -3265,6 +3266,12 @@ function updateSummarySyncStatus(state, message) {
 }
 
 async function syncCompletedPractice(data) {
+  if (currentScenario?.linkedCaseId && !activeAssignment) {
+    updateSummarySyncStatus('success', currentLang === 'zh'
+      ? '✓ 自主练习记录、完整对话和教练建议已保存在本浏览器的客户档案中。可在该客户档案中删除本地自主练习记录；不会自动同步到主管系统。'
+      : '✓ Self-practice transcript and coach feedback saved locally in this client case. Learner may delete local self-practice history; nothing was synced to the manager workspace.');
+    return;
+  }
   updateSummarySyncStatus('saving', currentLang === 'zh'
     ? '正在保存分数、完整对话记录和完成状态…'
     : 'Saving the score, transcript, and completion status…');
@@ -4288,6 +4295,7 @@ function renderCaseDetail(c) {
       <button class="dash-secondary-btn" style="flex:none;" onclick="openCaseFormForEdit('${c.id}')">✏️ ${s.csEdit}</button>
     </div>
   `;
+  if (typeof renderCasePracticeHistory === 'function') renderCasePracticeHistory(c);
 }
 
 // ── OBJECTION → CURRICULUM SCENARIO MATCHING ──
@@ -4335,6 +4343,8 @@ function startPracticeFromCase(caseId) {
   const c = getClientCases().find(x => x.id === caseId);
   if (!c) return;
   closeClientStudio();
+  // A learner launching a case practice is not completing a manager assignment.
+  activeAssignment = null;
   setPanelMode('curriculum');
 
   // Discovery-generated demo cases must rehearse the *specific* client context;
@@ -4365,6 +4375,8 @@ function startPracticeFromCase(caseId) {
     mapped = Object.assign({}, freeScenario, {
       clientName: c.clientName,
       industry: c.industry,
+      name: { en: 'Practice with ' + c.clientName, zh: '与 ' + c.clientName + ' 模拟交流' },
+      greeting: { en: 'Hello, thanks for following up. What would you like to discuss today?', zh: '你好，谢谢你再次联系。今天你想和我聊些什么？' },
       systemPrompt: buildCaseFreePracticePrompt(c),
       isCurriculum: false,
       linkedCaseId: c.id
@@ -4391,13 +4403,20 @@ function saveCasePracticeResult(caseId, data) {
   const idx = cases.findIndex(c => c.id === caseId);
   if (idx === -1) return;
   const result = {
-    date: new Date().toISOString().slice(0, 10),
+    id: genCaseId(),
+    date: new Date().toISOString(),
     scenarioId: currentScenario?.id,
     scenarioTitle: (currentScenario?.name && (currentScenario.name[currentLang] || currentScenario.name.en)) || '',
     score: data.overallScore || 0,
     strengths: data.strengths || [],
     tips: data.tips || [],
-    summary: data.summary || ''
+    summary: data.summary || '',
+    transcript: (conversationHistory || []).map((m, i) => ({ index: i+1, speaker: m.role === 'user' ? 'agent' : 'client', text: m.content })),
+    coachHistory: (window.clientCaseCoachHistory || []).slice(),
+    isSelfPractice: !activeAssignment,
+    isFormal: !!activeAssignment,
+    // Only exclusively local, unassigned records offer learner deletion.
+    localOnly: !activeAssignment
   };
   cases[idx].lastPractice = result;
   cases[idx].practiceHistory = cases[idx].practiceHistory || [];
@@ -4479,6 +4498,7 @@ window.addEventListener('load', () => {
   }, 300);
 });
 </script>
-<script src="client-discovery.js?v=20261107-client-discovery-v1" defer></script>
+<script src="client-discovery.js?v=20261107-client-discovery-v2" defer></script>
+<script src="client-practice.js?v=20261108-personalized-practice-v1" defer></script>
 </body>
 </html>
