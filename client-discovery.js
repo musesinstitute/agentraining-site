@@ -9,7 +9,7 @@
   };
   const empty = () => ({ version: 1, alias: "Demo Prospect", industry: "Insurance", turns: [], insights: null, nextQuestion: null });
   let state = empty(), dialog, answer, question, feedback, saveButton, submitButton, consent, aliasInput, industryInput, voiceButton;
-  let pending = false, recognizer = null;
+  let pending = false, recognizer = null, dictating = false, dictationBase = "", dictationFinal = "";
   const lang = () => {
     try { return ((new URLSearchParams(location.search).get("lang") || sessionStorage.getItem("agentraining_lang") || navigator.language || "en").toLowerCase().startsWith("zh")) ? "zh" : "en"; }
     catch { return "en"; }
@@ -51,8 +51,8 @@
   }
   function render() {
     if (!dialog) return;
-    byId("cs-ai-step").textContent = t("Answer ", "回答第 ") + (state.turns.length + 1) + t(" of up to 5", " 个问题（最多 5 个）");
-    question.textContent = state.nextQuestion || FIRST_QUESTION[lang()];
+    byId("cs-ai-step").textContent = state.turns.length >= 5 ? t("Discovery complete · 5 of 5", "访谈已完成 · 5/5") : t("Answer ", "回答第 ") + (state.turns.length + 1) + t(" of up to 5", " 个问题（最多 5 个）");
+    question.textContent = state.turns.length >= 5 ? t("Review the Client Understanding Map below, then save the case.", "请核对下方客户理解地图，再保存客户档案。") : (state.nextQuestion || FIRST_QUESTION[lang()]);
     aliasInput.value = state.alias;
     industryInput.value = state.industry;
     saveButton.disabled = !state.insights || !state.turns.length || pending;
@@ -115,7 +115,7 @@
       const res = await fetch("/.netlify/functions/claude", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ system, messages: [{ role: "user", content: JSON.stringify({ prior: turns, previousMap: state.insights, instruction: "Analyze the latest answer and provide an updated map and next question." }) }] })
+        body: JSON.stringify({ max_tokens: 600, system, messages: [{ role: "user", content: JSON.stringify({ prior: turns, previousMap: state.insights, instruction: "Analyze the latest answer and provide an updated map and next question. Keep each item brief." }) }] })
       });
       const json = await res.json();
       if (!res.ok || json.error) throw new Error(bounded(json.error || ("HTTP " + res.status), 180));
@@ -216,13 +216,49 @@
     const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (Speech) {
       voiceButton.addEventListener("click", () => {
-        if (recognizer) { recognizer.stop(); return; }
-        recognizer = new Speech(); recognizer.lang = lang() === "zh" ? "zh-CN" : "en-US"; recognizer.continuous = false; recognizer.interimResults = false;
-        recognizer.onresult = e => { answer.value = bounded((answer.value + " " + e.results[0][0].transcript), 1000); };
-        recognizer.onerror = () => displayStatus(t("Voice dictation failed. You can type instead.", "语音输入失败，可改用文字。"));
-        recognizer.onend = () => { recognizer = null; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); };
-        voiceButton.textContent = t("Stop dictation", "停止语音输入"); recognizer.start();
+        if (dictating) {
+          dictating = false;
+          if (recognizer) recognizer.stop();
+          voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入");
+          displayStatus(t("Dictation stopped. Check the complete text before sending.", "已停止听写。请检查完整文字后再发送。"));
+          return;
+        }
+        dictationBase = answer.value.trim(); dictationFinal = ""; dictating = true;
+        recognizer = new Speech();
+        recognizer.lang = lang() === "zh" ? "zh-CN" : "en-US";
+        recognizer.continuous = true;
+        recognizer.interimResults = true;
+        recognizer.maxAlternatives = 1;
+        recognizer.onresult = e => {
+          let interim = "";
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            const part = e.results[i][0]?.transcript || "";
+            if (e.results[i].isFinal) dictationFinal += part + " ";
+            else interim += part;
+          }
+          answer.value = bounded([dictationBase, dictationFinal, interim].filter(Boolean).join(" "), 1000);
+          if (answer.value.length >= 1000) displayStatus(t("Text limit reached. Stop dictation and review.", "已达到文字长度上限，请停止录音并核对。"));
+        };
+        recognizer.onerror = e => {
+          if (e.error !== "no-speech") {
+            dictating = false;
+            displayStatus(t("Dictation paused: ", "听写中断：") + e.error + t(". You can keep typing.", "。也可以继续打字。"));
+          }
+        };
+        recognizer.onend = () => {
+          if (dictating && answer.value.length < 1000) {
+            setTimeout(() => {
+              if (dictating && recognizer) {
+                try { recognizer.start(); } catch (e) { dictating = false; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
+              }
+            }, 250);
+          } else { dictating = false; recognizer = null; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
+        };
+        voiceButton.textContent = t("■ Stop dictation", "■ 停止听写");
+        displayStatus(t("Dictating continuously. Press Stop when finished; review the text before sending.", "正在连续听写。说完请按停止，并核对内容。"));
+        try { recognizer.start(); } catch(e) { dictating = false; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
       });
+      dialog.addEventListener("close", () => { dictating = false; if (recognizer) recognizer.stop(); });
     } else {
       voiceButton.disabled = true;
       voiceButton.title = t("Voice dictation is not supported in this browser.", "此浏览器不支持语音输入。");
