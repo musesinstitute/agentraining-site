@@ -2758,7 +2758,10 @@ async function getFeedback(history, isFinal) {
   const fullConvo = history.map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n');
 
   const coachLang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
-  const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}.
+  const linkedCase = currentScenario && currentScenario.linkedCaseId ? getClientCases().find(c => c.id === currentScenario.linkedCaseId) : null;
+  const d = linkedCase && linkedCase.clientDiscovery;
+  const caseContext = linkedCase ? 'Personalized client identity: ' + linkedCase.clientName + '. Reported client facts (not verified): ' + JSON.stringify(d?.facts || [linkedCase.need]) + '. Known information gaps: ' + JSON.stringify(d?.unknowns || []) + '. Suggested approach: ' + (d?.approach || '') + '. Do not invent facts.' : '';
+  const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}. ${caseContext}
 
 You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
 
@@ -4333,8 +4336,18 @@ function buildCaseFreePracticePrompt(c) {
     const zhRecruit = `你扮演${c.clientName}，一位保險團隊成員正在跟進的真實招募候選人。背景：${c.need || '未特別說明。'}目前顧慮：${c.objection || '有興趣，但尚未準備作出承諾。'}請保持角色，每次自然回覆2至3句。要求對方先建立信任、了解你是否適合、誠實介紹機會、避免施壓與未經證實的收入承諾，只有在合理時才同意明確的下一步。不要表明自己是AI。`;
     return { en: enRecruit, zh: zhRecruit };
   }
-  const en = `You play ${c.clientName}, a real prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
-  const zh = `你扮演${c.clientName}，這位業務員正在跟進的真實潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
+  const discovery = c.clientDiscovery || {};
+  const reportedFacts = Array.isArray(discovery.facts) ? discovery.facts.slice(0, 7).join('; ') : '';
+  const openQuestions = Array.isArray(discovery.unknowns) ? discovery.unknowns.slice(0, 6).join('; ') : '';
+  const hypotheses = Array.isArray(discovery.hypotheses) ? discovery.hypotheses.slice(0, 5).join('; ') : '';
+  const contextEn = c.clientDiscovery
+    ? 'Learner-reported facts (not verified): ' + reportedFacts + '. Unanswered questions: ' + openQuestions + '. Hypotheses (do not assume true): ' + hypotheses + '. Suggested respectful approach: ' + (discovery.approach || '') + '. Never invent personal details. '
+    : '';
+  const contextZh = c.clientDiscovery
+    ? '學員陳述的事實（尚未查證）：' + reportedFacts + '。尚待了解：' + openQuestions + '。不得當作事實的假設：' + hypotheses + '。建議的尊重式接觸方式：' + (discovery.approach || '') + '。不要自行編造個人背景。'
+    : '';
+  const en = `You play ${c.clientName}, a simulated prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} ${contextEn}Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
+  const zh = `你扮演${c.clientName}，這位業務員正在跟進的模擬潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}${contextZh}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
   return { en, zh };
 }
 
