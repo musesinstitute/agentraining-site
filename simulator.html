@@ -1194,7 +1194,7 @@
         <textarea class="chat-input" id="chat-input" rows="1"
           placeholder="Type your response to the client..." disabled
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Voice input">🎤</button>
+        <button class="mic-btn" id="mic-btn" type="button" title="Record audio, transcribe, then review">🎤</button>
         <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>Send</button>
       </div>
       <p class="input-hint" id="input-hint">Press Enter to send · Shift+Enter for new line</p>
@@ -2488,6 +2488,8 @@ function updateLearningGoal(sc) {
 }
 
 function selectScenario(sc) {
+  if (practiceVoiceControl) practiceVoiceControl.cancel();
+  practiceVoiceBusy = false;
   // Close mobile panel if open
   const panel = document.getElementById('panel-left');
   const btn   = document.getElementById('mobile-scenario-btn');
@@ -2695,6 +2697,7 @@ function removeTyping() {
 }
 
 async function sendMessage() {
+  if (practiceVoiceBusy) return;
   const inputEl = document.getElementById('chat-input');
   if (inputEl && inputEl.value.trim()) {
     detectTeamLeader(inputEl.value);
@@ -3489,98 +3492,39 @@ ${(d.tips||[]).map(t=>'• '+t).join('\n')}
 }
 
 
-// ── SPEECH RECOGNITION ──
-let recognition = null;
-let isRecording = false;
-
-function initSpeechRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return null;
-  
-  const r = new SpeechRecognition();
-  r.continuous = false;      // Stop after user pauses
-  r.interimResults = false;  // Only return final result, no accumulation
-  r.maxAlternatives = 1;
-  
-  r.onstart = () => {
-    isRecording = true;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { 
-      btn.classList.add('recording'); 
-      btn.textContent = '🔴';
-      btn.title = currentLang === 'zh' ? '說完後自動停止' : 'Will stop automatically';
+// ── CLOUD AUDIO TRANSCRIPTION (DISCOVERY + PRACTICE) ──
+// Record first, transcribe through the bounded server endpoint, then review before sending.
+// Unlike the old Web Speech API, pauses do not end the recording.
+let practiceVoiceControl = null;
+let practiceVoiceBusy = false;
+function initPracticeVoice() {
+  const mic = document.getElementById('mic-btn');
+  const input = document.getElementById('chat-input');
+  const hint = document.getElementById('input-hint');
+  const send = document.getElementById('send-btn');
+  if (!mic || !input || !hint || !send) return;
+  if (typeof window.setupClientDiscoveryVoice !== 'function') {
+    mic.disabled = true;
+    hint.textContent = currentLang === 'zh' ? '语音录音暂不可用，请使用文字输入。' : 'Voice recording unavailable. Please type.';
+    return;
+  }
+  mic.dataset.compactVoice = 'true';
+  practiceVoiceControl = window.setupClientDiscoveryVoice(
+    mic, input, message => { hint.textContent = message; },
+    () => {
+      if (isLoading || !currentScenario || input.disabled) {
+        hint.textContent = currentLang === 'zh' ? '请先开始练习，等待 AI 回答后再录音。' : 'Start practice and wait for the AI response before recording.';
+        return false;
+      }
+      return true;
+    },
+    busy => {
+      practiceVoiceBusy = busy;
+      send.disabled = busy || isLoading || !currentScenario || input.disabled;
     }
-  };
-  
-  r.onresult = (event) => {
-    // Only take the final result - no interim accumulation
-    const result = event.results[event.results.length - 1];
-    if (result.isFinal) {
-      const transcript = result[0].transcript.trim();
-      const input = document.getElementById('chat-input');
-      if (input && transcript) input.value = transcript;
-    }
-  };
-  
-  r.onend = () => {
-    isRecording = false;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { 
-      btn.classList.remove('recording'); 
-      btn.textContent = '🎤';
-      btn.title = currentLang === 'zh' ? '語音輸入' : 'Voice input';
-    }
-    // Don't auto-send - let user check the text first
-  };
-  
-  r.onerror = (event) => {
-    isRecording = false;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
-    if (event.error === 'not-allowed') {
-      alert(currentLang === 'zh' 
-        ? '請允許使用麥克風權限' 
-        : 'Please allow microphone access');
-    }
-  };
-  
-  return r;
+  );
 }
-
-function toggleMic() {
-  // Check if running inside WeChat browser
-  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-  if (isWeChat) {
-    alert(currentLang === 'zh'
-      ? '微信瀏覽器不支援語音輸入。\n\n請點右上角「...」→「在瀏覽器中打開」，再使用語音功能。'
-      : 'WeChat browser does not support voice input.\n\nPlease tap ··· → Open in Browser to use voice input.');
-    return;
-  }
-  // Check browser support
-  if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-    alert(currentLang === 'zh'
-      ? '您的瀏覽器不支援語音輸入。請使用 Chrome 或 Safari。'
-      : 'Your browser does not support voice input. Please use Chrome or Safari.');
-    return;
-  }
-  
-  if (isRecording) {
-    if (recognition) recognition.stop();
-    return;
-  }
-  
-  recognition = initSpeechRecognition();
-  if (!recognition) return;
-  
-  // Set language based on current UI language
-  recognition.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
-  
-  try {
-    recognition.start();
-  } catch(e) {
-    console.error('Speech recognition error:', e);
-  }
-}
+window.addEventListener('load', initPracticeVoice);
 
 // ── RENDER FEEDBACK ──
 function renderFeedback(data, isFinal) {
