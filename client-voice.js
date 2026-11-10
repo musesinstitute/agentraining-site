@@ -14,7 +14,7 @@
       .toLowerCase().startsWith('zh') ? zh : en;
   };
   window.setupClientDiscoveryVoice = function (button, input, status, canRecord, onBusy) {
-    let stream = null, recorder = null, chunks = [], deadline = null;
+    let stream = null, recorder = null, deadline = null;
     let working = false, session = 0;
     const idle = () => { button.textContent = button.dataset?.compactVoice === 'true' ? '🎤' : tx('🎤 Record answer', '🎤 录制回答'); button.title = tx('Record speech and review transcript before sending', '录音转写后先核对文字，再发送'); button.setAttribute('aria-label', button.title); };
     const setBusy = active => { if (typeof onBusy === 'function') onBusy(active); };
@@ -46,6 +46,7 @@
       working = true;
       button.disabled = true; setBusy(true);
       status(tx('Checking cloud transcription service…', '正在检查语音转写服务…'));
+      let micRequested = false;
       try {
         const ready = await fetch('/.netlify/functions/transcribe-audio', { method: 'GET' });
         const capability = await ready.json().catch(() => ({}));
@@ -56,22 +57,26 @@
           working = false; button.disabled = false; idle(); setBusy(false); return;
         }
         status(tx('Requesting microphone access…', '正在请求麦克风权限…'));
+        micRequested = true;
         const microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
         if (token !== session) { microphone.getTracks().forEach(track => track.stop()); working = false; setBusy(false); return; }
         stream = microphone;
         const mime = MIME_TYPES.find(type => MediaRecorder.isTypeSupported?.(type));
         recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
-        chunks = [];
-        recorder.ondataavailable = e => { if (e.data?.size) chunks.push(e.data); };
+        const ownRecorder = recorder;
+        const ownChunks = [];
+        recorder.ondataavailable = e => { if (e.data?.size) ownChunks.push(e.data); };
         recorder.onerror = () => {
           if (token === session) status(tx('Audio recording failed. Please type your answer.', '录音失败，请改用手动输入。'));
           stop(true); working = false; button.disabled = false; idle(); setBusy(false);
         };
         recorder.onstop = async () => {
-          stopTracks();
-          const audio = new Blob(chunks, { type: recorder?.mimeType || mime || '' });
-          chunks = [];
-          recorder = null;
+          microphone.getTracks().forEach(track => track.stop());
+          if (recorder === ownRecorder) {
+            if (deadline) clearTimeout(deadline);
+            deadline = null; stream = null; recorder = null;
+          }
+          const audio = new Blob(ownChunks, { type: ownRecorder.mimeType || mime || '' });
           if (token !== session) return;
           if (!audio.size) {
             status(tx('No audio was recorded. Please try again.', '没有录到声音，请重试。'));
@@ -80,7 +85,7 @@
           if (audio.size > MAX_AUDIO_BYTES) {
             status(tx('Recording is too large to transcribe. Try a shorter segment; no text was replaced.',
                       '录音文件超过转写限制，请分段重录；原有文字没有被覆盖。'));
-            button.disabled = false; idle(); return;
+            button.disabled = false; idle(); setBusy(false); return;
           }
           button.disabled = true;
           status(tx('Transcribing Chinese, English and insurance terms…',
@@ -136,8 +141,8 @@
         }, MAX_RECORD_MS);
       } catch (err) {
         if (token === session) {
-          status(tx('Microphone unavailable. Check browser permission, or type your answer.',
-                    '无法使用麦克风，请检查浏览器权限或手动输入。'));
+          status(micRequested ? tx('Microphone unavailable. Check browser permission, or type your answer.',
+                    '无法使用麦克风，请检查浏览器权限或手动输入。') : tx('Voice service check failed. Please type your answer.', '语音转写服务检查失败，请先使用文字输入。'));
           stopTracks(); working = false; button.disabled = false; idle(); setBusy(false);
         }
       }
