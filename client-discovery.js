@@ -55,7 +55,7 @@
     question.textContent = state.turns.length >= 5 ? t("Review the Client Understanding Map below, then save the case.", "请核对下方客户理解地图，再保存客户档案。") : (state.nextQuestion || FIRST_QUESTION[lang()]);
     aliasInput.value = state.alias;
     industryInput.value = state.industry;
-    saveButton.disabled = !state.insights || !state.turns.length || pending;
+    saveButton.disabled = !state.insights || !state.turns.length || pending || voiceBusy;
     submitButton.disabled = pending || voiceBusy || state.turns.length >= 5;
     byId("cs-ai-answer-label").textContent = t("Your answer (without private client identifiers)", "你的回答（勿填写客户身份及敏感资料）");
     submitButton.textContent = pending ? t("Thinking…", "正在分析…") : t("Send answer to AI", "发送回答给 AI");
@@ -131,7 +131,7 @@
     finally { pending = false; render(); }
   }
   function finish() {
-    if (!state.turns.length || !state.insights || pending) return;
+    if (!state.turns.length || !state.insights || pending || voiceBusy) return;
     if (!consent.checked) { displayStatus(t("Confirm anonymous-demo consent before saving.", "保存前请确认匿名示例数据同意。")); return; }
     if (typeof getClientCases !== "function" || typeof saveClientCasesList !== "function" || typeof genCaseId !== "function") {
       displayStatus(t("Client case storage is not available.", "客户档案保存功能暂不可用。")); return;
@@ -210,7 +210,7 @@
     submitButton.addEventListener("click", submitAnswer);
     saveButton.addEventListener("click", finish);
     byId("cs-ai-close").addEventListener("click", () => dialog.close());
-    byId("cs-ai-reset").addEventListener("click", () => { if (pending) return; state = empty(); try { localStorage.removeItem(DRAFT_KEY); } catch {} answer.value = ""; consent.checked = false; render(); displayStatus(""); });
+    byId("cs-ai-reset").addEventListener("click", () => { if (pending) return; if (voiceControl) voiceControl.cancel(); state = empty(); try { localStorage.removeItem(DRAFT_KEY); } catch {} answer.value = ""; consent.checked = false; render(); displayStatus(""); });
     aliasInput.addEventListener("change", () => { state.alias = bounded(aliasInput.value, 60) || "Demo Prospect"; persist(); });
     industryInput.addEventListener("change", () => { state.industry = industryInput.value; persist(); });
     if (typeof window.setupClientDiscoveryVoice === "function") {
