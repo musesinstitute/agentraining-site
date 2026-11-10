@@ -56,9 +56,11 @@ async function allowRequest(headers) {
 }
 exports.handler = async (event) => {
   const origin = authorizedOrigin(event.headers || {});
+  // A harmless readiness GET may omit Origin/Referer on same-site requests.
+  // Audio-bearing POST requests still require a known site origin.
+  if (event.httpMethod === 'GET') return json(200, { configured: !!process.env.OPENAI_API_KEY }, origin || 'https://agentraining.ai');
   if (!origin) return json(403, { error: 'Unrecognized site origin.' }, 'https://agentraining.ai');
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }, body: '' };
-  if (event.httpMethod === 'GET') return json(200, { configured: !!process.env.OPENAI_API_KEY }, origin);
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' }, origin);
   if (!process.env.OPENAI_API_KEY) return json(503, { error: 'Voice transcription is not configured for this preview. Please type your answer.' }, origin);
   if ((event.body || '').length > 3550000) return json(413, { error: 'Recording too large; please try a shorter segment.' }, origin);
