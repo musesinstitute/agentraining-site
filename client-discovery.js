@@ -194,7 +194,7 @@
     dialog.innerHTML =
       '<h2>' + t("AI Client Discovery", "AI 潜在客户探索") + '</h2>' +
       '<p class="cs-ai-note">' + t("Experimental demo: use only fictional or anonymized situations. AI processes your answers; this draft and any saved case remain on this browser. Do not enter real client identifiers, medical records, or financial account details.", "实验性示例功能：只使用虚构或匿名情境。AI 会处理你的回答；草稿及保存的档案仅存于本浏览器。请勿输入真实客户身份、病历或财务账户资料。") + '</p>' +
-      '<div class="cs-ai-row"><label>' + t("Case alias (not sent to AI)", "客户代号（不发送给 AI）") + '<input id="cs-ai-alias" maxlength="60"></label><label>' + t("Industry", "行业") + '<select id="cs-ai-industry"><option value="Insurance">Insurance</option><option value="Health">Health</option></select></label></div>' +
+      '<div class="cs-ai-row"><label>' + t("Fictional client alias (sent to AI during Practice)", "虚构客户代号（进入 Practice 后将发送给 AI）") + '<input id="cs-ai-alias" maxlength="60"></label><label>' + t("Industry", "行业") + '<select id="cs-ai-industry"><option value="Insurance">Insurance</option><option value="Health">Health</option></select></label></div>' +
       '<label><input type="checkbox" id="cs-ai-consent"> ' + t("I will use only anonymized demo information and agree to AI processing these answers.", "我只会使用匿名示例信息，并同意 AI 处理这些回答。") + '</label>' +
       '<p><strong id="cs-ai-step"></strong></p><p id="cs-ai-question"></p>' +
       '<label id="cs-ai-answer-label" for="cs-ai-answer"></label><textarea id="cs-ai-answer" maxlength="1000"></textarea>' +
