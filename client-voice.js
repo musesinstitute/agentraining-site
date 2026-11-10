@@ -13,10 +13,11 @@
     return (q.get('lang') || sessionStorage.getItem('agentraining_lang') || navigator.language || 'en')
       .toLowerCase().startsWith('zh') ? zh : en;
   };
-  window.setupClientDiscoveryVoice = function (button, input, status, canRecord) {
+  window.setupClientDiscoveryVoice = function (button, input, status, canRecord, onBusy) {
     let stream = null, recorder = null, chunks = [], deadline = null;
     let working = false, session = 0;
     const idle = () => { button.textContent = tx('🎤 Record answer', '🎤 录制回答'); };
+    const setBusy = active => { if (typeof onBusy === 'function') onBusy(active); };
     const stopTracks = () => {
       if (stream) stream.getTracks().forEach(track => track.stop());
       stream = null;
@@ -31,7 +32,7 @@
     const cleanup = () => {
       session += 1;
       stop(true);
-      if (!working) { button.disabled = false; idle(); }
+      working = false; button.disabled = false; idle(); setBusy(false);
     };
     async function start() {
       if (working || (recorder && recorder.state === 'recording')) return;
@@ -43,11 +44,11 @@
       }
       const token = ++session;
       working = true;
-      button.disabled = true;
+      button.disabled = true; setBusy(true);
       status(tx('Requesting microphone access…', '正在请求麦克风权限…'));
       try {
         const microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
-        if (token !== session) { microphone.getTracks().forEach(track => track.stop()); return; }
+        if (token !== session) { microphone.getTracks().forEach(track => track.stop()); working = false; setBusy(false); return; }
         stream = microphone;
         const mime = MIME_TYPES.find(type => MediaRecorder.isTypeSupported?.(type));
         recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
@@ -55,7 +56,7 @@
         recorder.ondataavailable = e => { if (e.data?.size) chunks.push(e.data); };
         recorder.onerror = () => {
           if (token === session) status(tx('Audio recording failed. Please type your answer.', '录音失败，请改用手动输入。'));
-          stop(true);
+          stop(true); working = false; button.disabled = false; idle(); setBusy(false);
         };
         recorder.onstop = async () => {
           stopTracks();
@@ -65,7 +66,7 @@
           if (token !== session) return;
           if (!audio.size) {
             status(tx('No audio was recorded. Please try again.', '没有录到声音，请重试。'));
-            button.disabled = false; idle(); return;
+            button.disabled = false; idle(); setBusy(false); return;
           }
           if (audio.size > MAX_AUDIO_BYTES) {
             status(tx('Recording is too large to transcribe. Try a shorter segment; no text was replaced.',
@@ -107,7 +108,7 @@
             if (token === session) status(tx('Transcription failed: ', '转写失败：') + (err.message || 'Unknown error') +
               tx('. You may type your answer; existing text is safe.', '。可手动输入，已有文字未丢失。'));
           } finally {
-            if (token === session) { working = false; button.disabled = false; idle(); }
+            if (token === session) { working = false; button.disabled = false; idle(); setBusy(false); }
           }
         };
         recorder.start();
@@ -127,7 +128,7 @@
         if (token === session) {
           status(tx('Microphone unavailable. Check browser permission, or type your answer.',
                     '无法使用麦克风，请检查浏览器权限或手动输入。'));
-          stopTracks(); working = false; button.disabled = false; idle();
+          stopTracks(); working = false; button.disabled = false; idle(); setBusy(false);
         }
       }
     }
