@@ -45,8 +45,17 @@
       const token = ++session;
       working = true;
       button.disabled = true; setBusy(true);
-      status(tx('Requesting microphone access…', '正在请求麦克风权限…'));
+      status(tx('Checking cloud transcription service…', '正在检查语音转写服务…'));
       try {
+        const ready = await fetch('/.netlify/functions/transcribe-audio', { method: 'GET' });
+        const capability = await ready.json().catch(() => ({}));
+        if (token !== session) return;
+        if (!ready.ok || !capability.configured) {
+          status(tx('Cloud transcription is not configured on this preview. Please type your answer; no recording was started.',
+                    '本测试版尚未配置云端语音转写。请先使用文字输入；麦克风尚未启动。'));
+          working = false; button.disabled = false; idle(); setBusy(false); return;
+        }
+        status(tx('Requesting microphone access…', '正在请求麦克风权限…'));
         const microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
         if (token !== session) { microphone.getTracks().forEach(track => track.stop()); working = false; setBusy(false); return; }
         stream = microphone;
