@@ -9,7 +9,7 @@
   };
   const empty = () => ({ version: 1, alias: "Demo Prospect", industry: "Insurance", turns: [], insights: null, nextQuestion: null });
   let state = empty(), dialog, answer, question, feedback, saveButton, submitButton, consent, aliasInput, industryInput, voiceButton;
-  let pending = false, recognizer = null, dictating = false, dictationBase = "", dictationFinal = "";
+  let pending = false, voiceBusy = false, voiceControl = null;
   const lang = () => {
     try { return ((new URLSearchParams(location.search).get("lang") || sessionStorage.getItem("agentraining_lang") || navigator.language || "en").toLowerCase().startsWith("zh")) ? "zh" : "en"; }
     catch { return "en"; }
@@ -56,7 +56,7 @@
     aliasInput.value = state.alias;
     industryInput.value = state.industry;
     saveButton.disabled = !state.insights || !state.turns.length || pending;
-    submitButton.disabled = pending || state.turns.length >= 5;
+    submitButton.disabled = pending || voiceBusy || state.turns.length >= 5;
     byId("cs-ai-answer-label").textContent = t("Your answer (without private client identifiers)", "你的回答（勿填写客户身份及敏感资料）");
     submitButton.textContent = pending ? t("Thinking…", "正在分析…") : t("Send answer to AI", "发送回答给 AI");
     saveButton.textContent = t("Save case & open Practice path", "保存客户档案并进入练习流程");
@@ -94,9 +94,9 @@
     };
   }
   async function submitAnswer() {
-    if (pending || state.turns.length >= 5) return;
+    if (pending || voiceBusy || state.turns.length >= 5) return;
     if (!consent.checked) { displayStatus(t("Please confirm anonymous-demo consent first.", "请先确认同意仅使用匿名示例数据。")); return; }
-    const response = bounded(answer.value, 1000);
+    const response = bounded(answer.value, 3000);
     if (response.length < 4) { displayStatus(t("Please add a little more context.", "请再补充一点背景。")); return; }
     if (hasSensitiveIdentifiers(response)) { displayStatus(t("Remove email, phone, or government ID before sending.", "发送前请删除邮箱、电话号码或证件号码。")); return; }
     const q = state.nextQuestion || FIRST_QUESTION[lang()];
@@ -193,11 +193,11 @@
     dialog = document.createElement("dialog"); dialog.id = "cs-ai-dialog"; dialog.className = "cs-ai-dialog";
     dialog.innerHTML =
       '<h2>' + t("AI Client Discovery", "AI 潜在客户探索") + '</h2>' +
-      '<p class="cs-ai-note">' + t("Experimental demo: use only fictional or anonymized situations. AI processes your answers; this draft and any saved case remain on this browser. Do not enter real client identifiers, medical records, or financial account details.", "实验性示例功能：只使用虚构或匿名情境。AI 会处理你的回答；草稿及保存的档案仅存于本浏览器。请勿输入真实客户身份、病历或财务账户资料。") + '</p>' +
+      '<p class="cs-ai-note">' + t("Experimental demo: use only fictional or anonymized situations. When you record, audio is sent to an OpenAI transcription service; the site does not save the audio. AI analyzes the checked text; the case and draft stay in this browser. Never record actual client identifiers, medical records, or account details.", "实验性示例：只使用虚构或匿名情境。录音会发送给 OpenAI 语音转写服务，本站不会保存录音。确认文字后才交给 AI 分析；档案及草稿仅存于本浏览器。请勿录入真实客户身份、病历或账户信息。") + '</p>' +
       '<div class="cs-ai-row"><label>' + t("Fictional client alias (sent to AI during Practice)", "虚构客户代号（进入 Practice 后将发送给 AI）") + '<input id="cs-ai-alias" maxlength="60"></label><label>' + t("Industry", "行业") + '<select id="cs-ai-industry"><option value="Insurance">Insurance</option><option value="Health">Health</option></select></label></div>' +
-      '<label><input type="checkbox" id="cs-ai-consent"> ' + t("I will use only anonymized demo information and agree to AI processing these answers.", "我只会使用匿名示例信息，并同意 AI 处理这些回答。") + '</label>' +
+      '<label><input type="checkbox" id="cs-ai-consent"> ' + t("I will use fictional/anonymized information and consent to AI processing; recorded audio is sent to a speech transcription service if I record.", "我只使用虚构或匿名示例信息，同意 AI 处理；使用录音时，音频将发送至语音转写服务。") + '</label>' +
       '<p><strong id="cs-ai-step"></strong></p><p id="cs-ai-question"></p>' +
-      '<label id="cs-ai-answer-label" for="cs-ai-answer"></label><textarea id="cs-ai-answer" maxlength="1000"></textarea>' +
+      '<label id="cs-ai-answer-label" for="cs-ai-answer"></label><textarea id="cs-ai-answer" maxlength="3000"></textarea>' +
       '<div class="cs-ai-row"><button class="secondary" type="button" id="cs-ai-voice">' + t("🎤 Dictate", "🎤 语音输入") + '</button><button type="button" id="cs-ai-submit"></button></div>' +
       '<div id="cs-ai-feedback" class="cs-ai-status" role="status" aria-live="polite"></div>' +
       '<div id="cs-ai-map" class="cs-ai-map"></div>' +
@@ -213,55 +213,25 @@
     byId("cs-ai-reset").addEventListener("click", () => { if (pending) return; state = empty(); try { localStorage.removeItem(DRAFT_KEY); } catch {} answer.value = ""; consent.checked = false; render(); displayStatus(""); });
     aliasInput.addEventListener("change", () => { state.alias = bounded(aliasInput.value, 60) || "Demo Prospect"; persist(); });
     industryInput.addEventListener("change", () => { state.industry = industryInput.value; persist(); });
-    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (Speech) {
-      voiceButton.addEventListener("click", () => {
-        if (dictating) {
-          dictating = false;
-          if (recognizer) recognizer.stop();
-          voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入");
-          displayStatus(t("Dictation stopped. Check the complete text before sending.", "已停止听写。请检查完整文字后再发送。"));
-          return;
-        }
-        dictationBase = answer.value.trim(); dictationFinal = ""; dictating = true;
-        recognizer = new Speech();
-        recognizer.lang = lang() === "zh" ? "zh-CN" : "en-US";
-        recognizer.continuous = true;
-        recognizer.interimResults = true;
-        recognizer.maxAlternatives = 1;
-        recognizer.onresult = e => {
-          let interim = "";
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            const part = e.results[i][0]?.transcript || "";
-            if (e.results[i].isFinal) dictationFinal += part + " ";
-            else interim += part;
+    if (typeof window.setupClientDiscoveryVoice === "function") {
+      voiceControl = window.setupClientDiscoveryVoice(
+        voiceButton, answer, displayStatus,
+        () => {
+          if (pending || state.turns.length >= 5) return false;
+          if (!consent.checked) {
+            displayStatus(t("Consent to anonymous demo/audio processing before recording.",
+                            "录音前请先确认匿名示例及音频处理同意。"));
+            return false;
           }
-          answer.value = bounded([dictationBase, dictationFinal, interim].filter(Boolean).join(" "), 1000);
-          if (answer.value.length >= 1000) displayStatus(t("Text limit reached. Stop dictation and review.", "已达到文字长度上限，请停止录音并核对。"));
-        };
-        recognizer.onerror = e => {
-          if (e.error !== "no-speech") {
-            dictating = false;
-            displayStatus(t("Dictation paused: ", "听写中断：") + e.error + t(". You can keep typing.", "。也可以继续打字。"));
-          }
-        };
-        recognizer.onend = () => {
-          if (dictating && answer.value.length < 1000) {
-            setTimeout(() => {
-              if (dictating && recognizer) {
-                try { recognizer.start(); } catch (e) { dictating = false; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
-              }
-            }, 250);
-          } else { dictating = false; recognizer = null; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
-        };
-        voiceButton.textContent = t("■ Stop dictation", "■ 停止听写");
-        displayStatus(t("Dictating continuously. Press Stop when finished; review the text before sending.", "正在连续听写。说完请按停止，并核对内容。"));
-        try { recognizer.start(); } catch(e) { dictating = false; voiceButton.textContent = t("🎤 Dictate", "🎤 语音输入"); }
-      });
-      dialog.addEventListener("close", () => { dictating = false; if (recognizer) recognizer.stop(); });
+          return true;
+        },
+        busy => { voiceBusy = busy; render(); }
+      );
+      dialog.addEventListener("close", () => { if (voiceControl) voiceControl.cancel(); });
     } else {
       voiceButton.disabled = true;
-      voiceButton.title = t("Voice dictation is not supported in this browser.", "此浏览器不支持语音输入。");
+      voiceButton.title = t("Audio capture is unavailable. Type your answer.",
+                            "语音录音不可用，请手动输入。");
     }
     if (typeof window.renderCaseDetail === "function") {
       const original = window.renderCaseDetail;
