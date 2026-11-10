@@ -16,7 +16,7 @@
   window.setupClientDiscoveryVoice = function (button, input, status, canRecord, onBusy) {
     let stream = null, recorder = null, chunks = [], deadline = null;
     let working = false, session = 0;
-    const idle = () => { button.textContent = tx('🎤 Record answer', '🎤 录制回答'); };
+    const idle = () => { button.textContent = button.dataset?.compactVoice === 'true' ? '🎤' : tx('🎤 Record answer', '🎤 录制回答'); button.title = tx('Record speech and review transcript before sending', '录音转写后先核对文字，再发送'); button.setAttribute('aria-label', button.title); };
     const setBusy = active => { if (typeof onBusy === 'function') onBusy(active); };
     const stopTracks = () => {
       if (stream) stream.getTracks().forEach(track => track.stop());
@@ -94,7 +94,8 @@
             if (!words) throw new Error('Empty transcript');
             const previous = input.value.trim();
             const combined = [previous, words].filter(Boolean).join('\n');
-            if (combined.length > input.maxLength) {
+            const maxText = input.maxLength > 0 ? input.maxLength : 8000;
+            if (combined.length > maxText) {
               // Do not silently cut or replace user speech.
               throw new Error(tx('Transcript exceeds answer length limit. Record a shorter segment.',
                                  '转写文字超过输入框上限，请分段录音，原有文字已保留。'));
@@ -114,7 +115,7 @@
         recorder.start();
         working = false;
         button.disabled = false;
-        button.textContent = tx('■ Stop & transcribe', '■ 停止并转写');
+        button.textContent = button.dataset?.compactVoice === 'true' ? '■' : tx('■ Stop & transcribe', '■ 停止并转写'); button.title = tx('Stop recording and transcribe', '停止录音并开始转写'); button.setAttribute('aria-label', button.title);
         status(tx('Recording (up to 90 seconds). Stop to transcribe; pauses will not end recording. No audio is saved in this browser.',
                   '正在录音（最长90秒）。说完请点停止并转写；停顿不会自动结束。录音不会保存在浏览器中。'));
         deadline = setTimeout(() => {
