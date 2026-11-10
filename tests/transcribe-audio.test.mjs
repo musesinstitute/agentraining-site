@@ -73,6 +73,18 @@ test('accepts bilingual recording and sends language and vocabulary hints', asyn
   assert.equal(res.headers['Cache-Control'], 'no-store');
 });
 
+test('preflight reports whether voice is configured even when GET omits Origin', async () => {
+  const on = makeHandler({ key: 'fake-key' });
+  const off = makeHandler({ key: '' });
+  const req = { httpMethod: 'GET', headers: {} };
+  const available = await on.handler(req);
+  const absent = await off.handler(req);
+  assert.equal(available.statusCode, 200);
+  assert.equal(JSON.parse(available.body).configured, true);
+  assert.equal(JSON.parse(absent.body).configured, false);
+  assert.equal(on.calls.length, 0);
+});
+
 test('throttles repeated audio requests', async () => {
   const { handler, calls } = makeHandler({ prior: Array(12).fill(Date.now()) });
   const res = await handler(request());
