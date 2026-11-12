@@ -38,6 +38,18 @@ function authorizedOrigin(headers) {
     return url.origin;
   } catch (_) { return null; }
 }
+async function verifyRateLimitStorage() {
+  try {
+    const store = getStore('demo-transcription-rate-limit');
+    const key = 'service-readiness-v1';
+    await store.setJSON(key, { ok: true });
+    const probe = await store.get(key, { type: 'json' });
+    return !!(probe && probe.ok === true);
+  } catch (err) {
+    console.error('transcribe-audio: rate-limit storage readiness failed', err && err.message);
+    return false;
+  }
+}
 async function allowRequest(headers) {
   const ip = String(headers['x-nf-client-connection-ip'] || headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   const key = 'ip-' + ip.replace(/[^a-zA-Z0-9]/g, '-').slice(0, 80);
@@ -49,8 +61,9 @@ async function allowRequest(headers) {
     if (recent.length >= MAX_REQUESTS) return false;
     await store.setJSON(key, [...recent, now]);
     return true;
-  } catch (_) {
-    // Audio billing is sensitive: do not fail open if rate-limiting is unavailable.
+  } catch (err) {
+    console.error('transcribe-audio: rate-limit storage unavailable', err && err.message);
+    // Do not bypass the usage/billing guard when storage is unavailable.
     return null;
   }
 }
@@ -58,7 +71,11 @@ exports.handler = async (event) => {
   const origin = authorizedOrigin(event.headers || {});
   // A harmless readiness GET may omit Origin/Referer on same-site requests.
   // Audio-bearing POST requests still require a known site origin.
-  if (event.httpMethod === 'GET') return json(200, { configured: !!process.env.OPENAI_API_KEY }, origin || 'https://agentraining.ai');
+  if (event.httpMethod === 'GET') {
+    const configured = !!process.env.OPENAI_API_KEY;
+    const rateLimitReady = configured ? await verifyRateLimitStorage() : false;
+    return json(200, { configured, rateLimitReady, ready: configured && rateLimitReady }, origin || 'https://agentraining.ai');
+  }
   if (!origin) return json(403, { error: 'Unrecognized site origin.' }, 'https://agentraining.ai');
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }, body: '' };
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' }, origin);
@@ -77,7 +94,7 @@ exports.handler = async (event) => {
   if (audio.length < 100 || audio.length > MAX_BYTES) return json(413, { error: 'Audio size is outside the allowed range.' }, origin);
   const allowed = await allowRequest(event.headers || {});
   if (allowed === false) return json(429, { error: 'Voice transcription limit reached. Try again later or type your answer.' }, origin);
-  if (allowed === null) return json(503, { error: 'Voice transcription is temporarily unavailable. Please type your answer.' }, origin);
+  if (allowed === null) return json(503, { error: 'Voice service rate-limit storage is unavailable on this deployment. No audio was sent. Please type your answer.', code: 'RATE_LIMIT_STORAGE_UNAVAILABLE' }, origin);
   try {
     const form = new FormData();
     form.append('model', 'gpt-transcribe');
