@@ -79,6 +79,41 @@ footer{max-width:1000px;margin:auto;padding:0 22px 50px}
 footer a{color:#143879}
 @media(max-width:820px){.attempts{grid-template-columns:1fr}.team{grid-template-columns:1fr 1fr}.person{min-height:0}.ev{grid-template-columns:1fr}.loopwrap,.two{grid-template-columns:1fr}.ring{width:300px;height:300px}.hub{inset:96px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Step-one manager judgment, controlled resources and simulated follow-up */
+.lab{margin-top:18px;padding:18px;background:#f7f9ff;border:1px solid #aec3ea;border-radius:13px}
+.lab h3{margin:7px 0}.eyeline{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--blue)}
+.bound{border-left:3px solid #be8e45;border-radius:0 8px 8px 0;background:#fffbf3;padding:10px 12px;font-size:13.5px;margin:13px 0}
+.resourcegrid{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:13px 0}
+.resourcegrid fieldset{display:flex;gap:12px;flex-wrap:wrap;border:0;padding:0;margin:0;align-items:center}
+.resourcegrid legend{font-size:12px;font-weight:800;margin-bottom:4px}
+.resourcegrid label{font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer}
+.resourcegrid input{accent-color:var(--blue)}
+.alloc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.alloc article{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}
+.alloc article b{font-size:19px;color:var(--navy);display:block}.alloc article span{font-size:11.5px;color:var(--muted);display:block}
+.actionset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.actionset button{cursor:pointer;background:#fff;text-align:left;border:2px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-weight:700;color:var(--ink)}
+.actionset button small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:4px}
+.actionset button[aria-pressed=true]{border-color:var(--blue);background:var(--soft)}
+.actionnote{font-size:13px;color:var(--muted);margin:7px 0}
+.lab select,.lab textarea{display:block;margin-top:8px;width:100%;max-width:620px;background:#fff;color:var(--ink);border:1px solid #bfcee7;border-radius:8px;padding:9px;font:inherit}
+.lab textarea{min-height:58px;resize:vertical}
+#decisionStatus{font-size:13px;color:#173a83}
+.followCard{background:#fff;border:1px solid #c6d4e8;border-radius:11px;padding:15px;margin-top:14px}
+.followCard .choices{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}
+.followCard .choices button{cursor:pointer;background:#fff;color:var(--blue);border:1px solid var(--blue);border-radius:8px;padding:9px;font:inherit}
+.followCard .choices button[aria-pressed=true]{background:var(--blue);color:#fff}
+#outcomeDetail{line-height:1.5;font-size:14px}
+.hub{border:2px solid #aac4ff!important;box-shadow:0 0 0 9px #dbe6ff,0 10px 25px #1e438d44;cursor:pointer}
+.hub small{display:block;color:#d9e5ff;font-size:10px;font-weight:500;margin-top:5px}
+.node.active{box-shadow:0 0 0 3px #b6cafa}.node{font-size:13px}
+.ring:before{border:3px dashed #a9bce4}
+.loopEvidence{margin-top:13px;padding:13px 15px;background:#f4f7ff;border:1px solid #c8d9f5;border-left:4px solid var(--blue);border-radius:10px}
+.loopEvidence b{font-size:13px}.loopEvidence p{font-size:14px;margin:5px 0}
+.hubCount{font-size:12px;color:var(--muted);margin-top:9px}
+#chipHint.warn{color:#954716;font-weight:700}
+@media(max-width:650px){.actionset,.alloc{grid-template-columns:1fr}.lab{padding:13px}}
 </style></head>
 <body>
 <header><div class="tag">AgentTraining.ai · Manager Demo</div><h1>You saw one conversation change.<br>Now take the manager's seat.</h1><p class="sub">Three steps, about four minutes, no sign-up. Make one coaching decision, see where the evidence came from, then sketch what fourteen days could look like for your own team.</p></header>
@@ -94,7 +129,28 @@ footer a{color:#143879}
  <div id="reveal" class="fade" hidden>
   <div class="verdict" id="verdict" tabindex="-1"></div>
   <details class="all"><summary>See the practice evidence for all five</summary><div class="evidence" id="evidence"></div></details>
-  <div class="row" id="decideRow"></div>
+  <div class="lab" id="managerLab">
+   <div class="eyeline">Human judgment · illustrative</div><h3>AI recommends coaching Michelle. What is your call?</h3>
+   <p class="small muted">A recommendation is a question for the manager, not an automatic assignment.</p>
+   <div class="bound"><strong>Evidence limit:</strong> Four text-based simulated practice attempts across two scenarios show a repeated pattern. That supports a focused coaching concern, not proof of real-world client performance. No verified field observation exists here.</div>
+   <div class="resourcegrid" id="resourceControls">
+    <fieldset><legend>Total manager coaching time</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset>
+    <label><input type="checkbox" id="seniorSupport">Senior colleague available for verification</label>
+   </div>
+   <div class="alloc" id="allocation" aria-live="polite"></div><p class="actionnote" id="allocationWhy"></p>
+   <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
+   <div id="reasonWrap" hidden><label class="small" for="decisionReason"><strong>Why are you overriding this suggestion?</strong></label>
+    <select id="decisionReason"><option value="">Choose a reason…</option><option>Evidence is too narrow</option><option>My field experience contradicts it</option><option>Another priority is more urgent</option><option>Other</option></select>
+    <textarea id="decisionNote" maxlength="200" placeholder="Optional note, not saved or sent"></textarea>
+   </div>
+   <p id="decisionStatus" role="status" aria-live="polite"></p>
+   <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Confirm my decision →</button></div>
+   <div class="followCard" id="impactPanel" hidden><div class="eyeline">Seven days later · simulated alternatives</div>
+    <h3>Does your original decision still hold?</h3><p class="small muted">Choose a possible outcome. Neither is a prediction or an actual learner result.</p>
+    <div class="choices" id="outcomeChoices" role="group" aria-label="Simulated follow-up"></div>
+    <div id="outcomeDetail" aria-live="polite"></div>
+   </div>
+  </div>
   <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="muted">The AI recommends. You decide. Nothing was assigned or recorded; this is a demonstration.</p><div class="row"><button class="btn" type="button" data-go="1">Where did this evidence come from? →</button></div></div>
  </div>
 </section>
@@ -102,17 +158,17 @@ footer a{color:#143879}
 <section class="card panel" id="p1" aria-labelledby="h1" hidden>
  <div class="tag muted">Step 2 of 3 · Four Studios, one Hub</div>
  <h2 id="h1">Follow David once around the loop.</h2>
- <p class="muted">Every piece of evidence you just used came from this cycle. It starts with you and comes back to you.</p>
+ <p class="muted">Click a Studio and follow one illustrative learner from an assignment to a second attempt, client context and manager reassessment. The central Hub connects evidence with decisions.</p>
  <div class="loopwrap">
   <div class="ring" aria-hidden="false">
    <div class="orbit" id="orbit"></div>
-   <div class="hub">Team Growth &amp; Retention Hub</div>
+   <button class="hub" id="hubJump" type="button" title="Jump to reassessment">TEAM GROWTH &amp; RETENTION HUB<small>Evidence · Judgment · Next action</small></button>
    <button type="button" class="node n0" data-node="0">Leadership<small>Studio</small></button>
    <button type="button" class="node n1" data-node="1">Knowledge<small>Studio</small></button>
    <button type="button" class="node n2" data-node="2">Practice<small>Studio</small></button>
    <button type="button" class="node n3" data-node="3">Client<small>Studio</small></button>
   </div>
-  <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p>
+  <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="loopEvidence"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
    <div class="row"><button class="btn secondary" type="button" id="prevStop">← Back</button><button class="btn" type="button" id="nextStop">Next →</button></div></div>
  </div>
 </section>
@@ -174,37 +230,104 @@ $('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)
  $('verdict').innerHTML=`<div class="tag" style="color:var(--blue)">What practice shows</div><h3>${same?'You chose Michelle, and practice agrees. Could her reports have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><p class="big">On paper she is your safest agent, with the highest test score on the team. Nothing in her reports shows this:</p><div class="attempts"><div class="excerpt"><div class="tag muted">Practice attempt 1 · simulated client</div><p><i>Client:</i> “Honestly, this is more than we budgeted for this year.”</p><p><i>Michelle:</i> “I understand. Let me walk you through what's included…”</p></div><div class="excerpt"><div class="tag muted">Practice attempt 4 · simulated client</div><p><i>Client:</i> “Another agent quoted me less.”</p><p><i>Michelle:</i> “Ours covers more, though. For example, it includes…”</p></div></div><p class="sum"><strong>Four attempts. A price concern each time. Product features each time.</strong> Her client meeting is tomorrow.</p><p class="muted small">Text-based practice with an AI client. Illustrative.</p>`;
  const order=[top,...TEAM.filter(p=>p.id!==TOP)];
  $('evidence').innerHTML=order.map(p=>`<div class="ev${p.id===TOP?' top':''}"><div class="who"><b>${p.name}</b><span>${p.focus}${p.id===pick?' · your choice':''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${p.ev}</p></div><div class="sug"><b>Suggestion: ${p.sug}</b><span>${p.sugWhy}</span></div></div>`).join('');
- $('decideRow').innerHTML=same?`<button class="btn" type="button" data-decide="michelle">Give the thirty minutes to Michelle</button>`:`<button class="btn" type="button" data-decide="michelle">Give the thirty minutes to Michelle</button><button class="btn secondary" type="button" data-decide="${me.id}">Keep my choice: ${me.name}</button>`;
+ $('decideRow').innerHTML='<button type="button" data-decide="accept" aria-pressed="false">Accept · Coach now<small>Act on the repeated signal</small></button><button type="button" data-decide="verify" aria-pressed="false">Defer · Verify first<small>Get a second kind of evidence</small></button><button type="button" data-decide="dismiss" aria-pressed="false">Dismiss · Override<small>Record your different judgment</small></button>';
+ $('decisionStatus').textContent='Choose a management action. This demo never sends assignments.';
+ renderAllocation();
  const wait=matchMedia('(prefers-reduced-motion: reduce)').matches?0:150+cards.length*160+900;
  setTimeout(()=>{$('reveal').hidden=false;requestAnimationFrame(()=>{$('reveal').classList.add('in');$('verdict').focus({preventScroll:true});$('verdict').scrollIntoView({behavior:'smooth',block:'nearest'})})},wait);
 });
-$('decideRow').addEventListener('click',e=>{const b=e.target.closest('[data-decide]');if(!b)return;const p=TEAM.find(x=>x.id===b.dataset.decide);
- $('decidedTxt').textContent=p.id===TOP?'Decided: Michelle gets your thirty minutes before tomorrow’s meeting. The other four get a next practice, which costs you no time.':'Decided: '+p.name+' gets your thirty minutes. Your reason outranks the suggestion, and the suggestion for Michelle stays open.';
- $('decideRow').hidden=true;$('decided').hidden=false});
+/* Human decision remains local to this illustrative page. */
+let managerAction='',actionConfirmed=false,simulatedOutcome='';
+function resourcePlan(){
+ const total=Number(document.querySelector('input[name="demoBudget"]:checked').value);
+ const senior=$('seniorSupport').checked;
+ let michelle=0,other=0,otherName='Unallocated';
+ if(managerAction==='accept'){michelle=senior?total:(total===30?20:10);other=total-michelle;otherName=senior?'Available':'Other team coaching';}
+ if(managerAction==='dismiss'&&pick&&pick!=='michelle'){other=total;otherName=TEAM.find(p=>p.id===pick).name+' · manager choice';}
+ return {total,senior,michelle,other,otherName};
+}
+function renderAllocation(){
+ const p=resourcePlan();
+ $('allocation').innerHTML='<article><b>'+p.total+' min</b><span>Manager capacity</span></article><article><b>'+p.michelle+' min</b><span>Michelle</span></article><article><b>'+p.other+' min</b><span>'+esc(p.otherName)+'</span></article>';
+ $('allocationWhy').textContent=managerAction==='accept'?'Illustrative allocation, not an AI optimizer. No time exceeds the budget.':
+ managerAction==='verify'?'No one-to-one time assigned to this finding yet. Request another scenario before spending the coaching budget.':
+ managerAction==='dismiss'?'AI suggestion overruled. You can give time to your original choice, or reserve it if you had picked Michelle.':
+ 'The same time budget can support different actions. Choose your decision first.';
+}
+function drawOutcome(){
+ const labels=managerAction==='verify'?['Gap repeats','Gap disappears']:managerAction==='dismiss'?['New evidence challenges override','New evidence supports override']:['Practice improves','Gap remains'];
+ $('outcomeChoices').innerHTML=labels.map((x,i)=>'<button type="button" data-outcome="'+i+'" aria-pressed="'+(simulatedOutcome===String(i))+'">'+x+'</button>').join('');
+ let result='Day 0: observe → manager decides → Day 7: examine another attempt → keep, revise or close the priority.';
+ if(simulatedOutcome==='0')result=managerAction==='accept'?'Simulated improvement: vary the scenario and seek field observation before declaring readiness.':
+ managerAction==='verify'?'Pattern repeats in a second scenario. Reopen the coaching decision with stronger evidence.':
+ 'The repeated gap persists after your override. Reopen the AI suggestion rather than treating either party as infallible.';
+ if(simulatedOutcome==='1')result=managerAction==='accept'?'Gap remains in simulated practice. Try a different coaching method and reassess.':
+ managerAction==='verify'?'New simulated scenario does not reproduce the gap. Keep the finding provisional; preserve the manager time.':
+ 'The next simulated case does not reproduce the pattern. Keep your override under review and set a light checkpoint.';
+ $('outcomeDetail').textContent=result;
+}
+function drawDecision(){
+ if(!actionConfirmed)return;
+ const p=resourcePlan();
+ const reason=managerAction==='dismiss'?' Reason: '+$('decisionReason').value+($('decisionNote').value.trim()?' — '+$('decisionNote').value.trim():''):'';
+ $('decidedTxt').textContent=managerAction==='accept'?'Your call: coach Michelle; '+p.michelle+' of '+p.total+' manager minutes allocated in the illustration.':
+ managerAction==='verify'?'Your call: request more evidence first. The recommendation remains open and no coaching time has been assigned.':
+ 'Your call: dismiss this recommendation.'+reason;
+ $('impactPanel').hidden=false;$('decided').hidden=false;drawOutcome();
+}
+$('decideRow').addEventListener('click',e=>{
+ const button=e.target.closest('[data-decide]');if(!button||actionConfirmed)return;
+ managerAction=button.dataset.decide;
+ $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ $('reasonWrap').hidden=managerAction!=='dismiss';$('confirmDecision').disabled=false;
+ $('decisionStatus').textContent=managerAction==='dismiss'?'Please choose a reason before confirming.':'Ready to confirm. This will not send anything.';
+ renderAllocation();
+});
+$('resourceControls').addEventListener('change',()=>{renderAllocation();drawDecision()});
+$('confirmDecision').onclick=()=>{
+ if(!managerAction)return;
+ if(managerAction==='dismiss'&&!$('decisionReason').value){$('decisionStatus').textContent='Choose an override reason first.';$('decisionReason').focus();return}
+ actionConfirmed=true;$('confirmDecision').disabled=true;
+ $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=true);
+ $('decisionStatus').textContent='Demo decision captured on this page only. No assignments or records were changed.';
+ drawDecision();$('impactPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+$('outcomeChoices').addEventListener('click',e=>{
+ const button=e.target.closest('[data-outcome]');if(!button)return;simulatedOutcome=button.dataset.outcome;drawOutcome();
+});
+
 
 /* step 2 */
 const STOPS=[
- {n:0,tag:"Leadership Studio · you assign",title:"It starts with your decision.",body:"You choose the conversation that matters for your team right now and who should practice it.",kase:"You asked David to prepare for his first call to a new prospect."},
- {n:1,tag:"Knowledge Studio",title:"Your approved material becomes the conversation.",body:"Practice is built from what your company has already signed off, so agents rehearse what you actually want said.",kase:"Your material became the conversation with Michael, a father thinking about his family."},
- {n:2,tag:"Practice Studio",title:"He rehearses before it is real.",body:"The agent practices with an AI client. The AI Coach names one thing to change, then he tries again.",kase:"Attempt 1: “I’m pretty busy.” Attempt 2: Michael named the reason himself."},
- {n:3,tag:"Client Studio",title:"Practice points at a real conversation.",body:"The agent adds context about a client he is preparing to meet, so the next practice fits that conversation. The platform does not listen to client calls.",kase:"David noted that his first real calls start next week."},
- {n:0,tag:"Leadership Studio · you review",title:"It comes back to you.",body:"You see the signal and how much evidence stands behind it. Then you coach now, verify first, or overrule the suggestion.",kase:"That is the seat you were just in. Then the loop turns again."}];
-function drawStop(){const s=STOPS[stop];$('stopTag').textContent=s.tag+' · '+(stop+1)+' of '+STOPS.length;$('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;
+ {n:0,tag:"Leadership · set the priority",title:"It starts with a manager decision.",body:"Choose which conversation matters for your team. AI suggests, but the manager reviews evidence and controls what happens next.",kase:"David will make his first introductory call to Michael. You want him to ask about needs before presenting a policy.",proof:"Manager artifact: focused assignment, coaching time and rationale. Return to Step 1 to compare accept, defer or dismiss."},
+ {n:1,tag:"Knowledge · approved guidance",title:"Company material defines the training boundary.",body:"An approved illustrative first-call guide supplies the practice objective. The manager can review and adjust the training material.",kase:"Scenario objective: ask one relevant discovery question before describing features.",proof:"Knowledge artifact: source-guided objective. This is authored illustration, not proof of a verified document-to-practice workflow."},
+ {n:2,tag:"Practice · retry",title:"Two simulated attempts, one observable change.",body:"The AI plays the simulated prospect, points to a coachable moment and invites another attempt.",kase:"First attempt: Michael says “I’m pretty busy.” Second attempt: Michael voluntarily names a family concern.",proof:"Practice artifact: attempted dialogue, one AI Coach note and a second attempt. Simulated performance does not prove real-world readiness."},
+ {n:3,tag:"Client · appropriate context",title:"Prepare for the next client conversation.",body:"The learner may record limited, relevant conversation context to guide the next simulation. The platform does not listen to real calls.",kase:"David notes a first prospect call is planned next week. Personal details and real outcomes are not inferred.",proof:"Client artifact: the situation to rehearse, not a recorded customer interaction."},
+ {n:0,tag:"Leadership · reassess",title:"It returns to your judgment, not a score.",body:"Compare later practice evidence with the earlier hypothesis. Keep, revise or close the priority and select the next practice.",kase:"If improvement holds in a different context, stretch the skill. If not, change the coaching approach. Then the loop begins again.",proof:"Manager artifact: initial finding → human decision → new observation → revised next action. This is the Team Growth & Retention Hub."}
+];
+function drawStop(){
+ const s=STOPS[stop];
+ $('stopTag').textContent=s.tag+' · '+(stop+1)+' of '+STOPS.length;
+ $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
+ $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Stage '+(stop+1)+' / 5 · click any Studio or select Next.';
  document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===s.n));
- $('orbit').style.transform='rotate('+(stop*90)+'deg)';$('prevStop').disabled=stop===0;$('nextStop').textContent=stop===STOPS.length-1?'Now your team →':'Next →'}
+ $('orbit').style.transform='rotate('+(stop*90)+'deg)';$('prevStop').disabled=stop===0;
+ $('nextStop').textContent=stop===STOPS.length-1?'Now your team →':'Next stage →';
+}
 $('nextStop').onclick=()=>{if(stop===STOPS.length-1){go(2);return}stop++;drawStop()};
 $('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
 document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
+$('hubJump').onclick=()=>{stop=4;drawStop()};
 
 /* step 3 */
 const CONVS=["The first call to a new prospect","“Your premium is too high”","“I need to think about it”","“I already have someone”","Asking for the first meeting","Following up after silence"];
 $('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
-function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o)a.push(o);return a.slice(0,2)}
+function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
 function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
  $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;
  const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
-$('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan()});
-$('own').addEventListener('input',drawPlan);$('size').addEventListener('change',drawPlan);
+$('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
+$('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
 
 /* navigation */
 const NAMES=['make-the-call','the-loop','your-team'];
