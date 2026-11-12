@@ -51,9 +51,9 @@
         const ready = await fetch('/.netlify/functions/transcribe-audio', { method: 'GET' });
         const capability = await ready.json().catch(() => ({}));
         if (token !== session) return;
-        if (!ready.ok || !capability.configured) {
-          status(tx('Cloud transcription is not configured on this preview. Please type your answer; no recording was started.',
-                    '本测试版尚未配置云端语音转写。请先使用文字输入；麦克风尚未启动。'));
+        if (!ready.ok || !capability.ready) {
+          status(tx('Cloud transcription is not ready on this preview (API credentials or rate-limit storage). No recording was started. Please type your answer.',
+                    '测试版语音服务尚未就绪（API 凭证或请求限制存储）。麦克风未启动，请先使用文字输入。'));
           working = false; button.disabled = false; idle(); setBusy(false); return;
         }
         status(tx('Requesting microphone access…', '正在请求麦克风权限…'));
