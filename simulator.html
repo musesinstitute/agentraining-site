@@ -1194,7 +1194,7 @@
         <textarea class="chat-input" id="chat-input" rows="1"
           placeholder="Type your response to the client..." disabled
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Voice input">🎤</button>
+        <button class="mic-btn" id="mic-btn" type="button" title="Record audio, transcribe, then review">🎤</button>
         <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>Send</button>
       </div>
       <p class="input-hint" id="input-hint">Press Enter to send · Shift+Enter for new line</p>
@@ -2488,6 +2488,8 @@ function updateLearningGoal(sc) {
 }
 
 function selectScenario(sc) {
+  if (practiceVoiceControl) practiceVoiceControl.cancel();
+  practiceVoiceBusy = false;
   // Close mobile panel if open
   const panel = document.getElementById('panel-left');
   const btn   = document.getElementById('mobile-scenario-btn');
@@ -2512,9 +2514,10 @@ function selectScenario(sc) {
   updateCurrentIndustry(sc?.industry);
   updateLearningGoal(sc);
   updateLinkedCaseBanner(sc?.linkedCaseId ? getClientCases().find(c => c.id === sc.linkedCaseId) : null);
+  if (typeof showLinkedCasePracticeTools === 'function') showLinkedCasePracticeTools(sc);
 
   // Auto-trigger welcome for free practice (id=0)
-  if (sc.id === 0) {
+  if (sc.id === 0 && !sc.linkedCaseId) {
     setTimeout(() => {
       const inputEl = document.getElementById('chat-input');
       if (inputEl) {
@@ -2548,7 +2551,7 @@ function selectScenario(sc) {
     6: { en: "I really love this neighborhood, but with rates at 7%, my monthly payment would be brutal. I'm thinking of waiting another year or two.", zh: "我真的很喜歡這個社區，但7%的利率，我的月付會很艱難。我在考慮再等一兩年。" }
   };
 
-  if (sc.id !== 0) {
+  if (sc.id !== 0 || sc.linkedCaseId) {
     const openingSource = sc.greeting || openingMap[sc.id];
     const opening = openingSource ? openingSource[currentLang] : (currentLang === 'zh' ? '你好，我們開始吧。' : "Hello, let's get started.");
     conversationHistory.push({ role: 'assistant', content: opening });
@@ -2694,6 +2697,7 @@ function removeTyping() {
 }
 
 async function sendMessage() {
+  if (practiceVoiceBusy) return;
   const inputEl = document.getElementById('chat-input');
   if (inputEl && inputEl.value.trim()) {
     detectTeamLeader(inputEl.value);
@@ -2757,7 +2761,10 @@ async function getFeedback(history, isFinal) {
   const fullConvo = history.map(m => (m.role === 'user' ? 'Agent: ' : 'Client: ') + m.content).join('\n');
 
   const coachLang = currentLang === 'zh' ? 'Traditional Chinese (繁體中文)' : 'English';
-  const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}.
+  const linkedCase = currentScenario && currentScenario.linkedCaseId ? getClientCases().find(c => c.id === currentScenario.linkedCaseId) : null;
+  const d = linkedCase && linkedCase.clientDiscovery;
+  const caseContext = linkedCase ? 'Personalized client identity: ' + linkedCase.clientName + '. Reported client facts (not verified): ' + JSON.stringify(d?.facts || [linkedCase.need]) + '. Known information gaps: ' + JSON.stringify(d?.unknowns || []) + '. Suggested approach: ' + (d?.approach || '') + '. Do not invent facts.' : '';
+  const coachPhilosophy = `You are an elite sales coach. IMPORTANT: You must respond ONLY in ${coachLang}. All feedback, strengths, tips, and assessments must be written in ${coachLang}. ${caseContext}
 
 You are trained in two complementary traditions: Sun Tzu's strategic thinking (know your counterpart before you try to move them; the best outcomes come from understanding, not forcing) and Dale Carnegie's principles of influence (genuine interest in the other person, letting them arrive at their own conclusion, never winning an argument at the cost of the relationship). Evaluate the agent's response through this lens — not as a script-following exercise, but as a test of whether they understood the client before trying to persuade them.`;
 
@@ -3265,6 +3272,12 @@ function updateSummarySyncStatus(state, message) {
 }
 
 async function syncCompletedPractice(data) {
+  if (currentScenario?.linkedCaseId && !activeAssignment) {
+    updateSummarySyncStatus('success', currentLang === 'zh'
+      ? '✓ 自主练习记录、完整对话和教练建议已保存在本浏览器的客户档案中。可在该客户档案中删除本地自主练习记录；不会自动同步到主管系统。'
+      : '✓ Self-practice transcript and coach feedback saved locally in this client case. Learner may delete local self-practice history; nothing was synced to the manager workspace.');
+    return;
+  }
   updateSummarySyncStatus('saving', currentLang === 'zh'
     ? '正在保存分数、完整对话记录和完成状态…'
     : 'Saving the score, transcript, and completion status…');
@@ -3479,98 +3492,39 @@ ${(d.tips||[]).map(t=>'• '+t).join('\n')}
 }
 
 
-// ── SPEECH RECOGNITION ──
-let recognition = null;
-let isRecording = false;
-
-function initSpeechRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return null;
-  
-  const r = new SpeechRecognition();
-  r.continuous = false;      // Stop after user pauses
-  r.interimResults = false;  // Only return final result, no accumulation
-  r.maxAlternatives = 1;
-  
-  r.onstart = () => {
-    isRecording = true;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { 
-      btn.classList.add('recording'); 
-      btn.textContent = '🔴';
-      btn.title = currentLang === 'zh' ? '說完後自動停止' : 'Will stop automatically';
+// ── CLOUD AUDIO TRANSCRIPTION (DISCOVERY + PRACTICE) ──
+// Record first, transcribe through the bounded server endpoint, then review before sending.
+// Unlike the old Web Speech API, pauses do not end the recording.
+let practiceVoiceControl = null;
+let practiceVoiceBusy = false;
+function initPracticeVoice() {
+  const mic = document.getElementById('mic-btn');
+  const input = document.getElementById('chat-input');
+  const hint = document.getElementById('input-hint');
+  const send = document.getElementById('send-btn');
+  if (!mic || !input || !hint || !send) return;
+  if (typeof window.setupClientDiscoveryVoice !== 'function') {
+    mic.disabled = true;
+    hint.textContent = currentLang === 'zh' ? '语音录音暂不可用，请使用文字输入。' : 'Voice recording unavailable. Please type.';
+    return;
+  }
+  mic.dataset.compactVoice = 'true';
+  practiceVoiceControl = window.setupClientDiscoveryVoice(
+    mic, input, message => { hint.textContent = message; },
+    () => {
+      if (isLoading || !currentScenario || input.disabled) {
+        hint.textContent = currentLang === 'zh' ? '请先开始练习，等待 AI 回答后再录音。' : 'Start practice and wait for the AI response before recording.';
+        return false;
+      }
+      return true;
+    },
+    busy => {
+      practiceVoiceBusy = busy;
+      send.disabled = busy || isLoading || !currentScenario || input.disabled;
     }
-  };
-  
-  r.onresult = (event) => {
-    // Only take the final result - no interim accumulation
-    const result = event.results[event.results.length - 1];
-    if (result.isFinal) {
-      const transcript = result[0].transcript.trim();
-      const input = document.getElementById('chat-input');
-      if (input && transcript) input.value = transcript;
-    }
-  };
-  
-  r.onend = () => {
-    isRecording = false;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { 
-      btn.classList.remove('recording'); 
-      btn.textContent = '🎤';
-      btn.title = currentLang === 'zh' ? '語音輸入' : 'Voice input';
-    }
-    // Don't auto-send - let user check the text first
-  };
-  
-  r.onerror = (event) => {
-    isRecording = false;
-    const btn = document.getElementById('mic-btn');
-    if (btn) { btn.classList.remove('recording'); btn.textContent = '🎤'; }
-    if (event.error === 'not-allowed') {
-      alert(currentLang === 'zh' 
-        ? '請允許使用麥克風權限' 
-        : 'Please allow microphone access');
-    }
-  };
-  
-  return r;
+  );
 }
-
-function toggleMic() {
-  // Check if running inside WeChat browser
-  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-  if (isWeChat) {
-    alert(currentLang === 'zh'
-      ? '微信瀏覽器不支援語音輸入。\n\n請點右上角「...」→「在瀏覽器中打開」，再使用語音功能。'
-      : 'WeChat browser does not support voice input.\n\nPlease tap ··· → Open in Browser to use voice input.');
-    return;
-  }
-  // Check browser support
-  if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-    alert(currentLang === 'zh'
-      ? '您的瀏覽器不支援語音輸入。請使用 Chrome 或 Safari。'
-      : 'Your browser does not support voice input. Please use Chrome or Safari.');
-    return;
-  }
-  
-  if (isRecording) {
-    if (recognition) recognition.stop();
-    return;
-  }
-  
-  recognition = initSpeechRecognition();
-  if (!recognition) return;
-  
-  // Set language based on current UI language
-  recognition.lang = currentLang === 'zh' ? 'zh-TW' : 'en-US';
-  
-  try {
-    recognition.start();
-  } catch(e) {
-    console.error('Speech recognition error:', e);
-  }
-}
+window.addEventListener('load', initPracticeVoice);
 
 // ── RENDER FEEDBACK ──
 function renderFeedback(data, isFinal) {
@@ -4288,6 +4242,7 @@ function renderCaseDetail(c) {
       <button class="dash-secondary-btn" style="flex:none;" onclick="openCaseFormForEdit('${c.id}')">✏️ ${s.csEdit}</button>
     </div>
   `;
+  if (typeof renderCasePracticeHistory === 'function') renderCasePracticeHistory(c);
 }
 
 // ── OBJECTION → CURRICULUM SCENARIO MATCHING ──
@@ -4325,8 +4280,18 @@ function buildCaseFreePracticePrompt(c) {
     const zhRecruit = `你扮演${c.clientName}，一位保險團隊成員正在跟進的真實招募候選人。背景：${c.need || '未特別說明。'}目前顧慮：${c.objection || '有興趣，但尚未準備作出承諾。'}請保持角色，每次自然回覆2至3句。要求對方先建立信任、了解你是否適合、誠實介紹機會、避免施壓與未經證實的收入承諾，只有在合理時才同意明確的下一步。不要表明自己是AI。`;
     return { en: enRecruit, zh: zhRecruit };
   }
-  const en = `You play ${c.clientName}, a real prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
-  const zh = `你扮演${c.clientName}，這位業務員正在跟進的真實潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
+  const discovery = c.clientDiscovery || {};
+  const reportedFacts = Array.isArray(discovery.facts) ? discovery.facts.slice(0, 7).join('; ') : '';
+  const openQuestions = Array.isArray(discovery.unknowns) ? discovery.unknowns.slice(0, 6).join('; ') : '';
+  const hypotheses = Array.isArray(discovery.hypotheses) ? discovery.hypotheses.slice(0, 5).join('; ') : '';
+  const contextEn = c.clientDiscovery
+    ? 'Learner-reported facts (not verified): ' + reportedFacts + '. Unanswered questions: ' + openQuestions + '. Hypotheses (do not assume true): ' + hypotheses + '. Suggested respectful approach: ' + (discovery.approach || '') + '. Never invent personal details. '
+    : '';
+  const contextZh = c.clientDiscovery
+    ? '學員陳述的事實（尚未查證）：' + reportedFacts + '。尚待了解：' + openQuestions + '。不得當作事實的假設：' + hypotheses + '。建議的尊重式接觸方式：' + (discovery.approach || '') + '。不要自行編造個人背景。'
+    : '';
+  const en = `You play ${c.clientName}, a simulated prospect the sales agent is following up with. Situation: ${c.need || 'Not specified.'} Current objection or hesitation: ${c.objection || 'Generally interested but has not committed yet.'} ${contextEn}Stay fully in character as this client — respond naturally in 2-3 sentences per turn, and raise the objection naturally if the agent moves toward asking for a commitment. Do not identify yourself as an AI.`;
+  const zh = `你扮演${c.clientName}，這位業務員正在跟進的模擬潛在客戶。情況：${c.need || '未特別說明。'}目前的異議或猶豫：${c.objection || '大致上有興趣，但尚未做出承諾。'}${contextZh}請完全保持這個客戶的角色——每次回覆2至3句，自然真實，如果業務員逐漸談到要你承諾，就自然地提出這個異議。不要表明自己是AI。`;
   return { en, zh };
 }
 
@@ -4335,9 +4300,13 @@ function startPracticeFromCase(caseId) {
   const c = getClientCases().find(x => x.id === caseId);
   if (!c) return;
   closeClientStudio();
+  // A learner launching a case practice is not completing a manager assignment.
+  activeAssignment = null;
   setPanelMode('curriculum');
 
-  const matched = getCaseType(c) === 'client' ? matchScenarioForObjection(c.objection, c.industry) : null;
+  // Discovery-generated demo cases must rehearse the *specific* client context;
+  // a generic curriculum match would discard facts collected in the AI interview.
+  const matched = !c.clientDiscovery && getCaseType(c) === 'client' ? matchScenarioForObjection(c.objection, c.industry) : null;
   let mapped;
   if (matched) {
     mapped = {
@@ -4363,6 +4332,8 @@ function startPracticeFromCase(caseId) {
     mapped = Object.assign({}, freeScenario, {
       clientName: c.clientName,
       industry: c.industry,
+      name: { en: 'Practice with ' + c.clientName, zh: '与 ' + c.clientName + ' 模拟交流' },
+      greeting: { en: 'Hello, thanks for following up. What would you like to discuss today?', zh: '你好，谢谢你再次联系。今天你想和我聊些什么？' },
       systemPrompt: buildCaseFreePracticePrompt(c),
       isCurriculum: false,
       linkedCaseId: c.id
@@ -4389,13 +4360,20 @@ function saveCasePracticeResult(caseId, data) {
   const idx = cases.findIndex(c => c.id === caseId);
   if (idx === -1) return;
   const result = {
-    date: new Date().toISOString().slice(0, 10),
+    id: genCaseId(),
+    date: new Date().toISOString(),
     scenarioId: currentScenario?.id,
     scenarioTitle: (currentScenario?.name && (currentScenario.name[currentLang] || currentScenario.name.en)) || '',
     score: data.overallScore || 0,
     strengths: data.strengths || [],
     tips: data.tips || [],
-    summary: data.summary || ''
+    summary: data.summary || '',
+    transcript: (conversationHistory || []).map((m, i) => ({ index: i+1, speaker: m.role === 'user' ? 'agent' : 'client', text: m.content })),
+    coachHistory: (window.clientCaseCoachHistory || []).slice(),
+    isSelfPractice: !activeAssignment,
+    isFormal: !!activeAssignment,
+    // Only exclusively local, unassigned records offer learner deletion.
+    localOnly: !activeAssignment
   };
   cases[idx].lastPractice = result;
   cases[idx].practiceHistory = cases[idx].practiceHistory || [];
@@ -4477,5 +4455,8 @@ window.addEventListener('load', () => {
   }, 300);
 });
 </script>
+<script src="client-voice.js?v=20261110-cloud-speech-v1" defer></script>
+<script src="client-discovery.js?v=20261110-cloud-speech-v1" defer></script>
+<script src="client-practice.js?v=20261108-personalized-practice-v1" defer></script>
 </body>
 </html>
