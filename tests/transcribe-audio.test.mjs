@@ -11,7 +11,7 @@ function makeHandler({ key = 'fake-key', prior = [], storeError = false } = {}) 
   const calls = [];
   const recorded = [];
   const store = {
-    async get() { if (storeError) throw new Error('no blobs'); return prior; },
+    async get(k) { if (storeError) throw new Error('no blobs'); if (k === 'service-readiness-v1') return { ok: true }; return prior; },
     async setJSON(k, hits) { recorded.push({ k, hits }); }
   };
   const exports = {};
@@ -81,7 +81,10 @@ test('preflight reports whether voice is configured even when GET omits Origin',
   const absent = await off.handler(req);
   assert.equal(available.statusCode, 200);
   assert.equal(JSON.parse(available.body).configured, true);
+  assert.equal(JSON.parse(available.body).rateLimitReady, true);
+  assert.equal(JSON.parse(available.body).ready, true);
   assert.equal(JSON.parse(absent.body).configured, false);
+  assert.equal(JSON.parse(absent.body).ready, false);
   assert.equal(on.calls.length, 0);
 });
 
@@ -96,5 +99,23 @@ test('fails closed if rate limit storage is unavailable', async () => {
   const { handler, calls } = makeHandler({ storeError: true });
   const res = await handler(request());
   assert.equal(res.statusCode, 503);
+  assert.equal(calls.length, 0);
+});
+
+test('preflight blocks recording when Netlify Blobs is unavailable', async () => {
+  const { handler, calls } = makeHandler({ storeError: true });
+  const res = await handler({ httpMethod: 'GET', headers: {} });
+  assert.equal(res.statusCode, 200);
+  assert.equal(JSON.parse(res.body).configured, true);
+  assert.equal(JSON.parse(res.body).rateLimitReady, false);
+  assert.equal(JSON.parse(res.body).ready, false);
+  assert.equal(calls.length, 0);
+});
+
+test('storage failure after preflight gives actionable error code and does not call provider', async () => {
+  const { handler, calls } = makeHandler({ storeError: true });
+  const res = await handler(request());
+  assert.equal(res.statusCode, 503);
+  assert.equal(JSON.parse(res.body).code, 'RATE_LIMIT_STORAGE_UNAVAILABLE');
   assert.equal(calls.length, 0);
 });
