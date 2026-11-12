@@ -40,7 +40,7 @@ function authorizedOrigin(headers) {
 }
 async function verifyRateLimitStorage() {
   try {
-    const store = getStore('demo-transcription-rate-limit');
+    const store = getStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
     const key = 'service-readiness-v1';
     await store.setJSON(key, { ok: true });
     const probe = await store.get(key, { type: 'json' });
@@ -54,7 +54,7 @@ async function allowRequest(headers) {
   const ip = String(headers['x-nf-client-connection-ip'] || headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   const key = 'ip-' + ip.replace(/[^a-zA-Z0-9]/g, '-').slice(0, 80);
   try {
-    const store = getStore('demo-transcription-rate-limit');
+    const store = getStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
     const now = Date.now();
     const prior = await store.get(key, { type: 'json' });
     const recent = (Array.isArray(prior) ? prior : []).filter(n => Number.isFinite(n) && now - n < WINDOW_MS);
