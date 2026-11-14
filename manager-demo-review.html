@@ -1,8 +1,441 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgentTraining.ai | Manager Demo — Review Edition</title>
-<style>:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17243a;background:#f3f6fc}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#10234a,#2455ba);color:#fff;padding:54px max(24px,calc((100vw - 1000px)/2))}main{max-width:1000px;margin:auto;padding:30px 22px 70px}h1{font-size:clamp(30px,5vw,50px);line-height:1.15;margin:12px 0}h2{font-size:23px}.sub{font-size:18px;max-width:750px;line-height:1.6}.tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.card{background:white;border:1px solid #dce4f2;border-radius:16px;padding:23px;margin:16px 0;box-shadow:0 6px 18px #17243a09}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.grid .card{margin:0}.btn{display:inline-block;background:#2455ba;color:white;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:750;margin:8px 8px 0 0}.btn.secondary{background:#e8efff;color:#143879}.muted{color:#53647b;line-height:1.55}li{margin:8px 0}a:focus-visible{outline:3px solid #f2ad38;outline-offset:3px}</style></head>
-<body><header><div class="tag">AgentTraining.ai · External review edition · PR #61</div><h1>Train Every Advisor.<br>Coach Every Manager.<br>Grow Every Team.</h1><p class="sub">One guided executive demo: identify team risk, understand the Four Studios, examine evidence, and make accountable coaching decisions across five fictional advisors.</p><a class="btn" href="manager-demo-opening.html">Start the four-page demo →</a></header>
-<main><section class="card"><h2>Review scope</h2><p class="muted">This is a pre-merge demonstration for feedback. The learner profiles, scores, dialogue, recommendations and Day 7 outcomes are fictional. The decision controls are simulations; no real assignments, notifications or learner records are created by the demo.</p></section>
-<section class="grid" aria-label="Four pages"><div class="card"><div class="tag">01 · Risk</div><h2>Manager Risk Briefing</h2><p class="muted">Why performance gaps go unnoticed and what managers need to see.</p><a class="btn secondary" href="manager-demo-opening.html">Open page 1 →</a></div><div class="card"><div class="tag">02 · Architecture</div><h2>Four Studios & Hub</h2><p class="muted">Practice, Client, Knowledge and Leadership connected by a team growth loop.</p><a class="btn secondary" href="manager-demo-hub.html">Open page 2 →</a></div><div class="card"><div class="tag">03 · Workflow</div><h2>Three Phases</h2><p class="muted">Follow the manager's steps from signal to action and reassessment.</p><a class="btn secondary" href="manager-demo-phases.html">Open page 3 →</a></div><div class="card"><div class="tag">04 · Decision</div><h2>Mission Control V2.2</h2><p class="muted">Current master V2.2: evidence limits, privacy disclosures, manager judgment and reassessment.</p><a class="btn secondary" href="mission-control-v2-1.html">Open page 4 →</a></div></section>
-<section class="card"><h2>What to test</h2><ol><li>Navigate pages 1–4. On page 4 (Mission Control V2.2), use your browser’s Back button to return to the demo; that existing master page has no in-page return link.</li><li>Explore current V2.2 scenarios, evidence limits and privacy disclosures.</li><li>Review V2.2 coaching-resource controls and manager decisions.</li><li>Review override rationale and what evidence would change a judgment.</li><li>Review reassessment reporting and distinguish simulated from real evidence.</li><li>Check on mobile and keyboard. Report any unclear claims, confusing controls, or broken links.</li></ol><p class="muted"><strong>Reviewer question:</strong> Would this help an insurance or financial advisory team manager make a better coaching decision than using a generic AI chat alone? What is missing?</p></section>
-<section class="card"><h2>Before merging</h2><p class="muted">Please send feedback to the project owner. This page is a review guide, not proof that live browser UAT has passed. Production deployment and PR merge remain pending review.</p><a class="btn" href="manager-demo-opening.html">Begin review →</a></section></main></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgentTraining.ai | Manager Demo</title>
+<meta name="description" content="Take the manager's seat: make one coaching decision, see where the evidence came from, and sketch a 14-day pilot for your own team.">
+<style>
+/* One page, three steps: decide, see the loop, sketch your own pilot. Calm light surface, site blue as the single accent. */
+:root{--bg:#f3f6fc;--card:#fff;--ink:#17243a;--muted:#53647b;--line:#dce4f2;--blue:#2455ba;--navy:#10234a;--soft:#e8efff;--warn:#96483a;--warn-soft:#f8ece9;--ok:#2a6e52;--ok-soft:#e7f3ec;--mid:#7a5a12;--mid-soft:#fbf3dc;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);line-height:1.5}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:40px max(22px,calc((100vw - 1000px)/2)) 34px}
+main{max-width:1000px;margin:auto;padding:22px 22px 60px}
+h1{font-size:clamp(26px,4.2vw,42px);line-height:1.18;margin:10px 0 12px;text-wrap:balance}
+h2{font-size:clamp(21px,2.8vw,27px);line-height:1.25;margin:4px 0 8px;text-wrap:balance}h3{font-size:18px;margin:0}
+.sub{font-size:17px;max-width:700px;margin:0;opacity:.95}
+.tag{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;padding:0;list-style:none}
+.steps button{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:30px;padding:8px 14px;font:600 13.5px inherit;font-family:inherit;cursor:pointer}
+.steps button[aria-current="step"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 6px 18px #17243a09}
+[hidden]{display:none!important}
+.btn{display:inline-block;border:0;background:var(--blue);color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font:700 15px inherit;font-family:inherit;cursor:pointer}
+.btn.secondary{background:var(--soft);color:#143879}.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,label:focus-within{outline:3px solid #f2ad38;outline-offset:2px}
+/* step 1 */
+.team{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+.person{position:relative;display:block;border:1px solid var(--line);border-radius:12px;padding:14px 12px;background:#fff;cursor:pointer;min-height:132px}
+.person input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.person.picked{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.person b{display:block;font-size:17px}.person .paper{display:block;font-size:12.5px;color:var(--ok);font-weight:700;margin-top:4px}
+.person .ctx{display:block;font-size:13.5px;color:var(--muted);margin-top:6px}
+.locked .person,.locked .person input{cursor:default}
+.person .mark{display:none;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.revealed .person.picked .mark.mine,.revealed .person.top .mark.here{display:block}
+.mark.mine{color:var(--muted)}.mark.here{color:var(--blue)}
+.revealed .person.picked{border-color:var(--ink);box-shadow:none}
+.revealed .person.top{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.person .prac{display:block;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.person .prac .t{display:block;font-size:13px;line-height:1.4}
+.fade{opacity:0;transform:translateY(6px);transition:opacity .55s ease,transform .55s ease}.fade.in{opacity:1;transform:none}
+.verdict h3{font-size:clamp(19px,2.4vw,23px);line-height:1.3}.verdict .big{font-size:17px;max-width:62ch}
+.attempts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.attempts .excerpt{margin-top:0}
+.verdict .sum{margin-top:12px;font-size:17px}
+details.all{margin-top:16px}details.all summary{cursor:pointer;font-weight:700;color:#143879;padding:6px 0}
+.evidence{margin-top:16px;display:grid;gap:10px}
+.ev{display:grid;grid-template-columns:110px 1fr 250px;gap:14px;align-items:start;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+.ev.top{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.ev p{margin:0;font-size:14.5px}.ev .who b{font-size:17px}.ev .who span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.pill{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.pill.thin{background:var(--warn-soft);color:var(--warn)}.pill.building{background:var(--mid-soft);color:var(--mid)}.pill.consistent{background:var(--ok-soft);color:var(--ok)}
+.sug b{display:block;font-size:14.5px}.sug span{font-size:13.5px;color:var(--muted)}
+.verdict{margin-top:18px;border-left:4px solid var(--blue);background:#f7f9fe;border-radius:0 12px 12px 0;padding:16px 18px}
+.verdict p{margin:6px 0 0}
+.excerpt{margin-top:12px;border:1px dashed var(--line);border-radius:10px;padding:12px 14px;font-size:14.5px;background:#fff}
+.excerpt p{margin:4px 0}.excerpt i{font-style:normal;font-weight:700}
+.decided{margin-top:16px;font-size:18px;font-weight:700}
+/* step 2 */
+.loopwrap{display:grid;grid-template-columns:360px 1fr;gap:26px;align-items:center;margin-top:10px}
+.ring{position:relative;width:340px;height:340px;margin:auto}
+.ring:before{content:"";position:absolute;inset:38px;border:2px solid var(--line);border-radius:50%}
+.hub{position:absolute;inset:108px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;text-align:center;font-size:12.5px;font-weight:700;line-height:1.35;padding:10px}
+.node{position:absolute;width:112px;margin:-27px 0 0 -56px;height:54px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink);font:700 13px inherit;font-family:inherit;cursor:pointer;line-height:1.2}
+.node small{display:block;font-weight:500;color:var(--muted);font-size:11px}
+.node.active{background:var(--blue);border-color:var(--blue);color:#fff}.node.active small{color:#dfe8ff}
+.node.n0{left:50%;top:38px}.node.n1{left:calc(100% - 38px);top:50%}.node.n2{left:50%;top:calc(100% - 38px)}.node.n3{left:38px;top:50%}
+.orbit{position:absolute;inset:38px;border-radius:50%;transition:transform .9s ease;pointer-events:none}
+.orbit:after{content:"";position:absolute;left:50%;top:0;width:4px;height:70px;margin-left:-2px;border-radius:2px;background:#f2ad38}
+.stop .tag{color:var(--blue)}.stop p{margin:8px 0 0;font-size:16px;max-width:52ch}
+.stop .case{margin-top:12px;border-left:3px solid var(--blue);padding:2px 0 2px 12px;color:var(--muted);font-size:15px}
+/* step 3 */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.chip{position:relative;border:1px solid var(--line);border-radius:30px;padding:8px 14px;background:#fff;font-size:14.5px;cursor:pointer}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer}.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.field{margin-top:14px}.field label{display:block;font-weight:700;font-size:14.5px;margin-bottom:6px}
+.field input[type=text],.field select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;max-width:420px;background:#fff;color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.plan{border:2px solid var(--blue);border-radius:14px;padding:18px;background:#fff}
+.plan ol{margin:10px 0 0;padding-left:20px}.plan li{margin:9px 0}.plan em{font-style:normal;font-weight:700;color:#143879}
+footer{max-width:1000px;margin:auto;padding:0 22px 50px}
+footer a{color:#143879}
+@media(max-width:820px){.attempts{grid-template-columns:1fr}.team{grid-template-columns:1fr 1fr}.person{min-height:0}.ev{grid-template-columns:1fr}.loopwrap,.two{grid-template-columns:1fr}.ring{width:300px;height:300px}.hub{inset:96px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Step-one manager judgment, controlled resources and simulated follow-up */
+.lab{margin-top:18px;padding:18px;background:#f7f9ff;border:1px solid #aec3ea;border-radius:13px}
+.lab h3{margin:7px 0}.eyeline{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--blue)}
+.bound{border-left:3px solid #be8e45;border-radius:0 8px 8px 0;background:#fffbf3;padding:10px 12px;font-size:13.5px;margin:13px 0}
+.resourcegrid{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:13px 0}
+.resourcegrid fieldset{display:flex;gap:12px;flex-wrap:wrap;border:0;padding:0;margin:0;align-items:center}
+.resourcegrid legend{font-size:12px;font-weight:800;margin-bottom:4px}
+.resourcegrid label{font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer}
+.resourcegrid input{accent-color:var(--blue)}
+.alloc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.alloc article{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}
+.alloc article b{font-size:19px;color:var(--navy);display:block}.alloc article span{font-size:11.5px;color:var(--muted);display:block}
+.actionset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.actionset button{cursor:pointer;background:#fff;text-align:left;border:2px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-weight:700;color:var(--ink)}
+.actionset button small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:4px}
+.actionset button[aria-pressed=true]{border-color:var(--blue);background:var(--soft)}
+.actionnote{font-size:13px;color:var(--muted);margin:7px 0}
+.lab select,.lab textarea{display:block;margin-top:8px;width:100%;max-width:620px;background:#fff;color:var(--ink);border:1px solid #bfcee7;border-radius:8px;padding:9px;font:inherit}
+.lab textarea{min-height:58px;resize:vertical}
+#decisionStatus{font-size:13px;color:#173a83}
+.followCard{background:#fff;border:1px solid #c6d4e8;border-radius:11px;padding:15px;margin-top:14px}
+.followCard .choices{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}
+.followCard .choices button{cursor:pointer;background:#fff;color:var(--blue);border:1px solid var(--blue);border-radius:8px;padding:9px;font:inherit}
+.followCard .choices button[aria-pressed=true]{background:var(--blue);color:#fff}
+#outcomeDetail{line-height:1.5;font-size:14px}
+.hub{border:2px solid #aac4ff!important;box-shadow:0 0 0 9px #dbe6ff,0 10px 25px #1e438d44;cursor:pointer}
+.hub small{display:block;color:#d9e5ff;font-size:10px;font-weight:500;margin-top:5px}
+.node.active{box-shadow:0 0 0 3px #b6cafa}.node{font-size:13px}
+.ring:before{border:3px dashed #a9bce4}
+.loopEvidence{margin-top:13px;padding:13px 15px;background:#f4f7ff;border:1px solid #c8d9f5;border-left:4px solid var(--blue);border-radius:10px}
+.loopEvidence b{font-size:13px}.loopEvidence p{font-size:14px;margin:5px 0}
+.hubCount{font-size:12px;color:var(--muted);margin-top:9px}
+#chipHint.warn{color:#954716;font-weight:700}
+@media(max-width:650px){.actionset,.alloc{grid-template-columns:1fr}.lab{padding:13px}}
+
+/* Step 2: interactive Knowledge and client-context learning examples. */
+.studio-proof{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.studio-proof h3{margin:3px 0 8px}
+.proof-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.proof-tabs button{border:1px solid #abc3e6;border-radius:10px;background:#fff;color:var(--ink);padding:10px;font:700 14px inherit;font-family:inherit;cursor:pointer}
+.proof-tabs button[aria-selected=true]{background:var(--blue);color:#fff}
+.proof-panel{background:#f7faff;border:1px solid #c8d9f4;border-radius:12px;padding:16px}
+.proof-panel p{margin:9px 0}
+.proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:13px 0}
+.proof-grid div{border:1px solid var(--line);border-radius:9px;background:#fff;padding:11px;font-size:13px}
+.proof-grid b{display:block;color:var(--blue);font-size:11px}
+.proof-note{font-size:12px;color:var(--muted)}
+.proof-output{background:#fff;border-left:3px solid var(--blue);padding:13px 15px;margin:12px 0;border-radius:0 8px 8px 0}
+.proof-output p{margin:6px 0}
+.proof-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.proof-count{font-size:12px;color:var(--muted)}
+@media(max-width:650px){.proof-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.proof-grid{grid-template-columns:1fr}}
+
+/* Hub legibility at desktop and compact layouts */
+.hub{inset:92px!important;padding:9px!important;font-size:12px!important;line-height:1.3}
+@media(max-width:820px){.hub{inset:76px!important}}
+</style></head>
+<body>
+<header><div class="tag">AgentTraining.ai · Manager Demo</div><h1>You saw one conversation change.<br>Now take the manager's seat.</h1><p class="sub">Three steps, about four minutes, no sign-up. Make one coaching decision, see where the evidence came from, then sketch what fourteen days could look like for your own team.</p></header>
+<main>
+<ol class="steps" aria-label="Demo steps"><li><button type="button" data-go="0">1 · Make the call</button></li><li><button type="button" data-go="1">2 · Where it came from</button></li><li><button type="button" data-go="2">3 · Your team</button></li></ol>
+
+<section class="card panel" id="p0" aria-labelledby="h0">
+ <div class="tag muted">Step 1 of 3 · Illustrative team</div>
+ <h2 id="h0">You have thirty minutes of one-to-one coaching this week. Who gets it?</h2>
+ <p class="muted" id="intro0">David is one of five people on your team. Here is what your reports show today. Choose with your instinct first.</p>
+ <form id="pickForm"><div class="team" id="team" role="radiogroup" aria-label="Choose one team member"></div>
+ <div class="row" id="lockRow"><button class="btn" type="submit" id="lock" disabled>Lock in my choice</button><span class="muted small">Then see what practice shows.</span></div></form>
+ <div id="reveal" class="fade" hidden>
+  <div class="verdict" id="verdict" tabindex="-1"></div>
+  <details class="all"><summary>See the practice evidence for all five</summary><div class="evidence" id="evidence"></div></details>
+  <div class="lab" id="managerLab">
+   <div class="eyeline">Human judgment · illustrative</div><h3>AI recommends coaching Michelle. What is your call?</h3>
+   <p class="small muted">A recommendation is a question for the manager, not an automatic assignment.</p>
+   <div class="bound"><strong>Evidence limit:</strong> Four text-based simulated practice attempts across two scenarios show a repeated pattern. That supports a focused coaching concern, not proof of real-world client performance. No verified field observation exists here.</div>
+   <div class="resourcegrid" id="resourceControls">
+    <fieldset><legend>Total manager coaching time</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset>
+    <label><input type="checkbox" id="seniorSupport">Senior colleague available for verification</label>
+   </div>
+   <div class="alloc" id="allocation" aria-live="polite"></div><p class="actionnote" id="allocationWhy"></p>
+   <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
+   <div id="reasonWrap" hidden><label class="small" for="decisionReason"><strong>Why are you overriding this suggestion?</strong></label>
+    <select id="decisionReason"><option value="">Choose a reason…</option><option>Evidence is too narrow</option><option>My field experience contradicts it</option><option>Another priority is more urgent</option><option>Other</option></select>
+    <textarea id="decisionNote" maxlength="200" placeholder="Optional note, not saved or sent"></textarea>
+   </div>
+   <p id="decisionStatus" role="status" aria-live="polite"></p>
+   <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Confirm my decision →</button></div>
+   <div class="followCard" id="impactPanel" hidden><div class="eyeline">Seven days later · simulated alternatives</div>
+    <h3>Does your original decision still hold?</h3><p class="small muted">Choose a possible outcome. Neither is a prediction or an actual learner result.</p>
+    <div class="choices" id="outcomeChoices" role="group" aria-label="Simulated follow-up"></div>
+    <div id="outcomeDetail" aria-live="polite"></div>
+   </div>
+  </div>
+  <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="muted">The AI recommends. You decide. Nothing was assigned or recorded; this is a demonstration.</p><div class="row"><button class="btn secondary" id="changeDecision" type="button">Change my decision</button><button class="btn" type="button" data-go="1">Where did this evidence come from? →</button></div></div>
+ </div>
+</section>
+
+<section class="card panel" id="p1" aria-labelledby="h1" hidden>
+ <div class="tag muted">Step 2 of 3 · Four Studios, one Hub</div>
+ <h2 id="h1">Follow David once around the loop.</h2>
+ <p class="muted">Click the Studios to follow one learner around the Hub; then try two short examples: how training helps build a skill, and how Client context guides repeated AI practice.</p>
+ <div class="loopwrap">
+  <div class="ring" aria-hidden="false">
+   <div class="orbit" id="orbit"></div>
+   <button class="hub" id="hubJump" type="button" title="Jump to reassessment">TEAM GROWTH &amp; RETENTION HUB<small>Evidence · Judgment · Next action</small></button>
+   <button type="button" class="node n0" data-node="0">Leadership<small>Studio</small></button>
+   <button type="button" class="node n1" data-node="1">Knowledge<small>Studio</small></button>
+   <button type="button" class="node n2" data-node="2">Practice<small>Studio</small></button>
+   <button type="button" class="node n3" data-node="3">Client<small>Studio</small></button>
+  </div>
+  <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="loopEvidence"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
+   <div class="row"><button class="btn secondary" type="button" id="prevStop">← Back</button><button class="btn" type="button" id="nextStop">Next →</button></div></div>
+ </div>
+
+ <section class="studio-proof" aria-labelledby="studioProofTitle">
+  <div class="eyeline">Interactive learning evidence · Illustrated examples</div>
+  <h3 id="studioProofTitle">Does the team learn—and can it rehearse a real client situation?</h3>
+  <p class="muted small">Explore two connections behind the four Studios. All dialogue and outcomes here are scripted examples, not live AI responses or actual learner records.</p>
+  <div class="proof-tabs" role="tablist" aria-label="Studio interactive examples">
+   <button type="button" role="tab" id="knowledgeTab" aria-selected="true" aria-controls="knowledgeProof">Knowledge · Learning effectiveness</button>
+   <button type="button" role="tab" id="clientTab" aria-selected="false" aria-controls="clientProof">Client ↔ Practice · AI conversation</button>
+  </div>
+  <div class="proof-panel" id="knowledgeProof" role="tabpanel" aria-labelledby="knowledgeTab">
+   <div class="eyeline">Knowledge Studio · Not just uploaded documents</div>
+   <p><strong>Example:</strong> A manager adds authorized weekly first-call training notes, reviews the AI-assisted draft and approves a targeted exercise for David.</p>
+   <div class="proof-grid">
+    <div><b>1 · SOURCE</b>Authorized training notes / transcript</div>
+    <div><b>2 · PRIORITIZE</b>Relevant and important knowledge, manager-reviewed</div>
+    <div><b>3 · PRACTICE</b>Targeted role-play for the learner</div>
+    <div><b>4 · REASSESS</b>Compare attempts; test skill again next week</div>
+   </div>
+   <p><strong>Relevance: High (example)</strong> — The source addresses David's current opening-call gap. <strong>Importance: Essential (example)</strong> — Asking about needs should come before a product pitch. These are illustrative management judgments, not verified automatic scores.</p>
+   <button type="button" class="btn secondary" id="knowledgeReveal" aria-expanded="false" aria-controls="knowledgeLearning">Show the simulated learning check →</button>
+   <div class="proof-output" id="knowledgeLearning" hidden aria-live="polite">
+    <p><strong>Before:</strong> David begins with policy features, before learning what Michael needs.</p>
+    <p><strong>After coaching and another practice:</strong> David asks, “What concerns you most about protecting your family?”</p>
+    <p><strong>Manager's next question:</strong> Can David repeat this in a different scenario next week? One good attempt suggests improvement; it does not prove lasting mastery or real-world readiness.</p>
+   </div>
+   <p class="proof-note">Current Pilot provides authorized source entry, AI analysis drafts, manager review and approved Practice assignment. This illustrative learning sequence does not claim that automated relevance scoring or longitudinal mastery measurement is fully deployed.</p>
+  </div>
+  <div class="proof-panel" id="clientProof" role="tabpanel" aria-labelledby="clientTab" hidden>
+   <div class="eyeline">Client Studio + Practice Studio · Context-specific preparation</div>
+   <p><strong>Illustrative case:</strong> Michael, a busy prospect, is concerned about family protection; David has a follow-up conversation planned. The learner rehearses this relationship rather than a generic sales objection.</p>
+   <div class="proof-output" aria-live="polite"><div class="eyeline" id="clientStageLabel">1 · Prepare from Client Studio</div><div id="clientStageBody"><p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p></div></div>
+   <div class="proof-actions"><button type="button" class="btn secondary" id="clientStageBack" disabled>← Back</button><button type="button" class="btn" id="clientStageNext">Discuss with AI →</button><span id="clientStageCount" class="proof-count">1 / 4</span></div>
+   <p class="proof-note">Scripted walk-through, not a live AI chat. No client calls are monitored. Current Pilot case notes are browser-local and must not contain sensitive client information; the connected flow shown here does not establish an unrestricted persistent client-specific AI adviser as a live feature.</p>
+  </div>
+ </section>
+</section>
+
+<section class="card panel" id="p2" aria-labelledby="h2" hidden>
+ <div class="tag muted">Step 3 of 3 · Your own team</div>
+ <h2 id="h2">Now picture your team in that seat.</h2>
+ <div class="two">
+  <div>
+   <div class="field"><label id="chipLabel">Which two conversations does your team find hardest?</label>
+    <div class="chips" id="chips" role="group" aria-labelledby="chipLabel"></div>
+    <p class="muted small" id="chipHint">Pick up to two, or write your own below.</p></div>
+   <div class="field"><label for="own">Another conversation (optional)</label><input type="text" id="own" maxlength="80" placeholder="e.g. Medicare conversations"></div>
+   <div class="field"><label for="size">Team size</label><select id="size"><option>1–5</option><option selected>6–10</option><option>11–25</option><option>26–50</option><option>51+</option></select></div>
+  </div>
+  <div class="plan" aria-live="polite"><div class="tag" style="color:var(--blue)">Your fourteen days</div>
+   <ol><li><strong>Before day 1.</strong> You send material your company has already approved. We build your two practice conversations: <em id="planConv"></em>.</li><li><strong>Days 1 to 13.</strong> Your team of <em id="planSize"></em> practices them. Each attempt comes back to you.</li><li><strong>Day 14.</strong> You review your own team's practice results and decide what happens next.</li></ol>
+   <div class="row"><a class="btn" id="pilotLink" href="pilot-start.html">Request this pilot →</a></div>
+   <p class="muted small" style="margin:10px 0 0">By request and subject to confirmation. No credit card. A request does not create a paid subscription. Your choices carry over to the request form; nothing is sent until you submit it.</p>
+  </div>
+ </div>
+</section>
+</main>
+<footer><p class="muted small"><strong>What is real here.</strong> This demo is illustrative. The team, the practice results, the dialogue and the suggestions are fictional, and all practice shown is simulated, text-based practice with an AI client. The platform does not listen to real client calls. Nothing you click is assigned, sent or recorded.</p>
+<p class="muted small">A deeper look, with a different illustrative team: <a href="manager-demo-opening.html">Risk briefing</a> · <a href="manager-demo-hub.html">Four Studios and the Hub</a> · <a href="manager-demo-phases.html">Three phases</a> · <a href="mission-control-v2-1.html">Mission Control</a></p></footer>
+<script>
+const TEAM=[
+ {id:"david",short:"One conversation. Improved once.",name:"David",ctx:"New. First client calls start next week.",focus:"First-call opening",pill:"thin",pillTxt:"Thin evidence",
+  ev:"2 practice attempts on one conversation. Attempt 1: the simulated client shut the door in three words. Attempt 2, after one coach note: the client kept talking.",
+  sug:"Verify first",sugWhy:"One conversation is a sample of one. Assign a second practice with a different client. No coaching time yet."},
+ {id:"michelle",short:"The same gap in all four attempts.",name:"Michelle",ctx:"Highest test score on the team. Client meeting tomorrow.",focus:"Price concerns",pill:"consistent",pillTxt:"Consistent evidence",
+  ev:"4 practice attempts across two conversations. Each time the simulated client raised price, she answered with product features.",
+  sug:"Coach now",sugWhy:"The same gap in every attempt, and a client meeting tomorrow."},
+ {id:"john",short:"One attempt only.",name:"John",ctx:"Joined two months ago.",focus:"Asking before presenting",pill:"thin",pillTxt:"Thin evidence",
+  ev:"1 practice attempt. He presented the product before asking what the client needed.",
+  sug:"Assign one more practice",sugWhy:"A single attempt may be a bad day. No coaching time yet."},
+ {id:"grace",short:"No gap in five attempts.",name:"Grace",ctx:"Two years on the team.",focus:"No gap seen",pill:"consistent",pillTxt:"Consistent evidence",
+  ev:"5 practice attempts across three conversations. She asks before she answers, every time.",
+  sug:"No time this week",sugWhy:"Offer her a harder conversation to find her ceiling."},
+ {id:"anna",short:"Improving, on one scenario.",name:"Anna",ctx:"Six months on the team.",focus:"Needs analysis",pill:"building",pillTxt:"Building evidence",
+  ev:"3 practice attempts, better each time, all on the same conversation.",
+  sug:"Reassess next week",sugWhy:"The improvement may be familiarity with one scenario."}];
+const TOP="michelle";
+const $=id=>document.getElementById(id);
+let pick=null,locked=false,step=0,stop=0,turns=0;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* step 1 */
+$('team').innerHTML=TEAM.map(p=>`<label class="person" data-p="${p.id}"><input type="radio" name="pick" value="${p.id}"><span class="mark mine">Your choice</span><span class="mark here">Practice points here</span><b>${p.name}</b><span class="paper">Courses complete · Tests passed</span><span class="ctx">${p.ctx}</span></label>`).join('');
+$('team').addEventListener('change',e=>{if(locked)return;pick=e.target.value;document.querySelectorAll('.person').forEach(l=>l.classList.toggle('picked',l.dataset.p===pick));$('lock').disabled=false});
+$('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)return;locked=true;
+ $('team').classList.add('locked');document.querySelectorAll('.person input').forEach(i=>i.disabled=true);$('lockRow').hidden=true;
+ const me=TEAM.find(p=>p.id===pick),top=TEAM.find(p=>p.id===TOP),same=pick===TOP;
+ $('team').classList.add('revealed');
+ $('intro0').textContent='On paper, all five look the same. In practice, they do not.';
+ const cards=[...document.querySelectorAll('.person')];
+ cards.forEach((l,i)=>{const p=TEAM.find(x=>x.id===l.dataset.p);const d=document.createElement('span');d.className='prac fade';d.innerHTML=`<span class="pill ${p.pill}">${p.pillTxt}</span><span class="t">${p.short}</span>`;l.appendChild(d);setTimeout(()=>d.classList.add('in'),150+i*160)});
+ setTimeout(()=>document.querySelector('.person[data-p="'+TOP+'"]').classList.add('top'),150+cards.length*160+250);
+ $('verdict').innerHTML=`<div class="tag" style="color:var(--blue)">What practice shows</div><h3>${same?'You chose Michelle, and practice agrees. Could her reports have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><p class="big">On paper she is your safest agent, with the highest test score on the team. Nothing in her reports shows this:</p><div class="attempts"><div class="excerpt"><div class="tag muted">Practice attempt 1 · simulated client</div><p><i>Client:</i> “Honestly, this is more than we budgeted for this year.”</p><p><i>Michelle:</i> “I understand. Let me walk you through what's included…”</p></div><div class="excerpt"><div class="tag muted">Practice attempt 4 · simulated client</div><p><i>Client:</i> “Another agent quoted me less.”</p><p><i>Michelle:</i> “Ours covers more, though. For example, it includes…”</p></div></div><p class="sum"><strong>Four attempts. A price concern each time. Product features each time.</strong> Her client meeting is tomorrow.</p><p class="muted small">Text-based practice with an AI client. Illustrative.</p>`;
+ const order=[top,...TEAM.filter(p=>p.id!==TOP)];
+ $('evidence').innerHTML=order.map(p=>`<div class="ev${p.id===TOP?' top':''}"><div class="who"><b>${p.name}</b><span>${p.focus}${p.id===pick?' · your choice':''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${p.ev}</p></div><div class="sug"><b>Suggestion: ${p.sug}</b><span>${p.sugWhy}</span></div></div>`).join('');
+ $('decideRow').innerHTML='<button type="button" data-decide="accept" aria-pressed="false">Accept · Coach now<small>Act on the repeated signal</small></button><button type="button" data-decide="verify" aria-pressed="false">Defer · Verify first<small>Get a second kind of evidence</small></button><button type="button" data-decide="dismiss" aria-pressed="false">Dismiss · Override<small>Record your different judgment</small></button>';
+ $('decisionStatus').textContent='Choose a management action. This demo never sends assignments.';
+ renderAllocation();
+ const wait=matchMedia('(prefers-reduced-motion: reduce)').matches?0:150+cards.length*160+900;
+ setTimeout(()=>{$('reveal').hidden=false;requestAnimationFrame(()=>{$('reveal').classList.add('in');$('verdict').focus({preventScroll:true});$('verdict').scrollIntoView({behavior:'smooth',block:'nearest'})})},wait);
+});
+/* Human decision remains local to this illustrative page. */
+let managerAction='',actionConfirmed=false,simulatedOutcome='';
+function resourcePlan(){
+ const total=Number(document.querySelector('input[name="demoBudget"]:checked').value);
+ const senior=$('seniorSupport').checked;
+ let michelle=0,other=0,otherName='Unallocated';
+ if(managerAction==='accept'){michelle=senior?total:(total===30?20:10);other=total-michelle;otherName=senior?'Available':'Other team coaching';}
+ if(managerAction==='dismiss'&&pick&&pick!=='michelle'){other=total;otherName=TEAM.find(p=>p.id===pick).name+' · manager choice';}
+ return {total,senior,michelle,other,otherName};
+}
+function renderAllocation(){
+ const p=resourcePlan();
+ $('allocation').innerHTML='<article><b>'+p.total+' min</b><span>Manager capacity</span></article><article><b>'+p.michelle+' min</b><span>Michelle</span></article><article><b>'+p.other+' min</b><span>'+esc(p.otherName)+'</span></article>';
+ $('allocationWhy').textContent=managerAction==='accept'?'Illustrative allocation, not an AI optimizer. No time exceeds the budget.':
+ managerAction==='verify'?'No one-to-one time assigned to this finding yet. Request another scenario before spending the coaching budget.':
+ managerAction==='dismiss'?'AI suggestion overruled. You can give time to your original choice, or reserve it if you had picked Michelle.':
+ 'The same time budget can support different actions. Choose your decision first.';
+}
+function drawOutcome(){
+ const labels=managerAction==='verify'?['Gap repeats','Gap disappears']:managerAction==='dismiss'?['New evidence challenges override','New evidence supports override']:['Practice improves','Gap remains'];
+ $('outcomeChoices').innerHTML=labels.map((x,i)=>'<button type="button" data-outcome="'+i+'" aria-pressed="'+(simulatedOutcome===String(i))+'">'+x+'</button>').join('');
+ let result='Day 0: observe → manager decides → Day 7: examine another attempt → keep, revise or close the priority.';
+ if(simulatedOutcome==='0')result=managerAction==='accept'?'Simulated improvement: vary the scenario and seek field observation before declaring readiness.':
+ managerAction==='verify'?'Pattern repeats in a second scenario. Reopen the coaching decision with stronger evidence.':
+ 'The repeated gap persists after your override. Reopen the AI suggestion rather than treating either party as infallible.';
+ if(simulatedOutcome==='1')result=managerAction==='accept'?'Gap remains in simulated practice. Try a different coaching method and reassess.':
+ managerAction==='verify'?'New simulated scenario does not reproduce the gap. Keep the finding provisional; preserve the manager time.':
+ 'The next simulated case does not reproduce the pattern. Keep your override under review and set a light checkpoint.';
+ $('outcomeDetail').textContent=result;
+}
+function drawDecision(){
+ if(!actionConfirmed)return;
+ const p=resourcePlan();
+ const reason=managerAction==='dismiss'?' Reason: '+$('decisionReason').value+($('decisionNote').value.trim()?' — '+$('decisionNote').value.trim():''):'';
+ $('decidedTxt').textContent=managerAction==='accept'?'Your call: coach Michelle; '+p.michelle+' of '+p.total+' manager minutes allocated in the illustration.':
+ managerAction==='verify'?'Your call: request more evidence first. The recommendation remains open and no coaching time has been assigned.':
+ 'Your call: dismiss this recommendation.'+reason;
+ $('impactPanel').hidden=false;$('decided').hidden=false;drawOutcome();
+}
+$('decideRow').addEventListener('click',e=>{
+ const button=e.target.closest('[data-decide]');if(!button||actionConfirmed)return;
+ managerAction=button.dataset.decide;
+ $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ $('reasonWrap').hidden=managerAction!=='dismiss';$('confirmDecision').disabled=false;
+ $('decisionStatus').textContent=managerAction==='dismiss'?'Please choose a reason before confirming.':'Ready to confirm. This will not send anything.';
+ renderAllocation();
+});
+$('resourceControls').addEventListener('change',()=>{renderAllocation();drawDecision()});
+$('confirmDecision').onclick=()=>{
+ if(!managerAction)return;
+ if(managerAction==='dismiss'&&!$('decisionReason').value){$('decisionStatus').textContent='Choose an override reason first.';$('decisionReason').focus();return}
+ actionConfirmed=true;$('confirmDecision').disabled=true;
+ $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=true);
+ $('decisionStatus').textContent='Demo decision captured on this page only. No assignments or records were changed.';
+ drawDecision();$('impactPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+$('changeDecision').onclick=()=>{
+ actionConfirmed=false;simulatedOutcome='';
+ $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=false);
+ $('confirmDecision').disabled=!managerAction;
+ $('decided').hidden=true;$('impactPanel').hidden=true;
+ $('decisionStatus').textContent='Change your decision and confirm again. All outcomes are illustrative.';
+ $('decideRow').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+$('outcomeChoices').addEventListener('click',e=>{
+ const button=e.target.closest('[data-outcome]');if(!button)return;simulatedOutcome=button.dataset.outcome;drawOutcome();
+});
+
+
+/* step 2 */
+const STOPS=[
+ {n:0,tag:"Leadership · set the priority",title:"It starts with a manager decision.",body:"Choose which conversation matters for your team. AI suggests, but the manager reviews evidence and controls what happens next.",kase:"David will make his first introductory call to Michael. You want him to ask about needs before presenting a policy.",proof:"Manager artifact: focused assignment, coaching time and rationale. Return to Step 1 to compare accept, defer or dismiss."},
+ {n:1,tag:"Knowledge · effective learning",title:"Did the weekly training change the learner’s skill?",body:"Authorized materials become manager-reviewed, relevant knowledge and targeted Practice. The next practice checks whether a learner applies what was taught.",kase:"Training priority: ask one relevant discovery question before describing product features.",proof:"Source → relevance and importance → approved Practice → repeated learning check. Try the Knowledge example below."},
+ {n:2,tag:"Practice · retry",title:"Two simulated attempts, one observable change.",body:"The AI plays the simulated prospect, points to a coachable moment and invites another attempt.",kase:"First attempt: Michael says “I’m pretty busy.” Second attempt: Michael voluntarily names a family concern.",proof:"Practice artifact: attempted dialogue, one AI Coach note and a second attempt. Simulated performance does not prove real-world readiness."},
+ {n:3,tag:"Client · tailored rehearsal",title:"A specific client situation guides the next practice.",body:"The learner can capture relevant client context, consider a suggested approach, rehearse with a simulated customer and use feedback for another attempt.",kase:"Michael is busy and unsure about family protection. David practices listening rather than pitching.",proof:"Client brief → AI discussion → simulated dialogue → retry → manager review. Try the Client + Practice example below."},
+ {n:0,tag:"Leadership · reassess",title:"It returns to your judgment, not a score.",body:"Compare later practice evidence with the earlier hypothesis. Keep, revise or close the priority and select the next practice.",kase:"If improvement holds in a different context, stretch the skill. If not, change the coaching approach. Then the loop begins again.",proof:"Manager artifact: initial finding → human decision → new observation → revised next action. This is the Team Growth & Retention Hub."}
+];
+function drawStop(){
+ const s=STOPS[stop];
+ if(stop===1)setProofTab('knowledge');
+ if(stop===3)setProofTab('client');
+ $('stopTag').textContent=s.tag+' · '+(stop+1)+' of '+STOPS.length;
+ $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
+ $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Stage '+(stop+1)+' / 5 · click any Studio or select Next.';
+ document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===s.n));
+ $('orbit').style.transform='rotate('+(stop*90)+'deg)';$('prevStop').disabled=stop===0;
+ $('nextStop').textContent=stop===STOPS.length-1?'Now your team →':'Next stage →';
+}
+$('nextStop').onclick=()=>{if(stop===STOPS.length-1){go(2);return}stop++;drawStop()};
+$('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
+document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
+$('hubJump').onclick=()=>{stop=4;drawStop()};
+
+
+/* Scripted Step-two examples; no AI service, persistent customer data or learner scoring. */
+function setProofTab(which){
+ const k=which==='knowledge';
+ $('knowledgeProof').hidden=!k;$('clientProof').hidden=k;
+ $('knowledgeTab').setAttribute('aria-selected',String(k));
+ $('clientTab').setAttribute('aria-selected',String(!k));
+}
+$('knowledgeTab').onclick=()=>setProofTab('knowledge');
+$('clientTab').onclick=()=>setProofTab('client');
+$('knowledgeReveal').onclick=()=>{
+ const show=$('knowledgeLearning').hidden;
+ $('knowledgeLearning').hidden=!show;
+ $('knowledgeReveal').setAttribute('aria-expanded',String(show));
+ $('knowledgeReveal').textContent=show?'Hide learning check':'Show the simulated learning check →';
+};
+const CLIENT_SCRIPT=[
+ ['1 · Prepare from Client Studio','<p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p>','Discuss with AI →'],
+ ['2 · Discuss the relationship with AI','<p><strong>David (example):</strong> “Michael says he is busy. How can I ask about family protection without pressuring him?”</p><p><strong>AI Coach (scripted):</strong> “Respect his time; ask permission for one short discovery question before suggesting a product.”</p>','Practice with AI client →'],
+ ['3 · Simulated client conversation','<p><strong>AI client Michael:</strong> “I’m pretty busy.”</p><p><strong>David:</strong> “I understand. Could I ask one quick question—what concerns you most about your family’s protection?”</p><p><strong>AI client Michael:</strong> “I have been worrying what would happen to them.”</p>','Review & retry →'],
+ ['4 · Feedback, retry and manager action','<p><strong>AI Coach example:</strong> David asked a discovery question instead of pitching. Try a different objection to see if the skill holds.</p><p><strong>Manager view:</strong> See a practice attempt, review feedback and decide the next assignment. Improvement here is fictional and does not verify field performance.</p>','Restart case example ↻']
+];
+let clientScriptStep=0;
+function drawClientScript(){
+ const a=CLIENT_SCRIPT[clientScriptStep];
+ $('clientStageLabel').textContent=a[0];$('clientStageBody').innerHTML=a[1];
+ $('clientStageNext').textContent=a[2];$('clientStageBack').disabled=clientScriptStep===0;
+ $('clientStageCount').textContent=(clientScriptStep+1)+' / 4';
+}
+$('clientStageBack').onclick=()=>{if(clientScriptStep>0)clientScriptStep--;drawClientScript()};
+$('clientStageNext').onclick=()=>{clientScriptStep=(clientScriptStep+1)%CLIENT_SCRIPT.length;drawClientScript()};
+
+/* step 3 */
+const CONVS=["The first call to a new prospect","“Your premium is too high”","“I need to think about it”","“I already have someone”","Asking for the first meeting","Following up after silence"];
+$('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
+function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
+function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
+ $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;
+ const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
+$('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
+$('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
+
+/* navigation */
+const NAMES=['make-the-call','the-loop','your-team'];
+function go(i,quiet){step=i;[0,1,2].forEach(k=>{$('p'+k).hidden=k!==i});
+ document.querySelectorAll('.steps button').forEach(b=>{if(+b.dataset.go===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
+ if(i===1)drawStop();if(i===2)drawPlan();
+ if(!quiet){try{history.replaceState(null,'','#'+NAMES[i])}catch(e){}window.scrollTo({top:document.querySelector('.steps').offsetTop-12,behavior:'smooth'})}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go)});
+const h=NAMES.indexOf(location.hash.slice(1));go(h<0?0:h,true);
+</script>
+</body></html>
