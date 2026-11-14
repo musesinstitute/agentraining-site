@@ -114,6 +114,26 @@ footer a{color:#143879}
 .hubCount{font-size:12px;color:var(--muted);margin-top:9px}
 #chipHint.warn{color:#954716;font-weight:700}
 @media(max-width:650px){.actionset,.alloc{grid-template-columns:1fr}.lab{padding:13px}}
+
+/* Step 2: interactive Knowledge and client-context learning examples. */
+.studio-proof{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.studio-proof h3{margin:3px 0 8px}
+.proof-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.proof-tabs button{border:1px solid #abc3e6;border-radius:10px;background:#fff;color:var(--ink);padding:10px;font:700 14px inherit;font-family:inherit;cursor:pointer}
+.proof-tabs button[aria-selected=true]{background:var(--blue);color:#fff}
+.proof-panel{background:#f7faff;border:1px solid #c8d9f4;border-radius:12px;padding:16px}
+.proof-panel p{margin:9px 0}
+.proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:13px 0}
+.proof-grid div{border:1px solid var(--line);border-radius:9px;background:#fff;padding:11px;font-size:13px}
+.proof-grid b{display:block;color:var(--blue);font-size:11px}
+.proof-note{font-size:12px;color:var(--muted)}
+.proof-output{background:#fff;border-left:3px solid var(--blue);padding:13px 15px;margin:12px 0;border-radius:0 8px 8px 0}
+.proof-output p{margin:6px 0}
+.proof-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.proof-count{font-size:12px;color:var(--muted)}
+@media(max-width:650px){.proof-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.proof-grid{grid-template-columns:1fr}}
+
 /* Hub legibility at desktop and compact layouts */
 .hub{inset:92px!important;padding:9px!important;font-size:12px!important;line-height:1.3}
 @media(max-width:820px){.hub{inset:76px!important}}
@@ -161,7 +181,7 @@ footer a{color:#143879}
 <section class="card panel" id="p1" aria-labelledby="h1" hidden>
  <div class="tag muted">Step 2 of 3 · Four Studios, one Hub</div>
  <h2 id="h1">Follow David once around the loop.</h2>
- <p class="muted">Click a Studio and follow one illustrative learner from an assignment to a second attempt, client context and manager reassessment. The central Hub connects evidence with decisions.</p>
+ <p class="muted">Click the Studios to follow one learner around the Hub; then try two short examples: how training helps build a skill, and how Client context guides repeated AI practice.</p>
  <div class="loopwrap">
   <div class="ring" aria-hidden="false">
    <div class="orbit" id="orbit"></div>
@@ -174,6 +194,41 @@ footer a{color:#143879}
   <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="loopEvidence"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
    <div class="row"><button class="btn secondary" type="button" id="prevStop">← Back</button><button class="btn" type="button" id="nextStop">Next →</button></div></div>
  </div>
+
+ <section class="studio-proof" aria-labelledby="studioProofTitle">
+  <div class="eyeline">Interactive learning evidence · Illustrated examples</div>
+  <h3 id="studioProofTitle">Does the team learn—and can it rehearse a real client situation?</h3>
+  <p class="muted small">Explore two connections behind the four Studios. All dialogue and outcomes here are scripted examples, not live AI responses or actual learner records.</p>
+  <div class="proof-tabs" role="tablist" aria-label="Studio interactive examples">
+   <button type="button" role="tab" id="knowledgeTab" aria-selected="true" aria-controls="knowledgeProof">Knowledge · Learning effectiveness</button>
+   <button type="button" role="tab" id="clientTab" aria-selected="false" aria-controls="clientProof">Client ↔ Practice · AI conversation</button>
+  </div>
+  <div class="proof-panel" id="knowledgeProof" role="tabpanel" aria-labelledby="knowledgeTab">
+   <div class="eyeline">Knowledge Studio · Not just uploaded documents</div>
+   <p><strong>Example:</strong> A manager adds authorized weekly first-call training notes, reviews the AI-assisted draft and approves a targeted exercise for David.</p>
+   <div class="proof-grid">
+    <div><b>1 · SOURCE</b>Authorized training notes / transcript</div>
+    <div><b>2 · PRIORITIZE</b>Relevant and important knowledge, manager-reviewed</div>
+    <div><b>3 · PRACTICE</b>Targeted role-play for the learner</div>
+    <div><b>4 · REASSESS</b>Compare attempts; test skill again next week</div>
+   </div>
+   <p><strong>Relevance: High (example)</strong> — The source addresses David's current opening-call gap. <strong>Importance: Essential (example)</strong> — Asking about needs should come before a product pitch. These are illustrative management judgments, not verified automatic scores.</p>
+   <button type="button" class="btn secondary" id="knowledgeReveal" aria-expanded="false" aria-controls="knowledgeLearning">Show the simulated learning check →</button>
+   <div class="proof-output" id="knowledgeLearning" hidden aria-live="polite">
+    <p><strong>Before:</strong> David begins with policy features, before learning what Michael needs.</p>
+    <p><strong>After coaching and another practice:</strong> David asks, “What concerns you most about protecting your family?”</p>
+    <p><strong>Manager's next question:</strong> Can David repeat this in a different scenario next week? One good attempt suggests improvement; it does not prove lasting mastery or real-world readiness.</p>
+   </div>
+   <p class="proof-note">Current Pilot provides authorized source entry, AI analysis drafts, manager review and approved Practice assignment. This illustrative learning sequence does not claim that automated relevance scoring or longitudinal mastery measurement is fully deployed.</p>
+  </div>
+  <div class="proof-panel" id="clientProof" role="tabpanel" aria-labelledby="clientTab" hidden>
+   <div class="eyeline">Client Studio + Practice Studio · Context-specific preparation</div>
+   <p><strong>Illustrative case:</strong> Michael, a busy prospect, is concerned about family protection; David has a follow-up conversation planned. The learner rehearses this relationship rather than a generic sales objection.</p>
+   <div class="proof-output" aria-live="polite"><div class="eyeline" id="clientStageLabel">1 · Prepare from Client Studio</div><div id="clientStageBody"><p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p></div></div>
+   <div class="proof-actions"><button type="button" class="btn secondary" id="clientStageBack" disabled>← Back</button><button type="button" class="btn" id="clientStageNext">Discuss with AI →</button><span id="clientStageCount" class="proof-count">1 / 4</span></div>
+   <p class="proof-note">Scripted walk-through, not a live AI chat. No client calls are monitored. Current Pilot case notes are browser-local and must not contain sensitive client information; the connected flow shown here does not establish an unrestricted persistent client-specific AI adviser as a live feature.</p>
+  </div>
+ </section>
 </section>
 
 <section class="card panel" id="p2" aria-labelledby="h2" hidden>
@@ -311,13 +366,15 @@ $('outcomeChoices').addEventListener('click',e=>{
 /* step 2 */
 const STOPS=[
  {n:0,tag:"Leadership · set the priority",title:"It starts with a manager decision.",body:"Choose which conversation matters for your team. AI suggests, but the manager reviews evidence and controls what happens next.",kase:"David will make his first introductory call to Michael. You want him to ask about needs before presenting a policy.",proof:"Manager artifact: focused assignment, coaching time and rationale. Return to Step 1 to compare accept, defer or dismiss."},
- {n:1,tag:"Knowledge · approved guidance",title:"Company material defines the training boundary.",body:"An approved illustrative first-call guide supplies the practice objective. The manager can review and adjust the training material.",kase:"Scenario objective: ask one relevant discovery question before describing features.",proof:"Knowledge artifact: source-guided objective. This is authored illustration, not proof of a verified document-to-practice workflow."},
+ {n:1,tag:"Knowledge · effective learning",title:"Did the weekly training change the learner’s skill?",body:"Authorized materials become manager-reviewed, relevant knowledge and targeted Practice. The next practice checks whether a learner applies what was taught.",kase:"Training priority: ask one relevant discovery question before describing product features.",proof:"Source → relevance and importance → approved Practice → repeated learning check. Try the Knowledge example below."},
  {n:2,tag:"Practice · retry",title:"Two simulated attempts, one observable change.",body:"The AI plays the simulated prospect, points to a coachable moment and invites another attempt.",kase:"First attempt: Michael says “I’m pretty busy.” Second attempt: Michael voluntarily names a family concern.",proof:"Practice artifact: attempted dialogue, one AI Coach note and a second attempt. Simulated performance does not prove real-world readiness."},
- {n:3,tag:"Client · appropriate context",title:"Prepare for the next client conversation.",body:"The learner may record limited, relevant conversation context to guide the next simulation. The platform does not listen to real calls.",kase:"David notes a first prospect call is planned next week. Personal details and real outcomes are not inferred.",proof:"Client artifact: the situation to rehearse, not a recorded customer interaction."},
+ {n:3,tag:"Client · tailored rehearsal",title:"A specific client situation guides the next practice.",body:"The learner can capture relevant client context, consider a suggested approach, rehearse with a simulated customer and use feedback for another attempt.",kase:"Michael is busy and unsure about family protection. David practices listening rather than pitching.",proof:"Client brief → AI discussion → simulated dialogue → retry → manager review. Try the Client + Practice example below."},
  {n:0,tag:"Leadership · reassess",title:"It returns to your judgment, not a score.",body:"Compare later practice evidence with the earlier hypothesis. Keep, revise or close the priority and select the next practice.",kase:"If improvement holds in a different context, stretch the skill. If not, change the coaching approach. Then the loop begins again.",proof:"Manager artifact: initial finding → human decision → new observation → revised next action. This is the Team Growth & Retention Hub."}
 ];
 function drawStop(){
  const s=STOPS[stop];
+ if(stop===1)setProofTab('knowledge');
+ if(stop===3)setProofTab('client');
  $('stopTag').textContent=s.tag+' · '+(stop+1)+' of '+STOPS.length;
  $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
  $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Stage '+(stop+1)+' / 5 · click any Studio or select Next.';
@@ -329,6 +386,38 @@ $('nextStop').onclick=()=>{if(stop===STOPS.length-1){go(2);return}stop++;drawSto
 $('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
 document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
 $('hubJump').onclick=()=>{stop=4;drawStop()};
+
+
+/* Scripted Step-two examples; no AI service, persistent customer data or learner scoring. */
+function setProofTab(which){
+ const k=which==='knowledge';
+ $('knowledgeProof').hidden=!k;$('clientProof').hidden=k;
+ $('knowledgeTab').setAttribute('aria-selected',String(k));
+ $('clientTab').setAttribute('aria-selected',String(!k));
+}
+$('knowledgeTab').onclick=()=>setProofTab('knowledge');
+$('clientTab').onclick=()=>setProofTab('client');
+$('knowledgeReveal').onclick=()=>{
+ const show=$('knowledgeLearning').hidden;
+ $('knowledgeLearning').hidden=!show;
+ $('knowledgeReveal').setAttribute('aria-expanded',String(show));
+ $('knowledgeReveal').textContent=show?'Hide learning check':'Show the simulated learning check →';
+};
+const CLIENT_SCRIPT=[
+ ['1 · Prepare from Client Studio','<p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p>','Discuss with AI →'],
+ ['2 · Discuss the relationship with AI','<p><strong>David (example):</strong> “Michael says he is busy. How can I ask about family protection without pressuring him?”</p><p><strong>AI Coach (scripted):</strong> “Respect his time; ask permission for one short discovery question before suggesting a product.”</p>','Practice with AI client →'],
+ ['3 · Simulated client conversation','<p><strong>AI client Michael:</strong> “I’m pretty busy.”</p><p><strong>David:</strong> “I understand. Could I ask one quick question—what concerns you most about your family’s protection?”</p><p><strong>AI client Michael:</strong> “I have been worrying what would happen to them.”</p>','Review & retry →'],
+ ['4 · Feedback, retry and manager action','<p><strong>AI Coach example:</strong> David asked a discovery question instead of pitching. Try a different objection to see if the skill holds.</p><p><strong>Manager view:</strong> See a practice attempt, review feedback and decide the next assignment. Improvement here is fictional and does not verify field performance.</p>','Restart case example ↻']
+];
+let clientScriptStep=0;
+function drawClientScript(){
+ const a=CLIENT_SCRIPT[clientScriptStep];
+ $('clientStageLabel').textContent=a[0];$('clientStageBody').innerHTML=a[1];
+ $('clientStageNext').textContent=a[2];$('clientStageBack').disabled=clientScriptStep===0;
+ $('clientStageCount').textContent=(clientScriptStep+1)+' / 4';
+}
+$('clientStageBack').onclick=()=>{if(clientScriptStep>0)clientScriptStep--;drawClientScript()};
+$('clientStageNext').onclick=()=>{clientScriptStep=(clientScriptStep+1)%CLIENT_SCRIPT.length;drawClientScript()};
 
 /* step 3 */
 const CONVS=["The first call to a new prospect","“Your premium is too high”","“I need to think about it”","“I already have someone”","Asking for the first meeting","Following up after silence"];
