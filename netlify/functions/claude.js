@@ -157,7 +157,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
+        max_tokens: Number.isInteger(body.max_tokens) ? Math.max(250, Math.min(1000, body.max_tokens)) : 1000,
         system: body.system || '',
         messages: body.messages
       })
