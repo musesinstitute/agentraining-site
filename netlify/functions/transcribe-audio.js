@@ -1,6 +1,7 @@
 // Anonymous demo speech transcription. Audio is forwarded once to OpenAI, not persisted.
 // Requires OPENAI_API_KEY in the Netlify function runtime environment.
-const { getStore } = require('@netlify/blobs');
+// Rate limits are deploy-scoped to keep previews isolated from production data.
+const { getDeployStore } = require('@netlify/blobs');
 const MAX_BYTES = 2500000;
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 12;
@@ -40,7 +41,7 @@ function authorizedOrigin(headers) {
 }
 async function verifyRateLimitStorage() {
   try {
-    const store = getStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
+    const store = getDeployStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
     const key = 'service-readiness-v1';
     await store.setJSON(key, { ok: true });
     const probe = await store.get(key, { type: 'json' });
@@ -54,7 +55,7 @@ async function allowRequest(headers) {
   const ip = String(headers['x-nf-client-connection-ip'] || headers['x-forwarded-for'] || 'unknown').split(',')[0].trim();
   const key = 'ip-' + ip.replace(/[^a-zA-Z0-9]/g, '-').slice(0, 80);
   try {
-    const store = getStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
+    const store = getDeployStore({ name: 'demo-transcription-rate-limit', consistency: 'strong' });
     const now = Date.now();
     const prior = await store.get(key, { type: 'json' });
     const recent = (Array.isArray(prior) ? prior : []).filter(n => Number.isFinite(n) && now - n < WINDOW_MS);
