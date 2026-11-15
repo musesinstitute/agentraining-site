@@ -20,7 +20,7 @@ function makeHandler({ key = 'fake-key', prior = [], storeError = false } = {}) 
     process: { env: { OPENAI_API_KEY: key } },
     require(name) {
       assert.equal(name, '@netlify/blobs');
-      return { getStore: () => store };
+      return { getDeployStore: (opts) => { assert.equal(opts.name, 'demo-transcription-rate-limit'); assert.equal(opts.consistency, 'strong'); return store; } };
     },
     async fetch(url, options) {
       calls.push({ url, options });
