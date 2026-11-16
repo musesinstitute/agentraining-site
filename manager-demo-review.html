@@ -174,23 +174,51 @@ footer a{color:#143879}
 #studioDeepDive{margin-top:13px}
 #followupDetails{margin-top:15px}
 @media(max-width:650px){.valuePair{grid-template-columns:1fr}.valuePair article{padding:13px}}
+
+/* The four-minute executive story: one fictional case, traceable example sources, connected decisions. */
+.case-bridge{margin:0 0 18px;padding:20px 22px;background:linear-gradient(115deg,#10234a,#2554a7);border-radius:15px;color:#fff}
+.case-bridge .eyeline{color:#d3e1ff}.case-bridge strong{display:block;font-size:21px;margin:5px 0;line-height:1.32}
+.case-bridge p{margin:5px 0;color:#e7efff;font-size:14px}
+.impact-strip{display:grid;grid-template-columns:1fr 32px 1fr;gap:12px;align-items:stretch;margin:16px 0 18px}
+.impact-strip article{padding:16px;border:1px solid #c7d7ef;background:#fff;border-radius:12px}
+.impact-strip b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#4f6387}
+.impact-strip strong{display:block;font-size:18px;line-height:1.35;margin:6px 0}
+.impact-strip small{display:block;font-size:13px;color:var(--muted)}
+.impact-strip .arrow{display:grid;place-items:center;color:var(--blue);font-size:25px;font-weight:900}
+.evidence-path{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:17px 0 21px;counter-reset:stages}
+.evidence-path article{counter-increment:stages;background:#f7faff;border:1px solid #bfcfee;border-radius:12px;padding:13px}
+.evidence-path b{display:block;font-size:14px;line-height:1.35}
+.evidence-path b:before{content:counter(stages,decimal-leading-zero) " · ";color:var(--blue)}
+.evidence-path span{display:block;font-size:12.5px;color:var(--muted);margin-top:6px}
+.sample-source{margin:12px 0;padding:12px 14px;border:1px solid #c5d7ec;border-left:4px solid #2455ba;border-radius:9px;background:#f6f9ff;font-size:13px}
+.sample-source b{display:block;color:#193d7c;margin-bottom:4px}.sample-source p{margin:2px 0 0;color:#374b66}
+.proof-label{font-size:12px;font-weight:700;letter-spacing:.045em;color:#465e83;margin:10px 0}
+.pilot-tie{border-left:4px solid var(--blue);background:#f6f9ff;padding:13px 16px;border-radius:0 10px 10px 0;margin-bottom:15px}
+.pilot-tie b{display:block;font-size:16px}.pilot-tie p{font-size:14px;color:var(--muted);margin:5px 0 0}
+@media(max-width:700px){.evidence-path{grid-template-columns:1fr 1fr}.impact-strip{grid-template-columns:1fr}.impact-strip .arrow{transform:rotate(90deg);min-height:18px}}
+@media(max-width:390px){.evidence-path{grid-template-columns:1fr}}
 </style></head>
 <body>
-<header><div class="tag">AgentTraining.ai · Manager Demo</div><h1>You saw one conversation change.<br>Now take the manager's seat.</h1><p class="sub">Three short steps, no sign-up. See what ordinary training reports miss, trace the evidence across four Studios, and picture a focused 14-day pilot for your team. Explore deeper only if you choose.</p></header>
+<header><div class="tag">AgentTraining.ai · Manager Demo · Review edition</div><h1>One team risk your reports never showed.<br>What would you do tomorrow?</h1><p class="sub">A four-minute, interactive manager experience. Discover the hidden practice gap, follow one case through four connected Studios, then sketch a 14-day pilot for your own team. The people, documents and findings here are fictional examples.</p></header>
 <main>
 <ol class="steps" aria-label="Demo steps"><li><button type="button" data-go="0">1 · Make the call</button></li><li><button type="button" data-go="1">2 · Inside the Studios</button></li><li><button type="button" data-go="2">3 · Your team</button></li></ol>
 
 <section class="card panel" id="p0" aria-labelledby="h0">
  <div class="tag muted">Step 1 of 3 · Illustrative team</div>
  <h2 id="h0">You have thirty minutes of one-to-one coaching this week. Who gets it?</h2>
- <p class="muted" id="intro0">David is one of five people on your team. Here is what your reports show today. Choose with your instinct first.</p>
+ <p class="muted" id="intro0">Five advisors. Similar completion reports. Only one short coaching slot. Choose with your instinct before seeing their simulated conversations.</p>
  <form id="pickForm"><div class="team" id="team" role="radiogroup" aria-label="Choose one team member"></div>
  <div class="row" id="lockRow"><button class="btn" type="submit" id="lock" disabled>Lock in my choice</button><span class="muted small">Then see what practice shows.</span></div></form>
  <div id="reveal" class="fade" hidden>
   <div class="verdict" id="verdict" tabindex="-1"></div>
+  <div class="impact-strip" aria-label="What training reports missed">
+    <article><b>What traditional reports show</b><strong>Michelle: highest test score</strong><small>Course completion and test scores look reassuring.</small></article>
+    <div class="arrow" aria-hidden="true">→</div>
+    <article><b>What simulated practice adds</b><strong>Same price-objection gap · 4 attempts</strong><small>Across two sample scenarios; a coaching signal, not proof of sales performance.</small></article>
+  </div>
   <details class="all"><summary>See the practice evidence for all five</summary><div class="evidence" id="evidence"></div></details>
   <div class="lab" id="managerLab">
-   <div class="eyeline">Human judgment · illustrative</div><h3>AI recommends coaching Michelle. What is your call?</h3>
+   <div class="eyeline">Manager decision · scripted illustration</div><h3>Practice evidence suggests coaching Michelle. What is your call?</h3>
    <p class="small muted">A recommendation is a question for the manager, not an automatic assignment.</p>
    <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
    <details class="optionalDeep" id="judgmentDetails"><summary>Why this recommendation? Review evidence and coaching time</summary>
@@ -220,67 +248,80 @@ footer a{color:#143879}
 </section>
 
 <section class="card panel" id="p1" aria-labelledby="h1" hidden>
- <div class="tag muted">Step 2 of 3 · Inside the Studios</div>
- <h2 id="h1">Two things your training reports will never do.</h2>
- <p class="muted">Press each button. The material is illustrative; the capabilities are what your team would use in the pilot.</p>
-
+ <div class="tag muted">Step 2 of 3 · Follow one case across four Studios</div>
+ <h2 id="h1">What happens after you spot Michelle's risk?</h2>
+ <p class="muted">The same price-objection problem now travels through Knowledge, Client, Practice and Leadership. Everything below is a <strong>scripted illustration</strong>, not a live AI analysis or an uploaded company file.</p>
+ <div class="case-bridge">
+  <div class="eyeline">One case · four Studios · one accountable manager</div>
+  <strong>Michelle knows the product. When the client says “another agent quoted less,” she pitches features before finding out what is being compared.</strong>
+  <p>The goal: practice a better discovery question before tomorrow's fictional customer meeting, then bring the new evidence back to the manager.</p>
+ </div>
+ <div class="evidence-path" aria-label="How the four Studios contribute">
+  <article><b>Knowledge</b><span>Locate a coachable principle and its source; draft a practice prompt.</span></article>
+  <article><b>Client</b><span>Identify the prospect's actual objection and what remains unknown.</span></article>
+  <article><b>Practice</b><span>Rehearse the price conversation; compare transcript moments.</span></article>
+  <article><b>Leadership</b><span>Review evidence, decide, and reassess instead of trusting a score alone.</span></article>
+ </div>
  <div class="show" id="showK">
-  <div class="showhead"><div class="eyeline">Knowledge Studio</div><h3>It reads your training material and tells you what deserves your team’s time.</h3></div>
+  <div class="showhead"><div class="eyeline">Knowledge Studio · illustrated workflow</div><h3>Find the coaching principle behind Michelle's price-objection gap.</h3></div>
   <div class="showbody">
-   <div><h4>Your library this week</h4>
-    <div class="doc" data-doc="0"><b>Weekly call notes: opening a first call</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
-    <div class="doc" data-doc="1"><b>Product brochure, 2023 edition</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
-    <div class="doc" data-doc="2"><b>Memo: comparing prices with competitors</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
-    <button class="btn big" type="button" id="runK">Analyze the library →</button>
+   <div><h4>Example training library · fictional</h4>
+    <div class="doc" data-doc="0"><b>Approved coaching note · price concerns · §2</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
+    <div class="doc" data-doc="1"><b>Product brochure · older sample edition</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
+    <div class="doc" data-doc="2"><b>Manager memo · comparing quotations</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
+    <div class="sample-source"><b>Sample source anchor · fictional coaching note, §2</b><p>“Before describing features, ask which coverage and conditions the prospect is comparing.” This excerpt is invented for the demo; no company document has been analyzed.</p></div>
+    <button class="btn big" type="button" id="runK">Reveal example analysis →</button>
    </div>
-   <div class="out" aria-live="polite"><h4>What comes back</h4>
-    <div class="wait" id="waitK">Three documents. Which one should your team practice this week?</div>
+   <div class="out" aria-live="polite"><h4>What a manager could review</h4>
+    <div class="wait" id="waitK">Where would you look for the skill Michelle needs before her next meeting?</div>
     <div id="outK" hidden>
-     <div class="outblock fade"><b>Question bank · drafted from the important source</b><ul><li>A prospect says “I’m pretty busy.” What do you ask before describing any plan?</li><li>Which question lets a parent name the concern himself?</li><li>What should you avoid saying in the first twenty seconds?</li></ul></div>
-     <div class="outblock fade"><b>Practice scenario · drafted for Practice Studio</b><p>Michael, a busy father. First call. Objection: “I’m pretty busy.”</p></div>
-     <div class="outblock go fade"><b>Your part</b><p>Review, edit, approve. Only then is it assigned to your team.</p></div>
+     <div class="outblock fade"><b>Training priority · anchored to sample §2</b><p>Clarify the customer's comparison before listing features. A low quote alone does not establish comparable coverage.</p></div>
+     <div class="outblock fade"><b>Draft question bank · review required</b><ul><li>What should Michelle ask when a prospect mentions a lower quote?</li><li>Which differences must be verified before discussing value?</li><li>What should never be assumed from an unverified competing quote?</li></ul></div>
+     <div class="outblock fade"><b>Targeted Practice Studio scenario · fictional</b><p>Michelle meets a price-sensitive prospect tomorrow. The simulated client says: “Another agent quoted me less.” Michelle must ask before explaining.</p></div>
+     <div class="outblock go fade"><b>Manager's role</b><p>Review the actual approved source, revise the draft, and approve an assignment. No approval or assignment happens inside this demo.</p></div>
     </div>
    </div>
   </div>
-  <div class="showfoot"><p class="showsum fade" id="sumK">Three documents in. One priority, a question bank and a practice conversation out.</p></div>
+  <div class="showfoot"><p class="showsum fade" id="sumK">From one recurring practice gap to a specific, source-checkable coaching objective.</p></div>
  </div>
 
  <div class="show" id="showC">
-  <div class="showhead"><div class="eyeline">Client Studio</div><h3>It reads a prospect’s file and tells your agent what to ask next.</h3></div>
+  <div class="showhead"><div class="eyeline">Client Studio · illustrated workflow</div><h3>Turn Michelle's next customer situation into the right rehearsal.</h3></div>
   <div class="showbody">
-   <div><h4>Client file · fictional</h4>
+   <div><h4>Fictional client-context note · demo only</h4>
     <div class="filecard"><dl>
-     <div><dt>Client</dt><dd>Michael R.</dd></div>
-     <div><dt>Pipeline</dt><dd>Client opportunity</dd></div>
-     <div><dt>Need / situation</dt><dd>Father of two. Wants to know his family would be protected.</dd></div>
-     <div><dt>Current objection</dt><dd>“I’m pretty busy.”</dd></div>
-     <div><dt>Status</dt><dd>Follow-up</dd></div>
-     <div><dt>Next follow-up</dt><dd>Thursday</dd></div>
+     <div><dt>Advisor</dt><dd>Michelle</dd></div>
+     <div><dt>Prospect</dt><dd>Ms. Rivera · fictional</dd></div>
+     <div><dt>Conversation</dt><dd>“Another agent quoted me less.”</dd></div>
+     <div><dt>Status</dt><dd>Follow-up meeting tomorrow</dd></div>
+     <div><dt>Still unknown</dt><dd>Coverage amount, policy terms, and details of the competing quote</dd></div>
+     <div><dt>Next focus</dt><dd>Ask what the customer wants to compare; don't guess</dd></div>
     </dl></div>
-    <button class="btn big" type="button" id="runC">Analyze this file →</button>
+    <div class="sample-source"><b>Sample source anchor · fictional client note, follow-up entry</b><p>The only recorded objection is the lower quoted price. No conclusion about coverage, suitability, or the prospect's intent is supported by that note.</p></div>
+    <button class="btn big" type="button" id="runC">Reveal example guidance →</button>
    </div>
-   <div class="out" aria-live="polite"><h4>What comes back</h4>
-    <div class="wait" id="waitC">One file. What should David say on Thursday?</div>
+   <div class="out" aria-live="polite"><h4>What a manager could review</h4>
+    <div class="wait" id="waitC">What should Michelle ask before describing her product?</div>
     <div id="outC" hidden>
-     <div class="outblock fade"><b>What the file tells us</b><ul><li>He has not said no. He has said not now.</li><li>His family is the reason he took the call.</li></ul></div>
-     <div class="outblock fade"><b>What is still unknown</b><ul><li>What exactly worries him.</li><li>Whether anyone else is part of the decision.</li></ul></div>
-     <div class="outblock fade"><b>Suggested next step</b><p>Ask permission for one question before describing any plan: “What would you most want to be sure of for your family?”</p></div>
-     <div class="outblock go fade"><b>Matched practice</b><p>Busy prospect, family protection. David can rehearse Thursday’s conversation with an AI client today.</p></div>
+     <div class="outblock fade"><b>Known from the sample file</b><p>The prospect mentioned a lower quote and has a meeting scheduled. The price comparison is not yet documented.</p></div>
+     <div class="outblock fade"><b>Unknown · do not infer</b><ul><li>Which type and amount of coverage the other quote includes</li><li>What matters most to the prospect beyond price</li></ul></div>
+     <div class="outblock fade"><b>Suggested discovery question · illustrative</b><p>“Would it help if we first looked at what each quote covers, so we're comparing the same things?”</p></div>
+     <div class="outblock go fade"><b>Matched practice</b><p>Michelle rehearses this exact price objection with a simulated AI client, then reviews the transcript and coach feedback. This page does not launch or grade a real practice.</p></div>
     </div>
    </div>
   </div>
-  <div class="showfoot"><p class="showsum fade" id="sumC">From a file in a folder to the next sentence your agent should say.</p><p class="muted small" style="margin:8px 0 0">In this release the file stays on the agent’s own browser. Client calls are never monitored. Sensitive client data does not belong in the file.</p></div>
+  <div class="showfoot"><p class="showsum fade" id="sumC">From a documented objection to one careful question Michelle can rehearse.</p><p class="muted small" style="margin:8px 0 0">This client note is fictional and stored only as page content. The demo does not read real client calls or private customer files.</p></div>
  </div>
 
- <div class="loophead"><div class="eyeline">How it connects · four Studios, one Hub</div><h3 style="font-size:21px;margin:6px 0 4px">Both feed one loop, and the loop returns to you.</h3><p class="muted" style="margin:0">Follow David once around.</p></div>
+ <div class="loophead"><div class="eyeline">Team Growth &amp; Retention Hub · evidence → judgment → next action</div><h3 style="font-size:21px;margin:6px 0 4px">Four Studios. One continuous management case.</h3><p class="muted" style="margin:0">Follow Michelle's fictional price-objection gap around the Hub and back to your decision.</p></div>
  <div class="loopwrap">
   <div class="ring" aria-hidden="false">
    <div class="orbit" id="orbit"></div>
    <button class="hub" id="hubJump" type="button" title="Jump to reassessment">TEAM GROWTH &amp; RETENTION HUB<small>Evidence · Judgment · Next action</small></button>
    <button type="button" class="node n0" data-node="0">Leadership<small>Studio</small></button>
    <button type="button" class="node n1" data-node="1">Knowledge<small>Studio</small></button>
-   <button type="button" class="node n2" data-node="2">Practice<small>Studio</small></button>
-   <button type="button" class="node n3" data-node="3">Client<small>Studio</small></button>
+   <button type="button" class="node n2" data-node="2">Client<small>Studio</small></button>
+   <button type="button" class="node n3" data-node="3">Practice<small>Studio</small></button>
   </div>
   <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="loopEvidence"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
    <div class="row"><button class="btn secondary" type="button" id="prevStop">← Back</button><button class="btn" type="button" id="nextStop">Next →</button></div></div>
@@ -291,7 +332,8 @@ footer a{color:#143879}
 
 <section class="card panel" id="p2" aria-labelledby="h2" hidden>
  <div class="tag muted">Step 3 of 3 · Your own team</div>
- <h2 id="h2">Now picture your team in that seat.</h2>
+ <h2 id="h2">What hidden conversation gap would you want to find in your team?</h2>
+ <div class="pilot-tie"><b>Michelle was one fictional advisor. Your coaching priorities will be different.</b><p>Select up to two real training topics, not confidential client information. We'll carry the topics into a 14-day Pilot request; no training or AI analysis starts on this page.</p></div>
  <div class="two">
   <div>
    <div class="field"><label id="chipLabel">Which two conversations does your team find hardest?</label>
@@ -301,14 +343,14 @@ footer a{color:#143879}
    <div class="field"><label for="size">Team size</label><select id="size"><option>1–5</option><option selected>6–10</option><option>11–25</option><option>26–50</option><option>51+</option></select></div>
   </div>
   <div class="plan" aria-live="polite"><div class="tag" style="color:var(--blue)">Your fourteen days</div>
-   <ol><li><strong>Before day 1.</strong> You send material your company has already approved. We build your two practice conversations: <em id="planConv"></em>.</li><li><strong>Days 1 to 13.</strong> Your team of <em id="planSize"></em> practices them. Each attempt comes back to you.</li><li><strong>Day 14.</strong> You review your own team's practice results and decide what happens next.</li></ol>
+   <ol><li><strong>Before day 1.</strong> Confirm pilot scope and share only approved materials. Priorities: <em id="planConv"></em>.</li><li><strong>Days 1 to 13.</strong> Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</li><li><strong>Day 14.</strong> Discuss patterns, evidence limits, coaching priorities, and whether to continue.</li></ol>
    <div class="row"><a class="btn" id="pilotLink" href="pilot-start.html">Request this pilot →</a></div>
    <p class="muted small" style="margin:10px 0 0">By request and subject to confirmation. No credit card. A request does not create a paid subscription. Your choices carry over to the request form; nothing is sent until you submit it.</p>
   </div>
  </div>
 </section>
 </main>
-<footer><p class="muted small"><strong>What is real here.</strong> This demo is illustrative. The team, the practice results, the dialogue and the suggestions are fictional, and all practice shown is simulated, text-based practice with an AI client. The platform does not listen to real client calls. Nothing you click is assigned, sent or recorded.</p>
+<footer><p class="muted small"><strong>Truth in the demo.</strong> Michelle, Ms. Rivera, all conversations, sample documents, source anchors and recommendations are fictional. The "analysis" buttons reveal scripted examples; they do not call an AI service, access customer data, send assignments, or prove outcomes. Only submitting the separate Pilot request form sends a request. Do not enter sensitive client details in the Pilot topic field.</p>
 <p class="muted small">A deeper look, with a different illustrative team: <a href="manager-demo-opening.html">Risk briefing</a> · <a href="manager-demo-hub.html">Four Studios and the Hub</a> · <a href="manager-demo-phases.html">Three phases</a> · <a href="mission-control-v2-1.html">Mission Control</a></p></footer>
 <script>
 const TEAM=[
@@ -423,11 +465,11 @@ $('outcomeChoices').addEventListener('click',e=>{
 
 /* step 2 */
 const STOPS=[
- {n:0,tag:"Leadership · set the priority",title:"It starts with a manager decision.",body:"Choose which conversation matters for your team. AI suggests, but the manager reviews evidence and controls what happens next.",kase:"David will make his first introductory call to Michael. You want him to ask about needs before presenting a policy.",proof:"Your decision determines which skill gets practiced and what evidence you want back."},
- {n:1,tag:"Knowledge · effective learning",title:"Did the weekly training change the learner’s skill?",body:"Authorized materials become manager-reviewed, relevant knowledge and targeted Practice. The next practice checks whether a learner applies what was taught.",kase:"Training priority: ask one relevant discovery question before describing product features.",proof:"From this week's training materials to the one skill the team must use. The Knowledge Studio example above shows it."},
- {n:2,tag:"Practice · retry",title:"Two simulated attempts, one observable change.",body:"The AI plays the simulated prospect, points to a coachable moment and invites another attempt.",kase:"First attempt: Michael says “I’m pretty busy.” Second attempt: Michael voluntarily names a family concern.",proof:"A practice transcript and coach note let you see the difference between a pitch and a useful question. Still simulated."},
- {n:3,tag:"Client · tailored rehearsal",title:"A specific client situation guides the next practice.",body:"The learner can capture relevant client context, consider a suggested approach, rehearse with a simulated customer and use feedback for another attempt.",kase:"Michael is busy and unsure about family protection. David practices listening rather than pitching.",proof:"A customer situation becomes a focused role-play, with feedback the manager can act on. The Client Studio example above shows it."},
- {n:0,tag:"Leadership · reassess",title:"It returns to your judgment, not a score.",body:"Compare later practice evidence with the earlier hypothesis. Keep, revise or close the priority and select the next practice.",kase:"If improvement holds in a different context, stretch the skill. If not, change the coaching approach. Then the loop begins again.",proof:"The Hub brings new practice evidence back to the manager, who decides whether to coach, adjust or move on."}
+ {n:0,tag:"Leadership · reveal the hidden risk",title:"An excellent test score hides a repeatable coaching signal.",body:"The manager sees Michelle's four simulated attempts across two scenarios, reviews their limits and decides what deserves scarce coaching time.",kase:"Michelle handles a lower-price objection by listing policy features instead of clarifying the comparison.",proof:"Four illustrative transcripts support a practice concern, not a claim about live customer calls or selling results."},
+ {n:1,tag:"Knowledge · trace the source",title:"Find a specific principle, not a generic sales script.",body:"The fictional coaching note §2 says to ask what coverage is being compared before listing features. A manager reviews the source and approves any resulting material.",kase:"Target skill: ask a useful comparison question before giving product information.",proof:"Sample source: fictional approved-coaching-note §2. The Knowledge example above shows the source anchor and drafted questions."},
+ {n:2,tag:"Client · understand context",title:"The client file tells you what is known—and what is missing.",body:"The illustrative note records a lower competing quote, but not the competing terms or the customer's priorities. The suggested next question respects that uncertainty.",kase:"Fictional prospect Ms. Rivera says: “Another agent quoted me less.” Michelle's follow-up is tomorrow.",proof:"Sample source: fictional client note, follow-up entry. The Client example above separates known facts from unsupported assumptions."},
+ {n:3,tag:"Practice · rehearse the correction",title:"See whether Michelle asks before she pitches.",body:"A targeted, simulated price-objection role-play could test the exact skill. The manager would compare transcript moments and coach feedback before any further decision.",kase:"Old response: “Ours covers more.” Target response: “What would you like us to compare first?”",proof:"The demo shows a proposed practice objective—not a live AI run, measured improvement or a sent assignment."},
+ {n:0,tag:"Leadership · reassess",title:"The loop returns to the manager, with evidence.",body:"If a later rehearsal shows the question working across different customer contexts, review that evidence. If not, adjust the coaching plan; do not infer sales success from a demo.",kase:"The team hub links the issue, source, customer context, planned rehearsal, and manager's next judgment.",proof:"No training, automated assignment or real-world outcome is created by this illustrative page."}
 ];
 function drawStop(){
  const s=STOPS[stop];
@@ -446,19 +488,19 @@ $('hubJump').onclick=()=>{stop=4;drawStop()};
 
 /* Step-two showpieces. Scripted illustration: no AI service is called and nothing is stored. */
 const KDOCS=[
- {cls:'important',label:'Important',why:'For new agents making first calls. It names the habit behind most shut doors: pitching before asking.'},
- {cls:'general',label:'General',why:'For all agents. Useful reference, but no client conversation turns on it.'},
- {cls:'review',label:'Needs review',why:'For you. It makes comparisons a manager should check before agents repeat them.'}];
+ {cls:'important',label:'Coaching source',why:'Fictional §2: ask what the competing quote includes before describing policy features. Directly relevant to Michelle.'},
+ {cls:'review',label:'Needs review',why:'A sample brochure may be old. Product claims and comparisons would require checking approved current materials.'},
+ {cls:'general',label:'Supporting context',why:'The fictional manager memo explains how to verify a comparison; review it before an agent uses the wording.'}];
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
-$('runK').onclick=()=>{$('runK').disabled=true;$('runK').textContent='Library analyzed';
+$('runK').onclick=()=>{$('runK').disabled=true;$('runK').textContent='Example revealed';
  document.querySelectorAll('#showK .doc').forEach((d,i)=>setTimeout(()=>{const k=KDOCS[i],r=d.querySelector('[data-rate]'),w=d.querySelector('[data-why]');r.textContent=k.label;r.className='rate '+k.cls;w.textContent=k.why;w.hidden=false;if(k.cls==='important')d.classList.add('is-important')},still?0:250+i*450));
  setTimeout(()=>{$('waitK').hidden=true;$('outK').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outK .fade')],60,380);stagger([$('sumK')],60+3*380,0)})},still?0:250+3*450+200)};
-$('runC').onclick=()=>{$('runC').disabled=true;$('runC').textContent='File analyzed';
+$('runC').onclick=()=>{$('runC').disabled=true;$('runC').textContent='Example revealed';
  $('waitC').hidden=true;$('outC').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outC .fade')],200,420);stagger([$('sumC')],200+4*420,0)})};
 
 /* step 3 */
-const CONVS=["The first call to a new prospect","“Your premium is too high”","“I need to think about it”","“I already have someone”","Asking for the first meeting","Following up after silence"];
+const CONVS=["“Your premium is too high”","Comparing a competitor's quote","“I need to think about it”","The first call to a new prospect","Asking for the first meeting","Following up after silence"];
 $('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
 function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
 function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
