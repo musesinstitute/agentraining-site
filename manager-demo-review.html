@@ -78,6 +78,30 @@ details.all{margin-top:16px}details.all summary{cursor:pointer;font-weight:700;c
 footer{max-width:1000px;margin:auto;padding:0 22px 50px}
 footer a{color:#143879}
 @media(max-width:820px){.attempts{grid-template-columns:1fr}.team{grid-template-columns:1fr 1fr}.person{min-height:0}.ev{grid-template-columns:1fr}.loopwrap,.two{grid-template-columns:1fr}.ring{width:300px;height:300px}.hub{inset:96px}}
+
+/* Step 2 showpieces: Knowledge Studio and Client Studio as the two headline capabilities */
+.show{margin-top:22px;border:1px solid #b9cbee;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 14px 34px #17243a14}
+.showhead{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;padding:20px 22px}
+.showhead .eyeline{color:#bcd0ff}.showhead h3{font-size:clamp(20px,2.7vw,27px);line-height:1.25;margin:6px 0 0;max-width:24em;text-wrap:balance}
+.showbody{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;padding:20px 22px;align-items:start}
+.showbody h4{margin:0 0 10px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.doc{border:1px solid var(--line);border-radius:11px;padding:12px 13px;margin-bottom:9px;background:#fbfcff;transition:border-color .4s,background .4s}
+.doc b{display:block;font-size:15px}.doc .why{display:block;font-size:13.5px;color:var(--muted);margin-top:6px}
+.rate{display:inline-block;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-top:7px;background:#eef1f6;color:var(--muted)}
+.rate.important{background:var(--ok);color:#fff}.rate.general{background:#dfe6f3;color:#33445e}.rate.review{background:#b8791a;color:#fff}
+.doc.is-important{border-color:var(--ok);background:var(--ok-soft)}
+.filecard{border:1px solid var(--line);border-radius:11px;background:#fbfcff;overflow:hidden}
+.filecard dl{margin:0}.filecard div{display:grid;grid-template-columns:128px 1fr;gap:10px;padding:9px 13px;border-bottom:1px solid var(--line);font-size:14.5px}
+.filecard div:last-child{border-bottom:0}.filecard dt{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:2px}.filecard dd{margin:0}
+.out{min-height:150px}.out .wait{border:2px dashed var(--line);border-radius:11px;padding:26px 16px;text-align:center;color:var(--muted);font-size:14.5px}
+.outblock{border-left:4px solid var(--blue);background:#f4f7ff;border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:10px}
+.outblock.go{border-left-color:var(--ok);background:var(--ok-soft)}
+.outblock b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#143879;margin-bottom:4px}
+.outblock.go b{color:var(--ok)}.outblock ul{margin:0;padding-left:18px}.outblock li{margin:3px 0;font-size:14.5px}.outblock p{margin:0;font-size:15px}
+.showfoot{padding:0 22px 20px}.showsum{font-size:clamp(17px,2.1vw,20px);font-weight:750;line-height:1.35;margin:0;text-wrap:balance}
+.show .btn.big{font-size:16px;padding:14px 20px;margin-top:6px}
+.loophead{margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+@media(max-width:820px){.showbody{grid-template-columns:1fr}.filecard div{grid-template-columns:1fr;gap:2px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* Step-one manager judgment, controlled resources and simulated follow-up */
@@ -154,7 +178,7 @@ footer a{color:#143879}
 <body>
 <header><div class="tag">AgentTraining.ai · Manager Demo</div><h1>You saw one conversation change.<br>Now take the manager's seat.</h1><p class="sub">Three short steps, no sign-up. See what ordinary training reports miss, trace the evidence across four Studios, and picture a focused 14-day pilot for your team. Explore deeper only if you choose.</p></header>
 <main>
-<ol class="steps" aria-label="Demo steps"><li><button type="button" data-go="0">1 · Make the call</button></li><li><button type="button" data-go="1">2 · Where it came from</button></li><li><button type="button" data-go="2">3 · Your team</button></li></ol>
+<ol class="steps" aria-label="Demo steps"><li><button type="button" data-go="0">1 · Make the call</button></li><li><button type="button" data-go="1">2 · Inside the Studios</button></li><li><button type="button" data-go="2">3 · Your team</button></li></ol>
 
 <section class="card panel" id="p0" aria-labelledby="h0">
  <div class="tag muted">Step 1 of 3 · Illustrative team</div>
@@ -196,9 +220,59 @@ footer a{color:#143879}
 </section>
 
 <section class="card panel" id="p1" aria-labelledby="h1" hidden>
- <div class="tag muted">Step 2 of 3 · Four Studios, one Hub</div>
- <h2 id="h1">Follow David once around the loop.</h2>
- <p class="muted">What changes for a manager? Company training becomes visible skills. Customer context becomes targeted practice. Both return evidence you can act on.</p>
+ <div class="tag muted">Step 2 of 3 · Inside the Studios</div>
+ <h2 id="h1">Two things your training reports will never do.</h2>
+ <p class="muted">Press each button. The material is illustrative; the capabilities are what your team would use in the pilot.</p>
+
+ <div class="show" id="showK">
+  <div class="showhead"><div class="eyeline">Knowledge Studio</div><h3>It reads your training material and tells you what deserves your team’s time.</h3></div>
+  <div class="showbody">
+   <div><h4>Your library this week</h4>
+    <div class="doc" data-doc="0"><b>Weekly call notes: opening a first call</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
+    <div class="doc" data-doc="1"><b>Product brochure, 2023 edition</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
+    <div class="doc" data-doc="2"><b>Memo: comparing prices with competitors</b><span class="rate" data-rate>Not yet read</span><span class="why" data-why hidden></span></div>
+    <button class="btn big" type="button" id="runK">Analyze the library →</button>
+   </div>
+   <div class="out" aria-live="polite"><h4>What comes back</h4>
+    <div class="wait" id="waitK">Three documents. Which one should your team practice this week?</div>
+    <div id="outK" hidden>
+     <div class="outblock fade"><b>Question bank · drafted from the important source</b><ul><li>A prospect says “I’m pretty busy.” What do you ask before describing any plan?</li><li>Which question lets a parent name the concern himself?</li><li>What should you avoid saying in the first twenty seconds?</li></ul></div>
+     <div class="outblock fade"><b>Practice scenario · drafted for Practice Studio</b><p>Michael, a busy father. First call. Objection: “I’m pretty busy.”</p></div>
+     <div class="outblock go fade"><b>Your part</b><p>Review, edit, approve. Only then is it assigned to your team.</p></div>
+    </div>
+   </div>
+  </div>
+  <div class="showfoot"><p class="showsum fade" id="sumK">Three documents in. One priority, a question bank and a practice conversation out.</p></div>
+ </div>
+
+ <div class="show" id="showC">
+  <div class="showhead"><div class="eyeline">Client Studio</div><h3>It reads a prospect’s file and tells your agent what to ask next.</h3></div>
+  <div class="showbody">
+   <div><h4>Client file · fictional</h4>
+    <div class="filecard"><dl>
+     <div><dt>Client</dt><dd>Michael R.</dd></div>
+     <div><dt>Pipeline</dt><dd>Client opportunity</dd></div>
+     <div><dt>Need / situation</dt><dd>Father of two. Wants to know his family would be protected.</dd></div>
+     <div><dt>Current objection</dt><dd>“I’m pretty busy.”</dd></div>
+     <div><dt>Status</dt><dd>Follow-up</dd></div>
+     <div><dt>Next follow-up</dt><dd>Thursday</dd></div>
+    </dl></div>
+    <button class="btn big" type="button" id="runC">Analyze this file →</button>
+   </div>
+   <div class="out" aria-live="polite"><h4>What comes back</h4>
+    <div class="wait" id="waitC">One file. What should David say on Thursday?</div>
+    <div id="outC" hidden>
+     <div class="outblock fade"><b>What the file tells us</b><ul><li>He has not said no. He has said not now.</li><li>His family is the reason he took the call.</li></ul></div>
+     <div class="outblock fade"><b>What is still unknown</b><ul><li>What exactly worries him.</li><li>Whether anyone else is part of the decision.</li></ul></div>
+     <div class="outblock fade"><b>Suggested next step</b><p>Ask permission for one question before describing any plan: “What would you most want to be sure of for your family?”</p></div>
+     <div class="outblock go fade"><b>Matched practice</b><p>Busy prospect, family protection. David can rehearse Thursday’s conversation with an AI client today.</p></div>
+    </div>
+   </div>
+  </div>
+  <div class="showfoot"><p class="showsum fade" id="sumC">From a file in a folder to the next sentence your agent should say.</p><p class="muted small" style="margin:8px 0 0">In this release the file stays on the agent’s own browser. Client calls are never monitored. Sensitive client data does not belong in the file.</p></div>
+ </div>
+
+ <div class="loophead"><div class="eyeline">How it connects · four Studios, one Hub</div><h3 style="font-size:21px;margin:6px 0 4px">Both feed one loop, and the loop returns to you.</h3><p class="muted" style="margin:0">Follow David once around.</p></div>
  <div class="loopwrap">
   <div class="ring" aria-hidden="false">
    <div class="orbit" id="orbit"></div>
@@ -212,46 +286,7 @@ footer a{color:#143879}
    <div class="row"><button class="btn secondary" type="button" id="prevStop">← Back</button><button class="btn" type="button" id="nextStop">Next →</button></div></div>
  </div>
 
- <section class="studio-proof" aria-labelledby="studioProofTitle">
-  <div class="eyeline">Why four Studios work better together</div>
-  <h3 id="studioProofTitle">From busywork to visible progress.</h3>
-  <div class="valuePair">
-   <article><div class="eyeline">Knowledge Studio</div><h3>Your company trains every week. What actually sticks?</h3><p>Spot what matters in the training library. Check whether learners can apply it in a real-sounding conversation, not just pass a course.</p><button class="btn secondary" type="button" id="openKnowledge">See what training changed →</button></article>
-   <article><div class="eyeline">Client + Practice</div><h3>Stop practicing generic sales scripts.</h3><p>Start from a customer's situation, find what is still unknown, then practice the next conversation with an AI client.</p><button class="btn secondary" type="button" id="openClient">Explore one client situation →</button></article>
-  </div>
-  <details class="optionalDeep" id="studioDeepDive"><summary>Explore the Studio examples · optional</summary>
-   <p class="muted small">These clickable sequences are scripted illustrations, not live AI responses or verified customer outcomes.</p>
-  <div class="proof-tabs" role="tablist" aria-label="Studio interactive examples">
-   <button type="button" role="tab" id="knowledgeTab" aria-selected="true" aria-controls="knowledgeProof">Knowledge · Learning effectiveness</button>
-   <button type="button" role="tab" id="clientTab" aria-selected="false" aria-controls="clientProof">Client ↔ Practice · AI conversation</button>
-  </div>
-  <div class="proof-panel" id="knowledgeProof" role="tabpanel" aria-labelledby="knowledgeTab">
-   <div class="eyeline">Knowledge Studio · Not just uploaded documents</div>
-   <p><strong>Example:</strong> A manager adds authorized weekly first-call training notes, reviews the AI-assisted draft and approves a targeted exercise for David.</p>
-   <div class="proof-grid">
-    <div><b>1 · SOURCE</b>Authorized training notes / transcript</div>
-    <div><b>2 · PRIORITIZE</b>Relevant and important knowledge, manager-reviewed</div>
-    <div><b>3 · PRACTICE</b>Targeted role-play for the learner</div>
-    <div><b>4 · REASSESS</b>Compare attempts; test skill again next week</div>
-   </div>
-   <p><strong>Relevance: High (example)</strong> — The source addresses David's current opening-call gap. <strong>Importance: Essential (example)</strong> — Asking about needs should come before a product pitch. These are illustrative management judgments, not verified automatic scores.</p>
-   <button type="button" class="btn secondary" id="knowledgeReveal" aria-expanded="false" aria-controls="knowledgeLearning">Show the simulated learning check →</button>
-   <div class="proof-output" id="knowledgeLearning" hidden aria-live="polite">
-    <p><strong>Before:</strong> David begins with policy features, before learning what Michael needs.</p>
-    <p><strong>After coaching and another practice:</strong> David asks, “What concerns you most about protecting your family?”</p>
-    <p><strong>Manager's next question:</strong> Can David repeat this in a different scenario next week? One good attempt suggests improvement; it does not prove lasting mastery or real-world readiness.</p>
-   </div>
-   <p class="proof-note">Illustration: relevance and importance are manager-reviewed judgments. It does not claim verified automatic scoring or measured long-term mastery.</p>
-  </div>
-  <div class="proof-panel" id="clientProof" role="tabpanel" aria-labelledby="clientTab" hidden>
-   <div class="eyeline">Client Studio + Practice Studio · Context-specific preparation</div>
-   <p><strong>Illustrative case:</strong> Michael, a busy prospect, is concerned about family protection; David has a follow-up conversation planned. The learner rehearses this relationship rather than a generic sales objection.</p>
-   <div class="proof-output" aria-live="polite"><div class="eyeline" id="clientStageLabel">1 · Prepare from Client Studio</div><div id="clientStageBody"><p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p></div></div>
-   <div class="proof-actions"><button type="button" class="btn secondary" id="clientStageBack" disabled>← Back</button><button type="button" class="btn" id="clientStageNext">Discuss with AI →</button><span id="clientStageCount" class="proof-count">1 / 4</span></div>
-   <p class="proof-note">Scripted example, not live AI chat. Client calls are not monitored. Do not enter sensitive customer information; live data synchronization and persistent AI client advice are not demonstrated here.</p>
-  </div>
-  </details>
- </section>
+ <div class="row" style="margin-top:22px"><button class="btn" type="button" data-go="2">Now picture your own team →</button></div>
 </section>
 
 <section class="card panel" id="p2" aria-labelledby="h2" hidden>
@@ -389,15 +424,13 @@ $('outcomeChoices').addEventListener('click',e=>{
 /* step 2 */
 const STOPS=[
  {n:0,tag:"Leadership · set the priority",title:"It starts with a manager decision.",body:"Choose which conversation matters for your team. AI suggests, but the manager reviews evidence and controls what happens next.",kase:"David will make his first introductory call to Michael. You want him to ask about needs before presenting a policy.",proof:"Your decision determines which skill gets practiced and what evidence you want back."},
- {n:1,tag:"Knowledge · effective learning",title:"Did the weekly training change the learner’s skill?",body:"Authorized materials become manager-reviewed, relevant knowledge and targeted Practice. The next practice checks whether a learner applies what was taught.",kase:"Training priority: ask one relevant discovery question before describing product features.",proof:"From this week's training materials to the one skill the team must use. Open the Knowledge example to see the before-and-after."},
+ {n:1,tag:"Knowledge · effective learning",title:"Did the weekly training change the learner’s skill?",body:"Authorized materials become manager-reviewed, relevant knowledge and targeted Practice. The next practice checks whether a learner applies what was taught.",kase:"Training priority: ask one relevant discovery question before describing product features.",proof:"From this week's training materials to the one skill the team must use. The Knowledge Studio example above shows it."},
  {n:2,tag:"Practice · retry",title:"Two simulated attempts, one observable change.",body:"The AI plays the simulated prospect, points to a coachable moment and invites another attempt.",kase:"First attempt: Michael says “I’m pretty busy.” Second attempt: Michael voluntarily names a family concern.",proof:"A practice transcript and coach note let you see the difference between a pitch and a useful question. Still simulated."},
- {n:3,tag:"Client · tailored rehearsal",title:"A specific client situation guides the next practice.",body:"The learner can capture relevant client context, consider a suggested approach, rehearse with a simulated customer and use feedback for another attempt.",kase:"Michael is busy and unsure about family protection. David practices listening rather than pitching.",proof:"A customer situation becomes a focused role-play, with feedback the manager can act on. Explore the Client example below."},
+ {n:3,tag:"Client · tailored rehearsal",title:"A specific client situation guides the next practice.",body:"The learner can capture relevant client context, consider a suggested approach, rehearse with a simulated customer and use feedback for another attempt.",kase:"Michael is busy and unsure about family protection. David practices listening rather than pitching.",proof:"A customer situation becomes a focused role-play, with feedback the manager can act on. The Client Studio example above shows it."},
  {n:0,tag:"Leadership · reassess",title:"It returns to your judgment, not a score.",body:"Compare later practice evidence with the earlier hypothesis. Keep, revise or close the priority and select the next practice.",kase:"If improvement holds in a different context, stretch the skill. If not, change the coaching approach. Then the loop begins again.",proof:"The Hub brings new practice evidence back to the manager, who decides whether to coach, adjust or move on."}
 ];
 function drawStop(){
  const s=STOPS[stop];
- if(stop===1)setProofTab('knowledge');
- if(stop===3)setProofTab('client');
  $('stopTag').textContent=s.tag+' · '+(stop+1)+' of '+STOPS.length;
  $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
  $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Stage '+(stop+1)+' / 5 · click any Studio or select Next.';
@@ -411,38 +444,18 @@ document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.
 $('hubJump').onclick=()=>{stop=4;drawStop()};
 
 
-/* Scripted Step-two examples; no AI service, persistent customer data or learner scoring. */
-function setProofTab(which){
- const k=which==='knowledge';
- $('knowledgeProof').hidden=!k;$('clientProof').hidden=k;
- $('knowledgeTab').setAttribute('aria-selected',String(k));
- $('clientTab').setAttribute('aria-selected',String(!k));
-}
-$('knowledgeTab').onclick=()=>setProofTab('knowledge');
-$('clientTab').onclick=()=>setProofTab('client');
-$('openKnowledge').onclick=()=>{$('studioDeepDive').open=true;setProofTab('knowledge');$('studioDeepDive').scrollIntoView({behavior:'smooth',block:'nearest'})};
-$('openClient').onclick=()=>{$('studioDeepDive').open=true;setProofTab('client');$('studioDeepDive').scrollIntoView({behavior:'smooth',block:'nearest'})};
-$('knowledgeReveal').onclick=()=>{
- const show=$('knowledgeLearning').hidden;
- $('knowledgeLearning').hidden=!show;
- $('knowledgeReveal').setAttribute('aria-expanded',String(show));
- $('knowledgeReveal').textContent=show?'Hide learning check':'Show the simulated learning check →';
-};
-const CLIENT_SCRIPT=[
- ['1 · Prepare from Client Studio','<p>Capture only relevant case context and the next step. Choose a matching Practice scenario.</p>','Discuss with AI →'],
- ['2 · Discuss the relationship with AI','<p><strong>David (example):</strong> “Michael says he is busy. How can I ask about family protection without pressuring him?”</p><p><strong>AI Coach (scripted):</strong> “Respect his time; ask permission for one short discovery question before suggesting a product.”</p>','Practice with AI client →'],
- ['3 · Simulated client conversation','<p><strong>AI client Michael:</strong> “I’m pretty busy.”</p><p><strong>David:</strong> “I understand. Could I ask one quick question—what concerns you most about your family’s protection?”</p><p><strong>AI client Michael:</strong> “I have been worrying what would happen to them.”</p>','Review & retry →'],
- ['4 · Feedback, retry and manager action','<p><strong>AI Coach example:</strong> David asked a discovery question instead of pitching. Try a different objection to see if the skill holds.</p><p><strong>Manager view:</strong> See a practice attempt, review feedback and decide the next assignment. Improvement here is fictional and does not verify field performance.</p>','Restart case example ↻']
-];
-let clientScriptStep=0;
-function drawClientScript(){
- const a=CLIENT_SCRIPT[clientScriptStep];
- $('clientStageLabel').textContent=a[0];$('clientStageBody').innerHTML=a[1];
- $('clientStageNext').textContent=a[2];$('clientStageBack').disabled=clientScriptStep===0;
- $('clientStageCount').textContent=(clientScriptStep+1)+' / 4';
-}
-$('clientStageBack').onclick=()=>{if(clientScriptStep>0)clientScriptStep--;drawClientScript()};
-$('clientStageNext').onclick=()=>{clientScriptStep=(clientScriptStep+1)%CLIENT_SCRIPT.length;drawClientScript()};
+/* Step-two showpieces. Scripted illustration: no AI service is called and nothing is stored. */
+const KDOCS=[
+ {cls:'important',label:'Important',why:'For new agents making first calls. It names the habit behind most shut doors: pitching before asking.'},
+ {cls:'general',label:'General',why:'For all agents. Useful reference, but no client conversation turns on it.'},
+ {cls:'review',label:'Needs review',why:'For you. It makes comparisons a manager should check before agents repeat them.'}];
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
+$('runK').onclick=()=>{$('runK').disabled=true;$('runK').textContent='Library analyzed';
+ document.querySelectorAll('#showK .doc').forEach((d,i)=>setTimeout(()=>{const k=KDOCS[i],r=d.querySelector('[data-rate]'),w=d.querySelector('[data-why]');r.textContent=k.label;r.className='rate '+k.cls;w.textContent=k.why;w.hidden=false;if(k.cls==='important')d.classList.add('is-important')},still?0:250+i*450));
+ setTimeout(()=>{$('waitK').hidden=true;$('outK').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outK .fade')],60,380);stagger([$('sumK')],60+3*380,0)})},still?0:250+3*450+200)};
+$('runC').onclick=()=>{$('runC').disabled=true;$('runC').textContent='File analyzed';
+ $('waitC').hidden=true;$('outC').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outC .fade')],200,420);stagger([$('sumC')],200+4*420,0)})};
 
 /* step 3 */
 const CONVS=["The first call to a new prospect","“Your premium is too high”","“I need to think about it”","“I already have someone”","Asking for the first meeting","Following up after silence"];
