@@ -179,6 +179,14 @@ function viewResult(sessionId){
   const details=card.querySelector('.details');
   if(details)details.hidden=false;
 }
+// A link such as manager.html?pilot=1&result=<session id> (from the AI Brief or Manager AI
+// Copilot) opens that Practice Result with its transcript showing. Runs once per page load.
+let linkedResultOpened=false;
+function openLinkedResult(){
+  if(linkedResultOpened)return;linkedResultOpened=true;
+  const wanted=new URLSearchParams(location.search).get('result');
+  if(wanted)viewResult(wanted);
+}
 function generateQuickTest(){
   const name=prompt(t('Enter a test client name:','请输入测试客户姓名：'), t('Xiaodong','小东'));
   if(!name) return;
@@ -285,6 +293,7 @@ async function refreshCloud(){
     document.getElementById('quickTest').hidden=true;
     document.getElementById('learnerEmail').placeholder='learner@example.com';
     renderAssignments();list();setAssignStatus(t('Pilot data is up to date.','试用数据已更新。'),'ok');
+    openLinkedResult();
     loadInvites();
   }catch(error){setAssignStatus(error.message,'error')}
 }
