@@ -63,3 +63,48 @@ export const knowledge = [
   },
   { id: 'k-draft', title: '尚未审核的资料', status: 'analyzed', updatedAt: day(1), analysis: { practiceDraft: { title: 'x', situation: 'y', objective: 'z' } } }
 ];
+
+// Owner UAT of 2026-11-16: the only Practice on record was three months old.
+// Two members, one session each (Aug 13 and Aug 19), one assignment that has
+// been open for 42 days, a relevance-assessed source (P2, 60/100).
+export const ANA = 'ana@example.com';
+export const BEN = 'ben@example.com';
+export const staleSessions = [
+  session('s-ana', ANA, 'Ana Ruiz', 95, "I'll Think About It", [55, 46, 25], {
+    tips: ['Ask what the client still needs to think about before the conversation ends.'],
+    transcript: [
+      { index: 1, speaker: 'client', text: 'I understand the coverage, but I want to think about it.' },
+      { index: 2, speaker: 'agent', text: 'Of course, take all the time you need.' },
+      { index: 3, speaker: 'client', text: 'Thanks. I will talk to my wife.' },
+      { index: 4, speaker: 'agent', text: 'Sounds good, just reach out whenever you are ready.' }
+    ]
+  }),
+  session('s-ben', BEN, 'Ben Cho', 89, 'Premium Is Too High', [35, 60, 58], { summary: 'Moved to price before acknowledging the concern.' })
+];
+export const staleProfiles = [
+  { learnerEmail: ANA, preferredName: 'Ana Ruiz', claims: [] },
+  { learnerEmail: BEN, preferredName: 'Ben Cho', claims: [] },
+  { learnerEmail: 'cara@example.com', preferredName: 'Cara Diaz', claims: [] }
+];
+export const staleAssignments = [
+  { id: 'a-ben', assignedTo: BEN, learner: 'Ben Cho', scenarioId: 'IHFC-23', scenarioName: 'Handling Skeptical Clients', mode: 'quick', status: 'Assigned', createdAt: day(42) }
+];
+export const assessedKnowledge = [
+  {
+    id: 'k-uw', title: 'Sample Life Underwriting Guide', status: 'approved', approvedAt: day(10), updatedAt: day(10),
+    relevance: { competencies: ['closing', 'accuracy'], priority: 'P2', overall: 60, whyItMatters: 'Field underwriting conversations end with a concrete next step.' },
+    analysis: {
+      quality: 'important',
+      practiceDraft: {
+        title: 'Field Underwriting Practice: Term Coverage Conversation', situation: 'A client is ready to apply for term coverage and asks what happens next.',
+        objective: 'Explain the underwriting steps accurately and agree the next step.', clientName: 'Mr. Lee',
+        clientOpening: 'So what do I need to do after today?', successCriteria: ['Explain the exam', 'Set expectations on timing']
+      }
+    }
+  },
+  {
+    id: 'k-brand', title: 'Company History Deck', status: 'approved', approvedAt: day(3), updatedAt: day(3),
+    relevance: { competencies: ['empathy'], priority: 'P3', overall: 30 },
+    analysis: { practiceDraft: { title: 'Telling the company story', situation: 'A client asks who the company is.', objective: 'Tell the story briefly.' } }
+  }
+];

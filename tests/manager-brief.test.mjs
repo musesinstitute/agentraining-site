@@ -17,52 +17,88 @@ import { __resetAllStores } from './stubs/netlify-blobs.mjs';
 const { buildBrief, pickExcerpt, practiceCandidates, assignmentPayload } = ManagerBrief;
 const base = () => ({ now: fx.NOW, sessions: fx.sessions, profiles: fx.profiles, assignments: fx.assignments });
 
-describe('finding', () => {
-  test('names the competency most members are weakest on, and counts only them', () => {
+describe('14-day observation', () => {
+  test('counts only members who practiced in the last 14 days, and names the competency most of them are weakest on', () => {
     const brief = buildBrief(base());
     assert.equal(brief.state, 'finding');
-    assert.deepEqual(brief.pattern, { key: 'closing', count: 3 });
-    assert.equal(brief.windowed, true);
-    assert.deepEqual(brief.basis, { memberCount: 4, sessionCount: 7 }); // Kevin's 20-day-old session is outside the window
+    assert.deepEqual(brief.pattern, { key: 'closing', count: 3, of: 4 });
+    assert.deepEqual(brief.recent, { sessionCount: 7, memberCount: 4 }); // Kevin's 20-day-old session is outside the window
+    assert.equal(brief.allTime.sessionCount, 8);
   });
 
-  test('looks first at the steepest drop among members not already holding an assignment', () => {
+  test('opens on someone a Practice can be recommended for: steepest drop, no assignment still open', () => {
     const brief = buildBrief(base());
     assert.equal(brief.focus.email, fx.MICHELLE);
     assert.deepEqual(brief.focus.series, [72, 61, 55]);
     assert.equal(brief.focus.trend, 'down');
-    // Amy is in the pattern too but already has an open assignment, so she ranks after David.
-    assert.deepEqual(brief.members.map(m => m.email), [fx.MICHELLE, fx.DAVID, fx.AMY, fx.KEVIN]);
-    assert.equal(brief.members[2].open.id, 'a-amy');
+    // Amy shares the pattern but already holds an open assignment, so she comes after everyone who does not.
+    assert.deepEqual(brief.members.map(m => m.email), [fx.MICHELLE, fx.DAVID, fx.KEVIN, fx.AMY]);
+    assert.deepEqual([brief.members[3].open.id, brief.members[3].open.days, brief.members[3].open.status], ['a-amy', 2, 'Assigned']);
   });
 
-  test('a member with one session is reported as a single data point, never a trend', () => {
+  test('a single Practice is one data point: no drop and no trend, even when the score is low', () => {
     const amy = buildBrief(base()).members.find(m => m.email === fx.AMY);
     assert.equal(amy.sessionCount, 1);
     assert.equal(amy.trend, 'single');
     assert.equal(amy.drop, 0);
-  });
-
-  test('falls back to all recorded Practice when the last 14 days are too thin', () => {
-    const old = fx.sessions.filter(s => s.id === 's-k1');
-    const brief = buildBrief({ ...base(), sessions: old });
-    assert.equal(brief.windowed, false);
-    assert.equal(brief.focus.email, fx.KEVIN);
-  });
-
-  test('with no scored Practice it makes no claim about anyone', () => {
-    const brief = buildBrief({ now: fx.NOW, sessions: [], profiles: fx.profiles, assignments: [] });
-    assert.equal(brief.state, 'no_evidence');
-    assert.equal(brief.pattern, null);
-    assert.equal(brief.members.length, 0);
-    assert.equal(brief.rosterOnly.length, 5);
-    assert.equal(buildBrief({ now: fx.NOW }).state, 'no_team');
+    assert.deepEqual(amy.series, [60]);
   });
 
   test('sessions with no scores are ignored rather than read as zeroes', () => {
     const blank = { id: 'x', learner: 'new@example.com', savedAt: fx.NOW, scores: { overall: 0, empathy: 0, accuracy: 0, closing: 0 } };
     const brief = buildBrief({ ...base(), sessions: [...fx.sessions, blank] });
     assert.equal(brief.members.some(m => m.email === 'new@example.com'), false);
+  });
+});
+
+describe('historical records are never presented as recent', () => {
+  const stale = () => ({ now: fx.NOW, sessions: fx.staleSessions, profiles: fx.staleProfiles, assignments: fx.staleAssignments });
+
+  test('Practice from three months ago gives a "stale" brief with no 14-day pattern', () => {
+    const brief = buildBrief(stale());
+    assert.equal(brief.state, 'stale');
+    assert.equal(brief.pattern, null, 'no shared 14-day pattern is claimed from old records');
+    assert.deepEqual(brief.recent, { sessionCount: 0, memberCount: 0 });
+    assert.deepEqual([brief.allTime.sessionCount, brief.allTime.memberCount, brief.allTime.daysSinceLatest], [2, 2, 89]);
+  });
+
+  test('each member carries the date and age of their latest Practice and is marked not fresh', () => {
+    const brief = buildBrief(stale());
+    const ana = brief.members.find(m => m.email === fx.ANA);
+    assert.deepEqual([ana.fresh, ana.daysSince, ana.trend, ana.focusKey, ana.focusScore], [false, 95, 'single', 'closing', 25]);
+    assert.equal(brief.members.find(m => m.email === fx.BEN).daysSince, 89);
+  });
+
+  test('the brief opens on the member without an open assignment; the 42-day-old assignment is reported with its age', () => {
+    const brief = buildBrief(stale());
+    assert.equal(brief.focus.email, fx.ANA);
+    const ben = brief.members.find(m => m.email === fx.BEN);
+    assert.deepEqual([ben.open.scenarioName, ben.open.days], ['Handling Skeptical Clients', 42]);
+    assert.deepEqual(brief.waiting.map(w => [w.name, w.days]), [['Ben Cho', 42]]);
+  });
+
+  test('members with old records and members with none are kept apart', () => {
+    const brief = buildBrief(stale());
+    assert.deepEqual(brief.members.map(m => [m.name, m.hasEvidence]), [['Ana Ruiz', true], ['Ben Cho', true]]);
+    assert.deepEqual(brief.rosterOnly.map(m => [m.name, m.hasEvidence]), [['Cara Diaz', false]]);
+  });
+
+  test('one recent session plus older ones: only the recent member is in the 14-day observation', () => {
+    const recentBen = { ...fx.staleSessions[1], id: 's-ben-new', savedAt: new Date(Date.parse(fx.NOW) - 3 * 86400000).toISOString() };
+    const brief = buildBrief({ ...stale(), sessions: [...fx.staleSessions, recentBen] });
+    assert.equal(brief.state, 'finding');
+    assert.deepEqual(brief.recent, { sessionCount: 1, memberCount: 1 });
+    assert.deepEqual(brief.pattern, { key: 'empathy', count: 1, of: 1 });
+    assert.deepEqual(brief.members.map(m => [m.email, m.fresh]), [[fx.BEN, true], [fx.ANA, false]]);
+  });
+
+  test('no Practice at all is a different state from old Practice', () => {
+    const brief = buildBrief({ now: fx.NOW, sessions: [], profiles: fx.profiles, assignments: [] });
+    assert.equal(brief.state, 'no_evidence');
+    assert.equal(brief.pattern, null);
+    assert.equal(brief.members.length, 0);
+    assert.equal(brief.rosterOnly.length, 5);
+    assert.equal(buildBrief({ now: fx.NOW }).state, 'no_team');
   });
 });
 
@@ -73,6 +109,8 @@ describe('results coming back', () => {
     assert.deepEqual(
       { name: brief.returns[0].name, key: brief.returns[0].key, before: brief.returns[0].before, after: brief.returns[0].after },
       { name: 'Kevin Zhao', key: 'closing', before: 52, after: 70 });
+    assert.ok(brief.returns[0].beforeAt < brief.returns[0].afterAt, 'both scores carry their own Practice date');
+    assert.equal(brief.returns[0].resultSessionId, 's-k2');
   });
 
   test('open assignments are listed as still out, with how long', () => {
@@ -88,6 +126,7 @@ describe('transcript passage', () => {
     const excerpt = pickExcerpt(michelle, 'closing');
     assert.deepEqual(excerpt.turns.map(t => [t.speaker, t.marked]), [['client', false], ['agent', true], ['client', false]]);
     assert.match(excerpt.turns[1].text, /慢慢考虑/);
+    assert.deepEqual([excerpt.line, excerpt.turnCount], [4, 5]);
   });
 
   test('for knowledge it marks the longest explanation; for empathy the reply to the longest client statement', () => {
@@ -101,31 +140,45 @@ describe('transcript passage', () => {
   });
 });
 
-describe('prepared Practice', () => {
+describe('recommended Practice and how well it fits', () => {
   const curriculum = [{ id: 'IHFC-01', title: { en: 'Premium Is Too High', zh: '保費太高' } }, { id: 'IHFC-02', title: { en: "I'll Think About It", zh: '我會再考慮看看' }, objective: { en: 'o', zh: '目標' } }];
+  const draft = { title: 't', situation: 's', objective: 'o' };
+  const source = (id, extra) => ({ id, title: id, status: 'approved', approvedAt: '2026-10-01', analysis: { practiceDraft: draft }, ...extra });
 
-  test('offers only approved Company Knowledge, then the standard Practice for that competency', () => {
+  test('offers only approved Company Knowledge; unassessed company material leads, the standard Practice follows', () => {
     const list = practiceCandidates({ knowledge: fx.knowledge, curriculum, key: 'closing', lang: 'zh' });
-    assert.deepEqual(list.map(c => c.id), ['knowledge-k-hnw', 'IHFC-02']);
+    assert.deepEqual(list.map(c => [c.id, c.match]), [['knowledge-k-hnw', 'unassessed'], ['IHFC-02', 'standard']]);
     assert.equal(list[1].title, '我會再考慮看看');
-    assert.equal(list[1].targeted, true);
+    assert.equal(ManagerBrief.rankReason(list).code, 'unassessed_latest');
   });
 
-  test('a source assessed as covering the competency outranks a newer one that is not', () => {
-    const draft = { title: 't', situation: 's', objective: 'o' };
+  test('the UAT case: P2 60/100 material tagged for closing is a partial match, and is first because it is the only one covering it', () => {
+    const list = practiceCandidates({ knowledge: fx.assessedKnowledge, curriculum, key: 'closing', lang: 'en' });
+    assert.deepEqual(list.map(c => [c.kind === 'knowledge' ? c.sourceId : c.id, c.match]), [['k-uw', 'partial'], ['IHFC-02', 'standard'], ['k-brand', 'off_target']]);
+    assert.deepEqual([list[0].priority, list[0].overall, list[0].covers], ['P2', 60, true]);
+    assert.deepEqual(ManagerBrief.rankReason(list), { code: 'only_cover', total: 3, covering: 1 });
+  });
+
+  test('P1 or 75+ material tagged for the competency is a strong match and outranks a newer partial one', () => {
     const knowledge = [
-      { id: 'new', title: 'New', status: 'approved', approvedAt: '2026-11-15', analysis: { practiceDraft: draft } },
-      { id: 'fit', title: 'Fit', status: 'approved', approvedAt: '2026-10-01', analysis: { practiceDraft: draft }, relevance: { competencies: ['closing'], priority: 'P1', overall: 82, whyItMatters: 'w' } }
+      source('partial', { approvedAt: '2026-11-15', relevance: { competencies: ['closing'], priority: 'P2', overall: 60 } }),
+      source('strong', { relevance: { competencies: ['closing'], priority: 'P1', overall: 82, whyItMatters: 'w' } })
     ];
     const list = practiceCandidates({ knowledge, curriculum: [], key: 'closing', lang: 'en' });
-    assert.deepEqual(list.map(c => c.sourceId), ['fit', 'new']);
-    assert.deepEqual([list[0].covers, list[0].priority, list[0].overall], [true, 'P1', 82]);
-    assert.equal(list[1].covers, false);
+    assert.deepEqual(list.map(c => [c.sourceId, c.match]), [['strong', 'strong'], ['partial', 'partial']]);
+    assert.equal(ManagerBrief.rankReason(list).code, 'best_cover');
   });
 
-  test('with no evidence yet it offers the first curriculum Practice and adds no coaching focus', () => {
+  test('when every approved source was assessed and none covers the competency, the standard Practice for it comes first', () => {
+    const knowledge = [source('a', { relevance: { competencies: ['empathy'], priority: 'P1', overall: 90 } })];
+    const list = practiceCandidates({ knowledge, curriculum, key: 'closing', lang: 'en' });
+    assert.deepEqual(list.map(c => c.match), ['standard', 'off_target']);
+    assert.deepEqual(ManagerBrief.rankReason(list), { code: 'none_covers', total: 2, company: 1 });
+  });
+
+  test('with no evidence yet there is nothing to match: the first curriculum Practice, no targeting', () => {
     const list = practiceCandidates({ knowledge: [], curriculum, key: null, lang: 'en' });
-    assert.deepEqual(list.map(c => [c.id, c.targeted]), [['IHFC-01', false]]);
+    assert.deepEqual(list.map(c => [c.id, c.targeted, c.match]), [['IHFC-01', false, 'starter']]);
   });
 });
 
@@ -171,6 +224,21 @@ describe('assignment the manager confirms', () => {
     assert.match(created.body.assignment.customScenario.objective, /主管辅导重点/);
     const inbox = await call(learner, 'GET');
     assert.deepEqual(inbox.body.assignments.map(a => a.scenarioName), ['争取与企业主的第一次面谈']);
+  });
+
+  test('repeating the same request id returns the first assignment instead of creating a second', async () => {
+    const payload = { ...assignmentPayload({ candidate: fromKnowledge, member, mode: 'quick', addFocus: true, key: 'closing', lang: 'zh' }), requestId: '0b0c6a4e-3f0f-4a51-9d55-6f6c2f1f9a10' };
+    const first = await call(manager, 'POST', payload);
+    const again = await call(manager, 'POST', payload);
+    assert.equal(first.status, 201);
+    assert.equal(again.status, 200);
+    assert.equal(again.body.duplicate, true);
+    assert.equal(again.body.assignment.id, first.body.assignment.id);
+    assert.equal((await call(learner, 'GET')).body.assignments.length, 1, 'the learner has one assignment, not two');
+    const other = await call(manager, 'POST', { ...payload, assignedTo: 'someone-else@example.com' });
+    assert.equal(other.status, 409, 'a request id cannot be reused for a different learner');
+    const fresh = await call(manager, 'POST', { ...payload, requestId: '7f6b1f0e-93f7-4d0c-b7d2-0f1f0a2a3b4c' });
+    assert.equal(fresh.status, 201, 'a new confirmation gets a new id and a new assignment');
   });
 
   test('the server accepts the standard-curriculum assignment', async () => {
