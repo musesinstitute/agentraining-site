@@ -17,12 +17,12 @@ body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--
 h1,h2,h3,h4,p{margin:0}
 [hidden]{display:none!important}
 .wrap{max-width:1080px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px}
-.band{padding-top:52px;padding-bottom:60px}
+.band{padding-top:72px;padding-bottom:80px}
 .stage{background:var(--ink);color:#fff}
 .muted{color:var(--slate)}.small{font-size:13.5px}
 :focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .stage :focus-visible,.plan :focus-visible{outline-color:var(--hi)}
-.btn{display:inline-block;border:0;border-radius:6px;background:var(--ink);color:#fff;padding:14px 22px;font:600 16px var(--sans);text-decoration:none;cursor:pointer}
+.btn{display:inline-block;border:0;border-radius:6px;background:var(--ink);color:#fff;padding:17px 28px;font:600 17px var(--sans);text-decoration:none;cursor:pointer}
 .btn:hover{background:#1e2e56}
 .btn.secondary{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .btn.secondary:hover{background:#0f1b330d}
@@ -39,7 +39,7 @@ h1,h2,h3,h4,p{margin:0}
 .brand{font:600 15px var(--sans);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
 .brand span{font-weight:400;color:var(--slate)}
 h1{font:400 clamp(38px,6.6vw,86px)/1.02 var(--serif);letter-spacing:-.025em;margin-top:30px;max-width:13.5em;text-wrap:balance}
-.lede{font-size:clamp(17px,1.6vw,20px);max-width:38em;margin-top:28px;color:var(--body)}
+.lede{font-size:clamp(18px,1.7vw,22px);max-width:34em;margin-top:28px;color:var(--body)}
 .fiction{margin-top:12px;font-size:14px;color:var(--slate)}
 
 /* step navigation: a true sequence, so it is numbered */
@@ -50,8 +50,8 @@ h1{font:400 clamp(38px,6.6vw,86px)/1.02 var(--serif);letter-spacing:-.025em;marg
 .steps button[aria-current=step]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
 .steps button[aria-current=step] i{color:var(--ink)}
 
-h2{font:400 clamp(28px,4vw,48px)/1.1 var(--serif);letter-spacing:-.015em;max-width:20em;text-wrap:balance}
-.intro{font-size:18px;color:var(--body);max-width:40em;margin-top:16px}
+h2{font:400 clamp(32px,4.8vw,58px)/1.06 var(--serif);letter-spacing:-.02em;max-width:18em;text-wrap:balance}
+.intro{font-size:19px;color:var(--body);max-width:36em;margin-top:20px}
 
 /* step 1: five training reports that turn over */
 .team{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:32px;perspective:1600px}
@@ -104,6 +104,21 @@ h2{font:400 clamp(28px,4vw,48px)/1.1 var(--serif);letter-spacing:-.015em;max-wid
 .tr i{display:block;font:600 13px var(--sans);font-style:normal;color:var(--mist)}
 .tr .hl{animation:swipe .8s 1s backwards}
 .tr:nth-child(2) .hl{animation-delay:1.5s}
+
+.chain{margin-top:52px;border:1px solid var(--line-dark);border-radius:7px;overflow:hidden;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.chain>div{padding:20px 20px 22px;border-left:1px solid var(--line-dark);position:relative;background:var(--ink-2)}
+.chain>div:first-child{border-left:0}
+.chain>div:after{content:"";position:absolute;right:-9px;top:50%;width:16px;height:16px;margin-top:-8px;background:var(--ink-2);border-top:1px solid var(--line-dark);border-right:1px solid var(--line-dark);transform:rotate(45deg);z-index:1}
+.chain>div:last-child:after{content:none}
+.chain .ck{font:500 13px var(--sans);color:var(--mist)}
+.chain .cv{font:400 21px/1.2 var(--serif);margin-top:8px;color:#fff;text-wrap:balance}
+.chain .cv big{display:block;font:600 52px/1 var(--serif);letter-spacing:-.03em;color:var(--hi)}
+.chain .cn{font-size:13.5px;color:var(--pale);margin-top:8px}
+.tier{display:inline-block;margin-top:10px;font:600 11.5px var(--sans);padding:3px 8px;border-radius:3px;border:1px solid currentColor}
+.tier.sim{color:#8fd9b3}.tier.lim{color:#f0d27a}.tier.ill{color:var(--mist)}
+.chain .decide-cell{background:var(--ink)}
+.chain .decide-cell.set{background:var(--hi)}.chain .decide-cell.set .ck,.chain .decide-cell.set .cn{color:var(--ink)}.chain .decide-cell.set .cv{color:var(--ink);font-weight:600}
+.chain .decide-cell.set:after{background:var(--hi)}
 .sum{margin-top:44px;font:400 clamp(22px,3vw,34px)/1.25 var(--serif);max-width:25em;text-wrap:balance}
 .stage .note{margin-top:14px;font-size:13.5px;color:var(--mist)}
 
@@ -221,27 +236,48 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .rx .small{margin-top:10px}
 
 /* the loop */
+/* The operating system: four Studios around one Hub. Small preview in the opening, large and interactive in step 2. */
+.sys{margin-top:44px;padding-top:34px;border-top:1px solid var(--line)}
+.sys-h{font:500 15px var(--sans);color:var(--slate)}
+.sys svg{display:block;width:100%;height:auto;margin-top:14px;max-width:960px}
+.sys .m{display:none}
+@media(max-width:700px){.sys .d{display:none}.sys .m{display:block;max-width:420px}}
+.sys text{font-family:var(--sans)}
+.sys .nd{fill:var(--sheet);stroke:var(--ink);stroke-width:1.5}
+.sys .nt{font-size:17px;font-weight:600;fill:var(--ink)}.sys .ns{font-size:12px;fill:var(--slate)}
+.sys .hb{fill:var(--ink)}.sys .ht{font-size:15px;font-weight:600;fill:#fff}.sys .hs{font-size:12px;fill:var(--mist)}
+.sys .lp{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:6 7;animation:flow 14s linear infinite}
+.sys .ar{fill:var(--ink)}
+@keyframes flow{to{stroke-dashoffset:-260}}
+.ring{position:relative;width:520px;height:520px;margin:auto}
+.ring:before{content:none}
+.ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ring .orb{fill:none;stroke:var(--mist);stroke-width:2.5;stroke-dasharray:7 8;animation:flow 16s linear infinite}
+.ring .arc{fill:none;stroke:var(--line);stroke-width:12;opacity:0;transition:opacity .4s}
+.ring .arc.on{stroke:var(--hi);opacity:1}
+.ring .ah{fill:var(--ink)}
+.hub{position:absolute;inset:150px;border-radius:50%;background:var(--ink);color:#fff;border:0;display:grid;place-content:center;text-align:center;font:600 18px/1.25 var(--serif);padding:22px;cursor:pointer;box-shadow:0 0 0 12px #0f1b330f,0 24px 50px -24px #0f1b33}
+.hub small{display:block;font:400 13px var(--sans);color:var(--mist);margin-top:8px}
+.hub:hover{background:#1a2a55}
+.node{position:absolute;width:160px;height:72px;margin:-36px 0 0 -80px;border-radius:7px;border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);font:600 17px/1.15 var(--sans);cursor:pointer;transition:background .3s,transform .3s}
+.node small{display:block;font-weight:400;font-size:12.5px;color:var(--slate);margin-top:3px}
+.node.active{background:var(--hi);transform:scale(1.06);box-shadow:0 14px 30px -16px #0f1b33}
+.node.active small{color:var(--ink)}
+.node.n0{left:50%;top:56px}.node.n1{left:calc(100% - 56px);top:50%}.node.n2{left:50%;top:calc(100% - 56px)}.node.n3{left:56px;top:50%}
+.orbit{display:none}
+.stop{position:relative}
+.stop .contrib{margin-top:22px;background:var(--sheet);border:1px solid var(--line);border-left:5px solid var(--hi);border-radius:0 6px 6px 0;padding:14px 18px}
+.stop .contrib b{display:block;font:500 13.5px var(--sans);color:var(--slate)}.stop .contrib p{margin-top:4px;font-size:15.5px;max-width:none}
+.loopwrap{grid-template-columns:540px 1fr}
 .loophead{margin-top:68px;padding-top:52px;border-top:1px solid var(--line)}
 .loophead h3{font:400 clamp(26px,3.4vw,42px)/1.12 var(--serif);letter-spacing:-.015em}
 .loophead p{margin-top:10px;color:var(--body);font-size:17px;max-width:40em}
-.loopwrap{display:grid;grid-template-columns:360px 1fr;gap:48px;align-items:center;margin-top:34px}
-.ring{position:relative;width:340px;height:340px;margin:auto}
-.ring:before{content:"";position:absolute;inset:38px;border:2px dashed var(--mist);border-radius:50%}
-.hub{position:absolute;inset:92px;border-radius:50%;background:var(--ink);color:#fff;border:0;display:grid;place-content:center;text-align:center;font:600 13px/1.3 var(--sans);padding:14px;cursor:pointer;box-shadow:0 0 0 8px #0f1b3314}
-.hub small{display:block;font-weight:400;font-size:11.5px;color:var(--mist);margin-top:5px}
-.node{position:absolute;width:116px;height:56px;margin:-28px 0 0 -58px;border-radius:5px;border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);font:600 14px/1.2 var(--sans);cursor:pointer;transition:background .3s}
-.node small{display:block;font-weight:400;font-size:11.5px;color:var(--slate)}
-.node.active{background:var(--hi)}.node.active small{color:var(--ink)}
-.node.n0{left:50%;top:38px}.node.n1{left:calc(100% - 38px);top:50%}.node.n2{left:50%;top:calc(100% - 38px)}.node.n3{left:38px;top:50%}
-.orbit{position:absolute;inset:38px;border-radius:50%;transition:transform .9s ease;pointer-events:none}
-.orbit:after{content:"";position:absolute;left:50%;top:0;width:3px;height:54px;margin-left:-1.5px;background:var(--ink)}
-.stop .tag{font:500 14px var(--sans);color:var(--slate)}
-.stop h3{font:400 clamp(22px,2.6vw,31px)/1.18 var(--serif);margin-top:8px;text-wrap:balance}
-.stop p{margin-top:12px;font-size:16px;max-width:34em}
+.loopwrap{display:grid;gap:56px;align-items:center;margin-top:40px}
+.stop .tag{font:500 15px var(--sans);color:var(--slate)}
+.stop h3{font:400 clamp(26px,3vw,38px)/1.12 var(--serif);margin-top:8px;text-wrap:balance}
+.stop p{margin-top:14px;font-size:17px;max-width:32em}
 .stop .case{border-left:4px solid var(--hi);padding-left:14px;color:var(--body)}
-.loopEvidence{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-.loopEvidence b{font-size:14px;color:var(--slate);font-weight:500}.loopEvidence p{margin-top:4px;font-size:15px}
-.hubCount{font-size:13.5px;color:var(--slate)}
+.hubCount{font-size:14px;color:var(--slate)}
 
 /* step 3 */
 .pilot-tie{margin-top:20px;max-width:44em}
@@ -264,6 +300,10 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .plan li{display:grid;grid-template-columns:112px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--line-dark);font-size:15.5px;color:#e8edf8}
 .plan li strong{font:600 18px/1.3 var(--serif);color:#fff}
 .plan em{font-style:normal;background:var(--hi);color:var(--ink);padding:.05em .35em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.plan .pri{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.plan .pri span{background:var(--hi);color:var(--ink);font:600 17px var(--sans);padding:9px 14px;border-radius:5px}
+.plan .pri .empty{background:transparent;color:var(--mist);border:1.5px dashed var(--line-dark);font-weight:400}
+.plan .btn{font-size:19px;padding:19px 32px}
 .plan .row{margin-top:10px;padding-top:22px;border-top:1px solid var(--line-dark)}
 .plan .small{color:var(--mist);margin-top:14px}
 
@@ -278,10 +318,11 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  .verdict{padding:48px 0;scroll-margin-top:120px}
  .versus{grid-template-columns:1fr}.vs.report{border-radius:5px 5px 0 0}.vs.practice{border-left:1px solid var(--line-dark);border-top:0;border-radius:0 0 5px 5px}.vs{padding:24px 22px 26px}
  .attempts,.actionset,.alloc,.showbody,.rx-grid,.loopwrap,.two{grid-template-columns:1fr}
+ .chain{grid-template-columns:1fr}.chain>div{border-left:0;border-top:1px solid var(--line-dark)}.chain>div:first-child{border-top:0}.chain>div:after{content:none}
  .showbody,.two,.loopwrap{gap:30px}
  .ev{grid-template-columns:1fr;gap:8px}
  .track{grid-template-columns:1fr 1fr;row-gap:26px}
- .ring{width:300px;height:300px}.hub{inset:78px}
+ .ring{width:340px;height:340px}.hub{inset:96px;font-size:14px;padding:14px}.hub small{font-size:11.5px}.node{width:118px;height:60px;margin:-30px 0 0 -59px;font-size:14px}.node.n0{top:42px}.node.n1{left:calc(100% - 42px)}.node.n2{top:calc(100% - 42px)}.node.n3{left:42px}.loopwrap{grid-template-columns:1fr}
  .plan{padding:24px 22px}.plan li{grid-template-columns:1fr;gap:4px}
  .filecard div{grid-template-columns:1fr;gap:2px}
 }
@@ -291,8 +332,30 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 <header class="hero"><div class="wrap">
  <p class="brand">AgentTraining.ai <span>Manager demo, review edition</span></p>
  <h1>One team risk your reports never showed. What would you do tomorrow?</h1>
- <p class="lede">A four-minute, interactive manager experience. Discover the hidden practice gap, follow one case through four connected Studios, then sketch a 14-day pilot for your own team.</p>
+ <p class="lede">Make one coaching decision. Follow it through four connected Studios. Then sketch a 14-day pilot for your own team.</p>
  <p class="fiction">The people, documents and findings here are fictional examples.</p>
+ <div class="sys" aria-label="How AgentTraining.ai is organised"><p class="sys-h">One system: four Studios around the Team Growth &amp; Retention Hub</p>
+  <svg class="d" viewBox="0 0 960 236" role="img" aria-label="Leadership, Knowledge, Client and Practice Studios connected in a loop around the Team Growth and Retention Hub">
+   <path class="lp" d="M250 60 H710 a28 28 0 0 1 28 28 V148 a28 28 0 0 1 -28 28 H250 a28 28 0 0 1 -28 -28 V88 a28 28 0 0 1 28 -28 Z"/>
+   <polygon class="ar" points="478,52 494,60 478,68"/><polygon class="ar" points="482,168 466,176 482,184"/>
+   <polygon class="ar" points="730,110 738,126 746,110"/><polygon class="ar" points="214,126 222,110 230,126"/>
+   <g><rect class="nd" x="24" y="24" width="200" height="72" rx="7"/><text class="nt" x="124" y="56" text-anchor="middle">Leadership</text><text class="ns" x="124" y="78" text-anchor="middle">decide and reassess</text></g>
+   <g><rect class="nd" x="736" y="24" width="200" height="72" rx="7"/><text class="nt" x="836" y="56" text-anchor="middle">Knowledge</text><text class="ns" x="836" y="78" text-anchor="middle">approved material in</text></g>
+   <g><rect class="nd" x="736" y="140" width="200" height="72" rx="7"/><text class="nt" x="836" y="172" text-anchor="middle">Client</text><text class="ns" x="836" y="194" text-anchor="middle">real context, no call monitoring</text></g>
+   <g><rect class="nd" x="24" y="140" width="200" height="72" rx="7"/><text class="nt" x="124" y="172" text-anchor="middle">Practice</text><text class="ns" x="124" y="194" text-anchor="middle">rehearse with an AI client</text></g>
+   <g><rect class="hb" x="320" y="82" width="320" height="72" rx="36"/><text class="ht" x="480" y="112" text-anchor="middle">Team Growth &amp; Retention Hub</text><text class="hs" x="480" y="134" text-anchor="middle">evidence in, decisions out</text></g>
+  </svg>
+  <svg class="m" viewBox="0 0 390 300" role="img" aria-label="Leadership, Knowledge, Client and Practice Studios connected in a loop around the Team Growth and Retention Hub">
+   <path class="lp" d="M110 60 H280 a20 20 0 0 1 20 20 V220 a20 20 0 0 1 -20 20 H110 a20 20 0 0 1 -20 -20 V80 a20 20 0 0 1 20 -20 Z"/>
+   <polygon class="ar" points="188,52 204,60 188,68"/><polygon class="ar" points="202,232 186,240 202,248"/>
+   <polygon class="ar" points="292,142 300,158 308,142"/><polygon class="ar" points="82,158 90,142 98,158"/>
+   <g><rect class="nd" x="12" y="24" width="164" height="68" rx="7"/><text class="nt" x="94" y="54" text-anchor="middle">Leadership</text><text class="ns" x="94" y="76" text-anchor="middle">decide and reassess</text></g>
+   <g><rect class="nd" x="214" y="24" width="164" height="68" rx="7"/><text class="nt" x="296" y="54" text-anchor="middle">Knowledge</text><text class="ns" x="296" y="76" text-anchor="middle">approved material in</text></g>
+   <g><rect class="nd" x="214" y="208" width="164" height="68" rx="7"/><text class="nt" x="296" y="238" text-anchor="middle">Client</text><text class="ns" x="296" y="260" text-anchor="middle">context, no call monitoring</text></g>
+   <g><rect class="nd" x="12" y="208" width="164" height="68" rx="7"/><text class="nt" x="94" y="238" text-anchor="middle">Practice</text><text class="ns" x="94" y="260" text-anchor="middle">rehearse with an AI client</text></g>
+   <g><rect class="hb" x="60" y="118" width="270" height="64" rx="32"/><text class="ht" x="195" y="145" text-anchor="middle">Team Growth &amp; Retention Hub</text><text class="hs" x="195" y="166" text-anchor="middle">evidence in, decisions out</text></g>
+  </svg>
+ </div>
 </div></header>
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
 <main>
@@ -300,7 +363,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 <section class="panel" id="p0" aria-labelledby="h0">
  <div class="band"><div class="wrap">
   <h2 id="h0">You have thirty minutes of one-to-one coaching this week. Who gets it?</h2>
-  <p class="intro" id="intro0">Five agents. Similar completion reports. Only one short coaching slot. Choose with your instinct before seeing their simulated conversations.</p>
+  <p class="intro" id="intro0">Five agents, five identical reports, one coaching slot. Choose on instinct. Then the reports turn over.</p>
   <form id="pickForm"><div class="team" id="team" role="radiogroup" aria-label="Choose one team member"></div>
   <div class="row" id="lockRow"><button class="btn" type="submit" id="lock" disabled>Lock in my choice</button><span class="muted small">Then the reports turn over.</span></div></form>
  </div></div>
@@ -342,7 +405,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 <section class="panel" id="p1" aria-labelledby="h1" hidden>
  <div class="band"><div class="wrap">
   <h2 id="h1">What happens after you spot Michelle's risk?</h2>
-  <p class="intro">The same price-objection problem now travels through Knowledge, Client, Practice and Leadership.</p>
+  <p class="intro">One problem, four Studios, one Hub. Watch it travel.</p>
   <div class="casequote">
    <p class="line">Michelle knows the product. When the client says <span class="hl">“another agent quoted less,”</span> she pitches features before finding out what is being compared.</p>
    <p class="goal">The goal: practice a better discovery question before tomorrow's fictional customer meeting, then bring the new evidence back to the manager.</p>
@@ -356,7 +419,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  </div></div>
 
  <div class="stage"><div class="wrap">
-  <p class="stagenote">Both examples below are scripted illustrations. The documents and the client note are invented, and no AI service runs on this page.</p>
+  <p class="stagenote">Scripted examples with invented documents. No AI service runs on this page.</p>
 
   <div class="show" id="showK">
    <p class="studio-name">Knowledge Studio</p>
@@ -437,9 +500,18 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
    <p class="muted small">Both cases are fictional illustrations.</p>
   </div>
 
-  <div class="loophead"><h3>Four Studios. One continuous management case.</h3><p>Follow Michelle's fictional price-objection gap around the Team Growth &amp; Retention Hub and back to your decision.</p></div>
+  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Evidence flows in, decisions flow out, and the next practice begins. Follow Michelle's case once around.</p></div>
   <div class="loopwrap">
    <div class="ring">
+    <svg viewBox="0 0 520 520" aria-hidden="true">
+     <circle class="orb" cx="260" cy="260" r="204"/>
+     <path class="arc" data-arc="0" d="M296 58 A204 204 0 0 1 462 224"/>
+     <path class="arc" data-arc="1" d="M462 296 A204 204 0 0 1 296 462"/>
+     <path class="arc" data-arc="2" d="M224 462 A204 204 0 0 1 58 296"/>
+     <path class="arc" data-arc="3" d="M58 224 A204 204 0 0 1 224 58"/>
+     <polygon class="ah" points="396,104 418,112 404,130"/><polygon class="ah" points="416,396 408,418 390,404"/>
+     <polygon class="ah" points="124,416 102,408 116,390"/><polygon class="ah" points="104,124 112,102 130,116"/>
+    </svg>
     <div class="orbit" id="orbit"></div>
     <button class="hub" id="hubJump" type="button" title="Jump to reassessment">Team Growth &amp; Retention Hub<small>Evidence, judgment, next action</small></button>
     <button type="button" class="node n0" data-node="0">Leadership<small>Studio</small></button>
@@ -447,7 +519,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     <button type="button" class="node n2" data-node="2">Client<small>Studio</small></button>
     <button type="button" class="node n3" data-node="3">Practice<small>Studio</small></button>
    </div>
-   <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="loopEvidence"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
+   <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="contrib"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
     <div class="row"><button class="btn secondary" type="button" id="prevStop">Back</button><button class="btn" type="button" id="nextStop">Next stage</button></div></div>
   </div>
 
@@ -467,8 +539,8 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     <div class="field"><label for="own">Another conversation (optional)</label><input type="text" id="own" maxlength="80" placeholder="e.g. Medicare conversations"></div>
     <div class="field"><label for="size">Team size</label><select id="size"><option>1–5</option><option selected>6–10</option><option>11–25</option><option>26–50</option><option>51+</option></select></div>
    </div>
-   <div class="plan" aria-live="polite"><p class="plan-h">Your fourteen days</p>
-    <ol><li><strong>Before day 1</strong><span>Confirm pilot scope and share only approved materials. Priorities: <em id="planConv"></em>.</span></li><li><strong>Days 1 to 13</strong><span>Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</span></li><li><strong>Day 14</strong><span>Discuss patterns, evidence limits, coaching priorities, and whether to continue.</span></li></ol>
+   <div class="plan" aria-live="polite"><p class="plan-h">Your team's fourteen days</p><div class="pri" id="pri" aria-label="Your chosen priorities"></div>
+    <ol><li><strong>Before day 1</strong><span>Confirm the pilot scope for the priorities above and share only approved materials.<span id="planConv" hidden></span></span></li><li><strong>Days 1 to 13</strong><span>Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</span></li><li><strong>Day 14</strong><span>Discuss patterns, evidence limits, coaching priorities, and whether to continue.</span></li></ol>
     <div class="row"><a class="btn hi" id="pilotLink" href="pilot-start.html">Request this pilot</a></div>
     <p class="small">By request and subject to confirmation. No credit card. A request does not create a paid subscription. Your choices carry over to the request form; nothing is sent until you submit it.</p>
    </div>
@@ -513,7 +585,7 @@ $('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)
  /* turn the reports over one by one; the card practice points to turns last */
  const seq=[...cards.filter(l=>l.dataset.p!==TOP),cards.find(l=>l.dataset.p===TOP)];
  seq.forEach((l,i)=>setTimeout(()=>{l.classList.add('flipped');l.querySelector('.front').setAttribute('aria-hidden','true');l.querySelector('.back').removeAttribute('aria-hidden');if(l.dataset.p===TOP)l.classList.add('top')},still?0:200+i*260+(l.dataset.p===TOP?380:0)));
- $('verdict').innerHTML=`<h3>${same?'You chose Michelle, and practice agrees. Could her reports have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><div class="versus"><div class="vs report"><p class="vs-label">What traditional reports show</p><p class="vs-fig">#1</p><p class="vs-cap">Michelle has the highest test score on the team. Course completion and test scores look reassuring.</p></div><div class="vs practice"><p class="vs-label">What simulated practice adds</p><p class="vs-fig">0<small>of</small>4</p><p class="vs-cap">practice attempts in which she asked before she pitched. The same price-objection gap across two sample scenarios: a coaching signal, not proof of sales performance.</p></div></div><p class="leadin">Nothing in her reports shows this:</p><div class="attempts"><div class="tr"><div class="tr-h">Practice attempt 1, simulated client</div><p><i>Client</i>“Honestly, this is more than we budgeted for this year.”</p><p><i>Michelle</i><span class="hl">“I understand. Let me walk you through what's included…”</span></p></div><div class="tr"><div class="tr-h">Practice attempt 4, simulated client</div><p><i>Client</i>“Another agent quoted me less.”</p><p><i>Michelle</i><span class="hl">“Ours covers more, though. For example, it includes…”</span></p></div></div><p class="sum">Four attempts. A price concern each time. Product features each time. Her client meeting is tomorrow.</p><p class="note">Text-based practice with an AI client. Illustrative.</p>`;
+ $('verdict').innerHTML=`<h3>${same?'You chose Michelle, and practice agrees. Could her reports have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><div class="versus"><div class="vs report"><p class="vs-label">What traditional reports show</p><p class="vs-fig">#1</p><p class="vs-cap">Michelle has the highest test score on the team. Course completion and test scores look reassuring.</p></div><div class="vs practice"><p class="vs-label">What simulated practice adds</p><p class="vs-fig">0<small>of</small>4</p><p class="vs-cap">practice attempts in which she asked before she pitched. The same price-objection gap across two sample scenarios: a coaching signal, not proof of sales performance.</p></div></div><p class="leadin">Nothing in her reports shows this:</p><div class="attempts"><div class="tr"><div class="tr-h">Practice attempt 1, simulated client</div><p><i>Client</i>“Honestly, this is more than we budgeted for this year.”</p><p><i>Michelle</i><span class="hl">“I understand. Let me walk you through what's included…”</span></p></div><div class="tr"><div class="tr-h">Practice attempt 4, simulated client</div><p><i>Client</i>“Another agent quoted me less.”</p><p><i>Michelle</i><span class="hl">“Ours covers more, though. For example, it includes…”</span></p></div></div><p class="sum">Four attempts. A price concern each time. Product features each time. Her client meeting is tomorrow.</p><p class="note">Text-based practice with an AI client. Illustrative.</p><div class="chain" id="chain" aria-label="From evidence to decision"><div><p class="ck">Agent</p><p class="cv">Michelle</p><p class="cn">Highest test score. Client meeting tomorrow.</p></div><div><p class="ck">Weakness</p><p class="cv">Pitches before she asks</p><p class="cn">Every price concern is answered with product features.</p></div><div><p class="ck">Practice evidence</p><p class="cv"><big>4<small style="font-size:.45em;font-weight:400">/4</small></big>attempts show it</p><span class="tier sim">Simulated, consistent</span></div><div><p class="ck">AI recommendation</p><p class="cv">Coach now</p><p class="cn">Before tomorrow. The other four get a next practice.</p><span class="tier ill">Illustrative</span></div><div class="decide-cell" id="chainDecide"><p class="ck">Manager decision</p><p class="cv" id="chainCv">Yours, below</p><p class="cn" id="chainCn">The AI recommends. You decide.</p></div></div>`;
  const order=[top,...TEAM.filter(p=>p.id!==TOP)];
  $('evidence').innerHTML=order.map(p=>`<div class="ev${p.id===TOP?' top':''}"><div class="who"><b>${p.name}</b><span>${p.focus}${p.id===pick?', your choice':''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${p.ev}</p></div><div class="sug"><b>Suggestion: ${p.sug}</b><span>${p.sugWhy}</span></div></div>`).join('');
  $('decideRow').innerHTML='<button type="button" data-decide="accept" aria-pressed="false"><b>Coach now</b><small>Accept. Act on the repeated signal.</small></button><button type="button" data-decide="verify" aria-pressed="false"><b>Verify first</b><small>Defer. Get a second kind of evidence.</small></button><button type="button" data-decide="dismiss" aria-pressed="false"><b>Override</b><small>Dismiss. Record your different judgment.</small></button>';
@@ -560,6 +632,7 @@ function drawDecision(){
  managerAction==='verify'?'Your call: request more evidence first. The recommendation remains open and no coaching time has been assigned.':
  'Your call: dismiss this recommendation.'+reason;
  $('followupDetails').hidden=false;$('decided').hidden=false;drawOutcome();
+ const cd=$('chainDecide');if(cd){cd.classList.add('set');$('chainCv').textContent=managerAction==='accept'?'Coach Michelle now':managerAction==='verify'?'Verify first':'Override';$('chainCn').textContent=managerAction==='accept'?p.michelle+' of '+p.total+' minutes this week.':managerAction==='verify'?'Second scenario before any coaching time.':'Recorded with your reason.'}
 }
 $('decideRow').addEventListener('click',e=>{
  const button=e.target.closest('[data-decide]');if(!button||actionConfirmed)return;
@@ -583,6 +656,7 @@ $('changeDecision').onclick=()=>{
  $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=false);
  $('confirmDecision').disabled=!managerAction;
  $('decided').hidden=true;$('followupDetails').hidden=true;$('followupDetails').open=false;
+ const cd=$('chainDecide');if(cd){cd.classList.remove('set');$('chainCv').textContent='Yours, below';$('chainCn').textContent='The AI recommends. You decide.'}
  $('decisionStatus').textContent='Change your decision and confirm again. All outcomes are illustrative.';
  $('decideRow').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
@@ -605,7 +679,7 @@ function drawStop(){
  $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
  $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Click any Studio, or select Next stage.';
  document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===s.n));
- $('orbit').style.transform='rotate('+(stop*90)+'deg)';$('prevStop').disabled=stop===0;
+ document.querySelectorAll('.ring .arc').forEach(a=>a.classList.toggle('on',stop>0&&+a.dataset.arc===stop-1));$('prevStop').disabled=stop===0;
  $('nextStop').textContent=stop===STOPS.length-1?'Now your team':'Next stage';
 }
 $('nextStop').onclick=()=>{if(stop===STOPS.length-1){go(2);return}stop++;drawStop()};
@@ -632,6 +706,7 @@ $('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox
 function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
 function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
  $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;
+ $('pri').innerHTML=(a.length?a.map(x=>'<span>'+esc(x)+'</span>').join(''):'')+(a.length<2?'<span class="empty">'+(a.length?'one more conversation':'choose two conversations')+'</span>':'');
  const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
 $('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
 $('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
