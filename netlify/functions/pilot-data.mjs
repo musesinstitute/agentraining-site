@@ -990,6 +990,21 @@ export default async function handler(req) {
       const input = await req.json();
       const record = assignmentRecord(input, actor);
       if (!record.assignedTo || !record.scenarioId || !record.scenarioName) return reply(400, { error: 'Learner email and Practice scenario are required.' });
+      // Idempotency: a client may send one UUID per confirmed assignment and
+      // repeat it on retry (after a dropped connection or a re-sign-in). The
+      // UUID becomes the assignment id, so a repeat returns the assignment that
+      // already exists instead of creating a second one or notifying twice.
+      const requestId = cleanText(input.requestId, 60).toLowerCase();
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(requestId)) {
+        const existing = await store.get(`${teamPrefix}/assignments/${requestId}`, { type: 'json' });
+        if (existing) {
+          if (existing.createdBy !== actor.email || normalizeEmail(existing.assignedTo) !== record.assignedTo) {
+            return reply(409, { error: 'This assignment request was already used.' });
+          }
+          return reply(200, { assignment: existing, duplicate: true });
+        }
+        record.id = requestId;
+      }
       if (record.sourceType === 'company_knowledge' && (!record.sourceKnowledgeId || !record.customScenario?.situation || !record.customScenario?.objective)) {
         return reply(400, { error: 'An approved Company Knowledge Practice Draft is required.' });
       }
