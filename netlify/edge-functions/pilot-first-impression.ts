@@ -19,6 +19,8 @@ export default async (_request: Request, context: any) => {
    const app=document.getElementById('app');if(!app)return;
    for(let i=0;i<40&&app.querySelector('.status');i++)await new Promise(r=>setTimeout(r,100));
    if(document.getElementById('firstImpression'))return;
+   // Managers now open on the AI Brief (manager-brief.js), which replaces this generic welcome for them.
+   if(manager&&document.getElementById('ai-brief'))return;
    const first=document.createElement('section');first.id='firstImpression';
    const chatHref=manager?'manager-chat.html?pilot=1':'coach-chat.html?pilot=1';
    const onboardingHref=chatHref+'&onboarding=1';
