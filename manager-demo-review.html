@@ -35,12 +35,14 @@ h1,h2,h3,h4,p{margin:0}
 @keyframes stamp{from{opacity:0;transform:rotate(-3deg) scale(1.9)}}
 
 /* hero */
-.hero{padding:52px 0 48px;border-bottom:1px solid var(--line)}
+.hero{background:var(--ink);color:#fff;padding:48px 0 52px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:48px;align-items:center}
+.hero .brand span{color:var(--mist)}
 .brand{font:600 15px var(--sans);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
 .brand span{font-weight:400;color:var(--slate)}
-h1{font:400 clamp(38px,6.6vw,86px)/1.02 var(--serif);letter-spacing:-.025em;margin-top:30px;max-width:13.5em;text-wrap:balance}
-.lede{font-size:clamp(18px,1.7vw,22px);max-width:34em;margin-top:28px;color:var(--body)}
-.fiction{margin-top:12px;font-size:14px;color:var(--slate)}
+h1{font:400 clamp(36px,4.3vw,60px)/1.05 var(--serif);letter-spacing:-.025em;margin-top:22px;max-width:13em;text-wrap:balance}
+.lede{font-size:clamp(17px,1.4vw,20px);max-width:32em;margin-top:24px;color:var(--pale)}
+.fiction{margin-top:14px;font-size:14px;color:var(--mist)}
 
 /* step navigation: a true sequence, so it is numbered */
 .stepsbar{border-bottom:1px solid var(--line)}
@@ -237,17 +239,20 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 
 /* the loop */
 /* The operating system: four Studios around one Hub. Small preview in the opening, large and interactive in step 2. */
-.sys{margin-top:44px;padding-top:34px;border-top:1px solid var(--line)}
-.sys-h{font:500 15px var(--sans);color:var(--slate)}
-.sys svg{display:block;width:100%;height:auto;margin-top:14px;max-width:960px}
-.sys .m{display:none}
-@media(max-width:700px){.sys .d{display:none}.sys .m{display:block;max-width:420px}}
+.sys{margin:0}
+.sys svg{display:block;width:100%;height:auto;max-width:460px;margin:0 auto;overflow:visible}
+.sys-h{font:500 14px var(--sans);color:var(--mist);text-align:center;margin-top:14px;max-width:34em;margin-left:auto;margin-right:auto}
 .sys text{font-family:var(--sans)}
-.sys .nd{fill:var(--sheet);stroke:var(--ink);stroke-width:1.5}
-.sys .nt{font-size:17px;font-weight:600;fill:var(--ink)}.sys .ns{font-size:12px;fill:var(--slate)}
-.sys .hb{fill:var(--ink)}.sys .ht{font-size:15px;font-weight:600;fill:#fff}.sys .hs{font-size:12px;fill:var(--mist)}
-.sys .lp{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:6 7;animation:flow 14s linear infinite}
-.sys .ar{fill:var(--ink)}
+.sys .nd{fill:none;stroke:#3e538a;stroke-width:1.5}
+.sys .nt{font-size:18px;font-weight:600;fill:#fff}
+.sys .ns{font-size:12.5px;fill:var(--ink)}
+.sys .seat .nd{fill:var(--hi);stroke:var(--hi)}
+.sys .seat .nt{fill:var(--ink)}
+.sys .hb{fill:#1a2a55;stroke:#35497e;stroke-width:1.5}
+.sys .ht{font-size:17px;font-weight:600;fill:#fff}.sys .hs{font-size:12.5px;fill:var(--mist)}
+.sys .lp{fill:none;stroke:#44598c;stroke-width:2;stroke-dasharray:7 9;animation:flow 22s linear infinite}
+.sys .ar{fill:#6d85bd}
+@media(max-width:860px){.sys .nt{font-size:26px}.sys .ns{font-size:18px}.sys .ht{font-size:23px}.sys .hs{font-size:15px}.sys svg{max-width:380px}}
 @keyframes flow{to{stroke-dashoffset:-260}}
 .ring{position:relative;width:520px;height:520px;margin:auto}
 .ring:before{content:none}
@@ -312,6 +317,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .foot a{color:var(--ink)}
 
 @media(max-width:860px){
+ .hero{padding:34px 0 38px}.hero .wrap{grid-template-columns:1fr;gap:30px}
  .band{padding-top:38px;padding-bottom:44px}
  .steps{gap:18px}.steps button{font-size:14px;padding-top:12px}.steps button i{font-size:21px}
  .team{grid-template-columns:1fr 1fr}.face{min-height:184px}
@@ -330,31 +336,26 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 </style></head>
 <body>
 <header class="hero"><div class="wrap">
+ <div class="hero-text">
  <p class="brand">AgentTraining.ai <span>Manager demo, review edition</span></p>
  <h1>One team risk your reports never showed. What would you do tomorrow?</h1>
  <p class="lede">Make one coaching decision. Follow it through four connected Studios. Then sketch a 14-day pilot for your own team.</p>
  <p class="fiction">The people, documents and findings here are fictional examples.</p>
- <div class="sys" aria-label="How AgentTraining.ai is organised"><p class="sys-h">One system: four Studios around the Team Growth &amp; Retention Hub</p>
-  <svg class="d" viewBox="0 0 960 236" role="img" aria-label="Leadership, Knowledge, Client and Practice Studios connected in a loop around the Team Growth and Retention Hub">
-   <path class="lp" d="M250 60 H710 a28 28 0 0 1 28 28 V148 a28 28 0 0 1 -28 28 H250 a28 28 0 0 1 -28 -28 V88 a28 28 0 0 1 28 -28 Z"/>
-   <polygon class="ar" points="478,52 494,60 478,68"/><polygon class="ar" points="482,168 466,176 482,184"/>
-   <polygon class="ar" points="730,110 738,126 746,110"/><polygon class="ar" points="214,126 222,110 230,126"/>
-   <g><rect class="nd" x="24" y="24" width="200" height="72" rx="7"/><text class="nt" x="124" y="56" text-anchor="middle">Leadership</text><text class="ns" x="124" y="78" text-anchor="middle">decide and reassess</text></g>
-   <g><rect class="nd" x="736" y="24" width="200" height="72" rx="7"/><text class="nt" x="836" y="56" text-anchor="middle">Knowledge</text><text class="ns" x="836" y="78" text-anchor="middle">approved material in</text></g>
-   <g><rect class="nd" x="736" y="140" width="200" height="72" rx="7"/><text class="nt" x="836" y="172" text-anchor="middle">Client</text><text class="ns" x="836" y="194" text-anchor="middle">real context, no call monitoring</text></g>
-   <g><rect class="nd" x="24" y="140" width="200" height="72" rx="7"/><text class="nt" x="124" y="172" text-anchor="middle">Practice</text><text class="ns" x="124" y="194" text-anchor="middle">rehearse with an AI client</text></g>
-   <g><rect class="hb" x="320" y="82" width="320" height="72" rx="36"/><text class="ht" x="480" y="112" text-anchor="middle">Team Growth &amp; Retention Hub</text><text class="hs" x="480" y="134" text-anchor="middle">evidence in, decisions out</text></g>
+ </div>
+ <div class="sys" aria-label="How AgentTraining.ai is organised">
+  <svg viewBox="0 0 620 560" role="img" aria-label="Leadership, Knowledge, Client and Practice Studios in a continuous loop around the Team Growth and Retention Hub">
+   <ellipse class="lp" cx="310" cy="280" rx="218" ry="186"/>
+   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(464,149) rotate(40)"/>
+   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(464,411) rotate(140)"/>
+   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(156,411) rotate(220)"/>
+   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(156,149) rotate(320)"/>
+   <g><circle class="hb" cx="310" cy="280" r="106"/><text class="ht" x="310" y="266" text-anchor="middle">Team Growth &amp;</text><text class="ht" x="310" y="290" text-anchor="middle">Retention Hub</text><text class="hs" x="310" y="314" text-anchor="middle">evidence in, decisions out</text></g>
+   <g class="seat"><rect class="nd" x="235" y="66" width="150" height="56" rx="7"/><text class="nt" x="310" y="90" text-anchor="middle">Leadership</text><text class="ns" x="310" y="110" text-anchor="middle">your seat</text></g>
+   <g><rect class="nd" x="453" y="252" width="150" height="56" rx="7"/><text class="nt" x="528" y="286" text-anchor="middle">Knowledge</text></g>
+   <g><rect class="nd" x="235" y="438" width="150" height="56" rx="7"/><text class="nt" x="310" y="472" text-anchor="middle">Client</text></g>
+   <g><rect class="nd" x="17" y="252" width="150" height="56" rx="7"/><text class="nt" x="92" y="286" text-anchor="middle">Practice</text></g>
   </svg>
-  <svg class="m" viewBox="0 0 390 300" role="img" aria-label="Leadership, Knowledge, Client and Practice Studios connected in a loop around the Team Growth and Retention Hub">
-   <path class="lp" d="M110 60 H280 a20 20 0 0 1 20 20 V220 a20 20 0 0 1 -20 20 H110 a20 20 0 0 1 -20 -20 V80 a20 20 0 0 1 20 -20 Z"/>
-   <polygon class="ar" points="188,52 204,60 188,68"/><polygon class="ar" points="202,232 186,240 202,248"/>
-   <polygon class="ar" points="292,142 300,158 308,142"/><polygon class="ar" points="82,158 90,142 98,158"/>
-   <g><rect class="nd" x="12" y="24" width="164" height="68" rx="7"/><text class="nt" x="94" y="54" text-anchor="middle">Leadership</text><text class="ns" x="94" y="76" text-anchor="middle">decide and reassess</text></g>
-   <g><rect class="nd" x="214" y="24" width="164" height="68" rx="7"/><text class="nt" x="296" y="54" text-anchor="middle">Knowledge</text><text class="ns" x="296" y="76" text-anchor="middle">approved material in</text></g>
-   <g><rect class="nd" x="214" y="208" width="164" height="68" rx="7"/><text class="nt" x="296" y="238" text-anchor="middle">Client</text><text class="ns" x="296" y="260" text-anchor="middle">context, no call monitoring</text></g>
-   <g><rect class="nd" x="12" y="208" width="164" height="68" rx="7"/><text class="nt" x="94" y="238" text-anchor="middle">Practice</text><text class="ns" x="94" y="260" text-anchor="middle">rehearse with an AI client</text></g>
-   <g><rect class="hb" x="60" y="118" width="270" height="64" rx="32"/><text class="ht" x="195" y="145" text-anchor="middle">Team Growth &amp; Retention Hub</text><text class="hs" x="195" y="166" text-anchor="middle">evidence in, decisions out</text></g>
-  </svg>
+  <p class="sys-h">One system: four Studios around the Team Growth &amp; Retention Hub</p>
  </div>
 </div></header>
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
