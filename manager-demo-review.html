@@ -418,6 +418,54 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  .back>.prio{grid-column:2;grid-row:2/5;align-self:center;margin:0;padding:0 0 0 14px;border-top:0;border-left:1px solid var(--line-dark);max-width:9.5em}
  .prio strong{font-size:17px}
 }
+/* five learner paths: who you picked, who the AI suggests, who is on screen */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ctxbar{position:sticky;top:0;z-index:30;background:var(--sheet);border-bottom:1px solid var(--line);box-shadow:0 10px 22px -20px #0f1b3380}
+.cx{display:flex;align-items:center;gap:18px;padding-top:9px;padding-bottom:9px}
+.cx-dl{display:flex;flex-wrap:wrap;gap:4px 22px;margin:0;flex:1;min-width:0}
+.cx-dl div{display:flex;align-items:baseline;gap:7px;min-width:0}
+.cx-dl dt{font-size:12.5px;color:var(--slate)}
+.cx-dl dd{margin:0;font:600 15px var(--sans);color:var(--ink)}
+.cx-ai dd{padding:0 6px;border:1.5px dashed var(--royal);border-radius:3px;color:var(--royal)}
+.cx-now{margin:0;display:flex;align-items:baseline;gap:7px;flex:none}.cx-now span{font-size:12.5px;color:var(--slate)}.cx-now b{font:600 16px var(--sans);color:var(--ink);background:linear-gradient(transparent 58%,var(--hi) 58%)}
+.cx-switch{flex:none;background:var(--royal);color:#fff;border:0;border-radius:4px;padding:9px 14px;font:600 14px var(--sans);cursor:pointer}
+.cx-switch:hover{background:var(--royal-dk)}
+#managerLab,#h1,#decided,#decideRow{scroll-margin-top:110px}
+.v-note{margin-top:16px;font-size:18px;color:var(--pale);max-width:38em}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;max-width:760px}
+.path{text-align:left;background:none;color:#fff;border:1.5px solid var(--line-dark);border-radius:6px;padding:14px 18px 16px;cursor:pointer;font-family:var(--sans)}
+.path i{display:block;font:600 12.5px var(--sans);font-style:normal;color:var(--mist)}
+.path b{display:block;font:600 22px/1.15 var(--serif);margin-top:4px}
+.path small{display:block;font-size:14px;color:var(--pale);margin-top:6px}
+.path:hover{border-color:#fff}
+.path[aria-pressed=true]{background:var(--sheet);color:var(--ink);border-color:var(--sheet);box-shadow:inset 0 -5px 0 var(--hi)}
+.path[aria-pressed=true] i,.path[aria-pressed=true] small{color:var(--slate)}
+.m-obs{margin-top:14px;font:400 clamp(19px,2vw,23px)/1.45 var(--serif);color:#fff;max-width:34em}
+.mark.now{background:#fff;color:var(--royal)}
+.person.exploring .mark.now{display:inline-block}
+.person.exploring .back{box-shadow:0 0 0 4px #fff,0 18px 34px -16px #1f4fd6}
+.person.exploring.top .back{box-shadow:0 0 0 4px var(--hi),0 18px 34px -16px #1f4fd6}
+.ev.now{box-shadow:inset 4px 0 0 var(--royal);padding-left:14px}
+.ev-go{display:inline-block;margin-top:10px;background:var(--sheet);color:var(--royal);border:1.5px solid var(--royal);border-radius:4px;padding:6px 12px;font:600 13.5px var(--sans);cursor:pointer}
+.ev-go[aria-pressed=true]{background:var(--royal);color:#fff;cursor:default}
+.sug .ev-go{display:block;width:max-content}
+.rate.low{color:var(--slate)}
+.doc.is-low b{color:var(--slate);font-weight:500}
+.rx-ai{display:inline-block;vertical-align:middle;margin-left:6px;font:600 12px var(--sans);color:var(--ink);background:var(--hi);padding:2px 7px;border-radius:3px}
+.recap{background:var(--sheet);border:1px solid var(--line);border-left:5px solid var(--royal);border-radius:4px;padding:16px 20px 18px;margin-bottom:30px;max-width:44em}
+.recap .rc-h{font:600 15px var(--sans)}
+.recap ul{margin:8px 0 6px;padding-left:20px}.recap li{font-size:15.5px;margin-top:3px}
+@media(max-width:860px){.paths{grid-template-columns:1fr}.cx{flex-wrap:wrap;gap:6px 14px}}
+@media(max-width:600px){
+ .cx{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center;padding-top:6px;padding-bottom:7px}
+ .cx-now{grid-column:1;grid-row:1}.cx-now b{font-size:15px}
+ .cx-switch{grid-column:2;grid-row:1;max-width:10.5em;padding:6px 10px;font-size:13px;line-height:1.2;text-align:left}
+ .cx-dl{grid-column:1/-1;gap:0 12px}.cx-dl div{gap:4px}.cx-dl dt{font-size:11.5px}.cx-dl dd{font-size:12.5px}.cx-ai dd{padding:0 4px;border-width:1px}
+ #managerLab,#h1,#decided,#decideRow{scroll-margin-top:104px}
+ .path b{font-size:20px}
+ .rx-card{padding:22px 20px 24px}.lane{grid-template-columns:1fr 1fr;row-gap:12px}.lane:before{display:none}
+}
+
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style></head>
 <body>
@@ -454,6 +502,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  </figure>
 </div></header>
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
+<div class="ctxbar" id="ctxbar" hidden><div class="wrap cx" role="region" aria-label="Where you are in the demo"><p class="cx-now"><span>Exploring</span> <b id="cxNow"></b></p><dl class="cx-dl"><div><dt>Your pick</dt><dd id="cxPick"></dd></div><div class="cx-ai"><dt>AI suggests</dt><dd id="cxAI"></dd></div><div><dt>Decision</dt><dd id="cxAct"></dd></div></dl><button type="button" class="cx-switch" id="cxSwitch" hidden></button><span class="sr" id="cxLive" role="status" aria-live="polite"></span></div></div>
 <main>
 
 <section class="panel" id="p0" aria-labelledby="h0">
@@ -466,20 +515,19 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  <div id="reveal" class="fade" hidden>
   <div class="stage"><div class="wrap"><div class="verdict" id="verdict" tabindex="-1"></div></div></div>
   <div class="band"><div class="wrap">
-   <details class="all"><summary>See the practice evidence for all five</summary><div class="evidence" id="evidence"></div></details>
-   <div class="lab" id="managerLab" style="scroll-margin-top:20px">
-    <h3>Your decision <span class="demo-badge">Demo: fictional team</span></h3>
-    <p class="lab-sub"><span class="ai-tag">AI suggestion</span> Coach Michelle before tomorrow. It is a suggestion; nothing happens until you approve.</p>
+   <details class="all"><summary>See the practice evidence for all five, and explore any of them</summary><div class="evidence" id="evidence"></div></details>
+   <div class="lab" id="managerLab">
+    <h3>Your decision on <span id="labName">Michelle</span> <span class="demo-badge">Demo: fictional team</span></h3>
+    <p class="lab-sub" id="labSub"></p>
     <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
     <details class="optionalDeep" id="judgmentDetails"><summary>Optional: coaching time and evidence limits</summary>
-     <div class="bound"><strong>What the evidence can tell you:</strong> Michelle showed the same gap in four simulated attempts across two scenarios. Worth reviewing before tomorrow's meeting, but this is not proof of real-world performance.</div>
+     <div class="bound" id="bound"></div>
      <div class="resourcegrid" id="resourceControls">
       <fieldset><legend>Your weekly coaching time</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset>
-      <label><input type="checkbox" id="seniorSupport">Senior colleague can check a second scenario</label>
      </div>
      <div class="alloc" id="allocation" aria-live="polite"></div><p class="actionnote" id="allocationWhy"></p>
     </details>
-    <div id="reasonWrap" hidden><label for="decisionReason"><strong>Why are you overriding this suggestion?</strong></label>
+    <div id="reasonWrap" hidden><label for="decisionReason"><strong>Why are you overriding the AI's suggestion for <span id="reasonName">Michelle</span>?</strong></label>
      <select id="decisionReason"><option value="">Choose a reason…</option><option>Evidence is too narrow</option><option>My field experience contradicts it</option><option>Another priority is more urgent</option><option>Other</option></select>
      <textarea id="decisionNote" maxlength="200" placeholder="Optional note, not saved or sent"></textarea>
     </div>
@@ -500,16 +548,16 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 
 <section class="panel" id="p1" aria-labelledby="h1" hidden>
  <div class="band"><div class="wrap">
-  <h2 id="h1">What happens after you spot Michelle's risk?</h2>
+  <h2 id="h1" tabindex="-1">What happens after you spot Michelle's risk?</h2>
   <p class="intro">One problem, four Studios, one Hub. Watch it travel.</p>
   <div class="casequote">
-   <p class="line">Michelle knows the product. When the client says <span class="hl">“another agent quoted less,”</span> she pitches features before finding out what is being compared.</p>
-   <p class="goal">The goal: practice a better discovery question before tomorrow's fictional customer meeting, then bring the new evidence back to the manager.</p>
+   <p class="line" id="s2line"></p>
+   <p class="goal" id="s2goal"></p>
   </div>
   <ol class="track" aria-label="How the four Studios contribute">
-   <li><b>Knowledge</b><span>Locate a coachable principle and its source; draft a practice prompt.</span></li>
-   <li><b>Client</b><span>Identify the prospect's actual objection and what remains unknown.</span></li>
-   <li><b>Practice</b><span>Rehearse the price conversation; compare transcript moments.</span></li>
+   <li><b>Knowledge</b><span>Locate the approved material behind the next step; draft a practice prompt.</span></li>
+   <li><b>Client</b><span>Separate what the client note records from what is still unknown.</span></li>
+   <li><b>Practice</b><span>Rehearse the targeted conversation; compare transcript moments.</span></li>
    <li><b>Leadership</b><span>Review evidence, decide, and reassess instead of trusting a score alone.</span></li>
   </ol>
  </div></div>
@@ -517,86 +565,20 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  <div class="stage"><div class="wrap">
   <p class="stagenote">Scripted examples with invented documents. No AI service runs on this page.</p>
 
-  <div class="show" id="showK">
-   <p class="studio-name">Knowledge Studio</p>
-   <h3 class="studio-task">Find the coaching principle behind Michelle's price-objection gap.</h3>
-   <div class="showbody">
-    <div><p class="col-h">Training library (fictional)</p>
-     <div class="doc" data-doc="0"><b>Approved coaching note, price concerns, §2</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
-     <div class="doc" data-doc="1"><b>Product brochure, older sample edition</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
-     <div class="doc" data-doc="2"><b>Manager memo, comparing quotations</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>
-     <div class="sample-source"><b>Source anchor: coaching note, §2</b><p><span class="hl">“Before describing features, ask which coverage and conditions the prospect is comparing.”</span></p></div>
-     <button class="btn hi" type="button" id="runK">Reveal example analysis</button>
-    </div>
-    <div class="out" aria-live="polite"><p class="col-h">What a manager could review</p>
-     <div class="wait" id="waitK">Where would you look for the skill Michelle needs before her next meeting?</div>
-     <div id="outK" hidden>
-      <div class="outblock fade"><b>Training priority, anchored to §2</b><p>Clarify the customer's comparison before listing features. A low quote alone does not establish comparable coverage.</p></div>
-      <div class="outblock fade"><b>Draft question bank</b><ul><li>What should Michelle ask when a prospect mentions a lower quote?</li><li>Which differences must be verified before discussing value?</li><li>What should never be assumed from an unverified competing quote?</li></ul></div>
-      <div class="outblock fade"><b>Targeted Practice Studio scenario</b><p>Michelle meets a price-sensitive prospect tomorrow. The simulated client says: “Another agent quoted me less.” Michelle must ask before explaining.</p></div>
-      <div class="outblock go fade"><b>Manager's role</b><p>Review the actual approved source, revise the draft, and approve an assignment.</p></div>
-     </div>
-    </div>
-   </div>
-   <p class="showsum fade" id="sumK">From one recurring practice gap to a specific, source-checkable coaching objective.</p>
-  </div>
-
-  <div class="show" id="showC">
-   <p class="studio-name">Client Studio</p>
-   <h3 class="studio-task">Turn Michelle's next customer situation into the right rehearsal.</h3>
-   <div class="showbody">
-    <div><p class="tab">Client-context note (fictional)</p>
-     <div class="filecard"><dl>
-      <div><dt>Agent</dt><dd>Michelle</dd></div>
-      <div><dt>Prospect</dt><dd>Ms. Rivera</dd></div>
-      <div><dt>Conversation</dt><dd><span class="hl">“Another agent quoted me less.”</span></dd></div>
-      <div><dt>Status</dt><dd>Follow-up meeting tomorrow</dd></div>
-      <div><dt>Still unknown</dt><dd>Coverage amount, policy terms, and details of the competing quote</dd></div>
-      <div><dt>Next focus</dt><dd>Ask what the customer wants to compare; don't guess</dd></div>
-     </dl></div>
-     <div class="sample-source"><b>Source anchor: client note, follow-up entry</b><p><span class="hl">The only recorded objection is the lower quoted price.</span> No conclusion about coverage, suitability, or the prospect's intent is supported by that note.</p></div>
-     <button class="btn hi" type="button" id="runC">Reveal example guidance</button>
-    </div>
-    <div class="out" aria-live="polite"><p class="col-h">What a manager could review</p>
-     <div class="wait" id="waitC">What should Michelle ask before describing her product?</div>
-     <div id="outC" hidden>
-      <div class="outblock fade"><b>Known from the sample file</b><p>The prospect mentioned a lower quote and has a meeting scheduled. The price comparison is not yet documented.</p></div>
-      <div class="outblock fade"><b>Unknown, so do not infer</b><ul><li>Which type and amount of coverage the other quote includes</li><li>What matters most to the prospect beyond price</li></ul></div>
-      <div class="outblock fade"><b>Suggested discovery question</b><p>“Would it help if we first looked at what each quote covers, so we're comparing the same things?”</p></div>
-      <div class="outblock go fade"><b>Matched practice</b><p>Michelle rehearses this exact price objection with a simulated AI client, then reviews the transcript and coach feedback.</p></div>
-     </div>
-    </div>
-   </div>
-   <p class="showsum fade" id="sumC">From a documented objection to one careful question Michelle can rehearse.</p>
-   <p class="small">The demo does not read real client calls or private customer files.</p>
-  </div>
+  <div class="show" id="showK"></div>
+  <div class="show" id="showC"></div>
  </div></div>
 
  <div class="band"><div class="wrap">
   <div class="rx" aria-labelledby="rxTitle">
-   <h3 id="rxTitle">The same loop writes two different prescriptions.</h3>
-   <p class="rx-lead" id="rxLead">Had you chosen David in step 1, the loop would start somewhere else.</p>
-   <div class="rx-grid">
-    <article class="rx-card">
-     <h4>Michelle</h4>
-     <p class="rx-type">Knows the product. Does not ask first.</p>
-     <dl><div><dt>Kind of gap</dt><dd>Communication skill</dd></div><div><dt>Evidence</dt><dd>Four simulated attempts, the same gap each time.</dd></div></dl>
-     <ol class="lane" aria-label="Where Michelle's loop starts"><li>Knowledge</li><li>Client</li><li class="start">Practice</li><li>Leadership</li></ol>
-     <p class="rx-start"><strong>Starts in Practice Studio.</strong> She rehearses the comparison question until it comes before the pitch.</p>
-    </article>
-    <article class="rx-card">
-     <h4>David</h4>
-     <p class="rx-type">Asks well. Cannot yet explain the product.</p>
-     <dl><div><dt>Kind of gap</dt><dd>Knowledge</dd></div><div><dt>Evidence</dt><dd>One simulated conversation: the client asked how term and whole life differ, and he could not explain it. Thin evidence, so a second scenario comes first.</dd></div></dl>
-     <ol class="lane" aria-label="Where David's loop starts"><li class="start">Knowledge</li><li>Client</li><li>Practice</li><li>Leadership</li></ol>
-     <p class="rx-start"><strong>Starts in Knowledge Studio.</strong> A question bank on approved product basics, then practice.</p>
-    </article>
-   </div>
-   <p class="rx-close">One needs to say it better. One needs to know it first. A single training class would have given both the same lesson.</p>
+   <h3 id="rxTitle">The same loop writes different prescriptions.</h3>
+   <p class="rx-lead" id="rxLead"></p>
+   <div class="rx-grid" id="rxGrid"></div>
+   <p class="rx-close">Different evidence, a different starting point. A single training class would have given everyone the same lesson.</p>
    <p class="muted small">Both cases are fictional illustrations.</p>
   </div>
 
-  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. Step through Michelle's case.</p>
+  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. Step through <span id="loopName">Michelle</span>'s case.</p>
   <ol class="cycle" id="cycle" aria-label="The management cycle"><li>Practice evidence</li><li>Your judgment</li><li>Targeted coaching</li><li>New practice</li><li>Reassessment</li><li>Next action</li></ol></div>
   <div class="loopwrap">
    <div class="ring">
@@ -626,6 +608,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 
 <section class="panel" id="p2" aria-labelledby="h2" hidden>
  <div class="band"><div class="wrap">
+  <div class="recap" id="recap" hidden></div>
   <h2 id="h2">What hidden conversation gap would you want to find in your team?</h2>
   <div class="realvs"><div><b>This demo</b><p>A fictional team, scripted results, nothing sent.</p></div><div class="yours"><b>Your pilot</b><p>Your own team and your approved material. Text-based practice with an AI client. You review what comes back and decide whether to continue. No outcome is promised.</p></div></div>
   <p class="muted small pilot-note">Choose training topics only, not confidential client details. Your choices go to the request form; no training or AI analysis starts on this page.</p>
@@ -647,161 +630,338 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  </div></div>
 </section>
 </main>
-<footer class="foot"><div class="wrap"><p class="muted small"><strong>Truth in the demo.</strong> Michelle, David, Ms. Rivera, all conversations, sample documents, source anchors and recommendations are fictional. The "reveal" buttons show scripted examples; they do not call an AI service, access customer data, send assignments, or prove outcomes. Only submitting the separate Pilot request form sends a request. Do not enter sensitive client details in the Pilot topic field.</p>
+<footer class="foot"><div class="wrap"><p class="muted small"><strong>Truth in the demo.</strong> Michelle, David, John, Grace and Anna, their prospects (Ms. Rivera, Mr. Okafor, Ms. Chen, Mr. Patel, Mr. Alvarez), all conversations, sample documents, source anchors and recommendations are fictional. The "reveal" buttons show scripted examples; they do not call an AI service, access customer data, send assignments, message anyone, save records, or prove outcomes. Only submitting the separate Pilot request form sends a request. Do not enter sensitive client details in the Pilot topic field.</p>
 <p class="muted small">A deeper look, with a different illustrative team: <a href="manager-demo-opening.html">Risk briefing</a>, <a href="manager-demo-hub.html">Four Studios and the Hub</a>, <a href="manager-demo-phases.html">Three phases</a>, <a href="mission-control-v2-1.html">Mission Control</a></p></div></footer>
 <script>
-const TEAM=[
- {id:"david",short:"One conversation. A product question he could not answer.",name:"David",ctx:"New. First client calls start next week.",focus:"Product basics",pill:"thin",pillTxt:"Thin evidence",
-  ev:"2 practice attempts on one conversation. The second went further, until the simulated client asked how term and whole life differ and David could not explain it.",
-  sug:"Verify first",sugWhy:"One conversation is a sample of one. Assign a second practice with a different client. No coaching time yet."},
- {id:"michelle",short:"The same gap in all four attempts.",name:"Michelle",ctx:"Highest test score on the team. Client meeting tomorrow.",focus:"Price concerns",pill:"consistent",pillTxt:"Consistent evidence",
-  ev:"4 practice attempts across two conversations. Each time the simulated client raised price, she answered with product features.",
-  sug:"Coach now",sugWhy:"The same gap in every attempt, and a client meeting tomorrow."},
- {id:"john",short:"One attempt only.",name:"John",ctx:"Joined two months ago.",focus:"Asking before presenting",pill:"thin",pillTxt:"Thin evidence",
-  ev:"1 practice attempt. He presented the product before asking what the client needed.",
-  sug:"Assign one more practice",sugWhy:"A single attempt may be a bad day. No coaching time yet."},
- {id:"grace",short:"No gap in five attempts.",name:"Grace",ctx:"Two years on the team.",focus:"No gap seen",pill:"consistent",pillTxt:"Consistent evidence",
-  ev:"5 practice attempts across three conversations. She asks before she answers, every time.",
-  sug:"No time this week",sugWhy:"Offer her a harder conversation to find her ceiling."},
- {id:"anna",short:"Improving, on one scenario.",name:"Anna",ctx:"Six months on the team.",focus:"Needs analysis",pill:"building",pillTxt:"Building evidence",
-  ev:"3 practice attempts, better each time, all on the same conversation.",
-  sug:"Reassess next week",sugWhy:"The improvement may be familiarity with one scenario."}];
-const TOP="michelle";
+/* ===== Five fictional learners. Every name, attempt, note and outcome below is illustrative; none is real learner data. =====
+   One renderer reads this table for every learner, so adding or correcting a case means editing data, not markup. */
+const TOP=`michelle`; /* the AI's highest-priority coaching suggestion for this fictional team's current evidence */
+const ORDER=[`david`,`michelle`,`john`,`grace`,`anna`];
+const LIBRARY=[
+ {id:`price`,title:`Approved coaching note, price concerns, §2`},
+ {id:`basics`,title:`Approved product guide: term and whole life basics`},
+ {id:`discovery`,title:`Approved needs-discovery question guide`},
+ {id:`agent`,title:`Approved objection guide: “I already have an agent”`},
+ {id:`brochure`,title:`Product brochure, older sample edition`}];
+const RATE={important:`Coaching source`,general:`Supporting`,low:`Not needed now`,review:`Needs review`};
+const GENERIC_WHY={general:n=>`Useful background for ${n}.`,low:n=>`Approved, but not the skill ${n} needs right now.`,review:()=>`May be out of date. Check it against current approved material before anyone uses it.`};
+const STOP_NODE=[0,1,2,3,0];
+const CASES={
+ michelle:{name:`Michelle`,pos:`her`,Pos:`Her`,ctx:`Highest test score on the team. Client meeting tomorrow.`,
+  short:`The same gap in all four attempts.`,pill:`consistent`,pillTxt:`Consistent evidence`,focus:`Price concerns`,sug:`Coach now`,
+  ev:`4 practice attempts across two conversations. Each time the simulated client raised price, she answered with product features.`,sugWhy:`The same gap in every attempt, and a client meeting tomorrow.`,
+  report:{fig:`#1`,cap:`Highest test score on the team.`,sum:`#1 in testing`},
+  practice:{fig:`0`,of:`4`,cap:`attempts in which she asked what the client was comparing before she pitched. A coaching signal, not proof of sales results.`,sum:`Same gap in 4 of 4 attempts`},
+  moment:{cap:`The moment that matters: practice attempt 4, simulated client`,client:`“Another agent quoted me less.”`,agent:`“Ours covers more, though. For example, it includes…”`,also:`Attempt 1 went the same way. Client: “This is more than we budgeted.” Michelle: “Let me walk you through what's included…”`},
+  sumHTML:`Four attempts. A price concern each time. Product features each time. <span class="hl swipe">Her client meeting is tomorrow.</span>`,
+  chain:{ctx:`Client meeting tomorrow.`,weak:`Pitches before she asks`,weakN:`Answers price concerns with features.`,big:`4`,bigOf:`4`,unit:`attempts`,sure:`Same gap every time, in two scenarios. Not yet seen with real clients.`,sug:`Coach before tomorrow`,because:`Because the gap repeats and the meeting is close.`},
+  aiShort:`Coach her before tomorrow`,labSub:`Coach Michelle before tomorrow's meeting.`,
+  bound:`Michelle showed the same gap in four simulated attempts across two scenarios. Worth acting on before tomorrow, but not proof of real-world performance.`,
+  actions:{
+   accept:{title:`Coach now`,coach:true,next:`Michelle gets one-to-one coaching before tomorrow. The rest of your time stays free.`,decided:`Your decision: coach Michelle before tomorrow, using {mine} of your {total} coaching minutes.`},
+   verify:{title:`Verify first`,next:`Michelle gets a second practice scenario first. You decide again with more evidence.`,decided:`Your decision: verify first. Michelle gets a second scenario before any coaching time is spent.`},
+   override:{title:`Hold coaching`,next:`You decide not to coach her now and give a reason. The suggestion stays open.`,decided:`Your decision: hold coaching for Michelle, against the suggestion. The suggestion stays open.`}},
+  outcomes:[{label:`Asks first in a new scenario`,text:`in a different price conversation Michelle asks what is being compared before she pitches. Vary the scenario once more before calling it a habit.`},{label:`Still pitches first`,text:`the gap appears again. Try a different coaching approach, such as rehearsing the opening question on its own.`}],
+  s2:{title:`What happens after you spot Michelle's risk?`,
+   line:`Michelle knows the product. When the client says <span class="hl">“another agent quoted less,”</span> she pitches features before finding out what is being compared.`,
+   goal:`The goal: practise a better discovery question before tomorrow's fictional client meeting, then bring the new evidence back to you.`,
+   kTask:`Find the coaching principle behind Michelle's price-objection gap.`,kWait:`Where would you look for the skill Michelle needs before her next meeting?`,
+   kRates:{price:`important`,basics:`low`,discovery:`general`,agent:`low`,brochure:`review`},
+   kWhy:{price:`Fictional §2: ask what the competing quote includes before describing policy features. Directly relevant to Michelle.`,discovery:`Supporting: the questions she should ask before she pitches.`},
+   kAnchor:{label:`coaching note, §2`,quote:`“Before describing features, ask which coverage and conditions the prospect is comparing.”`},
+   kOut:{priority:`Clarify the client's comparison before listing features. A low quote alone does not establish comparable coverage.`,qs:[`What should Michelle ask when a prospect mentions a lower quote?`,`Which differences must be verified before discussing value?`,`What should never be assumed from an unverified competing quote?`],scenario:`A simulated price-sensitive prospect says: “Another agent quoted me less.” Michelle must ask before explaining.`},
+   kSum:`From one recurring practice gap to a specific, source-checkable coaching objective.`,
+   cTask:`Turn Michelle's next client situation into the right rehearsal.`,
+   cRows:[[`Prospect`,`Ms. Rivera`],[`Conversation`,`<span class="hl">“Another agent quoted me less.”</span>`],[`Status`,`Follow-up meeting tomorrow`],[`Still unknown`,`Coverage amount, policy terms, and details of the competing quote`],[`Next focus`,`Ask what the client wants to compare; don't guess`]],
+   cAnchor:{label:`client note, follow-up entry`,html:`<span class="hl">The only recorded objection is the lower quoted price.</span> No conclusion about coverage, suitability, or the prospect's intent is supported by that note.`},
+   cWait:`What should Michelle ask before describing her product?`,
+   cOut:{known:`The prospect mentioned a lower quote and has a meeting scheduled. The price comparison is not yet documented.`,unknown:[`Which type and amount of coverage the other quote includes`,`What matters most to the prospect beyond price`],question:`“Would it help if we first looked at what each quote covers, so we're comparing the same things?”`,match:`Michelle rehearses this exact price objection with a simulated AI client, then you review the transcript and coach feedback.`},
+   cSum:`From a documented objection to one careful question Michelle can rehearse.`,
+   rx:{type:`Knows the product. Does not ask first.`,kind:`A communication-skill gap`,ev:`Four simulated attempts, the same gap each time.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> She rehearses the comparison question until it comes before the pitch.`},
+   stops:[
+    {tag:`Leadership, reveal the hidden risk`,title:`An excellent test score hides a repeatable coaching signal.`,body:`You see Michelle's four simulated attempts across two scenarios, review their limits and decide what deserves scarce coaching time.`,kase:`Michelle handles a lower-price objection by listing policy features instead of clarifying the comparison.`,proof:`Four illustrative transcripts support a practice concern, not a claim about live client calls or selling results.`},
+    {tag:`Knowledge, trace the source`,title:`Find a specific principle, not a generic sales script.`,body:`The fictional coaching note §2 says to ask what coverage is being compared before listing features. You review the source and approve any resulting material.`,kase:`Target skill: ask a useful comparison question before giving product information.`,proof:`Sample source: fictional approved coaching note §2, shown in the Knowledge example above.`},
+    {tag:`Client, understand context`,title:`The client file tells you what is known, and what is missing.`,body:`The illustrative note records a lower competing quote, but not the competing terms or the client's priorities. The suggested next question respects that uncertainty.`,kase:`Fictional prospect Ms. Rivera says: “Another agent quoted me less.” Michelle's follow-up is tomorrow.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, rehearse the correction`,title:`See whether Michelle asks before she pitches.`,body:`A targeted, simulated price-objection role-play tests the exact skill. You compare transcript moments and coach feedback before any further decision.`,kase:`Old response: “Ours covers more.” Target response: “What would you like us to compare first?”`,proof:`A proposed practice objective, not a live AI run, a measured improvement or a sent assignment.`},
+    {tag:`Leadership, reassess`,title:`The loop returns to you, with evidence.`,body:`If a later rehearsal shows the question working across different client situations, review that evidence. If not, adjust the coaching plan; do not infer sales success from a demo.`,kase:`The Hub links the issue, source, client context, planned rehearsal and your next judgment.`,proof:`No training, assignment or real-world outcome is created by this page.`}]}},
+ david:{name:`David`,pos:`his`,Pos:`His`,ctx:`New. First client calls start next week.`,
+  short:`One conversation. A product question he could not answer.`,pill:`thin`,pillTxt:`Thin evidence`,focus:`Product basics`,sug:`Verify first`,
+  ev:`2 practice attempts on one conversation. The second went further, until the simulated client asked how term and whole life differ and David could not explain it.`,sugWhy:`One conversation is a sample of one. Check product basics and assign a second scenario. No coaching time yet.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`2`,unit:`attempts`,cap:`on one conversation. When the simulated client asked how term and whole life differ, he could not explain it. Too little to judge his skills; enough to check his product basics.`,sum:`Thin evidence: 2 attempts, 1 conversation`},
+  moment:{cap:`What practice recorded (simulated)`,html:`Attempt 2 went further than attempt 1, until the simulated client asked how term and whole life differ. <span class="hl">David could not explain it.</span>`},
+  sumHTML:`Two attempts, one conversation, one product question he could not answer. <span class="hl swipe">His first client calls start next week.</span>`,
+  chain:{ctx:`First client calls next week.`,weak:`Product basics, possibly`,weakN:`Could not explain term versus whole life.`,big:`2`,unit:`attempts`,sure:`One conversation only. A real gap or a bad moment: too early to tell.`,sug:`Verify first, with product basics`,because:`Because one conversation is thin evidence and his calls start next week.`},
+  aiShort:`Verify first: product basics and a second scenario`,labSub:`Check whether David's product gap is real before spending coaching time: a product-basics question bank and a second scenario with a different client.`,
+  bound:`Two simulated attempts on one conversation. They show one product question he could not answer, not a pattern.`,
+  actions:{
+   accept:{title:`Basics + second scenario`,next:`David gets a product-basics question bank and a second scenario with a different client. No coaching time yet.`,decided:`Your decision: check the gap first. David gets a product-basics question bank and a second scenario; no coaching time is spent yet.`},
+   verify:{title:`Review it yourself`,next:`You read his two transcripts before anything is assigned. Then you decide.`,decided:`Your decision: review David's two transcripts yourself before assigning anything.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on David this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach David now, using {mine} of your {total} coaching minutes, against the suggestion.`}},
+  outcomes:[{label:`Explains it this time`,text:`a different simulated client asks the same question and David explains how term and whole life differ. The first miss may have been a bad moment.`},{label:`The gap shows again`,text:`he still cannot explain it. With two data points, product-basics coaching is now justified.`}],
+  s2:{title:`What happens when the evidence is thin?`,
+   line:`David asks good questions. But when the simulated client asked how term and whole life differ, <span class="hl">he could not explain it</span>.`,
+   goal:`The goal: find out whether this is a real product gap before his first client calls next week, using approved product material rather than a generic script.`,
+   kTask:`Find the approved product basics David needs, and check the rest of the library.`,kWait:`Which approved material answers the question David missed?`,
+   kRates:{price:`low`,basics:`important`,discovery:`general`,agent:`low`,brochure:`review`},
+   kWhy:{basics:`Explains how term and whole life differ in plain terms. Directly relevant to the question David could not answer.`,discovery:`Supporting: helps him ask what the client needs before explaining any product.`},
+   kAnchor:{label:`product guide, basics section`,quote:`“Explain the difference in length of coverage first, then ask what the client wants protected.”`},
+   kOut:{priority:`Product basics, anchored to the approved guide: explain how term and whole life differ before the first client calls.`,qs:[`How would you explain the difference between term and whole life in two sentences?`,`What should you ask before suggesting either one?`,`Which statements must come from approved material only?`],scenario:`A simulated young parent asks how term and whole life differ. David explains it plainly, then asks what the client wants to protect.`},
+   kSum:`From one missed question to a specific product-basics check, grounded in approved material.`,
+   cTask:`Prepare David for the kind of client he will meet next week.`,
+   cRows:[[`Prospect`,`Mr. Okafor`],[`Conversation`,`<span class="hl">Asked about term versus whole life.</span>`],[`Status`,`First call next week`],[`Still unknown`,`What he wants to protect, budget and existing coverage`],[`Next focus`,`Explain the basics plainly, then ask; no recommendation yet`]],
+   cAnchor:{label:`client note, intake entry`,html:`<span class="hl">The note records only that he asked about term versus whole life.</span> It says nothing about which would suit him.`},
+   cWait:`What should David be ready to explain, and what should he ask?`,
+   cOut:{known:`The prospect asked about term versus whole life. The first call is next week.`,unknown:[`What he wants the coverage to protect`,`Whether he already has coverage`],question:`“Before I compare them, can I ask what you'd most want the coverage to do for your family?”`,match:`After the product-basics questions, David rehearses this first call with a simulated client who asks the same question.`},
+   cSum:`From a client's question to a prepared, approved answer and one good question.`,
+   rx:{type:`Asks well. Cannot yet explain the product.`,kind:`Possibly a knowledge gap`,ev:`Two simulated attempts on one conversation. Thin evidence, so a check comes first.`,start:0,startTxt:`<strong>Starts in Knowledge Studio.</strong> A question bank on approved product basics, then a second scenario.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`One missed question is a signal, not yet a pattern.`,body:`You see two simulated attempts on one conversation. The AI marks the evidence as thin and suggests checking before spending coaching time.`,kase:`David could not explain how term and whole life differ when a simulated client asked.`,proof:`Two illustrative attempts support a check, not a conclusion about his skills.`},
+    {tag:`Knowledge, find the approved answer`,title:`Start from approved product material.`,body:`The approved product guide explains the difference plainly. A question bank built from it checks whether David can explain it. You review the questions before they are assigned.`,kase:`Target: explain term versus whole life in plain words, then ask a question.`,proof:`Sample source: fictional approved product guide, shown in the Knowledge example above.`},
+    {tag:`Client, prepare for next week`,title:`His next client may ask the same kind of question.`,body:`The fictional intake note shows the prospect asked about term versus whole life and nothing more. David should explain, then ask, not recommend.`,kase:`Fictional prospect Mr. Okafor, first call next week.`,proof:`Sample source: fictional client intake note, shown in the Client example above.`},
+    {tag:`Practice, a second scenario`,title:`A different client asks the same question.`,body:`A second simulated scenario with a different client shows whether the gap repeats. That second data point is what the first conversation lacked.`,kase:`If he explains it well, the first miss was a bad moment. If not, product coaching is justified.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Two data points, then your decision.`,body:`With the second scenario in, you decide: close the check, or spend coaching time on product basics.`,kase:`Either way the decision is yours, based on more than one conversation.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ john:{name:`John`,pos:`his`,Pos:`His`,ctx:`Joined two months ago.`,
+  short:`One attempt only.`,pill:`thin`,pillTxt:`Thin evidence`,focus:`Asking before presenting`,sug:`Assign one more practice`,
+  ev:`1 practice attempt. He presented the product before asking what the client needed.`,sugWhy:`A single attempt may be a bad day. No coaching time yet.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`1`,unit:`attempt`,cap:`so far. He presented the product before asking what the client needed. One attempt can be a bad day.`,sum:`Thin evidence: 1 attempt`},
+  moment:{cap:`What practice recorded (simulated)`,html:`In his only simulated attempt, John <span class="hl">described the product before asking what the client needed</span>.`},
+  sumHTML:`One attempt. Product first, questions later. <span class="hl swipe">Too early to know if it is a habit.</span>`,
+  chain:{ctx:`Joined two months ago.`,weak:`Presents before asking, once`,weakN:`Seen in a single attempt.`,big:`1`,unit:`attempt`,sure:`One attempt is not a pattern. Any conclusion now would be a guess.`,sug:`Assign one more practice`,because:`Because a second attempt costs no coaching time and shows whether it repeats.`},
+  aiShort:`Assign one more practice`,labSub:`Assign John one more practice before drawing any conclusion.`,
+  bound:`One simulated attempt. It shows one moment, not a habit.`,
+  actions:{
+   accept:{title:`One more practice`,next:`John gets a second practice on a needs-discovery conversation. No coaching time yet.`,decided:`Your decision: assign John one more practice before any coaching time is spent.`},
+   verify:{title:`Review it yourself`,next:`You read his one transcript before assigning anything. Then you decide.`,decided:`Your decision: read John's transcript yourself before assigning anything.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on John this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach John now, using {mine} of your {total} coaching minutes, against the suggestion.`}},
+  outcomes:[{label:`Asks first next time`,text:`in his second attempt he asks about the client's situation before presenting. The first attempt looks like a bad day.`},{label:`Presents first again`,text:`he presents first again. Two attempts now show the same habit, so targeted practice on discovery questions is justified.`}],
+  s2:{title:`What happens when there is only one attempt?`,
+   line:`In his only simulated attempt, John <span class="hl">presented the product before asking what the client needed</span>.`,
+   goal:`The goal: get a second data point cheaply, with a needs-discovery practice, before deciding whether he needs coaching at all.`,
+   kTask:`Find the approved material for one more, better-aimed practice.`,kWait:`Which approved material should John's next practice be built on?`,
+   kRates:{price:`low`,basics:`low`,discovery:`important`,agent:`low`,brochure:`review`},
+   kWhy:{discovery:`Approved questions for finding out what a client needs before presenting. Directly relevant to John's attempt.`},
+   kAnchor:{label:`discovery guide, opening questions`,quote:`“Ask at least one question about the client's situation before you describe any product.”`},
+   kOut:{priority:`Needs discovery, anchored to the approved guide: one question about the client before any product.`,qs:[`What is one question you would ask before describing a product?`,`How do you tell the client why you are asking?`,`What should you listen for in the answer?`],scenario:`A simulated new prospect asks what John is offering. John asks one question about the client's situation before answering.`},
+   kSum:`From one attempt to a second, well-aimed practice, at no coaching cost.`,
+   cTask:`Aim John's next practice at a realistic opening.`,
+   cRows:[[`Prospect`,`Ms. Chen`],[`Conversation`,`<span class="hl">Asked what John is offering.</span>`],[`Status`,`First meeting next week`],[`Still unknown`,`Her situation, needs and existing coverage`],[`Next focus`,`Ask about her situation before presenting`]],
+   cAnchor:{label:`client note, first contact`,html:`<span class="hl">The note records only that she asked what he offers.</span> Nothing about her needs is known yet.`},
+   cWait:`What should John ask before he presents anything?`,
+   cOut:{known:`She asked what he offers. A first meeting is booked.`,unknown:[`Her situation and what she wants to protect`,`Whether she already has coverage`],question:`“Happy to explain. Can I first ask what made you open to a conversation now?”`,match:`John rehearses this opening with a simulated client, then the transcript comes back to you.`},
+   cSum:`From a first-contact note to one question John can practise asking first.`,
+   rx:{type:`Presented before asking, once.`,kind:`Unclear so far`,ev:`One simulated attempt. Not enough to tell a skill gap from a bad day.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> One more attempt first, so the evidence can speak.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`One attempt is not a pattern.`,body:`You see a single simulated attempt. The AI marks the evidence as thin and suggests one more practice before any coaching time.`,kase:`John described the product before asking what the client needed.`,proof:`One illustrative attempt supports a second look, not a judgment.`},
+    {tag:`Knowledge, aim the next practice`,title:`Build the next practice from approved questions.`,body:`The approved needs-discovery guide gives the questions to practise. You review them before anything is assigned.`,kase:`Target: one question about the client before any product.`,proof:`Sample source: fictional approved discovery guide, shown in the Knowledge example above.`},
+    {tag:`Client, a realistic opening`,title:`Use the kind of opening he will actually hear.`,body:`The fictional note shows a prospect asking what he offers, and nothing about her needs. That is the moment to ask, not to present.`,kase:`Fictional prospect Ms. Chen, first meeting next week.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, the second attempt`,title:`A second attempt, at no coaching cost.`,body:`One more simulated practice shows whether presenting first is a habit or a one-off.`,kase:`If he asks first, close the concern. If not, practise discovery questions.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Decide with two attempts, not one.`,body:`With the second attempt in, you decide whether John needs coaching time or nothing more.`,kase:`Your coaching time stays free until the evidence asks for it.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ grace:{name:`Grace`,pos:`her`,Pos:`Her`,ctx:`Two years on the team.`,
+  short:`No gap in five attempts.`,pill:`consistent`,pillTxt:`Consistent evidence`,focus:`No gap seen`,sug:`No time this week`,
+  ev:`5 practice attempts across three conversations. She asks before she answers, every time.`,sugWhy:`Offer her a harder conversation to find her ceiling.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`5`,of:`5`,cap:`attempts in which she asked what the client needed before answering, across three conversations. No gap observed in simulated practice.`,sum:`No gap in 5 of 5 attempts`},
+  moment:{cap:`What practice recorded (simulated)`,html:`In all five simulated attempts, across three different conversations, Grace <span class="hl">asked what the client needed before answering</span>.`},
+  sumHTML:`Five attempts, three conversations, questions first every time. <span class="hl swipe">Her coaching time can go elsewhere.</span>`,
+  chain:{ctx:`Two years on the team.`,weak:`No gap observed`,weakN:`Asks before she answers.`,big:`5`,bigOf:`5`,unit:`attempts`,sure:`Consistent across three conversations. Still simulated, not real client calls.`,sug:`No coaching time; a harder scenario`,because:`Because nothing needs fixing, and a harder conversation can show her ceiling.`},
+  aiShort:`No coaching time; offer a harder scenario`,labSub:`Spend no coaching time on Grace this week. Offer her a harder scenario to find her ceiling.`,
+  bound:`Five simulated attempts across three conversations with no gap. Strong practice evidence, but not proof of real client results.`,
+  actions:{
+   accept:{title:`Harder scenario`,next:`Grace gets a harder simulated conversation. No coaching time; your minutes stay free for others.`,decided:`Your decision: no coaching time for Grace this week; she gets a harder scenario to find her ceiling.`},
+   verify:{title:`Review it yourself`,next:`You read a sample of her transcripts before deciding.`,decided:`Your decision: read a sample of Grace's transcripts yourself before deciding.`},
+   override:{title:`Coach her anyway`,coach:true,next:`You spend one-to-one time on Grace this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach Grace this week, using {mine} of your {total} coaching minutes, against the suggestion.`}},
+  outcomes:[{label:`Handles the harder scenario`,text:`she handles a harder simulated conversation well. Consider asking her to share her approach with the team.`},{label:`Finds her ceiling`,text:`the harder scenario shows where she struggles. That becomes her next development goal, not an urgent problem.`}],
+  s2:{title:`What happens when practice shows no gap?`,
+   line:`Grace <span class="hl">asks before she answers</span>, in every attempt and every conversation so far.`,
+   goal:`The goal: keep her growing with a harder conversation, without spending coaching time on a problem that does not exist.`,
+   kTask:`Find material for a harder conversation, not a fix.`,kWait:`What would stretch an agent who already asks good questions?`,
+   kRates:{price:`low`,basics:`low`,discovery:`general`,agent:`important`,brochure:`review`},
+   kWhy:{agent:`A harder objection she has not practised yet. Directly relevant to stretching Grace.`,discovery:`Supporting: her strength, and a useful example for others on the team.`},
+   kAnchor:{label:`objection guide, existing relationships`,quote:`“Acknowledge the existing relationship, then ask what the client values most in it.”`},
+   kOut:{priority:`A stretch goal, anchored to the approved objection guide: handle “I already have an agent” without pushing.`,qs:[`How do you respond when a client says they already have an agent?`,`What can you ask that respects that relationship?`,`When is it right to leave the door open and stop?`],scenario:`A simulated business owner says he already has an agent he trusts. Grace keeps the conversation open without pressure.`},
+   kSum:`From strong evidence to a stretch goal, not a fix.`,
+   cTask:`Match Grace's next practice to a tougher kind of client.`,
+   cRows:[[`Prospect`,`Mr. Patel`],[`Conversation`,`<span class="hl">Already works with another agent.</span>`],[`Status`,`Second conversation next month`],[`Still unknown`,`What he values in his current agent`],[`Next focus`,`Respect the relationship; ask what matters to him`]],
+   cAnchor:{label:`client note, first conversation`,html:`<span class="hl">The note records only that he already has an agent.</span> It does not say he is unhappy.`},
+   cWait:`How would Grace keep this door open without pushing?`,
+   cOut:{known:`He already works with another agent. A second conversation is planned.`,unknown:[`What he values in his current agent`,`Whether anything is missing for him`],question:`“That makes sense. What matters most to you in working with them?”`,match:`Grace rehearses this harder conversation with a simulated client. No coaching time is needed.`},
+   cSum:`From a tougher client note to a stretch practice that keeps her growing.`,
+   rx:{type:`Asks before she answers, every time.`,kind:`No gap seen`,ev:`Five simulated attempts across three conversations.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> A harder conversation to find her ceiling. No coaching time.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`Strong evidence that nothing needs fixing.`,body:`You see five simulated attempts across three conversations with no gap. The AI suggests no coaching time this week.`,kase:`Grace asks before she answers, every time.`,proof:`Illustrative attempts support a stretch goal, not a claim about real client results.`},
+    {tag:`Knowledge, find a stretch`,title:`Find material for a harder conversation.`,body:`The approved objection guide covers a conversation she has not practised yet. You review it before anything is assigned.`,kase:`Stretch goal: handle “I already have an agent” without pushing.`,proof:`Sample source: fictional approved objection guide, shown in the Knowledge example above.`},
+    {tag:`Client, a tougher client`,title:`A realistic client who is not looking to switch.`,body:`The fictional note records an existing agent relationship and nothing about dissatisfaction. Grace should respect it and ask what matters.`,kase:`Fictional prospect Mr. Patel, second conversation next month.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, a harder scenario`,title:`Find her ceiling.`,body:`A harder simulated conversation shows where her skill stops, which becomes her next goal.`,kase:`Not a fix. A next level.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Your time stays where it is needed.`,body:`With the harder scenario in, you set her next goal. Your coaching minutes stay free for agents whose evidence asks for them.`,kase:`Strong agents grow too, without urgent coaching.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ anna:{name:`Anna`,pos:`her`,Pos:`Her`,ctx:`Six months on the team.`,
+  short:`Improving, on one scenario.`,pill:`building`,pillTxt:`Building evidence`,focus:`Needs analysis`,sug:`Reassess next week`,
+  ev:`3 practice attempts, better each time, all on the same conversation.`,sugWhy:`The improvement may be familiarity with one scenario.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`3`,unit:`attempts`,cap:`better each time, all on the same conversation. The improvement may be familiarity with that one scenario.`,sum:`Improving: 3 attempts, 1 scenario`},
+  moment:{cap:`What practice recorded (simulated)`,html:`Each of Anna's three simulated attempts went further than the last. <span class="hl">All three used the same practice conversation.</span>`},
+  sumHTML:`Three attempts, better each time. <span class="hl swipe">All on the same scenario.</span>`,
+  chain:{ctx:`Six months on the team.`,weak:`Improving needs analysis`,weakN:`Better each time.`,big:`3`,unit:`attempts`,sure:`Real improvement, or familiarity with one scenario: a new scenario will tell.`,sug:`Reassess with a new scenario`,because:`Because the progress is promising but untested anywhere else.`},
+  aiShort:`Reassess next week with a new scenario`,labSub:`Check Anna's progress with a new scenario next week before deciding anything.`,
+  bound:`Three simulated attempts on one conversation, improving each time. Promising, but untested in a different scenario.`,
+  actions:{
+   accept:{title:`New scenario next week`,next:`Anna gets a different needs-analysis scenario next week. No coaching time yet.`,decided:`Your decision: reassess Anna next week with a new scenario; no coaching time is spent yet.`},
+   verify:{title:`Review it yourself`,next:`You compare her three transcripts yourself before deciding.`,decided:`Your decision: compare Anna's three transcripts yourself before deciding.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on Anna this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach Anna now, using {mine} of your {total} coaching minutes, against the suggestion.`}},
+  outcomes:[{label:`Progress holds`,text:`she does as well in a new scenario. The improvement looks real; close the priority or raise the difficulty.`},{label:`Progress drops`,text:`she does less well in the new scenario. The gains were partly familiarity, so practise the skill across different conversations.`}],
+  s2:{title:`What happens when practice shows improvement?`,
+   line:`Anna <span class="hl">gets better each time</span>, but every attempt so far used the same conversation.`,
+   goal:`The goal: test whether her progress holds in a different scenario before deciding anything.`,
+   kTask:`Find material for a new scenario that tests the same skill.`,kWait:`How would you test whether Anna's progress is real?`,
+   kRates:{price:`low`,basics:`general`,discovery:`important`,agent:`low`,brochure:`review`},
+   kWhy:{discovery:`Approved needs-analysis questions. Directly relevant to the skill Anna is improving.`,basics:`Supporting: a scenario built on product basics tests the same skill in different territory.`},
+   kAnchor:{label:`discovery guide, opening questions`,quote:`“Ask at least one question about the client's situation before you describe any product.”`},
+   kOut:{priority:`Needs analysis in new territory, anchored to the approved guide.`,qs:[`What would you ask a client whose situation you know nothing about?`,`How do you adjust your questions when the client changes topic?`,`How do you summarise what you heard before suggesting anything?`],scenario:`A simulated client with a different situation and a different concern. Anna runs the same needs analysis in new territory.`},
+   kSum:`From promising progress to a fair test in a new scenario.`,
+   cTask:`Choose a client situation she has not practised yet.`,
+   cRows:[[`Prospect`,`Mr. Alvarez`],[`Conversation`,`<span class="hl">Recently started his own business.</span>`],[`Status`,`First meeting in two weeks`],[`Still unknown`,`His family situation and what he wants to protect`],[`Next focus`,`The same needs analysis, in a new situation`]],
+   cAnchor:{label:`client note, referral entry`,html:`<span class="hl">The note records only that he recently started a business.</span> Nothing about his needs is known yet.`},
+   cWait:`What should Anna find out before suggesting anything?`,
+   cOut:{known:`He recently started a business. A first meeting is planned.`,unknown:[`His family situation`,`What he wants to protect`],question:`“Before anything else, can you tell me what has changed for you since starting the business?”`,match:`Anna rehearses this new kind of conversation with a simulated client. The result shows whether her progress holds.`},
+   cSum:`From one familiar scenario to a fair test in a new one.`,
+   rx:{type:`Getting better, on one scenario.`,kind:`An improving skill`,ev:`Three simulated attempts on the same conversation.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> A new scenario next week tests whether the progress holds.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`Promising progress, tested once.`,body:`You see three simulated attempts, better each time, all on one conversation. The AI suggests reassessing with a new scenario before deciding.`,kase:`Anna improved each time on the same practice conversation.`,proof:`Illustrative attempts support a fair test, not a conclusion.`},
+    {tag:`Knowledge, a fair test`,title:`Test the same skill in new territory.`,body:`The approved discovery guide gives the questions. A new scenario changes the client, not the skill. You review it before anything is assigned.`,kase:`Target: the same needs analysis, in a different situation.`,proof:`Sample source: fictional approved discovery guide, shown in the Knowledge example above.`},
+    {tag:`Client, a new situation`,title:`A client situation she has not practised.`,body:`The fictional note records only that the client recently started a business. Anna has to find out the rest.`,kase:`Fictional prospect Mr. Alvarez, first meeting in two weeks.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, a new scenario`,title:`Does the progress hold?`,body:`A different simulated scenario shows whether the improvement is skill or familiarity.`,kase:`If it holds, close the priority. If not, practise across more conversations.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Decide with a fair test behind you.`,body:`With the new scenario in, you decide: close the priority, raise the difficulty, or keep practising.`,kase:`Promising is not the same as proven, and the difference is now visible.`,proof:`No training, assignment or outcome is created by this page.`}]}}
+};
+
 const $=id=>document.getElementById(id);
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let pick=null,locked=false,step=0,stop=0,turns=0;
-const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const C=id=>CASES[id];
+/* State. pick = the manager's selection; TOP = the AI's suggestion; explored = the case on screen.
+   Each learner keeps its own demo decision, so switching never loses or mixes them. Nothing leaves this page. */
+let pick=null,locked=false,explored=null,step=0,stop=0,runTok=0;
+const dec={};ORDER.forEach(id=>dec[id]={action:``,reason:``,note:``,confirmed:false,outcome:``});
+const cur=()=>CASES[explored||TOP];
 
-/* step 1: each card is a training report (front) with simulated practice on its back */
-$('team').innerHTML=TEAM.map(p=>`<label class="person" data-p="${p.id}"><input type="radio" name="pick" value="${p.id}" aria-label="${p.name}: ${p.ctx}"><span class="flip"><span class="face front"><span class="slip">Training report</span><b>${p.name}</b><span class="paper">Courses complete</span><span class="paper">Tests passed</span><span class="ctx">${p.ctx}</span></span><span class="face back" aria-hidden="true"><span class="slip">Simulated practice</span><span class="badges"><span class="mark mine">&#10003; Your choice</span><span class="mark here">&#9733; AI suggests</span></span><b>${p.name}</b><span class="strength s-${p.pill}"><span class="meter"><i></i><i></i><i></i></span>${p.pillTxt}</span><span class="t">${p.id===TOP?'<span class="hl">'+p.short+'</span>':p.short}</span><span class="prio">Suggested: <strong>${p.sug}</strong></span></span></span></label>`).join('');
+/* ---------- step 1: five training reports that turn over ---------- */
+$('team').innerHTML=ORDER.map(id=>{const p=C(id);return `<label class="person" data-p="${id}"><input type="radio" name="pick" value="${id}" aria-label="${p.name}: ${esc(p.ctx)}"><span class="flip"><span class="face front"><span class="slip">Training report</span><b>${p.name}</b><span class="paper">Courses complete</span><span class="paper">Tests passed</span><span class="ctx">${esc(p.ctx)}</span></span><span class="face back" aria-hidden="true"><span class="slip">Simulated practice</span><span class="badges"><span class="mark mine">&#10003; Your choice</span><span class="mark here">&#9733; AI suggests</span><span class="mark now">&#9673; Exploring</span></span><b>${p.name}</b><span class="strength s-${p.pill}"><span class="meter"><i></i><i></i><i></i></span>${p.pillTxt}</span><span class="t">${id===TOP?'<span class="hl">'+esc(p.short)+'</span>':esc(p.short)}</span><span class="prio">Suggested: <strong>${esc(p.sug)}</strong></span></span></span></label>`}).join('');
 $('team').addEventListener('change',e=>{if(locked)return;pick=e.target.value;document.querySelectorAll('.person').forEach(l=>l.classList.toggle('picked',l.dataset.p===pick));$('lock').disabled=false});
-$('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)return;locked=true;
- $('team').classList.add('locked');document.querySelectorAll('.person input').forEach(i=>i.disabled=true);$('lockRow').hidden=true;
- const me=TEAM.find(p=>p.id===pick),top=TEAM.find(p=>p.id===TOP),same=pick===TOP;
- $('team').classList.add('revealed');
+$('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)return;locked=true;explored=pick;
+ $('team').classList.add('locked','revealed');document.querySelectorAll('.person input').forEach(i=>i.disabled=true);$('lockRow').hidden=true;
  $('intro0').textContent='On paper, all five look the same. In practice, they do not.';
  const cards=[...document.querySelectorAll('.person')];
- /* turn the reports over one by one; the card practice points to turns last */
  const seq=[...cards.filter(l=>l.dataset.p!==TOP),cards.find(l=>l.dataset.p===TOP)];
  seq.forEach((l,i)=>setTimeout(()=>{l.classList.add('flipped');l.querySelector('.front').setAttribute('aria-hidden','true');l.querySelector('.back').removeAttribute('aria-hidden');if(l.dataset.p===TOP)l.classList.add('top')},still?0:200+i*260+(l.dataset.p===TOP?380:0)));
- $('verdict').innerHTML=`<p class="sim-flag">Fictional team. Simulated practice.</p><h3>${same?'You chose Michelle, and practice agrees. Could her report have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><div class="exec" role="group" aria-label="Summary of the finding"><div><span>Training report</span><b>#1 in testing</b></div><div><span>Simulated practice</span><b>Same gap in 4 of 4 attempts</b></div><div class="ex-ai"><span>AI suggests</span><b>Coach her before tomorrow</b></div><button type="button" class="btn hi" id="toDecision">Make your decision</button></div><div class="versus"><div class="vs report"><p class="vs-label">Her training report</p><p class="vs-fig">#1</p><p class="vs-cap">Highest test score on the team.</p></div><div class="vs practice"><p class="vs-label">Her simulated practice</p><p class="vs-fig">0<small>of</small>4</p><p class="vs-cap">attempts in which she asked what the client was comparing before she pitched. A coaching signal, not proof of sales results.</p></div></div><figure class="moment"><figcaption>The moment that matters: practice attempt 4, simulated client</figcaption><p class="m-client"><i>Client</i>“Another agent quoted me less.”</p><p class="m-agent"><i>Michelle</i><span class="hl">“Ours covers more, though. For example, it includes…”</span></p><p class="m-also">Attempt 1 went the same way. Client: “This is more than we budgeted.” Michelle: “Let me walk you through what's included…”</p></figure><p class="sum">Four attempts. A price concern each time. Product features each time. <span class="hl swipe">Her client meeting is tomorrow.</span></p><div class="chainwrap"><div class="groups" aria-hidden="true"><span>Observed in practice</span><span>AI suggests</span><span>You decide</span></div><div class="chain" id="chain" role="list" aria-label="From evidence to decision"><div role="listitem" data-g="Observed in practice"><p class="ck">Agent</p><p class="cv">Michelle</p><p class="cn">Client meeting tomorrow.</p></div><div role="listitem"><p class="ck">Weakness</p><p class="cv">Pitches before she asks</p><p class="cn">Answers price concerns with features.</p></div><div role="listitem"><p class="ck">Evidence</p><p class="cv"><big>4<small> of </small>4</big>attempts</p><p class="cn"><strong>How sure?</strong> Same gap every time, in two scenarios. Not yet seen with real clients.</p></div><div role="listitem" class="ai-cell" data-g="AI suggests"><p class="ck">Suggestion</p><p class="cv">Coach before tomorrow</p><p class="cn">Because the gap repeats and the meeting is close.</p></div><div role="listitem" class="decide-cell" id="chainDecide" data-g="You decide"><p class="ck">Decision</p><p class="cv" id="chainCv">Yours</p><p class="cn" id="chainCn">Choose below. Nothing happens until you approve.</p></div></div></div><p class="note">Text-based practice with an AI client. Every person and conversation here is simulated.</p>`;
- const order=[top,...TEAM.filter(p=>p.id!==TOP)];
- $('evidence').innerHTML=order.map(p=>`<div class="ev${p.id===TOP?' top':''}"><div class="who"><b>${p.name}</b><span>${p.focus}${p.id===pick?', your choice':''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${p.ev}</p></div><div class="sug"><b>Suggestion: ${p.sug}</b><span>${p.sugWhy}</span></div></div>`).join('');
- $('decideRow').innerHTML='<button type="button" data-decide="accept" aria-pressed="false"><em class="sugg">AI suggestion</em><b>Coach now</b><small><span>What happens next</span>Michelle gets coaching time before tomorrow. The other four get a next practice.</small></button><button type="button" data-decide="verify" aria-pressed="false"><b>Verify first</b><small><span>What happens next</span>Michelle gets a second practice scenario. You decide again with more evidence.</small></button><button type="button" data-decide="dismiss" aria-pressed="false"><b>Override</b><small><span>What happens next</span>You choose differently and give a reason. The suggestion stays open for review.</small></button>';
- $('decisionStatus').textContent='Choose a management action. This demo never sends assignments.';
- renderAllocation();
+ renderAll();
  const wait=still?0:200+seq.length*260+380+900;
- setTimeout(()=>{$('reveal').hidden=false;requestAnimationFrame(()=>{$('reveal').classList.add('in');$('verdict').focus({preventScroll:true});$('verdict').scrollIntoView({behavior:still?'auto':'smooth',block:'start'})})},wait);
+ setTimeout(()=>{$('reveal').hidden=false;$('ctxbar').hidden=false;requestAnimationFrame(()=>{$('reveal').classList.add('in');$('verdict').focus({preventScroll:true});$('verdict').scrollIntoView({behavior:still?'auto':'smooth',block:'start'})})},wait);
 });
-/* Human decision remains local to this illustrative page. */
-let managerAction='',actionConfirmed=false,simulatedOutcome='';
-function resourcePlan(){
- const total=Number(document.querySelector('input[name="demoBudget"]:checked').value);
- const senior=$('seniorSupport').checked;
- let michelle=0,other=0,otherName='Unallocated';
- if(managerAction==='accept'){michelle=total===30?20:10;other=total-michelle;otherName='Other team coaching';}
- if(managerAction==='dismiss'&&pick&&pick!=='michelle'){other=total;otherName=TEAM.find(p=>p.id===pick).name+', manager choice';}
- return {total,senior,michelle,other,otherName};
+
+function renderAll(){renderVerdict();renderEvidence();renderLab();markCards();renderCtx();if(step===1)renderStep2()}
+function setExplored(id,from){if(!CASES[id]||id===explored)return;explored=id;stop=0;renderAll();
+ if(from&&!document.body.contains(from)){const again=from.classList.contains('path')?document.querySelector('.path[data-explore="'+id+'"]'):document.querySelector('#evidence .ev-go[data-explore="'+id+'"]');if(again)again.focus({preventScroll:true})}
+ const target=step===1?$('h1'):$('verdict');target.scrollIntoView({behavior:still?'auto':'smooth',block:'start'});
+ $('cxLive').textContent='Now exploring '+C(id).name+'.'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-explore]');if(b)setExplored(b.dataset.explore,b)});
+
+function markCards(){document.querySelectorAll('.person').forEach(l=>l.classList.toggle('exploring',locked&&l.dataset.p===explored&&!(explored===pick&&pick===TOP)))}
+
+function renderVerdict(){
+ const c=cur(),id=explored,isPick=id===pick,isAI=id===TOP,split=pick&&pick!==TOP;
+ const h=isPick&&isAI?`You chose ${c.name}, and the AI agrees. Here is why.`:isPick?`You chose ${c.name}. Here is what ${c.pos} practice shows.`:isAI?`The AI suggests ${c.name}. Here is why.`:`Exploring ${c.name}. Here is what ${c.pos} practice shows.`;
+ const note=!split?``:isPick?`For this fictional team's current evidence, the AI's top coaching priority is ${C(TOP).name}. Compare both before you decide.`:isAI?`Your pick, ${C(pick).name}, stays saved. Switch back any time.`:`Your pick was ${C(pick).name}; the AI suggests ${C(TOP).name}. Switch any time.`;
+ const paths=split?`<div class="paths" role="group" aria-label="Choose which case to explore">${[pick,TOP].map(x=>{const k=C(x);return `<button type="button" class="path" data-explore="${x}" aria-pressed="${x===id}"><i>${x===pick?'Your selection':'AI recommendation'}</i><b>Explore ${k.name}</b><small>${esc(k.practice.sum)}</small></button>`}).join('')}</div>`:``;
+ const fig=f=>f.of?`${esc(f.fig)}<small>of</small>${esc(f.of)}`:f.unit?`${esc(f.fig)}<small>${esc(f.unit)}</small>`:esc(f.fig);
+ const m=c.moment;
+ const moment=m.client?`<figure class="moment"><figcaption>${esc(m.cap)}</figcaption><p class="m-client"><i>Client</i>${esc(m.client)}</p><p class="m-agent"><i>${c.name}</i><span class="hl">${esc(m.agent)}</span></p><p class="m-also">${esc(m.also)}</p></figure>`:`<figure class="moment obs"><figcaption>${esc(m.cap)}</figcaption><p class="m-obs">${m.html}</p></figure>`;
+ const ch=c.chain;
+ $('verdict').innerHTML=`<p class="sim-flag">Fictional team. Simulated practice.</p><h3>${esc(h)}</h3>${note?`<p class="v-note">${esc(note)}</p>`:``}${paths}<div class="exec" role="group" aria-label="Summary for ${c.name}"><div><span>Training report</span><b>${esc(c.report.sum)}</b></div><div><span>Simulated practice</span><b>${esc(c.practice.sum)}</b></div><div class="ex-ai"><span>AI suggests</span><b>${esc(c.aiShort)}</b></div><button type="button" class="btn hi" id="toDecision">Make your decision</button></div><div class="versus"><div class="vs report"><p class="vs-label">${c.Pos} training report</p><p class="vs-fig">${fig(c.report)}</p><p class="vs-cap">${esc(c.report.cap)}</p></div><div class="vs practice"><p class="vs-label">${c.Pos} simulated practice</p><p class="vs-fig">${fig(c.practice)}</p><p class="vs-cap">${esc(c.practice.cap)}</p></div></div>${moment}<p class="sum">${c.sumHTML}</p><div class="chainwrap"><div class="groups" aria-hidden="true"><span>Observed in practice</span><span>AI suggests</span><span>You decide</span></div><div class="chain" id="chain" role="list" aria-label="From evidence to decision for ${c.name}"><div role="listitem" data-g="Observed in practice"><p class="ck">Agent</p><p class="cv">${c.name}</p><p class="cn">${esc(ch.ctx)}</p></div><div role="listitem"><p class="ck">Finding</p><p class="cv">${esc(ch.weak)}</p><p class="cn">${esc(ch.weakN)}</p></div><div role="listitem"><p class="ck">Evidence</p><p class="cv"><big>${esc(ch.big)}${ch.bigOf?'<small> of </small>'+esc(ch.bigOf):''}</big>${esc(ch.unit)}</p><p class="cn"><strong>How sure?</strong> ${esc(ch.sure)}</p></div><div role="listitem" class="ai-cell" data-g="AI suggests"><p class="ck">Suggestion</p><p class="cv">${esc(ch.sug)}</p><p class="cn">${esc(ch.because)}</p></div><div role="listitem" class="decide-cell" id="chainDecide" data-g="You decide"><p class="ck">Decision</p><p class="cv" id="chainCv">Yours</p><p class="cn" id="chainCn">Choose below. Nothing happens until you approve.</p></div></div></div><p class="note">Text-based practice with an AI client. Every person and conversation here is simulated.</p>`;
+ renderChainDecision();
 }
-function renderAllocation(){
- const p=resourcePlan();
- $('allocation').innerHTML='<article><b>'+p.total+' min</b><span>Manager capacity</span></article><article><b>'+p.michelle+' min</b><span>Michelle</span></article><article><b>'+p.other+' min</b><span>'+esc(p.otherName)+'</span></article>';
- $('allocationWhy').textContent=managerAction==='accept'?(p.senior?'Senior colleague checks another scenario separately; manager time remains divided within the selected budget.':'Illustrative manager-time allocation. This is not an AI optimizer.'):
- managerAction==='verify'?'No one-to-one time assigned to this finding yet. Request another scenario before spending the coaching budget.':
- managerAction==='dismiss'?'AI suggestion overruled. You can give time to your original choice, or reserve it if you had picked Michelle.':
- 'The same time budget can support different actions. Choose your decision first.';
-}
-function drawOutcome(){
- const labels=managerAction==='verify'?['Gap repeats','Gap disappears']:managerAction==='dismiss'?['New evidence challenges override','New evidence supports override']:['Practice improves','Gap remains'];
- $('outcomeChoices').innerHTML=labels.map((x,i)=>'<button type="button" data-outcome="'+i+'" aria-pressed="'+(simulatedOutcome===String(i))+'">'+x+'</button>').join('');
- let result='Day 0: observe, then the manager decides. Day 7: examine another attempt, then keep, revise or close the priority.';
- if(simulatedOutcome==='0')result=managerAction==='accept'?'Simulated improvement: vary the scenario and seek field observation before declaring readiness.':
- managerAction==='verify'?'Pattern repeats in a second scenario. Reopen the coaching decision with stronger evidence.':
- 'The repeated gap persists after your override. Reopen the AI suggestion rather than treating either party as infallible.';
- if(simulatedOutcome==='1')result=managerAction==='accept'?'Gap remains in simulated practice. Try a different coaching method and reassess.':
- managerAction==='verify'?'New simulated scenario does not reproduce the gap. Keep the finding provisional; preserve the manager time.':
- 'The next simulated case does not reproduce the pattern. Keep your override under review and set a light checkpoint.';
- $('outcomeDetail').textContent=result;
-}
-function drawDecision(){
- if(!actionConfirmed)return;
- const p=resourcePlan();
- const reason=managerAction==='dismiss'?' Reason: '+$('decisionReason').value+($('decisionNote').value.trim()?' ('+$('decisionNote').value.trim()+')':''):'';
- $('decidedTxt').textContent=managerAction==='accept'?'Your decision: coach Michelle before tomorrow, using '+p.michelle+' of your '+p.total+' coaching minutes.':
- managerAction==='verify'?'Your decision: verify first. Michelle would get a second scenario before any coaching time is spent.':
- 'Your decision: override the suggestion. Your judgment stands; the suggestion stays open.'+reason;
- $('followupDetails').hidden=false;$('decided').hidden=false;drawOutcome();
- const cd=$('chainDecide');if(cd){cd.classList.add('set');$('chainCv').textContent=managerAction==='accept'?'Coach Michelle now':managerAction==='verify'?'Verify first':'Override';$('chainCn').textContent=managerAction==='accept'?'Your demo decision. No assignment sent.':managerAction==='verify'?'Your demo decision: second scenario first.':'Your demo override, with your reason.'}
-}
-$('decideRow').addEventListener('click',e=>{
- const button=e.target.closest('[data-decide]');if(!button||actionConfirmed)return;
- managerAction=button.dataset.decide;
- $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
- $('reasonWrap').hidden=managerAction!=='dismiss';$('confirmDecision').disabled=false;$('confirmDecision').textContent='Approve: '+button.querySelector('b').textContent;
- $('decisionStatus').textContent=managerAction==='dismiss'?'Choose a reason for the override, then approve.':'Ready for your approval. This demo sends nothing.';
+function renderChainDecision(){const d=dec[explored],cd=$('chainDecide');if(!cd)return;const c=cur();
+ cd.classList.toggle('set',d.confirmed);
+ $('chainCv').textContent=d.confirmed?c.actions[d.action].title:`Yours`;
+ $('chainCn').textContent=d.confirmed?(d.action===`override`?`Your demo override, with your reason. No assignment sent.`:`Your demo decision. No assignment sent.`):`Choose below. Nothing happens until you approve.`}
+
+function renderEvidence(){
+ const order=[TOP,...ORDER.filter(x=>x!==TOP)];
+ $('evidence').innerHTML=order.map(id=>{const p=C(id),tags=[id===TOP?'AI top priority':'',id===pick?'your choice':''].filter(Boolean).join(', ');return `<div class="ev${id===TOP?' top':''}${id===explored?' now':''}"><div class="who"><b>${p.name}</b><span>${esc(p.focus)}${tags?', '+tags:''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${esc(p.ev)}</p></div><div class="sug"><b>Suggestion: ${esc(p.sug)}</b><span>${esc(p.sugWhy)}</span><button type="button" class="ev-go" data-explore="${id}" aria-pressed="${id===explored}" aria-label="Explore ${p.name}'s case">${id===explored?'Exploring now':'Explore '+p.name}</button></div></div>`}).join('')}
+
+/* ---------- the manager's decision, per explored learner ---------- */
+function plan(){const total=+document.querySelector('input[name="demoBudget"]:checked').value,d=dec[explored],a=d.action?cur().actions[d.action]:null;const mine=a&&a.coach?Math.round(total*2/3):0;return {total,mine,rest:total-mine}}
+function renderAllocation(){const p=plan(),c=cur(),d=dec[explored];
+ const restFor=explored===TOP?`Free for the rest of the team`:`Free for others, including the AI's top priority, ${C(TOP).name}`;
+ $('allocation').innerHTML=`<article><b>${p.total} min</b><span>Your coaching time this week</span></article><article><b>${p.mine} min</b><span>${c.name}, one-to-one</span></article><article><b>${p.rest} min</b><span>${esc(restFor)}</span></article>`;
+ $('allocationWhy').textContent=(!d.action?`Choose a decision to see how your coaching time would be used.`:p.mine?`This decision uses ${p.mine} of your ${p.total} minutes on ${c.name}.`:`This decision uses none of your coaching time on ${c.name}.`)+` Illustrative only, not an optimiser.`}
+function decidedText(){const c=cur(),d=dec[explored],p=plan();let t=c.actions[d.action].decided.replace(`{mine}`,p.mine).replace(`{total}`,p.total);if(d.action===`override`)t+=` Reason: `+d.reason+(d.note.trim()?` (`+d.note.trim()+`)`:``)+`.`;return t}
+const NEXT={accept:`Next: keep or close the priority, with this evidence.`,verify:`Next: decide again with the new evidence.`,override:`Next: compare the result with the suggestion you overrode. Neither you nor the AI is assumed to be right.`};
+function drawOutcome(){const c=cur(),d=dec[explored];
+ $('outcomeChoices').innerHTML=c.outcomes.map((o,i)=>`<button type="button" data-outcome="${i}" aria-pressed="${d.outcome===String(i)}">${esc(o.label)}</button>`).join('');
+ $('outcomeDetail').textContent=d.outcome===``?`Pick one of two possible simulated outcomes for ${c.name}. Neither is a prediction or a real result.`:`Day 7, simulated: `+c.outcomes[+d.outcome].text+` `+NEXT[d.action]}
+function renderLab(){const c=cur(),d=dec[explored];
+ $('labName').textContent=c.name;
+ $('labSub').innerHTML=`<span class="ai-tag">AI suggestion</span> ${esc(c.labSub)} It is a suggestion; nothing happens until you approve.`;
+ $('bound').innerHTML=`<strong>What the evidence can tell you:</strong> ${esc(c.bound)}`;
+ $('decideRow').innerHTML=[`accept`,`verify`,`override`].map(k=>{const a=c.actions[k];return `<button type="button" data-decide="${k}" aria-pressed="${d.action===k}"${d.confirmed?' disabled':''}>${k===`accept`?'<em class="sugg">AI suggestion</em>':''}<b>${esc(a.title)}</b><small><span>What happens next</span>${esc(a.next)}</small></button>`}).join('');
+ $('reasonWrap').hidden=d.action!==`override`;$('reasonName').textContent=c.name;$('decisionReason').value=d.reason;$('decisionNote').value=d.note;
+ $('confirmDecision').disabled=!d.action||d.confirmed;
+ $('confirmDecision').textContent=d.confirmed?`Demo decision made`:d.action?`Approve: `+c.actions[d.action].title:`Choose an option above`;
+ $('decisionStatus').textContent=d.confirmed?`Demo decision made on this page only. No assignment sent, nothing saved.`:d.action?(d.action===`override`?`Choose a reason for the override, then approve.`:`Ready for your approval. This demo sends nothing.`):`Choose a management action for ${c.name}. This demo never sends assignments.`;
  renderAllocation();
-});
-$('resourceControls').addEventListener('change',()=>{renderAllocation();drawDecision()});
-$('confirmDecision').onclick=()=>{
- if(!managerAction)return;
- if(managerAction==='dismiss'&&!$('decisionReason').value){$('decisionStatus').textContent='Choose an override reason first.';$('decisionReason').focus();return}
- actionConfirmed=true;$('confirmDecision').disabled=true;
- $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=true);
- $('decisionStatus').textContent='Demo decision made on this page only. No assignment sent, nothing saved.';$('confirmDecision').textContent='Demo decision made';
- drawDecision();$('decided').scrollIntoView({behavior:'smooth',block:'nearest'});
-};
-$('changeDecision').onclick=()=>{
- actionConfirmed=false;simulatedOutcome='';
- $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=false);
- $('confirmDecision').disabled=!managerAction;if(managerAction)$('confirmDecision').textContent='Approve: '+$('decideRow').querySelector('[aria-pressed="true"] b').textContent;
- $('decided').hidden=true;$('followupDetails').hidden=true;$('followupDetails').open=false;
- const cd=$('chainDecide');if(cd){cd.classList.remove('set');$('chainCv').textContent='Yours';$('chainCn').textContent='Choose below. Nothing happens until you approve.'}
- $('decisionStatus').textContent='Change your decision and confirm again. All outcomes are illustrative.';
- $('decideRow').scrollIntoView({behavior:'smooth',block:'nearest'});
-};
-$('outcomeChoices').addEventListener('click',e=>{
- const button=e.target.closest('[data-outcome]');if(!button)return;simulatedOutcome=button.dataset.outcome;drawOutcome();
-});
+ $('decided').hidden=!d.confirmed;$('followupDetails').hidden=!d.confirmed;if(!d.confirmed)$('followupDetails').open=false;
+ if(d.confirmed){$('decidedTxt').textContent=decidedText();drawOutcome()}}
+$('decideRow').addEventListener('click',e=>{const b=e.target.closest('[data-decide]'),d=dec[explored];if(!b||d.confirmed)return;d.action=b.dataset.decide;renderLab();renderCtx()});
+$('decisionReason').addEventListener('change',()=>{dec[explored].reason=$('decisionReason').value});
+$('decisionNote').addEventListener('input',()=>{dec[explored].note=$('decisionNote').value});
+$('resourceControls').addEventListener('change',()=>{renderAllocation();if(dec[explored].confirmed)$('decidedTxt').textContent=decidedText()});
+$('confirmDecision').onclick=()=>{const d=dec[explored];if(!d.action||d.confirmed)return;
+ if(d.action===`override`&&!d.reason){$('decisionStatus').textContent=`Choose an override reason first.`;$('decisionReason').focus();return}
+ d.confirmed=true;renderLab();renderChainDecision();renderCtx();$('decided').scrollIntoView({behavior:still?'auto':'smooth',block:'nearest'})};
+$('changeDecision').onclick=()=>{const d=dec[explored];d.confirmed=false;d.outcome=``;renderLab();renderChainDecision();renderCtx();
+ $('decisionStatus').textContent=`Change your decision and approve again. All outcomes are illustrative.`;$('decideRow').scrollIntoView({behavior:still?'auto':'smooth',block:'nearest'})};
+$('outcomeChoices').addEventListener('click',e=>{const b=e.target.closest('[data-outcome]');if(!b)return;dec[explored].outcome=b.dataset.outcome;drawOutcome()});
 
+/* ---------- context bar: pick, AI suggestion, exploring, action ---------- */
+function renderCtx(){if(!explored)return;const d=dec[explored],c=cur();
+ $('cxPick').textContent=pick?C(pick).name:`Not chosen yet`;$('cxAI').textContent=C(TOP).name;$('cxNow').textContent=c.name;
+ $('cxAct').textContent=d.confirmed?c.actions[d.action].title:d.action?`Choosing…`:`Not decided`;
+ const sw=$('cxSwitch');let target=null,label=``;
+ if(pick&&explored!==pick){target=pick;label=`Back to your pick: `+C(pick).name}else if(explored!==TOP){target=TOP;label=`Explore the AI's pick: `+C(TOP).name}
+ sw.hidden=!target;if(target){sw.dataset.explore=target;sw.textContent=label}}
 
-/* step 2 */
+/* ---------- step 2: the explored learner travels around the four Studios ---------- */
+function renderStep2(){const c=cur(),s=c.s2;
+ $('h1').textContent=s.title;$('s2line').innerHTML=s.line;$('s2goal').textContent=s.goal;$('loopName').textContent=c.name;
+ renderK();renderC();renderRx();drawStop()}
+function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
+function renderK(){runTok++;const s=cur().s2;$('showK').classList.remove('read');
+ $('showK').innerHTML=`<p class="studio-name">Knowledge Studio</p><h3 class="studio-task">${esc(s.kTask)}</h3><div class="showbody"><div><p class="col-h">Training library (fictional)</p>${LIBRARY.map(d=>`<div class="doc" data-doc="${d.id}"><b>${esc(d.title)}</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>`).join('')}<div class="sample-source"><b>Source anchor: ${esc(s.kAnchor.label)}</b><p><span class="hl">${esc(s.kAnchor.quote)}</span></p></div><button class="btn hi" type="button" data-run="K">Reveal example analysis</button></div><div class="out" aria-live="polite"><p class="col-h">What a manager could review</p><div class="wait" id="waitK">${esc(s.kWait)}</div><div id="outK" hidden><div class="outblock fade"><b>Training priority</b><p>${esc(s.kOut.priority)}</p></div><div class="outblock fade"><b>Draft question bank</b><ul>${s.kOut.qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div><div class="outblock fade"><b>Targeted Practice Studio scenario</b><p>${esc(s.kOut.scenario)}</p></div><div class="outblock go fade"><b>Your role</b><p>Review the actual approved source, revise the draft, and approve any assignment.</p></div></div></div></div><p class="showsum fade" id="sumK">${esc(s.kSum)}</p>`}
+function renderC(){runTok++;const c=cur(),s=c.s2;$('showC').classList.remove('read');
+ $('showC').innerHTML=`<p class="studio-name">Client Studio</p><h3 class="studio-task">${esc(s.cTask)}</h3><div class="showbody"><div><p class="tab">Client-context note (fictional)</p><div class="filecard"><dl>${[[`Agent`,c.name],...s.cRows].map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div><div class="sample-source"><b>Source anchor: ${esc(s.cAnchor.label)}</b><p>${s.cAnchor.html}</p></div><button class="btn hi" type="button" data-run="C">Reveal example guidance</button></div><div class="out" aria-live="polite"><p class="col-h">What a manager could review</p><div class="wait" id="waitC">${esc(s.cWait)}</div><div id="outC" hidden><div class="outblock fade"><b>Known from the sample file</b><p>${esc(s.cOut.known)}</p></div><div class="outblock fade"><b>Unknown, so do not infer</b><ul>${s.cOut.unknown.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div class="outblock fade"><b>Suggested discovery question</b><p>${esc(s.cOut.question)}</p></div><div class="outblock go fade"><b>Matched practice</b><p>${esc(s.cOut.match)}</p></div></div></div></div><p class="showsum fade" id="sumC">${esc(s.cSum)}</p><p class="small">The demo does not read real client calls or private client files.</p>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-run]');if(!b||b.disabled)return;const tok=runTok,c=cur(),s=c.s2,ok=()=>tok===runTok;b.disabled=true;b.textContent='Example revealed';
+ if(b.dataset.run===`K`){$('showK').classList.add('read');
+  document.querySelectorAll('#showK .doc').forEach((el,i)=>setTimeout(()=>{if(!ok())return;const id=el.dataset.doc,cls=s.kRates[id],r=el.querySelector('[data-rate]'),w=el.querySelector('[data-why]');r.textContent=RATE[cls];r.className='rate '+cls;w.textContent=(s.kWhy[id])||GENERIC_WHY[cls](c.name);w.hidden=false;el.classList.toggle('is-important',cls===`important`);el.classList.toggle('is-low',cls===`low`)},still?0:250+i*380));
+  setTimeout(()=>{if(!ok())return;$('waitK').hidden=true;$('outK').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outK .fade')],60,380);stagger([$('sumK')],60+4*380,0)})},still?0:250+LIBRARY.length*380+200)}
+ else{$('showC').classList.add('read');setTimeout(()=>{if(!ok())return;$('waitC').hidden=true;$('outC').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outC .fade')],100,420);stagger([$('sumC')],100+4*420,0)})},still?0:900)}});
+function renderRx(){const c=cur(),oid=explored===TOP?`david`:TOP,o=C(oid);
+ $('rxLead').textContent=`${c.name} compared with ${o.name}: different evidence, a different starting point.`;
+ $('rxGrid').innerHTML=[c,o].map(k=>{const r=k.s2.rx;return `<article class="rx-card"><h4>${k.name}${k===C(TOP)?' <span class="rx-ai">AI top priority</span>':''}</h4><p class="rx-type">${esc(r.type)}</p><dl><div><dt>Practice shows</dt><dd>${esc(r.kind)}</dd></div><div><dt>Evidence</dt><dd>${esc(r.ev)}</dd></div></dl><ol class="lane" aria-label="Where ${k.name}'s loop starts">${[`Knowledge`,`Client`,`Practice`,`Leadership`].map((n,i)=>`<li${i===r.start?' class="start"':''}>${n}</li>`).join('')}</ol><p class="rx-start">${r.startTxt}</p></article>`}).join('')}
 const CYCLE=[[0,1],[2],[2],[3],[4,5]];
-const STOPS=[
- {n:0,tag:"Leadership, reveal the hidden risk",title:"An excellent test score hides a repeatable coaching signal.",body:"The manager sees Michelle's four simulated attempts across two scenarios, reviews their limits and decides what deserves scarce coaching time.",kase:"Michelle handles a lower-price objection by listing policy features instead of clarifying the comparison.",proof:"Four illustrative transcripts support a practice concern, not a claim about live customer calls or selling results."},
- {n:1,tag:"Knowledge, trace the source",title:"Find a specific principle, not a generic sales script.",body:"The fictional coaching note §2 says to ask what coverage is being compared before listing features. A manager reviews the source and approves any resulting material.",kase:"Target skill: ask a useful comparison question before giving product information.",proof:"Sample source: fictional approved-coaching-note §2. The Knowledge example above shows the source anchor and drafted questions."},
- {n:2,tag:"Client, understand context",title:"The client file tells you what is known, and what is missing.",body:"The illustrative note records a lower competing quote, but not the competing terms or the customer's priorities. The suggested next question respects that uncertainty.",kase:"Fictional prospect Ms. Rivera says: “Another agent quoted me less.” Michelle's follow-up is tomorrow.",proof:"Sample source: fictional client note, follow-up entry. The Client example above separates known facts from unsupported assumptions."},
- {n:3,tag:"Practice, rehearse the correction",title:"See whether Michelle asks before she pitches.",body:"A targeted, simulated price-objection role-play could test the exact skill. The manager would compare transcript moments and coach feedback before any further decision.",kase:"Old response: “Ours covers more.” Target response: “What would you like us to compare first?”",proof:"The demo shows a proposed practice objective, not a live AI run, measured improvement or a sent assignment."},
- {n:0,tag:"Leadership, reassess",title:"The loop returns to the manager, with evidence.",body:"If a later rehearsal shows the question working across different customer contexts, review that evidence. If not, adjust the coaching plan; do not infer sales success from a demo.",kase:"The team hub links the issue, source, customer context, planned rehearsal, and manager's next judgment.",proof:"No training, automated assignment or real-world outcome is created by this illustrative page."}
-];
-function drawStop(){
- const s=STOPS[stop];
- $('stopTag').textContent='Stage '+(stop+1)+' of '+STOPS.length+': '+s.tag;
+function drawStop(){const stops=cur().s2.stops,s=stops[stop];
+ $('stopTag').textContent='Stage '+(stop+1)+' of '+stops.length+': '+s.tag;
  $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
  $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Click any Studio, or select Next stage.';
- document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===s.n));
+ document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===STOP_NODE[stop]));
  const cy=CYCLE[stop];document.querySelectorAll('#cycle li').forEach((li,i)=>{li.classList.toggle('on',cy.includes(i));li.classList.toggle('past',i<Math.min(...cy));if(cy.includes(i))li.setAttribute('aria-current','step');else li.removeAttribute('aria-current')});
  document.querySelectorAll('.ring .arc').forEach(a=>a.classList.toggle('on',stop>0&&+a.dataset.arc===stop-1));$('prevStop').disabled=stop===0;
- $('nextStop').textContent=stop===STOPS.length-1?'Now your team':'Next stage';
-}
-$('nextStop').onclick=()=>{if(stop===STOPS.length-1){go(2);return}stop++;drawStop()};
+ $('nextStop').textContent=stop===stops.length-1?'Now your team':'Next stage'}
+$('nextStop').onclick=()=>{if(stop===4){go(2);return}stop++;drawStop()};
 $('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
 document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
 $('hubJump').onclick=()=>{stop=4;drawStop()};
 
-
-/* Step-two showpieces. Scripted illustration: no AI service is called and nothing is stored. */
-const KDOCS=[
- {cls:'important',label:'Coaching source',why:'Fictional §2: ask what the competing quote includes before describing policy features. Directly relevant to Michelle.'},
- {cls:'review',label:'Needs review',why:'A sample brochure may be old. Product claims and comparisons would require checking approved current materials.'},
- {cls:'general',label:'Supporting context',why:'The fictional manager memo explains how to verify a comparison; review it before an agent uses the wording.'}];
-function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
-$('runK').onclick=()=>{$('runK').disabled=true;$('runK').textContent='Example revealed';$('showK').classList.add('read');
- document.querySelectorAll('#showK .doc').forEach((d,i)=>setTimeout(()=>{const k=KDOCS[i],r=d.querySelector('[data-rate]'),w=d.querySelector('[data-why]');r.textContent=k.label;r.className='rate '+k.cls;w.textContent=k.why;w.hidden=false;if(k.cls==='important')d.classList.add('is-important')},still?0:250+i*450));
- setTimeout(()=>{$('waitK').hidden=true;$('outK').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outK .fade')],60,380);stagger([$('sumK')],60+4*380,0)})},still?0:250+3*450+200)};
-$('runC').onclick=()=>{$('runC').disabled=true;$('runC').textContent='Example revealed';$('showC').classList.add('read');
- setTimeout(()=>{$('waitC').hidden=true;$('outC').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outC .fade')],100,420);stagger([$('sumC')],100+4*420,0)})},still?0:900)};
-
-/* step 3 */
+/* ---------- step 3 ---------- */
 const CONVS=["“Your premium is too high”","Comparing a competitor's quote","“I need to think about it”","The first call to a new prospect","Asking for the first meeting","Following up after silence"];
 $('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
 function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
@@ -811,10 +971,11 @@ function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').f
  const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
 $('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
 $('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
+function renderRecap(){const done=ORDER.filter(id=>dec[id].confirmed);$('recap').hidden=!pick&&!done.length;
+ $('recap').innerHTML=`<p class="rc-h">Your demo, recapped</p><ul>${pick?(pick===TOP?`<li>You picked <strong>${C(pick).name}</strong>, the same agent the AI suggested.</li>`:`<li>You picked <strong>${C(pick).name}</strong>. The AI's top suggestion was <strong>${C(TOP).name}</strong>.</li>`):``}${done.map(id=>`<li>${C(id).name}: <strong>${esc(C(id).actions[dec[id].action].title)}</strong></li>`).join(``)}${pick&&!done.length?`<li>No demo decision made yet.</li>`:``}</ul><p class="small">Fictional decisions about a fictional team. Nothing was sent or saved.</p>`}
 
 /* reveal summary: jump straight to the manager's choice */
 document.addEventListener('click',e=>{if(!e.target.closest('#toDecision'))return;$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const b=document.querySelector('#decideRow [data-decide]:not(:disabled)');if(b)b.focus({preventScroll:true})},still?0:650)});
-
 /* hero action: go straight to the first decision */
 $('startDemo').onclick=()=>{go(0,true);$('h0').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const i=document.querySelector('#team input:not(:disabled)');if(i)i.focus({preventScroll:true})},still?0:650)};
 
@@ -822,8 +983,9 @@ $('startDemo').onclick=()=>{go(0,true);$('h0').scrollIntoView({behavior:still?'a
 const NAMES=['make-the-call','the-loop','your-team'];
 function go(i,quiet){step=i;[0,1,2].forEach(k=>{$('p'+k).hidden=k!==i});
  document.querySelectorAll('.steps button').forEach(b=>{if(+b.dataset.go===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
- if(i===1){drawStop();$('rxLead').textContent=pick==='david'?'You chose David in step 1. For him, the loop starts somewhere else.':'Had you chosen David in step 1, the loop would start somewhere else.'}
- if(i===2)drawPlan();
+ if(i===1){if(!explored)explored=TOP;renderStep2();renderCtx()}
+ $('ctxbar').hidden=!explored||i===2||(i===0&&!locked);
+ if(i===2){drawPlan();renderRecap()}
  if(!quiet){try{history.replaceState(null,'','#'+NAMES[i])}catch(e){}window.scrollTo({top:document.querySelector('.stepsbar').offsetTop-8,behavior:still?'auto':'smooth'})}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go)});
 const h=NAMES.indexOf(location.hash.slice(1));go(h<0?0:h,true);
