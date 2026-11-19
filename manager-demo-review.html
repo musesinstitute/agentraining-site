@@ -581,6 +581,58 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 @media(max-width:520px){.tt-list li{grid-template-columns:minmax(0,1fr)}.layers{flex-direction:column;gap:6px}}
 .recap .rg{font-weight:600;color:var(--slate);margin-right:4px}
 .conflict{margin-bottom:20px}
+/* fourth review: the manager's action plan */
+.ap{margin-bottom:34px}
+.ap-top{background:var(--royal);color:#fff;border-radius:8px 8px 0 0;padding:30px 34px 26px}
+.ap.empty{background:var(--sheet);border:1.5px dashed #9fb3dc;border-radius:8px;padding:24px 26px}
+.ap.empty h3{font:400 clamp(22px,2.6vw,30px)/1.2 var(--serif);margin-top:8px;max-width:26em}
+.ap-ctx{margin:10px 0 0;padding-left:20px;font-size:15.5px}.ap-ctx li{margin-top:3px}
+.ap .row{margin-top:14px}
+.ap-k{font-size:13.5px;color:var(--mist)}
+.ap.empty .ap-k{color:var(--slate)}
+.ap-top h3{font:400 clamp(28px,3.6vw,44px)/1.12 var(--serif);letter-spacing:-.015em;margin-top:10px;max-width:22em;text-wrap:balance}
+.ap-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:22px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:7px;overflow:hidden}
+.kpi{background:var(--ink-2);padding:14px 18px 16px;min-width:0}
+.kpi span{display:block;font-size:13px;color:var(--mist)}
+.kpi b{display:block;font:600 clamp(26px,3vw,36px)/1.1 var(--serif);color:#fff;margin-top:4px}
+.kpi.k-coach b{color:var(--hi)}
+.kpi.k-cap.bad b{color:#ffb4a1}
+.kpi small{display:block;margin-top:4px;font-size:13.5px;color:var(--pale);overflow-wrap:anywhere}
+.ap-status{margin-top:16px;font-size:15px;color:#fff}
+.ap-ai{margin-top:6px;font-size:14.5px;color:var(--pale)}
+.linkbtn.on-dark{color:var(--hi)}
+.ap-copy{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:18px}
+.ap-copy span{font-size:14px;color:var(--pale)}
+.copyfb{display:block;width:100%;min-height:180px;margin-top:12px;padding:10px 12px;border-radius:5px;border:0;font:13px/1.5 var(--mono);color:var(--ink)}
+.copyfb[hidden]{display:none}
+.ap-items{list-style:none;margin:0;padding:0;background:var(--sheet);border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+.ap-item{padding:18px 24px 20px;border-top:1px solid var(--line)}
+.ap-item:first-child{border-top:0}
+.ap-ih{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.ap-n{flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--royal);color:var(--royal);font:600 14px/24px var(--sans);text-align:center}
+.ap-ih h4{font:400 21px/1.25 var(--serif)}.ap-ih h4 strong{font-weight:600}
+.ap-cat{font:600 12px var(--sans);padding:2px 8px;border-radius:3px}
+.c-coach .ap-cat{background:var(--royal);color:#fff}
+.c-evidence .ap-cat{background:var(--sheet);color:var(--royal);box-shadow:inset 0 0 0 1.5px var(--royal)}
+.c-practice .ap-cat{background:var(--pale);color:var(--ink)}
+.c-monitor .ap-cat{background:#eef0f4;color:var(--slate)}
+.ap-rev{margin-left:auto;font-size:13.5px;color:var(--slate)}
+.trace{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.trace li{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:9px 11px 10px;min-width:0}
+.trace li+li:before{content:"→";position:absolute;left:-14px;top:50%;transform:translateY(-50%);color:var(--royal);font:600 14px var(--sans)}
+.trace b{display:block;font:600 12.5px var(--sans);color:var(--slate)}
+.trace span{display:block;margin-top:3px;font-size:14px;line-height:1.4}
+.trace li.miss{border:1.5px dashed #c2410c;background:#fff4ec}.trace li.miss span{color:#7a2a0c;font-weight:600}
+.trace li.na{background:transparent;border-style:dashed}.trace li.na span{color:var(--slate)}
+.trace li.thin{border-left:3px solid #b86e12}
+.ap-undec{margin-top:14px;font-size:15px}
+.ap-foot{margin-top:12px;max-width:52em}
+.invite{margin:0 0 46px;background:var(--sky);border:1px solid #c3d2f5;border-radius:8px;padding:24px 28px 26px}
+.invite h3{font:400 clamp(24px,3vw,34px)/1.15 var(--serif);letter-spacing:-.01em;max-width:24em}
+.invite p{margin-top:8px;font-size:16px;color:var(--body);max-width:40em}
+.invite .btn{margin-top:16px}
+@media(max-width:860px){.ap-kpis{grid-template-columns:1fr 1fr}.trace{grid-template-columns:1fr;gap:14px}.trace li+li:before{content:"↓";left:14px;top:-14px;transform:none}.ap-rev{margin-left:0;flex-basis:100%}}
+@media(max-width:520px){.ap-top{padding:22px 18px 20px}.ap-item{padding:16px 16px 18px}.kpi{padding:12px 12px 13px}.invite{padding:20px 18px 22px}}
 
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style></head>
@@ -657,7 +709,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Choose an option above</button></div>
     <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="needs" id="decNeeds" hidden></p><p class="demo-flag">Demo decision. No assignment was sent to anyone.</p>
      <div class="row"><button class="btn" type="button" data-go="1">See how the four Studios help</button><button class="btn secondary" id="changeDecision" type="button">Change my decision</button></div>
-     <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your pilot plan</button></p>
+     <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your action plan</button></p>
     </div>
     <details class="followCard optionalDeep" id="followupDetails" hidden><summary>Explore what could happen next (simulated)</summary>
      <p class="fu-tag"><span class="lyr ill">Illustrative follow-up</span> Invented events for a fictional team, not results.</p>
@@ -678,7 +730,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  <div class="band"><div class="wrap">
   <h2 id="h1" tabindex="-1">What happens after you spot Michelle's risk?</h2>
   <p class="intro">One problem, four Studios, one Hub. Watch it travel.</p>
-  <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your pilot plan</button></p>
+  <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your action plan</button></p>
   <ul class="layers" aria-label="How to read this step"><li><span class="lyr dec">Your decision</span>a confirmed, fictional demo decision</li><li><span class="lyr hyp">Hypothetical workflow</span>what the Studios would do for it</li><li><span class="lyr gen">General demonstration</span>what each Studio can do</li><li><span class="lyr ill">Illustrative follow-up</span>invented events, not results</li></ul>
   <div class="route" id="route" aria-live="polite"></div>
   <div class="casequote">
@@ -733,14 +785,15 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     <div class="row"><button class="btn secondary" type="button" id="prevStop">Back</button><button class="btn" type="button" id="nextStop">Next stage</button></div></div>
   </div>
 
-  <div class="row" style="margin-top:44px"><button class="btn" type="button" data-go="2">Now picture your own team</button></div>
+  <div class="row" style="margin-top:44px"><button class="btn" type="button" data-go="2">See your action plan</button></div>
  </div></div>
 </section>
 
 <section class="panel" id="p2" aria-labelledby="h2" hidden>
  <div class="band"><div class="wrap">
-  <div class="recap" id="recap" hidden></div>
-  <h2 id="h2">What hidden conversation gap would you want to find in your team?</h2>
+  <section class="ap" id="actionPlan" aria-labelledby="apHead"></section>
+  <div class="invite"><h3>See what this could look like with your own team.</h3><p>Your agents, your approved material, 14 days. Your team's own practice evidence comes back to you, and you decide whether to continue. No outcome is promised.</p><button type="button" class="btn" id="toPilot" data-topilot="1">Plan your 14-day Private Pilot</button></div>
+  <h2 id="h2" tabindex="-1">What hidden conversation gap would you want to find in your team?</h2>
   <div class="realvs"><div><b>This demo</b><p>A fictional team, scripted results, nothing sent.</p></div><div class="yours"><b>Your pilot</b><p>Your own team and your approved material. Text-based practice with an AI client. You review what comes back and decide whether to continue. No outcome is promised.</p></div></div>
   <p class="muted small pilot-note">Choose training topics only, not confidential client details. Your choices go to the request form; no training or AI analysis starts on this page.</p>
   <div class="two">
@@ -1056,6 +1109,9 @@ const EXCERPTS={
 };
 
 /* What kind of evidence each learner has, for plan trade-offs. */
+/* When the manager looks again, counted from the day the decision is approved (relative, not calendar dates). */
+const REVIEW={michelle:{accept:`Day 2, after the new practice`,verify:`Day 2, after the second scenario`,override:`Day 7, at your weekly check-in`},david:{accept:`Day 4, after the second scenario`,verify:`Day 1, after you read the excerpts`,override:`Day 4, after the practice that follows coaching`},john:{accept:`Day 3, after the second practice`,verify:`Day 1, after you read the excerpt`,override:`Day 3, after the practice that follows coaching`},grace:{accept:`Day 5, after the harder scenario`,verify:`Day 1, after you read the excerpts`,override:`Day 5, after the session`},anna:{accept:`Day 8, after next week's new scenario`,verify:`Day 1, after you compare the excerpts`,override:`Day 4, after the practice that follows coaching`}};
+
 const EVIDENCE_TRAIT={michelle:`repeat`,david:`thin`,john:`thin`,grace:`nogap`,anna:`one-scenario`};
 
 const $=id=>document.getElementById(id);
@@ -1164,14 +1220,14 @@ function planCard(title,plan,tag){const f=planFacts(plan);
  const dl=[[`Immediate coaching`,f.coach.length?f.coach.map(id=>`${C(id).name} (${plan[id].minutes} min)`).join(`, `):`No one`],
   [`Practice, review or monitoring instead`,f.other.length?f.other.map(id=>`${C(id).name}: ${esc(C(id).actions[plan[id].action].title)}`).join(`; `):`No one`],
   [`Minutes`,`${f.used} of ${f.b} committed, `+(f.left<0?`over by ${-f.left}`:`${f.left} left`)],
-  [`Evidence behind each coaching priority`,f.coach.length?f.coach.map(id=>`${C(id).name}: ${esc(C(id).practice.sum)} (${C(id).pillTxt.toLowerCase()})`).join(`; `):`No coaching priority`]];
+  [`Evidence behind each coaching priority`,f.coach.length?f.coach.map(id=>`${C(id).name}: ${esc(evidOf(id))}`).join(`; `):`No coaching priority`]];
  return `<article class="plancard"><h5>${title} <span class="lyr hyp">${tag}</span></h5><dl>${dl.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div><dt>Trade-offs and limits</dt><dd><ul>${tradeoffs(plan,f).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></dd></div></dl></article>`}
 function renderCompare(){const b=budget(),aiM=Math.round(b*2/3);const ai={},mine={};
  ORDER.forEach(id=>{ai[id]={action:`accept`,minutes:C(id).actions.accept.coach?aiM:0};if(dec[id].confirmed)mine[id]={action:dec[id].action,minutes:dec[id].minutes}});
  const same=ORDER.every(id=>mine[id]&&mine[id].action===ai[id].action&&mine[id].minutes===ai[id].minutes);
  $('compareBody').innerHTML=`<p class="cmp-lead">Two hypothetical plans within your ${b}-minute budget. This compares what each plan commits and the evidence behind it, not results. Nothing here is applied: you decide in each learner's panel.</p>${same?`<p class="cmp-same">Your plan matches the AI's suggested plan.</p>`:``}<div class="cmp-grid">${planCard(`The AI's suggested plan`,ai,`Hypothetical`)}${planCard(`Your plan so far`,mine,`Your demo decisions`)}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-budget]');if(b){const r=document.querySelector(`input[name="demoBudget"][value="${b.dataset.budget}"]`);r.checked=true;afterDecisionChange();$('ttLive').textContent=`Budget set to ${b.dataset.budget} min.`}
- const d=e.target.closest('[data-decidefor]');if(d){setExplored(d.dataset.decidefor);$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const f=document.querySelector('#decideRow [data-decide]');if(f)f.focus({preventScroll:true})}});
+ const d=e.target.closest('[data-decidefor]');if(d){if(step!==0)go(0,true);setExplored(d.dataset.decidefor);$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const f=document.querySelector('#decideRow [data-decide]');if(f)f.focus({preventScroll:true})}});
 function decidedText(){const c=cur(),d=dec[explored];let t=c.actions[d.action].decided.replace(`{mine}`,d.minutes);if(d.action===`override`)t+=` Reason: `+d.reason+(d.note.trim()?` (`+d.note.trim()+`)`:``)+`.`;return t}
 function drawFollow(){const id=explored,d=dec[id],f=FOLLOW[id][d.action],review=f.kind===`review`;
  $('fuPlan').textContent=(needsRevision(id)?`Needs revision before it could happen: `:``)+fill(f.plan,d.minutes);$('fuEvent').textContent=f.event;
@@ -1198,7 +1254,7 @@ function renderLab(){const c=cur(),d=dec[explored],id=explored;
  $('decided').hidden=!d.confirmed;$('followupDetails').hidden=!d.confirmed;if(!d.confirmed)$('followupDetails').open=false;
  if(d.confirmed){$('decidedTxt').textContent=decidedText();drawFollow()}
  $('decNeeds').hidden=!needsRevision(id);if(needsRevision(id))$('decNeeds').innerHTML=`<strong>Needs revision.</strong> The team plan is over budget, so this coaching time is not workable as it stands. Revise it or another coaching decision in the team plan below.`}
-function afterDecisionChange(){renderLab();renderChainDecision();renderCtx();if(step===1)renderRoute();if(step===2)renderRecap()}
+function afterDecisionChange(){renderLab();renderChainDecision();renderCtx();if(step===1)renderRoute();if(step===2)renderActionPlan()}
 $('decideRow').addEventListener('click',e=>{const b=e.target.closest('[data-decide]'),d=dec[explored];if(!b||d.confirmed)return;d.action=b.dataset.decide;
  if(d.action===`verify`&&FOLLOW[explored].verify.kind===`review`)$('inspect').open=true;renderLab();renderCtx()});
 $('minOpts').addEventListener('change',e=>{if(e.target.name===`minSel`){dec[explored].minSel=+e.target.value;renderLab()}});
@@ -1259,7 +1315,7 @@ function drawStop(){const stops=cur().s2.stops,s=stops[stop];
  document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===STOP_NODE[stop]));
  const cy=CYCLE[stop];document.querySelectorAll('#cycle li').forEach((li,i)=>{li.classList.toggle('on',cy.includes(i));li.classList.toggle('past',i<Math.min(...cy));if(cy.includes(i))li.setAttribute('aria-current','step');else li.removeAttribute('aria-current')});
  document.querySelectorAll('.ring .arc').forEach(a=>a.classList.toggle('on',stop>0&&+a.dataset.arc===stop-1));$('prevStop').disabled=stop===0;
- $('nextStop').textContent=stop===stops.length-1?'Now your team':'Next stage'}
+ $('nextStop').textContent=stop===stops.length-1?'See your action plan':'Next stage'}
 $('nextStop').onclick=()=>{if(stop===4){go(2);return}stop++;drawStop()};
 $('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
 document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
@@ -1289,15 +1345,60 @@ document.addEventListener('click',e=>{const r=e.target.closest('[data-replace]')
  if(r){const i=document.querySelector(`#chips input[value="${r.dataset.replace}"]`);if(i)i.checked=false;drawPlan();$('pri').focus({preventScroll:true});$('goalLive').textContent='Replaced. Carried into your request: '+chosen().join(' and ')+'.'}
  if(l){$('own').value='';drawPlan();$('goalLive').textContent='Your own conversation was left out. Carried into your request: '+chosen().join(' and ')+'.'}});
 $('pilotLink').addEventListener('click',e=>{if(!goalConflict())return;e.preventDefault();$('conflict').scrollIntoView({behavior:still?'auto':'smooth',block:'center'});const b=document.querySelector('#conflictBtns button');if(b)b.focus({preventScroll:true});$('goalLive').textContent='Choose what your own conversation replaces, or leave it out, before requesting.'});
-function renderRecap(){const done=ORDER.filter(id=>dec[id].confirmed),b=budget(),used=committed(null);
- const pickLine=!pick?`<li>You have not chosen an agent yet.</li>`:pick===TOP?`<li>You picked <strong>${C(pick).name}</strong>, the same agent the AI suggested.</li>`:`<li>You picked <strong>${C(pick).name}</strong>. The AI's top suggestion was <strong>${C(TOP).name}</strong>.</li>`;
- const it=id=>`${C(id).name}: <strong>${esc(C(id).actions[dec[id].action].title)}</strong>${dec[id].minutes?`, ${dec[id].minutes} min`:``}${needsRevision(id)?` <em class="nr">Needs revision</em>`:``}`;
- const decLines=GROUPS.map(([k,label])=>{const ids=done.filter(x=>kindOf(x)===k);return ids.length?`<li><span class="rg">${label}</span> ${ids.map(it).join(`; `)}</li>`:``}).join(``)
-  +(done.some(x=>dec[x].action===`override`)?`<li><span class="rg">Reassess at next check-in</span> ${names(done.filter(x=>dec[x].action===`override`))}, against the AI suggestion</li>`:``)
-  +(done.length&&done.length<ORDER.length?`<li><span class="rg">Not decided yet</span> ${names(ORDER.filter(x=>!dec[x].confirmed))}</li>`:``);
- const time=done.length?(used>b?`<li class="warn"><strong>Plan status: Needs revision.</strong> Coaching time: ${used} min approved, but only ${b} min available. <button type="button" class="linkbtn" data-todecide="1">Revise in step 1</button></li>`:`<li>Plan status: within budget. Coaching time: ${used} of ${b} min committed, ${b-used} left.</li>`):``;
- $('recap').hidden=false;
- $('recap').innerHTML=`<p class="rc-h">Your demo, recapped</p><ul>${pickLine}${decLines}${time}${done.length?``:`<li>No demo decision yet. The pilot request below does not depend on one. <button type="button" class="linkbtn" data-go="0">Make a coaching call</button></li>`}</ul><p class="small">Fictional decisions about a fictional team. Nothing was sent or saved. Demo choices stay on this page and reset when you reload.</p>`}
+const evidOf=id=>{const c=C(id);return c.practice.sum.toLowerCase().includes(c.pillTxt.toLowerCase())?c.practice.sum:`${c.practice.sum} (${c.pillTxt.toLowerCase()})`};
+/* ---------- step 3: the manager's action plan, built only from the demo decisions ---------- */
+const needsEvidence=id=>{const d=dec[id];return d.confirmed&&!d.minutes&&(d.action===`verify`||(d.action===`accept`&&[`thin`,`one-scenario`].includes(EVIDENCE_TRAIT[id])))};
+const CATS={coach:`Coach`,evidence:`More evidence first`,practice:`Practice and stretch`,monitor:`Monitor`};
+function attemptsOf(id){const n=EXCERPTS[id].shown.map(e=>(e.label.match(/^Attempt (\d+)/)||[])[1]).filter(Boolean);return n.length?`Scripted excerpt${n.length>1?`s`:``}: attempt${n.length>1?`s`:``} ${n.join(` and `)}.`:``}
+function planItem(id){const c=C(id),d=dec[id],r=ROUTE[id][d.action],f=FOLLOW[id][d.action],k=kindOf(id);
+ const cat=d.minutes?`coach`:needsEvidence(id)?`evidence`:k===`monitor`?`monitor`:`practice`,nr=needsRevision(id);
+ const gap=(v,what)=>v?{v:fill(v,d.minutes)}:cat===`coach`||cat===`practice`||(cat===`evidence`&&k!==`review`)?{v:`Missing: no ${what} is linked to this ${cat===`coach`?`coaching`:`practice`} yet.`,miss:true}:k===`review`?{v:`Not needed yet: you decide after your review.`,na:true}:{v:`Not used: no training is planned.`,na:true};
+ const acc=c.actions.accept.title;
+ const decision=d.action===`accept`?`Accepted the AI suggestion.`:d.action===`verify`?`Chose to verify first. The AI suggested: ${acc}.`:`Overrode the AI suggestion (${acc}). Reason: ${d.reason}${d.note.trim()?` (${d.note.trim()})`:``}.`;
+ return {id,name:c.name,cat,title:c.actions[d.action].title,minutes:d.minutes,review:REVIEW[id][d.action],nr,
+  trace:[[`Practice evidence`,{v:`${evidOf(id)}. ${attemptsOf(id)}`,warn:c.pill===`thin`}],[`Knowledge source`,gap(r.K,`approved source`)],[`Client context`,gap(r.C,`client note`)],[`Your decision`,{v:decision}],[`Next action`,{v:(nr?`Needs revision first. `:``)+fill(f.plan,d.minutes)}]]}}
+function buildPlan(){const b=budget(),used=committed(null),left=b-used,ov=used>b,rank={coach:0,evidence:1,practice:2,monitor:3};
+ const items=ORDER.filter(id=>dec[id].confirmed).map(planItem).sort((x,y)=>rank[x.cat]-rank[y.cat]||y.minutes-x.minutes||ORDER.indexOf(x.id)-ORDER.indexOf(y.id));
+ const by=k=>items.filter(i=>i.cat===k),coach=by(`coach`),ev=by(`evidence`),rest=[...by(`practice`),...by(`monitor`)],undec=ORDER.filter(id=>!dec[id].confirmed);
+ const nm=a=>names(a.map(i=>i.id));
+ let head=coach.length?`Coach ${nm(coach)} first`:`No one-to-one coaching this week`;
+ head+=ev.length?(coach.length?`, and check ${nm(ev)} before spending more time.`:`. Check ${nm(ev)} before spending coaching time.`):`.`;
+ const status=ov?`Plan status: Needs revision. Coaching time: ${used} min approved, but only ${b} min available.`:`Plan status: within budget. Coaching time: ${used} of ${b} min committed, ${left} left.`;
+ const pickLine=!pick?`You have not chosen an agent yet.`:pick===TOP?`You picked ${C(pick).name}, the same agent the AI suggested.`:`You picked ${C(pick).name}. The AI's top suggestion was ${C(TOP).name}.`;
+ return {b,used,left,ov,items,coach,ev,rest,undec,head,status,pickLine,ai:`AI's top priority: ${C(TOP).name} (${C(TOP).practice.sum.toLowerCase()}).`}}
+function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
+ if(!P.items.length){el.className='ap empty';el.innerHTML=`<p class="ap-k"><span class="lyr dec">Manager action plan</span> Fictional team</p><h3>Your action plan for next week appears here once you make a demo decision.</h3><ul class="ap-ctx"><li>${esc(P.pickLine)}</li><li>No demo decision yet. The pilot request below does not depend on one.</li></ul><div class="row"><button type="button" class="btn" data-go="0">Make a coaching call</button></div><p class="small">Demo choices stay on this page and reset when you reload.</p>`;return}
+ const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} ${i.minutes} min`:i.name).join(`, `):`No one`;
+ el.className='ap'+(P.ov?' bad':'');
+ el.innerHTML=`<div class="ap-top"><p class="ap-k"><span class="lyr ill">Manager action plan</span> Next week, for a fictional team, from your demo decisions</p>
+ <h3 id="apHead">${esc(P.head)}</h3>
+ <div class="ap-kpis" role="list">
+  <div role="listitem" class="kpi k-coach"><span>Coach</span><b>${P.used} min</b><small>${esc(nm(P.coach))}</small></div>
+  <div role="listitem" class="kpi k-ev"><span>More evidence first</span><b>${P.ev.length}</b><small>${esc(nm(P.ev))}</small></div>
+  <div role="listitem" class="kpi k-pr"><span>Practice, stretch or monitor</span><b>${P.rest.length}</b><small>${esc(nm(P.rest))}</small></div>
+  <div role="listitem" class="kpi k-cap${P.ov?' bad':''}"><span>Capacity</span><b>${P.ov?`Over by ${-P.left}`:`${P.left} min left`}</b><small>of ${P.b} min · ${P.ov?`Needs revision`:`Within budget`}</small></div>
+ </div>
+ <p class="ap-status">${esc(P.status)}${P.ov?` <button type="button" class="linkbtn on-dark" data-todecide="1">Revise in step 1</button>`:``}</p>
+ <p class="ap-ai">${esc(P.ai)} ${esc(P.pickLine)}</p>
+ <div class="ap-copy"><button type="button" class="btn hi" data-copyplan="1">Copy action plan</button><span id="copyStatus" role="status" aria-live="polite">Plain text for your notes. Nothing is stored or sent.</span></div>
+ <textarea id="copyFallback" class="copyfb" readonly hidden aria-label="Action plan as plain text"></textarea></div>
+ <ol class="ap-items">${P.items.map((i,n)=>`<li class="ap-item c-${i.cat}" data-id="${i.id}"><div class="ap-ih"><span class="ap-n">${n+1}</span><h4>${i.name}: <strong>${esc(i.title)}</strong>${i.minutes?`, ${i.minutes} min`:``}</h4><span class="ap-cat">${CATS[i.cat]}</span>${i.nr?`<em class="nr">Needs revision</em>`:``}<span class="ap-rev">Review: ${esc(i.review)}</span></div>
+  <ol class="trace" aria-label="How ${i.name}'s recommendation traces back">${i.trace.map(([k,t])=>`<li class="${t.miss?'miss':t.na?'na':t.warn?'thin':''}"><b>${k}</b><span>${esc(t.v)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
+ ${P.undec.length?`<p class="ap-undec"><strong>Not decided yet:</strong> ${P.undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join(' ')} <span class="small">No action is planned for them.</span></p>`:``}
+ <p class="small ap-foot">Fictional people, evidence, documents and follow-up. Demo decisions only: nothing was assigned, sent or saved, and no result is claimed. Days count from the day you approve; they are relative periods, not calendar dates. Demo choices stay on this page and reset when you reload.</p>`}
+function planText(){const P=buildPlan(),L=[];
+ L.push(`Manager action plan: next week`,`Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.`,``,P.head,P.status,`${P.ai} ${P.pickLine}`,``);
+ const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} (${i.minutes} min)`:i.name).join(`, `):`none`;
+ L.push(`Coach: ${nm(P.coach)}`,`More evidence first: ${nm(P.ev)}`,`Practice, stretch or monitor: ${nm(P.rest)}`,`Not decided yet: ${P.undec.length?names(P.undec):`none`}`,``);
+ P.items.forEach((i,n)=>{L.push(`${n+1}. ${i.name}: ${i.title}${i.minutes?`, ${i.minutes} min`:``} [${CATS[i.cat]}]${i.nr?` [Needs revision]`:``}`,`   Review: ${i.review}.`);i.trace.forEach(([k,t])=>L.push(`   ${k}: ${t.v}`));L.push(``)});
+ L.push(`Days count from the day you approve: relative periods, not calendar dates.`,`From the AgentTraining.ai manager demo. Fictional people, evidence and follow-up.`);
+ return L.join(`\n`)}
+async function copyPlan(){const t=planText(),st=$('copyStatus'),fb=$('copyFallback');
+ const done=()=>{st.textContent=`Copied as plain text. Nothing was stored or sent.`;fb.hidden=true};
+ try{if(!navigator.clipboard||!window.isSecureContext)throw 0;await navigator.clipboard.writeText(t);done();return}catch(e){}
+ fb.value=t;fb.hidden=false;fb.focus();fb.select();let ok=false;try{ok=document.execCommand(`copy`)}catch(e){}
+ if(ok){done();fb.hidden=true}else st.textContent=`Your browser blocked copying. The plan is selected below: press Ctrl+C or Cmd+C.`}
+document.addEventListener('click',e=>{if(e.target.closest('[data-copyplan]'))copyPlan();if(e.target.closest('[data-topilot]')){$('h2').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});$('h2').focus({preventScroll:true})}});
 
 /* reveal summary: jump straight to the manager's choice */
 document.addEventListener('click',e=>{if(!e.target.closest('#toDecision'))return;$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const b=document.querySelector('#decideRow [data-decide]:not(:disabled)');if(b)b.focus({preventScroll:true})},still?0:650)});
@@ -1310,7 +1411,7 @@ function go(i,quiet){step=i;[0,1,2].forEach(k=>{$('p'+k).hidden=k!==i});
  document.querySelectorAll('.steps button').forEach(b=>{if(+b.dataset.go===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
  if(i===1){if(!explored)explored=TOP;renderStep2();renderCtx()}
  $('ctxbar').hidden=!explored||i===2||(i===0&&!locked);
- if(i===2){drawPlan();renderRecap()}
+ if(i===2){drawPlan();renderActionPlan()}
  if(!quiet){try{history.replaceState(null,'','#'+NAMES[i])}catch(e){}window.scrollTo({top:document.querySelector('.stepsbar').offsetTop-8,behavior:still?'auto':'smooth'})}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go)});
 addEventListener('hashchange',()=>{const i=NAMES.indexOf(location.hash.slice(1));if(i>=0&&i!==step)go(i)});

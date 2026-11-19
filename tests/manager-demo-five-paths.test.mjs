@@ -53,8 +53,9 @@ after(async () => {
 });
 
 // Reduced motion makes every reveal immediate, so tests do not wait on animation.
-async function openDemo({ width = 1366, height = 900, motion = 'reduce' } = {}) {
-  const context = await browser.newContext({ viewport: { width, height }, reducedMotion: motion });
+async function openDemo({ width = 1366, height = 900, motion = 'reduce', permissions = [], init = null } = {}) {
+  const context = await browser.newContext({ viewport: { width, height }, reducedMotion: motion, permissions });
+  if (init) await context.addInitScript(init);
   const page = await context.newPage();
   const requests = [];
   const errors = [];
@@ -199,7 +200,7 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await approvedMin(page), 25);
 
       await page.click('.steps [data-go="2"]');
-      const recap = await text(page, '#recap');
+      const recap = await text(page, '#actionPlan');
       assert.match(recap, /Michelle: Coach now, 15 min/);
       assert.match(recap, /Grace: Coach her anyway, 10 min/);
       assert.match(recap, /John: One more practice/);
@@ -225,7 +226,7 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await page.isDisabled('#confirmDecision'), true);
 
       await page.click('.steps [data-go="2"]');
-      assert.match(await text(page, '#recap'), /Coaching time: 20 min approved, but only 15 min available\./);
+      assert.match(await text(page, '#actionPlan'), /Coaching time: 20 min approved, but only 15 min available\./);
 
       // revise Michelle to 10 min: back within budget
       await page.click('.steps [data-go="0"]');
@@ -342,25 +343,25 @@ describe('Manager Demo: five complete learner paths', () => {
       await page.goto(baseUrl + PAGE + '#your-team');
       await page.reload();
       await page.waitForSelector('#p2:not([hidden])');
-      const recap = await text(page, '#recap');
+      const recap = await text(page, '#actionPlan');
       assert.match(recap, /You have not chosen an agent yet\./);
       assert.match(recap, /No demo decision yet\. The pilot request below does not depend on one\./);
       assert.ok(await page.isVisible('#pilotLink'));
       assert.ok(await page.isHidden('#ctxbar'));
 
       // the in-recap button starts the call; a decision then shows up in the recap
-      await page.click('#recap [data-go="0"]');
+      await page.click('#actionPlan [data-go="0"]');
       await pickAndLock(page, 'anna');
       await decide(page, 'accept');
       await page.evaluate(() => { location.hash = '#your-team'; });
       await page.waitForSelector('#p2:not([hidden])');
-      assert.match(await text(page, '#recap'), /Anna: New scenario next week/);
+      assert.match(await text(page, '#actionPlan'), /Anna: New scenario next week/);
 
       // a reload is a fresh demo: nothing carried over, nothing claimed
       await page.reload();
       await page.waitForSelector('#p2:not([hidden])');
-      assert.match(await text(page, '#recap'), /No demo decision yet/);
-      assert.match(await text(page, '#recap'), /reset when you reload/);
+      assert.match(await text(page, '#actionPlan'), /No demo decision yet/);
+      assert.match(await text(page, '#actionPlan'), /reset when you reload/);
       await page.evaluate(() => { location.hash = '#the-loop'; });
       await page.waitForSelector('#p1:not([hidden])');
       assert.match(await text(page, '#route'), /Optional illustration/);
@@ -381,7 +382,7 @@ describe('Manager Demo: five complete learner paths', () => {
       await page.click('#decided .fast [data-go="2"]');
       await page.waitForSelector('#p2:not([hidden])');
       assert.ok(await page.isVisible('#pilotLink'));
-      assert.match(await text(page, '#recap'), /Michelle: Coach now, 20 min/);
+      assert.match(await text(page, '#actionPlan'), /Michelle: Coach now, 20 min/);
     } finally { await context.close(); }
   });
 
@@ -437,11 +438,11 @@ describe('Manager Demo: five complete learner paths', () => {
       // step 3 recaps both decisions and the AI's suggestion
       await page.click('#nextStop >> nth=0');
       await page.click('[data-go="2"] >> nth=0');
-      const recap = await text(page, '#recap');
+      const recap = await text(page, '#actionPlan');
       assert.match(recap, /You picked John\. The AI's top suggestion was Michelle\./);
       assert.match(recap, /John: One more practice/);
       assert.match(recap, /Michelle: Coach now/);
-      assert.match(recap, /Nothing was sent or saved/);
+      assert.match(recap, /nothing was assigned, sent or saved/);
       assert.ok(await page.isHidden('#ctxbar'));
     } finally { await context.close(); }
   });
@@ -476,7 +477,7 @@ describe('Manager Demo: five complete learner paths', () => {
         }
         assert.match(stops[0], /^Stage 1 of 5/);
         assert.match(stops[4], /^Stage 5 of 5/);
-        assert.equal(await text(page, '#nextStop'), 'Now your team');
+        assert.equal(await text(page, '#nextStop'), 'See your action plan');
       }
     } finally { await context.close(); }
   });
@@ -669,8 +670,8 @@ describe('Manager Demo: five complete learner paths', () => {
       await page.click('.steps [data-go="1"]');
       assert.match(await text(page, '#route'), /Needs revision.*not workable as it stands/);
       await toStep3(page);
-      assert.match(await text(page, '#recap'), /Plan status: Needs revision\. Coaching time: 30 min approved, but only 15 min available\./);
-      assert.equal(await page.$$eval('#recap .nr', els => els.length), 2);
+      assert.match(await text(page, '#actionPlan'), /Plan status: Needs revision\. Coaching time: 30 min approved, but only 15 min available\./);
+      assert.equal(await page.$$eval('#actionPlan .nr', els => els.length), 2);
 
       // direct control: go back to 30 min, then cut again and revise instead
       await page.click('.steps [data-go="0"]');
@@ -690,7 +691,7 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await page.$$eval('#ttList .nr', els => els.length), 0);
       assert.ok(await page.isHidden('#decNeeds'));
       await toStep3(page);
-      const recap = await text(page, '#recap');
+      const recap = await text(page, '#actionPlan');
       assert.match(recap, /Plan status: within budget\. Coaching time: 10 of 15 min committed, 5 left\./);
       assert.match(recap, /Michelle: Coach now, 10 min/);
       assert.match(recap, /Grace: Harder scenario/);
@@ -722,8 +723,10 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await text(page, '#cxNow'), 'Anna');
       assert.equal(await page.evaluate(() => document.activeElement.matches('#decideRow [data-decide]')), true);
       await toStep3(page);
-      const recap = await text(page, '#recap');
-      for (const re of [/Coaching now Grace: Coach her anyway, 20 min/, /Practice planned, not sent John: One more practice/, /Your review pending David: Review it yourself/, /Monitoring only Michelle: Hold coaching/, /Reassess at next check-in Michelle and Grace, against the AI suggestion/, /Not decided yet Anna/]) assert.match(recap, re);
+      const recap = await text(page, '#actionPlan');
+      assert.deepEqual(await page.$$eval('#actionPlan .ap-item', els => els.map(li => li.dataset.id + ' ' + li.querySelector('.ap-cat').textContent)),
+        ['grace Coach', 'david More evidence first', 'john More evidence first', 'michelle Monitor']);
+      assert.match(recap, /Not decided yet: Anna/);
     } finally { await context.close(); }
   });
 
@@ -812,6 +815,210 @@ describe('Manager Demo: five complete learner paths', () => {
         assert.ok(await page.isVisible('#conflict'));
         assert.ok(await noOverflow(page), `goal conflict at ${width}`);
         assert.ok(await page.isVisible('.realvs'));
+      } finally { await context.close(); }
+    }
+  });
+
+  // ---- fourth review: Manager Action Plan ----
+  async function fourDecisions(page) {
+    await pickAndLock(page, 'grace');
+    await exploreFromEvidence(page, 'michelle'); await decide(page, 'accept');   // coach 20
+    await exploreFromEvidence(page, 'grace'); await decide(page, 'override');    // coach 10, reason 1
+    await exploreFromEvidence(page, 'david'); await decide(page, 'accept');      // more evidence first
+    await exploreFromEvidence(page, 'john'); await decide(page, 'verify');       // review, more evidence first
+  }
+  const itext = async (page, sel) => (await page.innerText(sel)).replace(/\s+/g, ' ').trim();
+  const items = page => page.$$eval('#actionPlan .ap-item', els => els.map(li => ({
+    id: li.dataset.id, cat: li.querySelector('.ap-cat').textContent, head: li.querySelector('h4').textContent,
+    review: li.querySelector('.ap-rev').textContent,
+    trace: [...li.querySelectorAll('.trace li')].map(c => [c.querySelector('b').textContent, c.querySelector('span').textContent, c.className]) })));
+
+  test('action plan reflects several decisions, their evidence and the team budget', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await fourDecisions(page);
+      const committed = await approvedMin(page);
+      await toStep3(page);
+      assert.equal(await text(page, '#apHead'), 'Coach Michelle and Grace first, and check David and John before spending more time.');
+      const kpis = await page.$$eval('#actionPlan .kpi', els => els.map(k => k.innerText.replace(/\s+/g, ' ').trim()));
+      assert.deepEqual(kpis, ['Coach 30 min Michelle 20 min, Grace 10 min', 'More evidence first 2 David, John', 'Practice, stretch or monitor 0 No one', 'Capacity 0 min left of 30 min · Within budget']);
+      assert.equal(committed, 30, 'the plan and the team panel agree');
+      assert.match(await text(page, '.ap-status'), /^Plan status: within budget\. Coaching time: 30 of 30 min committed, 0 left\.$/);
+      assert.match(await text(page, '.ap-ai'), /AI's top priority: Michelle \(same gap in 4 of 4 attempts\)\. You picked Grace\./);
+
+      const it = await items(page);
+      assert.deepEqual(it.map(i => [i.id, i.cat, i.head, i.review]), [
+        ['michelle', 'Coach', 'Michelle: Coach now, 20 min', 'Review: Day 2, after the new practice'],
+        ['grace', 'Coach', 'Grace: Coach her anyway, 10 min', 'Review: Day 5, after the session'],
+        ['david', 'More evidence first', 'David: Basics + second scenario', 'Review: Day 4, after the second scenario'],
+        ['john', 'More evidence first', 'John: Review it yourself', 'Review: Day 1, after you read the excerpt'],
+      ]);
+      // every item traces evidence -> source -> client -> decision -> next action
+      for (const i of it) assert.deepEqual(i.trace.map(t => t[0]), ['Practice evidence', 'Knowledge source', 'Client context', 'Your decision', 'Next action']);
+      const [m, g, d, j] = it;
+      assert.equal(m.trace.filter(t => t[2] === 'miss').length, 0);
+      assert.match(m.trace[0][1], /Same gap in 4 of 4 attempts \(consistent evidence\)\. Scripted excerpts: attempts 1 and 4\./);
+      assert.match(m.trace[1][1], /Coaching note §2/);
+      assert.match(m.trace[2][1], /Ms\. Rivera/);
+      assert.equal(m.trace[3][1], 'Accepted the AI suggestion.');
+      assert.match(m.trace[4][1], /^A 20-minute one-to-one with Michelle/);
+      assert.deepEqual([g.trace[1][2], g.trace[2][2]], ['miss', 'miss'], 'missing source and client note are marked');
+      assert.match(g.trace[1][1], /^Missing: no approved source is linked to this coaching yet\.$/);
+      assert.match(g.trace[3][1], /^Overrode the AI suggestion \(Harder scenario\)\. Reason: Evidence is too narrow\.$/);
+      assert.equal(d.trace[0][2], 'thin');
+      assert.match(j.trace[1][1], /^Not needed yet: you decide after your review\.$/);
+      assert.equal(j.trace[3][1], 'Chose to verify first. The AI suggested: One more practice.');
+      assert.match(j.trace[4][1], /Nothing is assigned and no coaching time is used/);
+
+      // undecided learners are named, and one click takes the manager back to decide
+      assert.match(await text(page, '.ap-undec'), /Not decided yet: Anna No action is planned for them\./);
+      await page.click('.ap-undec [data-decidefor="anna"]');
+      await page.waitForSelector('#p0:not([hidden])');
+      assert.equal(await text(page, '#cxNow'), 'Anna');
+      assert.match(await text(page, '.ap-foot'), /nothing was assigned, sent or saved, and no result is claimed/);
+    } finally { await context.close(); }
+  });
+
+  test('every learner and action gives a traceable plan item with a review period', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'david');
+      const CAT = { michelle: { accept: 'Coach', verify: 'More evidence first', override: 'Monitor' },
+        david: { accept: 'More evidence first', verify: 'More evidence first', override: 'Coach' },
+        john: { accept: 'More evidence first', verify: 'More evidence first', override: 'Coach' },
+        grace: { accept: 'Practice and stretch', verify: 'More evidence first', override: 'Coach' },
+        anna: { accept: 'More evidence first', verify: 'More evidence first', override: 'Coach' } };
+      for (const id of Object.keys(EXPECT)) {
+        for (const action of ['accept', 'verify', 'override']) {
+          await page.click('.steps [data-go="0"]');
+          if ((await text(page, '#cxNow')) !== NAMES[id]) await exploreFromEvidence(page, id);
+          await decide(page, action);
+          await toStep3(page);
+          const [i] = await items(page);
+          assert.equal((await items(page)).length, 1);
+          assert.equal(i.cat, CAT[id][action], `${id} ${action}`);
+          assert.match(i.head, new RegExp(`^${NAMES[id]}: ${EXPECT[id][action].replace(/[+]/g, '\\+')}`));
+          assert.match(i.review, /^Review: (Day \d+), /);
+          const next = i.trace[4][1];
+          if (CAT[id][action] === 'Coach') assert.match(next, /\d+-minute one-to-one/, `${id} ${action} next action`);
+          if (action === 'verify' && id !== 'michelle') assert.match(next, /Nothing is assigned and no coaching time is used/);
+          if (id === 'michelle' && action === 'override') assert.match(next, /No coaching and no new practice/);
+          for (const [k, v, cls] of i.trace) {
+            assert.ok(v.trim().length > 10, `${id} ${action} ${k} has content`);
+            if (cls === 'miss') assert.match(v, /^Missing: /);
+            if (cls === 'na') assert.match(v, /^(Not needed yet|Not used): /);
+          }
+          // the plan never claims a result
+          assert.doesNotMatch(await text(page, '#actionPlan'), /improved|achieved|was sent|has been assigned|guarantee/i);
+          await page.click('.steps [data-go="0"]');
+          await page.click('#changeDecision');
+        }
+      }
+    } finally { await context.close(); }
+  });
+
+  test('Copy action plan puts formatted plain text on the clipboard and stores or sends nothing', async () => {
+    const { page, context, requests } = await openDemo({ permissions: ['clipboard-read', 'clipboard-write'] });
+    try {
+      await fourDecisions(page);
+      await toStep3(page);
+      const before = requests.length;
+      await page.click('[data-copyplan]');
+      await page.waitForFunction(() => /Copied/.test(document.getElementById('copyStatus').textContent));
+      assert.equal(await text(page, '#copyStatus'), 'Copied as plain text. Nothing was stored or sent.');
+      const clip = await page.evaluate(() => navigator.clipboard.readText());
+      const lines = clip.split('\n');
+      assert.equal(lines[0], 'Manager action plan: next week');
+      assert.equal(lines[1], 'Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.');
+      for (const want of ['Coach Michelle and Grace first, and check David and John before spending more time.',
+        'Plan status: within budget. Coaching time: 30 of 30 min committed, 0 left.',
+        'Coach: Michelle (20 min), Grace (10 min)', 'More evidence first: David, John', 'Not decided yet: Anna',
+        '1. Michelle: Coach now, 20 min [Coach]', '   Review: Day 2, after the new practice.',
+        '2. Grace: Coach her anyway, 10 min [Coach]', '   Knowledge source: Missing: no approved source is linked to this coaching yet.',
+        '4. John: Review it yourself [More evidence first]', '   Your decision: Chose to verify first. The AI suggested: One more practice.',
+        'Days count from the day you approve: relative periods, not calendar dates.']) assert.ok(lines.includes(want), `copied text includes: ${want}`);
+      assert.doesNotMatch(clip, /<[a-z]/i, 'plain text, no markup');
+      assert.equal(clip, await page.evaluate(() => planText()), 'the copy is exactly what the page shows');
+      assert.equal(requests.length, before, 'copying sends nothing');
+      assert.deepEqual(await page.evaluate(() => [localStorage.length, sessionStorage.length]), [0, 0], 'copying stores nothing');
+    } finally { await context.close(); }
+  });
+
+  test('if the browser blocks copying, the plan is shown selected for manual copy', async () => {
+    const init = () => { Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true }); document.execCommand = () => false; };
+    const { page, context } = await openDemo({ init });
+    try {
+      await fourDecisions(page);
+      await toStep3(page);
+      await page.click('[data-copyplan]');
+      assert.match(await text(page, '#copyStatus'), /Your browser blocked copying\. The plan is selected below/);
+      assert.ok(await page.isVisible('#copyFallback'));
+      assert.equal(await page.inputValue('#copyFallback'), await page.evaluate(() => planText()));
+    } finally { await context.close(); }
+  });
+
+  test('action plan follows decision changes and budget cuts, including Needs revision', async () => {
+    const { page, context } = await openDemo({ permissions: ['clipboard-read', 'clipboard-write'] });
+    try {
+      await fourDecisions(page);
+      await page.check('input[name="demoBudget"][value="15"]');
+      await toStep3(page);
+      assert.match(await itext(page, '#actionPlan .k-cap'), /Capacity Over by 15 of 15 min · Needs revision/);
+      assert.match(await text(page, '.ap-status'), /^Plan status: Needs revision\. Coaching time: 30 min approved, but only 15 min available\. Revise in step 1$/);
+      assert.equal(await page.$$eval('#actionPlan .ap-item .nr', els => els.length), 2);
+      const it = await items(page);
+      assert.match(it[0].trace[4][1], /^Needs revision first\. /);
+      await page.click('[data-copyplan]');
+      await page.waitForFunction(() => /Copied/.test(document.getElementById('copyStatus').textContent));
+      const clip = await page.evaluate(() => navigator.clipboard.readText());
+      assert.ok(clip.includes('Plan status: Needs revision.') && clip.includes('[Needs revision]'));
+
+      // revise Grace to a harder scenario and Michelle to 10 min: the plan updates
+      await page.click('.ap-status [data-todecide]');
+      await page.click('#ttList [data-revise="grace"]');
+      await decide(page, 'accept');
+      await page.click('#ttList [data-revise="michelle"]');
+      await page.check('#minOpts input[value="10"]');
+      await page.click('#confirmDecision');
+      await toStep3(page);
+      assert.equal(await text(page, '#apHead'), 'Coach Michelle first, and check David and John before spending more time.');
+      assert.match(await itext(page, '#actionPlan .k-cap'), /Capacity 5 min left of 15 min · Within budget/);
+      assert.deepEqual((await items(page)).map(i => i.id + ' ' + i.cat), ['michelle Coach', 'david More evidence first', 'john More evidence first', 'grace Practice and stretch']);
+      assert.equal(await page.$$eval('#actionPlan .nr', els => els.length), 0);
+    } finally { await context.close(); }
+  });
+
+  test('the invitation leads into the existing Pilot form, whose prefill still works', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await fourDecisions(page);
+      await toStep3(page);
+      assert.equal(await text(page, '.invite h3'), 'See what this could look like with your own team.');
+      const hashBefore = await page.evaluate(() => location.hash);
+      await page.click('#toPilot');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'h2');
+      assert.equal(await page.evaluate(() => location.hash), hashBefore, 'no hash change, so a reload stays on step 3');
+      await page.check('#chips input[value="1"]');
+      await page.fill('#own', 'Final expense questions');
+      await page.selectOption('#size', '11–25');
+      await page.click('#pilotLink');
+      await page.waitForURL(/pilot-start\.html/);
+      assert.equal(await page.inputValue('textarea[name="goal"]'), "Comparing a competitor's quote; Final expense questions");
+      assert.equal(await page.$eval('select[name="team-size"]', s => s.options[s.selectedIndex].text), '11–25');
+    } finally { await context.close(); }
+  });
+
+  test('action plan fits phones (320-430px) and desktop, with the copy button reachable', async () => {
+    for (const width of [320, 375, 430, 1366]) {
+      const { page, context } = await openDemo({ width, height: 800 });
+      try {
+        await fourDecisions(page);
+        await toStep3(page);
+        assert.ok(await noOverflow(page), `action plan at ${width}`);
+        assert.ok(await page.isVisible('[data-copyplan]'));
+        assert.ok(await page.isVisible('#apHead'));
+        const kpiBox = await page.$eval('.ap-kpis', el => el.getBoundingClientRect().width);
+        assert.ok(kpiBox <= width, `KPIs fit at ${width}`);
       } finally { await context.close(); }
     }
   });
