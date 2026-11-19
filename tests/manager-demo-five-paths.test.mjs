@@ -83,7 +83,8 @@ async function exploreFromEvidence(page, id) {
   await page.evaluate(() => { document.querySelector('details.all').open = true; });
   await page.click(`#evidence .ev-go[data-explore="${id}"]`);
 }
-const minutes = page => page.$$eval('#allocation b', els => els.map(e => parseInt(e.textContent, 10)));
+const approvedMin = async page => parseInt(await page.textContent('#ttCommit'), 10);
+const minOptions = page => page.$$eval('#minOpts input', els => els.map(i => [+i.value, !i.disabled]));
 const noOverflow = page => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
 describe('Manager Demo: five complete learner paths', () => {
@@ -131,38 +132,256 @@ describe('Manager Demo: five complete learner paths', () => {
     });
   }
 
-  test('accept, verify and override use coaching time logically for every learner', async () => {
+  test('accept, verify and override: coaching time per learner, one decision at a time', async () => {
     const { page, context } = await openDemo();
     try {
       await pickAndLock(page, 'david');
       for (const id of Object.keys(EXPECT)) {
-        if ((await text(page, '#cxNow')) !== NAMES[id]) {
-          await exploreFromEvidence(page, id);
-        }
+        if ((await text(page, '#cxNow')) !== NAMES[id]) await exploreFromEvidence(page, id);
         assert.equal(await text(page, '#cxNow'), NAMES[id]);
         const e = EXPECT[id];
         for (const action of ['accept', 'verify', 'override']) {
           await decide(page, action);
-          const [total, mine, rest] = await minutes(page);
           const coaches = action === 'accept' ? e.acceptCoaches : action === 'override' ? e.overrideCoaches : false;
-          assert.equal(total, 30);
-          assert.equal(mine, coaches ? 20 : 0, `${NAMES[id]} ${action}`);
-          assert.equal(rest, total - mine);
-          assert.equal(await text(page, '#cxAct'), e[action]);
-          assert.equal(await text(page, '#chainCv'), e[action]);
+          assert.equal(await approvedMin(page), coaches ? 20 : 0, `${NAMES[id]} ${action}`);
+          assert.equal(await text(page, '#cxAct'), e[action] + (coaches ? ' · 20 min' : ''));
+          assert.equal(await text(page, '#chainCv'), e[action] + (coaches ? ', 20 min' : ''));
           assert.match(await text(page, '#decided'), /Demo decision\. No assignment was sent to anyone\./);
           await page.click('#changeDecision');
           assert.ok(await page.isHidden('#decided'));
+          assert.equal(await approvedMin(page), 0, 'changing a decision releases its minutes');
           assert.equal(await text(page, '#chainCv'), 'Yours');
         }
       }
-      // only Michelle's AI suggestion spends coaching time; budget changes scale it
-      await exploreFromEvidence(page, 'michelle');
+    } finally { await context.close(); }
+  });
+
+  test('coaching for several learners stays inside one team budget, and earlier decisions can be revised', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'grace');
+      await page.click('.path[data-explore="michelle"]');
       await decide(page, 'accept');
-      await page.click('#judgmentDetails summary');
+      assert.equal(await approvedMin(page), 20);
+      assert.equal(await text(page, '#ttLeft'), '10 min');
+
+      // Grace: only 10 min are free, so 15 and 20 cannot be chosen
+      await page.click('#cxSwitch');
+      await page.click('#decideRow [data-decide="override"]');
+      assert.deepEqual(await minOptions(page), [[10, true], [15, false], [20, false]]);
+      assert.match(await text(page, '#ttPend'), /If you approve: 30 of 30 min committed, 0 left\./);
+      await page.selectOption('#decisionReason', { index: 1 });
+      await page.click('#confirmDecision');
+      assert.equal(await approvedMin(page), 30);
+      assert.equal(await text(page, '#ttLeft'), '0 min');
+
+      // John: no coaching time left, so coaching cannot be approved; other actions can
+      await exploreFromEvidence(page, 'john');
+      await page.click('#decideRow [data-decide="override"]');
+      assert.deepEqual(await minOptions(page), [[10, false], [15, false], [20, false]]);
+      assert.match(await text(page, '#minNote'), /No coaching time is free: 30 of 30 min are already approved/);
+      assert.equal(await page.isDisabled('#confirmDecision'), true);
+      await decide(page, 'accept');
+      assert.equal(await approvedMin(page), 30, 'a no-coaching decision does not use time');
+
+      // the team list shows every approved decision with its minutes
+      assert.deepEqual(await page.$$eval('#ttList li', els => els.map(li => li.querySelector('b').textContent + ' ' + li.querySelector('.m').textContent)),
+        ['Michelle 20 min', 'John no coaching time', 'Grace 10 min']);
+
+      // revise Michelle down to 15: her minutes are released, then re-approved
+      await page.click('#ttList [data-revise="michelle"]');
+      assert.equal(await text(page, '#cxNow'), 'Michelle');
+      assert.ok(await page.isHidden('#decided'));
+      assert.equal(await approvedMin(page), 10);
+      assert.deepEqual(await minOptions(page), [[10, true], [15, true], [20, true]]);
+      await page.check('#minOpts input[value="15"]');
+      await page.click('#confirmDecision');
+      assert.equal(await approvedMin(page), 25);
+
+      await page.click('.steps [data-go="2"]');
+      const recap = await text(page, '#recap');
+      assert.match(recap, /Michelle: Coach now, 15 min/);
+      assert.match(recap, /Grace: Coach her anyway, 10 min/);
+      assert.match(recap, /John: One more practice/);
+      assert.match(recap, /Coaching time: 25 of 30 min committed, 5 left\./);
+    } finally { await context.close(); }
+  });
+
+  test('lowering the budget after approval flags the plan as over budget until it is revised', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'michelle');
+      await decide(page, 'accept');
+      assert.equal(await approvedMin(page), 20);
       await page.check('input[name="demoBudget"][value="15"]');
-      assert.deepEqual(await minutes(page), [15, 10, 5]);
-      assert.match(await text(page, '#decidedTxt'), /10 of your 15/);
+      assert.equal(await text(page, '#ttLeft'), 'Over by 5 min');
+      assert.ok(await page.isVisible('#ttWarn'));
+      assert.match(await text(page, '#ttWarn'), /20 min approved, but only 15 min are available/);
+      assert.match(await text(page, '#decidedTxt'), /20 minutes of your team coaching time/);
+
+      // no new coaching can be approved while over budget
+      await exploreFromEvidence(page, 'david');
+      await page.click('#decideRow [data-decide="override"]');
+      assert.equal(await page.isDisabled('#confirmDecision'), true);
+
+      await page.click('.steps [data-go="2"]');
+      assert.match(await text(page, '#recap'), /Coaching time: 20 min approved, but only 15 min available\./);
+
+      // revise Michelle to 10 min: back within budget
+      await page.click('.steps [data-go="0"]');
+      await page.click('#ttList [data-revise="michelle"]');
+      assert.deepEqual(await minOptions(page), [[10, true], [15, true], [20, false]]);
+      await page.check('#minOpts input[value="10"]');
+      await page.click('#confirmDecision');
+      assert.equal(await text(page, '#ttLeft'), '5 min');
+      assert.ok(await page.isHidden('#ttWarn'));
+    } finally { await context.close(); }
+  });
+
+  test('simulated follow-up depends on the action, not only on the learner', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'anna');
+      for (const id of Object.keys(EXPECT)) {
+        if ((await text(page, '#cxNow')) !== NAMES[id]) await exploreFromEvidence(page, id);
+        const plans = new Set();
+        for (const action of ['accept', 'verify', 'override']) {
+          await decide(page, action);
+          await page.evaluate(() => { document.getElementById('followupDetails').open = true; });
+          const plan = await text(page, '#fuPlan'), event = await text(page, '#fuEvent'), head = await text(page, '#fuRespH');
+          plans.add(plan);
+          assert.match(await text(page, '#fuNext'), /Appears after you choose/);
+          const review = id !== 'michelle' && action === 'verify';
+          if (review) {
+            assert.match(plan, /Nothing is assigned and no coaching time is used/);
+            assert.match(event, /No new practice exists yet/);
+            assert.doesNotMatch(event, /completes/, 'a review must not show a new-practice result');
+            assert.equal(head, 'What you might conclude (hypothetical)');
+            assert.ok(await page.isVisible('#fuNoLearner'));
+          } else {
+            assert.equal(head, 'Hypothetical learner response');
+            assert.ok(await page.isHidden('#fuNoLearner'));
+          }
+          if (EXPECT[id][action === 'accept' ? 'acceptCoaches' : 'overrideCoaches'] && action !== 'verify') assert.match(plan, /20-minute one-to-one/);
+          await page.click('#outcomeChoices [data-outcome="1"]');
+          assert.doesNotMatch(await text(page, '#fuNext'), /Appears after/);
+          await page.click('#changeDecision');
+        }
+        assert.equal(plans.size, 3, `${NAMES[id]} has three different planned actions`);
+      }
+      // holding coaching never claims a training assignment
+      await exploreFromEvidence(page, 'michelle');
+      await decide(page, 'override');
+      await page.evaluate(() => { document.getElementById('followupDetails').open = true; });
+      assert.match(await text(page, '#fuPlan'), /No coaching and no new practice this week/);
+      assert.match(await text(page, '#fuEvent'), /you assigned nothing/);
+    } finally { await context.close(); }
+  });
+
+  test('step 2 shows the approved route, or labels itself an optional illustration', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'michelle');
+      await page.click('.steps [data-go="1"]');
+      assert.match(await page.getAttribute('#route', 'class'), /illus/);
+      assert.match(await text(page, '#route'), /Optional illustration.*No demo decision is confirmed for Michelle\..*Nothing here carries out a management decision/);
+      const studios = () => page.$$eval('#route .route-grid li', els => els.map(li => [li.querySelector('b').textContent, li.className]));
+
+      for (const [action, on] of [['override', ['Leadership', 'Hub']], ['verify', ['Leadership', 'Practice', 'Hub']], ['accept', ['Leadership', 'Knowledge', 'Client', 'Practice', 'Hub']]]) {
+        await page.click('.steps [data-go="0"]');
+        if (await page.isVisible('#changeDecision')) await page.click('#changeDecision');
+        await decide(page, action);
+        await page.click('.steps [data-go="1"]');
+        assert.match(await page.getAttribute('#route', 'class'), /set/);
+        assert.match(await text(page, '#route'), new RegExp(`Your approved demo decision\\s*Michelle: ${EXPECT.michelle[action]}`));
+        const got = await studios();
+        assert.deepEqual(got.filter(([, c]) => c.includes('on')).map(([n]) => n), on, action);
+        for (const [n, c] of got) if (!c.includes('on')) assert.match(await page.textContent(`#route .route-grid li:has(b:text-is("${n}"))`), /Not used by this decision/);
+      }
+      // a review-only decision for David uses no Knowledge, Client or Practice work
+      await page.click('.steps [data-go="0"]');
+      await exploreFromEvidence(page, 'david');
+      await decide(page, 'verify');
+      await page.click('.steps [data-go="1"]');
+      assert.deepEqual((await studios()).filter(([, c]) => c.includes('on')).map(([n]) => n), ['Leadership', 'Hub']);
+      assert.match(await text(page, '.stagenote'), /General illustration for David's case/);
+    } finally { await context.close(); }
+  });
+
+  test('evidence inspection shows each learner\'s own labelled, scripted excerpts', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'john');
+      for (const id of Object.keys(EXPECT)) {
+        if ((await text(page, '#cxNow')) !== NAMES[id]) await exploreFromEvidence(page, id);
+        await page.click('#decideRow [data-decide="verify"]');
+        const autoOpen = await page.$eval('#inspect', d => d.open);
+        assert.equal(autoOpen, id !== 'michelle', 'Review it yourself opens the excerpts (Michelle\'s verify is a second scenario instead)');
+        await page.evaluate(() => { document.getElementById('inspect').open = true; });
+        const body = await text(page, '#inspBody');
+        assert.match(body, /Scripted demo excerpts for a fictional agent, not records of real practice\./);
+        const labels = await page.$$eval('#inspBody figcaption', els => els.map(e => e.textContent));
+        assert.ok(labels.length >= 1 && labels.every(l => /^Attempt \d\. /.test(l)), labels.join(' | '));
+        const speakers = await page.$$eval('#inspBody .excerpt i', els => [...new Set(els.map(e => e.textContent))]);
+        assert.deepEqual(speakers.sort(), [NAMES[id], 'Simulated client'].sort());
+        assert.match(await text(page, '.insp-rest'), /summarised, not shown|only attempt/);
+        await page.evaluate(() => { document.getElementById('inspect').open = false; });
+      }
+    } finally { await context.close(); }
+  });
+
+  test('direct links, hash changes and reloads never assume a decision was made', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await page.goto(baseUrl + PAGE + '#the-loop');
+      await page.waitForSelector('#p1:not([hidden])');
+      assert.match(await text(page, '#route'), /You have not chosen an agent yet, so this shows the AI's top suggestion, Michelle\./);
+      assert.equal(await text(page, '#cxPick'), 'Not chosen yet');
+      assert.equal(await text(page, '#cxAct'), 'Not decided');
+
+      await page.goto(baseUrl + PAGE + '#your-team');
+      await page.reload();
+      await page.waitForSelector('#p2:not([hidden])');
+      const recap = await text(page, '#recap');
+      assert.match(recap, /You have not chosen an agent yet\./);
+      assert.match(recap, /No demo decision yet\. The pilot request below does not depend on one\./);
+      assert.ok(await page.isVisible('#pilotLink'));
+      assert.ok(await page.isHidden('#ctxbar'));
+
+      // the in-recap button starts the call; a decision then shows up in the recap
+      await page.click('#recap [data-go="0"]');
+      await pickAndLock(page, 'anna');
+      await decide(page, 'accept');
+      await page.evaluate(() => { location.hash = '#your-team'; });
+      await page.waitForSelector('#p2:not([hidden])');
+      assert.match(await text(page, '#recap'), /Anna: New scenario next week/);
+
+      // a reload is a fresh demo: nothing carried over, nothing claimed
+      await page.reload();
+      await page.waitForSelector('#p2:not([hidden])');
+      assert.match(await text(page, '#recap'), /No demo decision yet/);
+      assert.match(await text(page, '#recap'), /reset when you reload/);
+      await page.evaluate(() => { location.hash = '#the-loop'; });
+      await page.waitForSelector('#p1:not([hidden])');
+      assert.match(await text(page, '#route'), /Optional illustration/);
+    } finally { await context.close(); }
+  });
+
+  test('fast path: pick, decide and reach the pilot plan in a few clicks', async () => {
+    const { page, context } = await openDemo();
+    try {
+      assert.doesNotMatch(await text(page, '#intro0'), /identical/);
+      await page.click('#startDemo');
+      await page.click('label[data-p="michelle"]');
+      await page.click('#lock');
+      await page.waitForSelector('#reveal:not([hidden])');
+      await page.click('#toDecision');
+      await page.click('#decideRow [data-decide="accept"]');
+      await page.click('#confirmDecision');
+      await page.click('#decided .fast [data-go="2"]');
+      await page.waitForSelector('#p2:not([hidden])');
+      assert.ok(await page.isVisible('#pilotLink'));
+      assert.match(await text(page, '#recap'), /Michelle: Coach now, 20 min/);
     } finally { await context.close(); }
   });
 
@@ -205,7 +424,7 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await text(page, '#cxSwitch'), 'Back to your pick: John');
       assert.equal(await page.$eval('.person[data-p="michelle"]', l => l.classList.contains('exploring')), true);
       await decide(page, 'accept');
-      assert.equal((await minutes(page))[1], 20);
+      assert.equal(await approvedMin(page), 20);
 
       // step 2 follows whoever is explored, and the switch works there too
       await page.click('#decided [data-go="1"]');
