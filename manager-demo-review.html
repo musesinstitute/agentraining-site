@@ -40,6 +40,9 @@ h1,h2,h3,h4,p{margin:0}
 .hero .brand span{color:var(--slate)}
 .brand{font:600 15px var(--sans);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
 .brand span{font-weight:400;color:var(--slate)}
+.brand{align-items:center;gap:12px}.brand .logo{width:34px;height:34px;flex:0 0 34px}
+.wordmark{font:600 23px/1 var(--sans);letter-spacing:-.015em;color:var(--ink)}.brand .wordmark .dot{color:var(--royal);font-weight:600}
+.brand .tag{font-size:13.5px;color:var(--slate);border:1.5px solid #c3d2f5;border-radius:30px;padding:3px 11px;background:#ffffffa8}
 h1{font:400 clamp(34px,3.9vw,56px)/1.06 var(--serif);letter-spacing:-.025em;margin-top:20px;max-width:13em;text-wrap:balance}
 .lede{font-size:clamp(17px,1.4vw,20px);max-width:30em;margin-top:20px;color:var(--body)}
 .hero-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:28px}
@@ -109,6 +112,14 @@ h2{font:400 clamp(32px,4.8vw,58px)/1.06 var(--serif);letter-spacing:-.02em;max-w
 @keyframes impact{0%{opacity:0;transform:scale(1.9)}60%{opacity:1}}
 .vs-fig small{font-size:.34em;font-weight:400;letter-spacing:0;margin:0 .14em}
 .vs-cap{margin-top:18px;font-size:16px;max-width:26em}.vs.practice .vs-cap{color:var(--pale)}
+.sim-flag{display:inline-block;font:600 13px var(--sans);color:var(--ink);background:var(--pale);padding:4px 10px;border-radius:3px;margin-bottom:18px}
+.exec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:1px;margin-top:30px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:7px;overflow:hidden;align-items:stretch}
+.exec>div{background:var(--ink-2);padding:14px 18px 16px}
+.exec span{display:block;font-size:13px;color:var(--mist)}
+.exec b{display:block;font:600 clamp(17px,1.6vw,20px)/1.25 var(--serif);color:#fff;margin-top:4px}
+.exec .ex-ai{background:repeating-linear-gradient(135deg,var(--ink-2) 0 10px,#2d5ce0 10px 20px)}
+.exec .ex-ai b{color:var(--hi)}
+.exec .btn{border-radius:0;align-self:stretch;display:flex;align-items:center;justify-content:center;padding:14px 24px;font-size:16.5px}
 .moment{margin:44px 0 0;background:var(--ink-2);border-radius:6px;padding:24px 28px 26px;border-left:5px solid var(--hi)}
 .moment figcaption{font:500 14px var(--sans);color:var(--mist)}
 .moment i{display:block;font:600 13px var(--sans);font-style:normal;color:var(--mist);margin-bottom:2px}
@@ -164,6 +175,8 @@ details.all summary{cursor:pointer;font-weight:600;padding:16px 0}
 .lab{margin-top:48px}
 .lab h3{font:400 clamp(24px,3.2vw,38px)/1.15 var(--serif);letter-spacing:-.01em;max-width:20em;text-wrap:balance}
 .lab-sub{margin-top:10px;color:var(--slate)}
+.demo-badge{display:inline-block;vertical-align:middle;font:600 13px var(--sans);letter-spacing:0;color:var(--ink);background:var(--pale);border:1.5px solid #c3d2f5;padding:3px 9px;border-radius:3px;margin-left:8px}
+.demo-flag{display:inline-block;margin-top:10px;font:600 14px var(--sans);color:var(--ink);border-left:4px solid var(--hi);background:var(--sheet);padding:7px 12px}
 .actionset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:26px}
 .actionset button{text-align:left;background:var(--sheet);border:1.5px solid var(--line);border-radius:6px;padding:20px 20px 22px;cursor:pointer;color:var(--ink);font-family:var(--sans)}
 .actionset button b{display:block;font:600 25px/1.1 var(--serif)}
@@ -219,7 +232,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .studio-task{font-weight:400;font-size:clamp(17px,1.7vw,20px);color:var(--pale);max-width:34em;margin-top:14px}
 .showbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:48px;margin-top:38px;align-items:start}
 .col-h{font:500 15px var(--sans);color:var(--mist);margin-bottom:14px}
-.doc{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:start;background:var(--sheet);color:var(--ink);border-radius:4px;padding:15px 16px 16px;margin-bottom:10px;box-shadow:0 14px 26px -18px #000;transition:box-shadow .4s}
+.doc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:start;background:var(--sheet);color:var(--ink);border-radius:4px;padding:15px 16px 16px;margin-bottom:10px;box-shadow:0 14px 26px -18px #000;transition:box-shadow .4s}
 .doc b{font:600 17px/1.25 var(--serif)}
 .doc .why{grid-column:1/-1;font-size:14px;color:var(--slate)}
 .rate{font-size:12.5px;color:var(--slate);white-space:nowrap;padding-top:3px}
@@ -294,7 +307,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .legend li:before{content:"";display:inline-block;width:26px;flex:0 0 26px}
 .legend .lg-in:before{height:3px;background:var(--royal)}
 .legend .lg-out:before{height:7px;background:var(--hi);box-shadow:0 0 0 2px var(--ink);border-radius:4px}
-.legend .lg-cy:before{height:0;border-top:2px dashed #6f95f2}
+.cycle-line{margin:10px auto 0;max-width:520px;text-align:center;font-size:14px;color:var(--body)}
 @media(max-width:860px){.sys .nt{font-size:29px}.sys .ns{font-size:17.5px}.sys .ht{font-size:26px}.sys .hs{display:none}.sys svg{max-width:400px}.hero-cta{margin-top:22px}}
 @keyframes flow{to{stroke-dashoffset:-260}}
 .ring{position:relative;width:520px;height:520px;margin:auto}
@@ -328,6 +341,11 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .stop p{margin-top:14px;font-size:17px;max-width:32em}
 .stop .case{border-left:4px solid var(--hi);padding-left:14px;color:var(--body)}
 .hubCount{font-size:14px;color:var(--slate)}
+.cycle{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-wrap:wrap;gap:6px;counter-reset:cy}
+.cycle li{counter-increment:cy;display:flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border:1.5px solid var(--line);border-radius:30px;background:var(--sheet);font-size:14.5px;color:var(--slate);transition:background .3s,border-color .3s,color .3s}
+.cycle li:before{content:counter(cy);display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--paper);font:600 12.5px var(--sans);color:var(--slate)}
+.cycle li.past{color:var(--body);border-color:#b9c9ee}.cycle li.past:before{background:#dbe5fb;color:var(--royal)}
+.cycle li.on{background:var(--hi);border-color:var(--ink);color:var(--ink);font-weight:600}.cycle li.on:before{background:var(--ink);color:var(--hi)}
 
 /* step 3 */
 .realvs{display:grid;grid-template-columns:1fr 1.6fr;gap:14px;margin-top:26px;max-width:880px}
@@ -362,7 +380,8 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .plan .row{margin-top:10px;padding-top:22px;border-top:1px solid var(--line-dark)}
 #pilotLink{display:block;width:100%;text-align:center;font-size:21px;padding:21px 24px;box-shadow:0 14px 34px -10px #ffe600aa;animation:beckon 2.2s ease-in-out 1s 2}
 @keyframes beckon{50%{box-shadow:0 0 0 10px #ffe60040,0 14px 34px -10px #ffe600aa}}
-.plan .small{color:var(--mist);margin-top:14px}
+.plan .after{margin-top:16px;font-size:15.5px;line-height:1.5;color:#fff}.plan .after strong{color:var(--hi)}
+.plan .small{color:var(--pale);margin-top:10px;font-size:14.5px}
 
 .foot{border-top:1px solid var(--line);padding:34px 0 56px}
 .foot p{max-width:62em}.foot p+p{margin-top:12px}
@@ -375,22 +394,36 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  .team{grid-template-columns:1fr 1fr;gap:10px}.face{min-height:0;padding:12px 13px 14px}.person:last-child{grid-column:1/-1}.slip{margin-bottom:8px;padding-bottom:6px}.ctx{margin-top:8px}.back .t{font-size:14px}
  .verdict{padding:48px 0;scroll-margin-top:120px}
  .versus{grid-template-columns:1fr}.vs.report{border-radius:5px 5px 0 0}.vs.practice{border-left:1px solid var(--line-dark);border-top:0;border-radius:0 0 5px 5px}.vs{padding:24px 22px 26px}
- .realvs,.attempts,.actionset,.alloc,.showbody,.rx-grid,.loopwrap,.two{grid-template-columns:1fr}
+ .realvs,.attempts,.actionset,.alloc,.showbody,.rx-grid,.loopwrap,.two{grid-template-columns:minmax(0,1fr)}
+ .exec{grid-template-columns:1fr 1fr}.exec .ex-ai{grid-column:1/-1}.exec .btn{grid-column:1/-1;padding:15px}.exec>div{padding:12px 14px 13px}
+ .chain>div{display:grid;grid-template-columns:92px minmax(0,1fr);column-gap:12px;padding:13px 15px 14px}.chain>div>*{grid-column:2}.chain>div>.ck{grid-column:1;padding-top:3px}.chain>div[data-g]:before{grid-column:1/-1}.chain .cv{margin-top:0;font-size:18px}.chain .cv big{display:inline;font-size:30px;margin-right:6px}.chain .cn{margin-top:4px}
  .groups{display:none}.chain>div[data-g]:before{content:attr(data-g);display:block;font:600 12.5px var(--sans);color:var(--hi);margin-bottom:6px}.moment{padding:18px 18px 20px}
  .chain{grid-template-columns:1fr}.chain>div{border-left:0;border-top:1px solid var(--line-dark)}.chain>div:first-child{border-top:0}.chain>div:after{content:none}
  .showbody,.two,.loopwrap{gap:30px}
  .ev{grid-template-columns:1fr;gap:8px}
  .track{grid-template-columns:1fr 1fr;row-gap:26px}
- .ring{width:340px;height:340px}.hub{inset:96px;font-size:14px;padding:14px}.hub small{font-size:11.5px}.node{width:118px;height:60px;margin:-30px 0 0 -59px;font-size:14px}.node.n0{top:42px}.node.n1{left:calc(100% - 42px)}.node.n2{top:calc(100% - 42px)}.node.n3{left:42px}.loopwrap{grid-template-columns:1fr}
+ .ring{width:min(100%,380px);height:auto;aspect-ratio:1/1}.hub{inset:31%;font-size:clamp(12px,3.5vw,15px);padding:6px;line-height:1.2;box-shadow:0 0 0 8px #0f1b330f}.hub small{font-size:clamp(10px,2.8vw,12px);margin-top:4px}.node{width:30%;height:auto;min-height:15%;margin:0;transform:translate(-50%,-50%);padding:5px 4px;font-size:clamp(12px,3.7vw,15px);line-height:1.15}.node small{font-size:clamp(10px,2.9vw,12px);margin-top:2px}.node.active{transform:translate(-50%,-50%) scale(1.04)}.node.n0{top:10%}.node.n1{left:85%}.node.n2{top:90%}.node.n3{left:15%}.loopwrap{grid-template-columns:1fr}
  .plan{padding:24px 22px}.plan li{grid-template-columns:1fr;gap:4px}
  .filecard div{grid-template-columns:1fr;gap:2px}
+}
+@media(max-width:460px){.hub small{display:none}}
+@media(max-width:400px){.doc{grid-template-columns:minmax(0,1fr)}.doc .rate{justify-self:start}}
+@media(max-width:520px){
+ .team{grid-template-columns:1fr;gap:10px}.person:last-child{grid-column:auto}
+ .face{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;align-content:start;min-height:0;padding:12px 15px 14px}
+ .face>*{grid-column:1}.face>.slip{grid-column:1/-1;margin-bottom:6px;padding-bottom:6px}
+ .person b{font-size:25px}
+ .front>b{grid-row:2/4;align-self:center}.front>.paper{grid-column:2;margin-top:0}.front>.paper:nth-child(3){grid-row:2}.front>.paper:nth-child(4){grid-row:3}.front>.ctx{grid-column:1/-1;margin-top:8px}
+ .back>.badges{grid-row:2}.back>b{grid-row:3}.back>.strength{grid-row:4;margin-top:6px;font-size:14px}.back>.t{grid-column:1/-1;grid-row:5;margin-top:8px}
+ .back>.prio{grid-column:2;grid-row:2/5;align-self:center;margin:0;padding:0 0 0 14px;border-top:0;border-left:1px solid var(--line-dark);max-width:9.5em}
+ .prio strong{font-size:17px}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style></head>
 <body>
 <header class="hero"><div class="wrap">
  <div class="hero-text">
-  <p class="brand">AgentTraining.ai <span>Manager demo</span></p>
+  <p class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="12" fill="none" stroke="#1f4fd6" stroke-width="2.4" stroke-dasharray="4.2 3"/><circle cx="16" cy="17" r="6.4" fill="#1f4fd6"/><circle cx="16" cy="5" r="3.4" fill="#ffe600" stroke="#0f1b33" stroke-width="1.3"/></svg><strong class="wordmark">AgentTraining<span class="dot">.ai</span></strong><span class="tag">Manager demo</span></p>
   <h1>Know which agent needs your coaching before the client meeting.</h1>
   <p class="lede">Practice evidence from four connected Studios, gathered in one Hub. The AI recommends. You decide.</p>
   <div class="hero-cta"><button class="btn" type="button" id="startDemo">Make one coaching call</button><span>Four minutes. No sign-up.</span></div>
@@ -417,7 +450,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
    <g><rect class="nd" x="250" y="499" width="180" height="62" rx="8"/><text class="nt" x="340" y="526" text-anchor="middle">Client</text><text class="ns" x="340" y="548" text-anchor="middle">client context</text></g>
    <g><rect class="nd" x="5" y="269" width="180" height="62" rx="8"/><text class="nt" x="95" y="296" text-anchor="middle">Practice</text><text class="ns" x="95" y="318" text-anchor="middle">skill practice</text></g>
   </svg>
-  <figcaption><ul class="legend"><li class="lg-in">Evidence and context flow in</li><li class="lg-out">Decisions flow out to you</li><li class="lg-cy">The cycle continues</li></ul></figcaption>
+  <figcaption><ul class="legend"><li class="lg-in">Evidence and context flow in</li><li class="lg-out">Decisions flow out to you</li></ul><p class="cycle-line">Practice evidence → your judgment → targeted coaching → new practice → reassessment</p></figcaption>
  </figure>
 </div></header>
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
@@ -434,8 +467,8 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
   <div class="stage"><div class="wrap"><div class="verdict" id="verdict" tabindex="-1"></div></div></div>
   <div class="band"><div class="wrap">
    <details class="all"><summary>See the practice evidence for all five</summary><div class="evidence" id="evidence"></div></details>
-   <div class="lab" id="managerLab">
-    <h3>Your decision</h3>
+   <div class="lab" id="managerLab" style="scroll-margin-top:20px">
+    <h3>Your decision <span class="demo-badge">Demo: fictional team</span></h3>
     <p class="lab-sub"><span class="ai-tag">AI suggestion</span> Coach Michelle before tomorrow. It is a suggestion; nothing happens until you approve.</p>
     <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
     <details class="optionalDeep" id="judgmentDetails"><summary>Optional: coaching time and evidence limits</summary>
@@ -452,7 +485,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     </div>
     <p id="decisionStatus" role="status" aria-live="polite"></p>
     <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Choose an option above</button></div>
-    <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="muted small">The AI recommends. You decide. This is an example; no assignment has been sent.</p>
+    <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="demo-flag">Demo decision. No assignment was sent to anyone.</p>
      <div class="row"><button class="btn" type="button" data-go="1">See how the four Studios help</button><button class="btn secondary" id="changeDecision" type="button">Change my decision</button></div>
     </div>
     <details class="followCard optionalDeep" id="followupDetails" hidden><summary>Explore the next seven days (simulated follow-up)</summary>
@@ -563,7 +596,8 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
    <p class="muted small">Both cases are fictional illustrations.</p>
   </div>
 
-  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Evidence flows in, decisions flow out, and the next practice begins. Follow Michelle's case once around.</p></div>
+  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. Step through Michelle's case.</p>
+  <ol class="cycle" id="cycle" aria-label="The management cycle"><li>Practice evidence</li><li>Your judgment</li><li>Targeted coaching</li><li>New practice</li><li>Reassessment</li><li>Next action</li></ol></div>
   <div class="loopwrap">
    <div class="ring">
     <svg viewBox="0 0 520 520" aria-hidden="true">
@@ -606,7 +640,8 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
    <div class="plan" aria-live="polite"><p class="plan-h">Your team's fourteen days</p><div class="pri" id="pri" aria-label="Your chosen priorities"></div>
     <ol><li><strong>Before day 1</strong><span>Confirm the pilot scope for the priorities above and share only approved materials.<span id="planConv" hidden></span></span></li><li><strong>Days 1 to 13</strong><span>Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</span></li><li><strong>Day 14</strong><span>Discuss patterns, evidence limits, coaching priorities, and whether to continue.</span></li></ol>
     <div class="row"><a class="btn hi" id="pilotLink" href="pilot-start.html">Request this pilot</a></div>
-    <p class="small">By request and subject to confirmation. No credit card. A request does not create a paid subscription. Your choices carry over to the request form; nothing is sent until you submit it.</p>
+    <p class="after"><strong>After you request:</strong> we follow up by email to confirm the scope. If the pilot fits, we configure it for you: a manager view, your learners and focused practice scenarios.</p>
+    <p class="small">No credit card and no paid subscription. Your choices carry into the request form; nothing is sent until you submit it there.</p>
    </div>
   </div>
  </div></div>
@@ -649,7 +684,7 @@ $('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)
  /* turn the reports over one by one; the card practice points to turns last */
  const seq=[...cards.filter(l=>l.dataset.p!==TOP),cards.find(l=>l.dataset.p===TOP)];
  seq.forEach((l,i)=>setTimeout(()=>{l.classList.add('flipped');l.querySelector('.front').setAttribute('aria-hidden','true');l.querySelector('.back').removeAttribute('aria-hidden');if(l.dataset.p===TOP)l.classList.add('top')},still?0:200+i*260+(l.dataset.p===TOP?380:0)));
- $('verdict').innerHTML=`<h3>${same?'You chose Michelle, and practice agrees. Could her report have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><div class="versus"><div class="vs report"><p class="vs-label">Her training report</p><p class="vs-fig">#1</p><p class="vs-cap">Highest test score on the team.</p></div><div class="vs practice"><p class="vs-label">Her simulated practice</p><p class="vs-fig">0<small>of</small>4</p><p class="vs-cap">attempts in which she asked what the client was comparing before she pitched. A coaching signal, not proof of sales results.</p></div></div><figure class="moment"><figcaption>The moment that matters: practice attempt 4, simulated client</figcaption><p class="m-client"><i>Client</i>“Another agent quoted me less.”</p><p class="m-agent"><i>Michelle</i><span class="hl">“Ours covers more, though. For example, it includes…”</span></p><p class="m-also">Attempt 1 went the same way. Client: “This is more than we budgeted.” Michelle: “Let me walk you through what's included…”</p></figure><p class="sum">Four attempts. A price concern each time. Product features each time. <span class="hl swipe">Her client meeting is tomorrow.</span></p><div class="chainwrap"><div class="groups" aria-hidden="true"><span>Observed in practice</span><span>AI suggests</span><span>You decide</span></div><div class="chain" id="chain" role="list" aria-label="From evidence to decision"><div role="listitem" data-g="Observed in practice"><p class="ck">Agent</p><p class="cv">Michelle</p><p class="cn">Client meeting tomorrow.</p></div><div role="listitem"><p class="ck">Weakness</p><p class="cv">Pitches before she asks</p><p class="cn">Answers price concerns with features.</p></div><div role="listitem"><p class="ck">Evidence</p><p class="cv"><big>4<small> of </small>4</big>attempts</p><p class="cn"><strong>How sure?</strong> Same gap every time, in two scenarios. Not yet seen with real clients.</p></div><div role="listitem" class="ai-cell" data-g="AI suggests"><p class="ck">Suggestion</p><p class="cv">Coach before tomorrow</p><p class="cn">Because the gap repeats and the meeting is close.</p></div><div role="listitem" class="decide-cell" id="chainDecide" data-g="You decide"><p class="ck">Decision</p><p class="cv" id="chainCv">Yours</p><p class="cn" id="chainCn">Choose below. Nothing happens until you approve.</p></div></div></div><p class="note">Text-based practice with an AI client. Every person and conversation here is simulated.</p>`;
+ $('verdict').innerHTML=`<p class="sim-flag">Fictional team. Simulated practice.</p><h3>${same?'You chose Michelle, and practice agrees. Could her report have told you why?':'You chose '+me.name+'. Practice points to Michelle.'}</h3><div class="exec" role="group" aria-label="Summary of the finding"><div><span>Training report</span><b>#1 in testing</b></div><div><span>Simulated practice</span><b>Same gap in 4 of 4 attempts</b></div><div class="ex-ai"><span>AI suggests</span><b>Coach her before tomorrow</b></div><button type="button" class="btn hi" id="toDecision">Make your decision</button></div><div class="versus"><div class="vs report"><p class="vs-label">Her training report</p><p class="vs-fig">#1</p><p class="vs-cap">Highest test score on the team.</p></div><div class="vs practice"><p class="vs-label">Her simulated practice</p><p class="vs-fig">0<small>of</small>4</p><p class="vs-cap">attempts in which she asked what the client was comparing before she pitched. A coaching signal, not proof of sales results.</p></div></div><figure class="moment"><figcaption>The moment that matters: practice attempt 4, simulated client</figcaption><p class="m-client"><i>Client</i>“Another agent quoted me less.”</p><p class="m-agent"><i>Michelle</i><span class="hl">“Ours covers more, though. For example, it includes…”</span></p><p class="m-also">Attempt 1 went the same way. Client: “This is more than we budgeted.” Michelle: “Let me walk you through what's included…”</p></figure><p class="sum">Four attempts. A price concern each time. Product features each time. <span class="hl swipe">Her client meeting is tomorrow.</span></p><div class="chainwrap"><div class="groups" aria-hidden="true"><span>Observed in practice</span><span>AI suggests</span><span>You decide</span></div><div class="chain" id="chain" role="list" aria-label="From evidence to decision"><div role="listitem" data-g="Observed in practice"><p class="ck">Agent</p><p class="cv">Michelle</p><p class="cn">Client meeting tomorrow.</p></div><div role="listitem"><p class="ck">Weakness</p><p class="cv">Pitches before she asks</p><p class="cn">Answers price concerns with features.</p></div><div role="listitem"><p class="ck">Evidence</p><p class="cv"><big>4<small> of </small>4</big>attempts</p><p class="cn"><strong>How sure?</strong> Same gap every time, in two scenarios. Not yet seen with real clients.</p></div><div role="listitem" class="ai-cell" data-g="AI suggests"><p class="ck">Suggestion</p><p class="cv">Coach before tomorrow</p><p class="cn">Because the gap repeats and the meeting is close.</p></div><div role="listitem" class="decide-cell" id="chainDecide" data-g="You decide"><p class="ck">Decision</p><p class="cv" id="chainCv">Yours</p><p class="cn" id="chainCn">Choose below. Nothing happens until you approve.</p></div></div></div><p class="note">Text-based practice with an AI client. Every person and conversation here is simulated.</p>`;
  const order=[top,...TEAM.filter(p=>p.id!==TOP)];
  $('evidence').innerHTML=order.map(p=>`<div class="ev${p.id===TOP?' top':''}"><div class="who"><b>${p.name}</b><span>${p.focus}${p.id===pick?', your choice':''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${p.ev}</p></div><div class="sug"><b>Suggestion: ${p.sug}</b><span>${p.sugWhy}</span></div></div>`).join('');
  $('decideRow').innerHTML='<button type="button" data-decide="accept" aria-pressed="false"><em class="sugg">AI suggestion</em><b>Coach now</b><small><span>What happens next</span>Michelle gets coaching time before tomorrow. The other four get a next practice.</small></button><button type="button" data-decide="verify" aria-pressed="false"><b>Verify first</b><small><span>What happens next</span>Michelle gets a second practice scenario. You decide again with more evidence.</small></button><button type="button" data-decide="dismiss" aria-pressed="false"><b>Override</b><small><span>What happens next</span>You choose differently and give a reason. The suggestion stays open for review.</small></button>';
@@ -692,11 +727,11 @@ function drawDecision(){
  if(!actionConfirmed)return;
  const p=resourcePlan();
  const reason=managerAction==='dismiss'?' Reason: '+$('decisionReason').value+($('decisionNote').value.trim()?' ('+$('decisionNote').value.trim()+')':''):'';
- $('decidedTxt').textContent=managerAction==='accept'?'Approved by you: coach Michelle before tomorrow, '+p.michelle+' of your '+p.total+' coaching minutes.':
- managerAction==='verify'?'Approved by you: verify first. Michelle gets a second scenario; no coaching time is spent yet.':
- 'Your override: the suggestion stays open, your judgment stands.'+reason;
+ $('decidedTxt').textContent=managerAction==='accept'?'Your decision: coach Michelle before tomorrow, using '+p.michelle+' of your '+p.total+' coaching minutes.':
+ managerAction==='verify'?'Your decision: verify first. Michelle would get a second scenario before any coaching time is spent.':
+ 'Your decision: override the suggestion. Your judgment stands; the suggestion stays open.'+reason;
  $('followupDetails').hidden=false;$('decided').hidden=false;drawOutcome();
- const cd=$('chainDecide');if(cd){cd.classList.add('set');$('chainCv').textContent=managerAction==='accept'?'Coach Michelle now':managerAction==='verify'?'Verify first':'Override';$('chainCn').textContent=managerAction==='accept'?'Approved by you. '+p.michelle+' of '+p.total+' minutes this week.':managerAction==='verify'?'Approved by you. Second scenario first.':'Your override, with your reason.'}
+ const cd=$('chainDecide');if(cd){cd.classList.add('set');$('chainCv').textContent=managerAction==='accept'?'Coach Michelle now':managerAction==='verify'?'Verify first':'Override';$('chainCn').textContent=managerAction==='accept'?'Your demo decision. No assignment sent.':managerAction==='verify'?'Your demo decision: second scenario first.':'Your demo override, with your reason.'}
 }
 $('decideRow').addEventListener('click',e=>{
  const button=e.target.closest('[data-decide]');if(!button||actionConfirmed)return;
@@ -712,7 +747,7 @@ $('confirmDecision').onclick=()=>{
  if(managerAction==='dismiss'&&!$('decisionReason').value){$('decisionStatus').textContent='Choose an override reason first.';$('decisionReason').focus();return}
  actionConfirmed=true;$('confirmDecision').disabled=true;
  $('decideRow').querySelectorAll('[data-decide]').forEach(b=>b.disabled=true);
- $('decisionStatus').textContent='Decision approved on this page only. Nothing was sent or saved.';$('confirmDecision').textContent='Approved';
+ $('decisionStatus').textContent='Demo decision made on this page only. No assignment sent, nothing saved.';$('confirmDecision').textContent='Demo decision made';
  drawDecision();$('decided').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
 $('changeDecision').onclick=()=>{
@@ -730,6 +765,7 @@ $('outcomeChoices').addEventListener('click',e=>{
 
 
 /* step 2 */
+const CYCLE=[[0,1],[2],[2],[3],[4,5]];
 const STOPS=[
  {n:0,tag:"Leadership, reveal the hidden risk",title:"An excellent test score hides a repeatable coaching signal.",body:"The manager sees Michelle's four simulated attempts across two scenarios, reviews their limits and decides what deserves scarce coaching time.",kase:"Michelle handles a lower-price objection by listing policy features instead of clarifying the comparison.",proof:"Four illustrative transcripts support a practice concern, not a claim about live customer calls or selling results."},
  {n:1,tag:"Knowledge, trace the source",title:"Find a specific principle, not a generic sales script.",body:"The fictional coaching note §2 says to ask what coverage is being compared before listing features. A manager reviews the source and approves any resulting material.",kase:"Target skill: ask a useful comparison question before giving product information.",proof:"Sample source: fictional approved-coaching-note §2. The Knowledge example above shows the source anchor and drafted questions."},
@@ -743,6 +779,7 @@ function drawStop(){
  $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
  $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Click any Studio, or select Next stage.';
  document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===s.n));
+ const cy=CYCLE[stop];document.querySelectorAll('#cycle li').forEach((li,i)=>{li.classList.toggle('on',cy.includes(i));li.classList.toggle('past',i<Math.min(...cy));if(cy.includes(i))li.setAttribute('aria-current','step');else li.removeAttribute('aria-current')});
  document.querySelectorAll('.ring .arc').forEach(a=>a.classList.toggle('on',stop>0&&+a.dataset.arc===stop-1));$('prevStop').disabled=stop===0;
  $('nextStop').textContent=stop===STOPS.length-1?'Now your team':'Next stage';
 }
@@ -774,6 +811,9 @@ function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').f
  const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
 $('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
 $('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
+
+/* reveal summary: jump straight to the manager's choice */
+document.addEventListener('click',e=>{if(!e.target.closest('#toDecision'))return;$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const b=document.querySelector('#decideRow [data-decide]:not(:disabled)');if(b)b.focus({preventScroll:true})},still?0:650)});
 
 /* hero action: go straight to the first decision */
 $('startDemo').onclick=()=>{go(0,true);$('h0').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const i=document.querySelector('#team input:not(:disabled)');if(i)i.focus({preventScroll:true})},still?0:650)};
