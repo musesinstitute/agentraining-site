@@ -185,8 +185,8 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await approvedMin(page), 30, 'a no-coaching decision does not use time');
 
       // the team list shows every approved decision with its minutes
-      assert.deepEqual(await page.$$eval('#ttList li', els => els.map(li => li.querySelector('b').textContent + ' ' + li.querySelector('.m').textContent)),
-        ['Michelle 20 min', 'John no coaching time', 'Grace 10 min']);
+      assert.deepEqual(await page.$$eval('#ttList .it', els => els.map(it => it.querySelector('b').textContent + ' ' + (it.querySelector('.m') || it.querySelector('.t')).textContent)),
+        ['Michelle 20 min', 'Grace 10 min', 'John One more practice']);
 
       // revise Michelle down to 15: her minutes are released, then re-approved
       await page.click('#ttList [data-revise="michelle"]');
@@ -216,7 +216,7 @@ describe('Manager Demo: five complete learner paths', () => {
       await page.check('input[name="demoBudget"][value="15"]');
       assert.equal(await text(page, '#ttLeft'), 'Over by 5 min');
       assert.ok(await page.isVisible('#ttWarn'));
-      assert.match(await text(page, '#ttWarn'), /20 min approved, but only 15 min are available/);
+      assert.match(await text(page, '#ttWarn'), /20 min of coaching are approved, but only 15 min are available/);
       assert.match(await text(page, '#decidedTxt'), /20 minutes of your team coaching time/);
 
       // no new coaching can be approved while over budget
@@ -293,7 +293,7 @@ describe('Manager Demo: five complete learner paths', () => {
         await decide(page, action);
         await page.click('.steps [data-go="1"]');
         assert.match(await page.getAttribute('#route', 'class'), /set/);
-        assert.match(await text(page, '#route'), new RegExp(`Your approved demo decision\\s*Michelle: ${EXPECT.michelle[action]}`));
+        assert.match(await text(page, '#route'), new RegExp(`Your approved demo decision, fictional\\s*Michelle: ${EXPECT.michelle[action]}`));
         const got = await studios();
         assert.deepEqual(got.filter(([, c]) => c.includes('on')).map(([n]) => n), on, action);
         for (const [n, c] of got) if (!c.includes('on')) assert.match(await page.textContent(`#route .route-grid li:has(b:text-is("${n}"))`), /Not used by this decision/);
@@ -564,5 +564,255 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await page.$$eval('.person.flipped', els => els.length), 5);
       assert.equal(await page.$eval('.person.top', l => l.dataset.p), 'michelle');
     } finally { await context.close(); }
+  });
+
+  // ---- third review ----
+  async function toStep3(page) { await page.click('.steps [data-go="2"]'); await page.waitForSelector('#p2:not([hidden])'); }
+  const goal = async page => new URL(await page.getAttribute('#pilotLink', 'href'), baseUrl).searchParams.get('goal');
+  const carried = page => page.$$eval('#pri span:not(.empty)', els => els.map(e => e.textContent));
+
+  test('custom Pilot goal is never dropped silently: explicit replace or leave-out choice', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await toStep3(page);
+      // own goal alone, then with one preset: both carried
+      await page.fill('#own', 'Medicare conversations, 65+');
+      assert.deepEqual(await carried(page), ['Medicare conversations, 65+']);
+      await page.check('#chips input[value="0"]');
+      assert.deepEqual(await carried(page), ['“Your premium is too high”', 'Medicare conversations, 65+']);
+      assert.ok(await page.isHidden('#conflict'));
+
+      // a second preset would make three: the page asks, it does not drop the own goal
+      await page.check('#chips input[value="2"]');
+      assert.ok(await page.isVisible('#conflict'));
+      assert.match(await text(page, '#conflictMsg'), /“Medicare conversations, 65\+”, is not included yet: two conversations are already chosen\. Which should it replace\?/);
+      assert.match(await text(page, '#carryMiss'), /Not included yet: “Medicare conversations, 65\+”/);
+      const choices = await page.$$eval('#conflictBtns button', els => els.map(b => b.textContent));
+      assert.deepEqual(choices, ['Replace “Your premium is too high”', 'Replace “I need to think about it”', 'Leave mine out']);
+
+      // requesting while unresolved is held back, with focus on the choice
+      await page.click('#pilotLink');
+      assert.match(page.url(), /manager-demo-review\.html/);
+      assert.equal(await page.evaluate(() => document.activeElement.closest('#conflictBtns') !== null), true);
+      assert.match(await text(page, '#goalLive'), /before requesting/);
+
+      // keyboard: replace the first preset
+      await page.focus('#conflictBtns button >> nth=0');
+      await page.keyboard.press('Enter');
+      assert.ok(await page.isHidden('#conflict'));
+      assert.equal(await page.isChecked('#chips input[value="0"]'), false);
+      assert.deepEqual(await carried(page), ['“I need to think about it”', 'Medicare conversations, 65+']);
+      assert.match(await text(page, '#goalLive'), /Replaced\. Carried into your request: “I need to think about it” and Medicare conversations, 65\+\./);
+      await page.selectOption('#size', '26–50');
+      assert.equal(await goal(page), '“I need to think about it”; Medicare conversations, 65+');
+      assert.equal(await text(page, '#carrySize'), '26–50');
+
+      // both priorities and the team size survive the prefill
+      await page.click('#pilotLink');
+      await page.waitForURL(/pilot-start\.html/);
+      assert.equal(await page.inputValue('textarea[name="goal"]'), '“I need to think about it”; Medicare conversations, 65+');
+      assert.equal(await page.$eval('select[name="team-size"]', s => s.options[s.selectedIndex].text), '26–50');
+    } finally { await context.close(); }
+  });
+
+  test('custom Pilot goal: "leave mine out" is explicit, and a third preset is refused', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await toStep3(page);
+      await page.check('#chips input[value="1"]');
+      await page.check('#chips input[value="3"]');
+      await page.click('#chips input[value="4"]');
+      assert.equal(await page.isChecked('#chips input[value="4"]'), false, 'a third preset is not accepted');
+      assert.match(await text(page, '#chipHint'), /Two is the limit/);
+      await page.fill('#own', 'Final expense questions');
+      assert.ok(await page.isVisible('#conflict'));
+      await page.click('#conflictBtns [data-leaveout]');
+      assert.equal(await page.inputValue('#own'), '');
+      assert.ok(await page.isHidden('#conflict'));
+      assert.ok(await page.isHidden('#carryMiss'));
+      assert.deepEqual(await carried(page), ["Comparing a competitor's quote", 'The first call to a new prospect']);
+      assert.equal(await goal(page), "Comparing a competitor's quote; The first call to a new prospect");
+      assert.match(await text(page, '#goalLive'), /left out/);
+    } finally { await context.close(); }
+  });
+
+  test('cutting the budget after several approvals marks the plan Needs revision everywhere, then revising fixes it', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'grace');
+      await page.click('.path[data-explore="michelle"]');
+      await decide(page, 'accept');                       // Michelle 20
+      await page.click('#cxSwitch');
+      await decide(page, 'override');                     // Grace 10
+      await exploreFromEvidence(page, 'john');
+      await decide(page, 'verify');                       // John review, no time
+      assert.equal(await text(page, '#ttStatus'), 'Within budget');
+
+      await page.check('input[name="demoBudget"][value="15"]');
+      assert.equal(await text(page, '#ttStatus'), 'Needs revision');
+      assert.match(await text(page, '#ttWarn'), /Needs revision\. 30 min of coaching are approved, but only 15 min are available, so this plan is not workable as it stands\. Your decisions are kept for review/);
+      assert.match(await text(page, '#ttLive'), /Needs revision/);
+      assert.equal(await page.$$eval('.tt-bar .seg.bad', els => els.length), 2);
+      const tags = await page.$$eval('#ttList .it', els => els.map(it => it.querySelector('b').textContent + (it.querySelector('.nr') ? ' NR' : '')));
+      assert.deepEqual(tags, ['Michelle NR', 'Grace NR', 'John'], 'decisions are preserved; only coaching is flagged');
+      assert.equal(await approvedMin(page), 30);
+
+      // John (no coaching time) is not flagged; Michelle is flagged in her decision, chain, bar and follow-up
+      assert.ok(await page.isHidden('#decNeeds'));
+      await exploreFromEvidence(page, 'michelle');
+      assert.ok(await page.isVisible('#decided'), 'Michelle still decided (not silently reverted)');
+      assert.match(await text(page, '#decNeeds'), /Needs revision\. The team plan is over budget/);
+      assert.match(await text(page, '#chainCn'), /Needs revision/);
+      assert.match(await text(page, '#cxAct'), /Coach now · 20 min · needs revision/);
+      await page.evaluate(() => { document.getElementById('followupDetails').open = true; });
+      assert.match(await text(page, '#fuPlan'), /^Needs revision before it could happen:/);
+      await page.click('.steps [data-go="1"]');
+      assert.match(await text(page, '#route'), /Needs revision.*not workable as it stands/);
+      await toStep3(page);
+      assert.match(await text(page, '#recap'), /Plan status: Needs revision\. Coaching time: 30 min approved, but only 15 min available\./);
+      assert.equal(await page.$$eval('#recap .nr', els => els.length), 2);
+
+      // direct control: go back to 30 min, then cut again and revise instead
+      await page.click('.steps [data-go="0"]');
+      await page.click('#ttWarn [data-budget="30"]');
+      assert.equal(await text(page, '#ttStatus'), 'Within budget');
+      await page.check('input[name="demoBudget"][value="15"]');
+      await page.click('#ttList [data-revise="grace"]');
+      assert.equal(await text(page, '#cxNow'), 'Grace');
+      assert.equal(await approvedMin(page), 20);
+      assert.equal(await text(page, '#ttStatus'), 'Needs revision', 'still 20 of 15');
+      await decide(page, 'accept');                       // Grace: harder scenario, no time
+      await page.click('#ttList [data-revise="michelle"]');
+      assert.deepEqual(await minOptions(page), [[10, true], [15, true], [20, false]]);
+      await page.check('#minOpts input[value="10"]');
+      await page.click('#confirmDecision');
+      assert.equal(await text(page, '#ttStatus'), 'Within budget');
+      assert.equal(await page.$$eval('#ttList .nr', els => els.length), 0);
+      assert.ok(await page.isHidden('#decNeeds'));
+      await toStep3(page);
+      const recap = await text(page, '#recap');
+      assert.match(recap, /Plan status: within budget\. Coaching time: 10 of 15 min committed, 5 left\./);
+      assert.match(recap, /Michelle: Coach now, 10 min/);
+      assert.match(recap, /Grace: Harder scenario/);
+      assert.match(recap, /John: Review it yourself/);
+    } finally { await context.close(); }
+  });
+
+  test('team summary groups every decision and names the AI priority, its evidence and who is undecided', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'michelle');
+      assert.equal(await text(page, '#ttStatus'), 'No decisions yet');
+      assert.match(await text(page, '#ttAI'), /AI's top priority: Michelle\. Evidence: same gap in 4 of 4 attempts in simulated practice\./);
+      await decide(page, 'override');                     // Michelle: hold coaching -> monitoring, reassess
+      await exploreFromEvidence(page, 'david'); await decide(page, 'verify');    // review pending
+      await exploreFromEvidence(page, 'john'); await decide(page, 'accept');     // practice planned
+      await exploreFromEvidence(page, 'grace'); await decide(page, 'override');  // coaching, reassess
+      const groups = await page.$$eval('#ttList li[data-group]', els => els.map(li => li.dataset.group + ': ' + li.querySelector('.its').innerText.replace(/Revise/g, '').replace(/\s+/g, ' ').trim()));
+      assert.deepEqual(groups, [
+        'coach: Grace Coach her anyway 20 min',
+        'practice: John One more practice',
+        'review: David Review it yourself',
+        'monitor: Michelle Hold coaching',
+        'reassess: Michelle and Grace: you overrode the AI suggestion, so compare the new evidence with it. Neither is assumed right.',
+        'undecided: Anna',
+      ]);
+      // an undecided learner is one click from a decision
+      await page.click('#ttList [data-decidefor="anna"]');
+      assert.equal(await text(page, '#cxNow'), 'Anna');
+      assert.equal(await page.evaluate(() => document.activeElement.matches('#decideRow [data-decide]')), true);
+      await toStep3(page);
+      const recap = await text(page, '#recap');
+      for (const re of [/Coaching now Grace: Coach her anyway, 20 min/, /Practice planned, not sent John: One more practice/, /Your review pending David: Review it yourself/, /Monitoring only Michelle: Hold coaching/, /Reassess at next check-in Michelle and Grace, against the AI suggestion/, /Not decided yet Anna/]) assert.match(recap, re);
+    } finally { await context.close(); }
+  });
+
+  test('plan comparison is read-only, budget-bound and never claims outcomes', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'grace');
+      await decide(page, 'override');                     // Grace coached 20
+      await page.click('#ttList summary, #compare summary');
+      await page.evaluate(() => { document.getElementById('compare').open = true; });
+      const cards = await page.$$eval('#compareBody .plancard', els => els.map(e => e.innerText.replace(/\s+/g, ' ')));
+      assert.equal(cards.length, 2);
+      const [ai, mine] = cards;
+      assert.match(ai, /The AI's suggested plan Hypothetical/);
+      assert.match(ai, /Immediate coaching Michelle \(20 min\)/);
+      assert.match(ai, /Minutes 20 of 30 committed, 10 left/);
+      assert.match(ai, /Evidence behind each coaching priority Michelle: Same gap in 4 of 4 attempts \(consistent evidence\)/);
+      assert.match(mine, /Immediate coaching Grace \(20 min\)/);
+      assert.match(mine, /Michelle, the AI's top priority \(same gap in 4 of 4 attempts\), gets no coaching in this plan\./);
+      assert.match(mine, /Spends 20 min on Grace, where practice shows no gap\./);
+      assert.match(mine, /No decision yet for David, Michelle, John and Anna\./);
+      for (const c of cards) {
+        assert.match(c, /Based on simulated practice only\. No outcome is known\./);
+        assert.doesNotMatch(c, /will improve|guarantee|proven|validated|optimi[sz]ed/i);
+      }
+      assert.match(await text(page, '#compareBody .cmp-lead'), /not results\. Nothing here is applied/);
+      assert.equal(await page.$$eval('#compareBody button, #compareBody input', els => els.length), 0, 'no controls inside the comparison');
+
+      // follows the budget, and recognises a plan that matches the AI's
+      await page.check('input[name="demoBudget"][value="15"]');
+      assert.match((await page.innerText('#compareBody .plancard >> nth=0')).replace(/\s+/g, ' '), /Michelle \(10 min\).*10 of 15 committed, 5 left/);
+      await page.check('input[name="demoBudget"][value="30"]');
+      await page.click('#changeDecision');
+      for (const id of ['grace', 'david', 'michelle', 'john', 'anna']) {
+        if ((await text(page, '#cxNow')) !== NAMES[id]) await exploreFromEvidence(page, id);
+        await decide(page, 'accept');
+      }
+      assert.match(await text(page, '#compareBody'), /Your plan matches the AI's suggested plan\./);
+    } finally { await context.close(); }
+  });
+
+  test('step 2 separates decision, hypothetical workflow, general demonstration and illustrative follow-up', async () => {
+    const { page, context } = await openDemo();
+    try {
+      await pickAndLock(page, 'john');
+      await decide(page, 'accept');
+      await page.evaluate(() => { document.getElementById('followupDetails').open = true; });
+      assert.match(await text(page, '#followupDetails .fu-tag'), /Illustrative follow-up Invented events for a fictional team, not results\./);
+      await page.click('#decided [data-go="1"]');
+      assert.deepEqual(await page.$$eval('.layers .lyr', els => els.map(e => e.textContent)), ['Your decision', 'Hypothetical workflow', 'General demonstration', 'Illustrative follow-up']);
+      assert.match(await text(page, '#route .route-k'), /Your decision Your approved demo decision, fictional/);
+      assert.match(await text(page, '#route .route-sub'), /Hypothetical workflow What the Studios would do for this decision\. Nothing was sent or assigned\./);
+      assert.match(await text(page, '.stagenote'), /^General demonstration General illustration for John's case/);
+      assert.equal(await page.$$eval('.rx .lyr.gen', els => els.length), 1);
+      assert.equal(await page.$$eval('.loophead .lyr.ill', els => els.length), 1);
+      // with no decision, the route is a general demonstration, not a workflow
+      await page.click('.steps [data-go="0"]');
+      await page.click('#changeDecision');
+      await page.click('.steps [data-go="1"]');
+      assert.match(await text(page, '#route .route-k'), /General demonstration Optional illustration/);
+      assert.equal(await page.$$eval('#route .lyr.dec, #route .lyr.hyp', els => els.length), 0);
+    } finally { await context.close(); }
+  });
+
+  test('new panels fit at 320-430px and simulation labels stay visible', async () => {
+    for (const width of [320, 375, 430]) {
+      const { page, context } = await openDemo({ width, height: 760 });
+      try {
+        await pickAndLock(page, 'michelle');
+        assert.ok(await page.isVisible('#verdict .sim-flag'));
+        await decide(page, 'accept');
+        assert.ok(await page.isVisible('#decided .demo-flag'));
+        await page.click('#cxSwitch').catch(() => {});
+        await exploreFromEvidence(page, 'grace');
+        await decide(page, 'override');
+        await page.check('input[name="demoBudget"][value="15"]');
+        await page.evaluate(() => { document.getElementById('compare').open = true; });
+        assert.ok(await noOverflow(page), `team plan, over budget and comparison at ${width}`);
+        await page.click('.steps [data-go="1"]');
+        assert.ok(await page.isVisible('.layers'));
+        assert.ok(await noOverflow(page), `step 2 layers and route at ${width}`);
+        await toStep3(page);
+        await page.check('#chips input[value="0"]');
+        await page.check('#chips input[value="2"]');
+        await page.fill('#own', 'A long custom conversation about family protection reviews');
+        assert.ok(await page.isVisible('#conflict'));
+        assert.ok(await noOverflow(page), `goal conflict at ${width}`);
+        assert.ok(await page.isVisible('.realvs'));
+      } finally { await context.close(); }
+    }
   });
 });

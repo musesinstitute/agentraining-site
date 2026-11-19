@@ -497,8 +497,6 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .tt-pend:empty{display:none}
 .tt-warn{margin-top:10px;border-left:4px solid #c2410c;background:#fff4ec;color:#7a2a0c;padding:8px 12px;font-size:14.5px;font-weight:600}
 .tt-list{list-style:none;padding:0;margin:12px 0 8px}
-.tt-list li{display:grid;grid-template-columns:7em minmax(0,1fr) auto auto;gap:4px 14px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line);font-size:14.5px}
-.tt-list li b{font-weight:600}.tt-list .m{color:var(--slate)}
 .tt-list li.none{display:block;color:var(--slate)}
 .fu{list-style:none;padding:0;margin:8px 0 10px;counter-reset:fu}
 .fu li{counter-increment:fu;position:relative;padding:4px 0 10px 40px;border-left:2px solid var(--line);margin-left:13px}
@@ -528,7 +526,61 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 .route-grid li.off{border:1px dashed var(--line);color:var(--slate)}
 .recap li.warn{color:#a3361c}
 @media(max-width:860px){.route-grid{grid-template-columns:1fr 1fr}.route-grid li.r-hub{grid-column:1/-1}}
-@media(max-width:520px){.tt-list li{grid-template-columns:minmax(0,1fr) auto}.tt-list li b{grid-column:1;grid-row:1}.tt-list .m{grid-column:2;grid-row:1;text-align:right}.tt-list li span:not(.m){grid-column:1;grid-row:2}.tt-list .linkbtn{grid-column:2;grid-row:2;justify-self:end}.tt-nums{gap:18px}.tt-nums dd{font-size:19px}.route{padding:16px 16px 14px}.route-grid li{padding:8px 10px}}
+@media(max-width:520px){.tt-nums{gap:18px}.tt-nums dd{font-size:19px}.route{padding:16px 16px 14px}.route-grid li{padding:8px 10px}}
+/* third review: goals, needs revision, team summary, comparison, layers */
+.conflict{margin-top:12px;border:1.5px solid #c2410c;background:#fff4ec;border-radius:5px;padding:12px 14px}
+.conflict p{font-size:15px;color:#5c2208}
+.conflict .row{margin-top:10px;gap:8px;flex-wrap:wrap;align-items:center}
+.conflict .btn{font-size:14.5px;padding:8px 12px}
+.carry-h{margin-top:16px;font-size:13.5px;color:var(--mist)}
+.plan .carry-h+.pri{margin-top:8px}
+.plan .pri:focus{outline:0}
+.carry-miss{margin-top:10px;border-left:4px solid var(--hi);background:var(--royal-dk);color:#fff;padding:6px 10px;font-size:14.5px}
+.carry-size{margin-top:8px;font-size:14px;color:var(--mist)}.carry-size b{color:#fff}
+.nr{display:inline-block;font:600 12px var(--sans);font-style:normal;color:#7a2a0c;background:#ffe3d3;border:1px solid #e9a27e;border-radius:3px;padding:1px 7px;vertical-align:middle}
+.needs{margin-top:10px;border-left:4px solid #c2410c;background:#fff4ec;color:#5c2208;padding:8px 12px;font-size:15px;max-width:44em}
+.tt-status{display:inline-block;vertical-align:middle;margin-left:8px;font:600 12.5px var(--sans);padding:2px 8px;border-radius:3px}
+.tt-status.ok{background:#dff0e7;color:#1f6a4b}.tt-status.bad{background:#ffe3d3;color:#7a2a0c}.tt-status.none{background:var(--pale);color:var(--slate)}
+.tt-ai{margin-top:8px;font-size:14.5px;color:var(--body);border-left:3px dashed var(--royal);padding-left:10px}
+.seg.bad{background:#b4441c}
+.tt-warn p{margin:0}.tt-warn .btn{margin-top:8px;font-size:14px;padding:7px 12px}
+.tt-list li{display:grid;grid-template-columns:11em minmax(0,1fr);gap:4px 14px;align-items:start;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px}
+.tt-list .g{font-weight:600;color:var(--ink)}
+.tt-list .its{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tt-list .its p{margin:0;color:var(--body)}
+.tt-list .it{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.tt-list .it b{font-weight:600}.tt-list .it .t{color:var(--body)}.tt-list .it .m{color:var(--slate)}
+.tt-list [data-group=undecided] .its{flex-direction:row;flex-wrap:wrap;gap:6px}
+.chipbtn{background:var(--sheet);border:1.5px solid var(--royal);color:var(--royal);border-radius:14px;padding:3px 12px;font:600 13.5px var(--sans);cursor:pointer}
+.chipbtn:hover{background:var(--pale)}
+.compare{margin-top:6px;border-top:1px solid var(--line)}
+.compare>summary{cursor:pointer;font-weight:600;padding:12px 0}
+.cmp-lead{font-size:14.5px;color:var(--body)}
+.cmp-same{margin-top:6px;font-weight:600;color:var(--pass)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 6px}
+.plancard{border:1px solid var(--line);border-radius:5px;padding:14px 16px;background:var(--paper)}
+.plancard h5{font:600 15.5px var(--sans)}
+.plancard dl{margin:8px 0 0}
+.plancard dl div{padding:7px 0;border-top:1px solid var(--line)}
+.plancard dt{font-size:12.5px;color:var(--slate)}
+.plancard dd{margin:2px 0 0;font-size:14.5px}
+.plancard ul{margin:2px 0 0;padding-left:18px}.plancard li{margin-top:2px}
+.lyr{display:inline-block;vertical-align:baseline;font:600 12px/1.5 var(--sans);font-style:normal;padding:1px 8px;border-radius:3px;margin-right:6px;white-space:nowrap}
+.lyr.dec{background:var(--royal);color:#fff}
+.lyr.hyp{background:var(--sheet);color:var(--royal);box-shadow:inset 0 0 0 1.5px var(--royal)}
+.lyr.gen{background:var(--pale);color:var(--ink);box-shadow:inset 0 0 0 1px #c3d2f5}
+.lyr.ill{background:var(--hi);color:var(--ink)}
+.layers{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--body)}
+.layers li{display:flex;align-items:baseline;gap:2px}
+.lyr-line{margin-bottom:8px}
+.route-sub{margin-top:14px;font-size:14px;color:var(--body)}
+.route.bad{border-left-color:#c2410c}
+.route-warn{margin-top:8px;border-left:4px solid #c2410c;background:#fff4ec;color:#5c2208;padding:6px 10px;font-size:14.5px}
+.fu-tag{margin-top:4px;font-size:14px;color:var(--body)}
+@media(max-width:860px){.cmp-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.tt-list li{grid-template-columns:minmax(0,1fr)}.layers{flex-direction:column;gap:6px}}
+.recap .rg{font-weight:600;color:var(--slate);margin-right:4px}
+.conflict{margin-bottom:20px}
 
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
 </style></head>
@@ -591,21 +643,24 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     </div>
     <details class="optionalDeep inspect" id="inspect"><summary>Inspect <span id="inspName">Michelle</span>&#39;s practice excerpts</summary><div id="inspBody"></div></details>
     <section class="teamtime" id="teamTime" aria-labelledby="ttH">
-     <div class="tt-head"><h4 id="ttH">Team coaching time this week</h4><fieldset><legend class="sr">Your coaching time this week</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset></div>
+     <div class="tt-head"><h4 id="ttH">Team plan this week <span class="tt-status none" id="ttStatus">No decisions yet</span></h4><fieldset><legend class="sr">Your coaching time this week</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset></div>
+     <p class="tt-ai" id="ttAI"></p>
      <div class="tt-bar" id="ttBar" aria-hidden="true"></div>
      <dl class="tt-nums" aria-live="polite"><div><dt>Available</dt><dd id="ttAvail"></dd></div><div><dt>Approved</dt><dd id="ttCommit"></dd></div><div><dt>Remaining</dt><dd id="ttLeft"></dd></div></dl>
-     <p class="tt-pend" id="ttPend"></p><p class="tt-warn" id="ttWarn" role="alert" hidden></p>
+     <p class="tt-pend" id="ttPend"></p><div class="tt-warn" id="ttWarn" hidden></div><p class="sr" id="ttLive" role="status" aria-live="polite"></p>
      <ul class="tt-list" id="ttList"></ul>
+     <details class="compare" id="compare"><summary>Compare the AI's suggested plan with yours</summary><div id="compareBody"></div></details>
      <p class="small">Your own plan across the whole team. The minutes are your choice, not an AI optimisation.</p>
     </section>
     <details class="optionalDeep" id="judgmentDetails"><summary>Optional: what the evidence can and cannot tell you</summary><div class="bound" id="bound"></div></details>
     <p id="decisionStatus" role="status" aria-live="polite"></p>
     <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Choose an option above</button></div>
-    <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="demo-flag">Demo decision. No assignment was sent to anyone.</p>
+    <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="needs" id="decNeeds" hidden></p><p class="demo-flag">Demo decision. No assignment was sent to anyone.</p>
      <div class="row"><button class="btn" type="button" data-go="1">See how the four Studios help</button><button class="btn secondary" id="changeDecision" type="button">Change my decision</button></div>
      <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your pilot plan</button></p>
     </div>
     <details class="followCard optionalDeep" id="followupDetails" hidden><summary>Explore what could happen next (simulated)</summary>
+     <p class="fu-tag"><span class="lyr ill">Illustrative follow-up</span> Invented events for a fictional team, not results.</p>
      <ol class="fu">
       <li><b>Planned action</b><p id="fuPlan"></p></li>
       <li><b>Simulated next event</b><p id="fuEvent"></p><p class="small" id="fuNoLearner" hidden>No learner activity: nothing was assigned.</p></li>
@@ -624,6 +679,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
   <h2 id="h1" tabindex="-1">What happens after you spot Michelle's risk?</h2>
   <p class="intro">One problem, four Studios, one Hub. Watch it travel.</p>
   <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your pilot plan</button></p>
+  <ul class="layers" aria-label="How to read this step"><li><span class="lyr dec">Your decision</span>a confirmed, fictional demo decision</li><li><span class="lyr hyp">Hypothetical workflow</span>what the Studios would do for it</li><li><span class="lyr gen">General demonstration</span>what each Studio can do</li><li><span class="lyr ill">Illustrative follow-up</span>invented events, not results</li></ul>
   <div class="route" id="route" aria-live="polite"></div>
   <div class="casequote">
    <p class="line" id="s2line"></p>
@@ -638,7 +694,7 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
  </div></div>
 
  <div class="stage"><div class="wrap">
-  <p class="stagenote">General illustration for <span id="stageName">Michelle</span>&#39;s case: scripted examples with invented documents. No AI service runs on this page.</p>
+  <p class="stagenote"><span class="lyr gen">General demonstration</span> General illustration for <span id="stageName">Michelle</span>&#39;s case: scripted examples with invented documents. No AI service runs on this page.</p>
 
   <div class="show" id="showK"></div>
   <div class="show" id="showC"></div>
@@ -646,14 +702,14 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 
  <div class="band"><div class="wrap">
   <div class="rx" aria-labelledby="rxTitle">
-   <h3 id="rxTitle">The same loop writes different prescriptions.</h3>
+   <p class="lyr-line"><span class="lyr gen">General demonstration</span></p><h3 id="rxTitle">The same loop writes different prescriptions.</h3>
    <p class="rx-lead" id="rxLead"></p>
    <div class="rx-grid" id="rxGrid"></div>
    <p class="rx-close">Different evidence, a different starting point. A single training class would have given everyone the same lesson.</p>
    <p class="muted small">Both cases are fictional illustrations.</p>
   </div>
 
-  <div class="loophead"><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. An illustration of the full cycle along the AI's suggested route for <span id="loopName">Michelle</span>.</p>
+  <div class="loophead"><p class="lyr-line"><span class="lyr ill">Illustrative follow-up</span></p><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. An illustration of the full cycle along the AI's suggested route for <span id="loopName">Michelle</span>.</p>
   <ol class="cycle" id="cycle" aria-label="The management cycle"><li>Practice evidence</li><li>Your judgment</li><li>Targeted coaching</li><li>New practice</li><li>Reassessment</li><li>Next action</li></ol></div>
   <div class="loopwrap">
    <div class="ring">
@@ -692,10 +748,12 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
     <div class="field"><p id="chipLabel">Which two conversations does your team find hardest?</p>
      <div class="chips" id="chips" role="group" aria-labelledby="chipLabel"></div>
      <p class="muted small" id="chipHint">Pick up to two, or write your own below.</p></div>
-    <div class="field"><label for="own">Another conversation (optional)</label><input type="text" id="own" maxlength="80" placeholder="e.g. Medicare conversations"></div>
+    <div class="field"><label for="own">Your own conversation (optional)</label><input type="text" id="own" maxlength="80" placeholder="e.g. Medicare conversations"></div>
+    <div class="conflict" id="conflict" role="group" aria-labelledby="conflictMsg" hidden><p id="conflictMsg"></p><div class="row" id="conflictBtns"></div></div>
+    <p class="sr" id="goalLive" role="status" aria-live="polite"></p>
     <div class="field"><label for="size">Team size</label><select id="size"><option>1–5</option><option selected>6–10</option><option>11–25</option><option>26–50</option><option>51+</option></select></div>
    </div>
-   <div class="plan" aria-live="polite"><p class="plan-h">Your team's fourteen days</p><div class="pri" id="pri" aria-label="Your chosen priorities"></div>
+   <div class="plan" aria-live="polite"><p class="plan-h">Your team's fourteen days</p><p class="carry-h">Carried into your Pilot request</p><div class="pri" id="pri" tabindex="-1" aria-label="Priorities carried into your Pilot request"></div><p class="carry-miss" id="carryMiss" hidden></p><p class="carry-size">Team size: <b id="carrySize"></b></p>
     <ol><li><strong>Before day 1</strong><span>Confirm the pilot scope for the priorities above and share only approved materials.<span id="planConv" hidden></span></span></li><li><strong>Days 1 to 13</strong><span>Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</span></li><li><strong>Day 14</strong><span>Discuss patterns, evidence limits, coaching priorities, and whether to continue.</span></li></ol>
     <div class="row"><a class="btn hi" id="pilotLink" href="pilot-start.html">Request this pilot</a></div>
     <p class="after"><strong>After you request:</strong> we follow up by email to confirm the scope. If the pilot fits, we configure it for you: a manager view, your learners and focused practice scenarios.</p>
@@ -997,6 +1055,9 @@ const EXCERPTS={
   rest:`Attempt 2 is summarised, not shown. All three attempts used the same client and opening line.`}
 };
 
+/* What kind of evidence each learner has, for plan trade-offs. */
+const EVIDENCE_TRAIT={michelle:`repeat`,david:`thin`,john:`thin`,grace:`nogap`,anna:`one-scenario`};
+
 const $=id=>document.getElementById(id);
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1045,7 +1106,7 @@ function renderVerdict(){
 function renderChainDecision(){const d=dec[explored],cd=$('chainDecide');if(!cd)return;const c=cur();
  cd.classList.toggle('set',d.confirmed);
  $('chainCv').textContent=d.confirmed?c.actions[d.action].title+(d.minutes?`, ${d.minutes} min`:``):`Yours`;
- $('chainCn').textContent=d.confirmed?(d.action===`override`?`Your demo override, with your reason. No assignment sent.`:`Your demo decision. No assignment sent.`):`Choose below. Nothing happens until you approve.`}
+ $('chainCn').textContent=d.confirmed?(needsRevision(explored)?`Needs revision: the team plan is over budget.`:d.action===`override`?`Your demo override, with your reason. No assignment sent.`:`Your demo decision. No assignment sent.`):`Choose below. Nothing happens until you approve.`}
 
 function renderEvidence(){
  const order=[TOP,...ORDER.filter(x=>x!==TOP)];
@@ -1065,19 +1126,55 @@ function renderMinutes(){const id=explored,d=dec[id],c=cur(),show=isCoach(id,d.a
  $('minOpts').innerHTML=MIN_OPTS.map(m=>`<label class="${ok.includes(m)?'':'off'}"><input type="radio" name="minSel" value="${m}"${m===d.minSel?' checked':''}${ok.includes(m)?'':' disabled'}>${m} min</label>`).join('');
  $('minNote').textContent=ok.length?`${Math.max(room,0)} of ${budget()} min are still free this week.`:`No coaching time is free: ${committed(id)} of ${budget()} min are already approved for others. Revise one of them below, or choose another action for ${c.name}.`;
  $('minNote').classList.toggle('warn',!ok.length)}
-function renderTeam(){const b=budget(),used=committed(null),d=dec[explored],c=cur();
- const pend=isCoach(explored,d.action)&&!d.confirmed&&d.minSel?d.minSel:0,left=b-used,over=used>b;
- const segs=ORDER.filter(x=>dec[x].confirmed&&dec[x].minutes).map(x=>`<span class="seg" style="flex:${dec[x].minutes}">${C(x).name} ${dec[x].minutes}</span>`).join('')+(pend?`<span class="seg pend" style="flex:${pend}">${c.name} +${pend}?</span>`:'')+(left-pend>0?`<span class="seg free" style="flex:${left-pend}">${left-pend} free</span>`:'');
+const over=()=>committed(null)>budget();
+const needsRevision=id=>over()&&dec[id].confirmed&&dec[id].minutes>0;
+function kindOf(id){const d=dec[id];if(!d.confirmed)return null;if(d.minutes)return `coach`;if(FOLLOW[id][d.action].kind===`review`)return `review`;return ROUTE[id][d.action].P?`practice`:`monitor`}
+const GROUPS=[[`coach`,`Coaching now`],[`practice`,`Practice planned, not sent`],[`review`,`Your review pending`],[`monitor`,`Monitoring only`]];
+const names=ids=>ids.map(id=>C(id).name).join(`, `).replace(/, ([^,]*)$/,` and $1`);
+function renderTeam(){const b=budget(),used=committed(null),d=dec[explored],c=cur(),any=ORDER.some(x=>dec[x].confirmed);
+ const pend=isCoach(explored,d.action)&&!d.confirmed&&d.minSel?d.minSel:0,left=b-used,ov=used>b;
+ $('ttStatus').textContent=!any?`No decisions yet`:ov?`Needs revision`:`Within budget`;$('ttStatus').className=`tt-status `+(!any?`none`:ov?`bad`:`ok`);
+ $('ttAI').innerHTML=`AI's top priority: <b>${C(TOP).name}</b>. Evidence: ${esc(C(TOP).practice.sum.toLowerCase())} in simulated practice. ${esc(C(TOP).chain.because)}`;
+ const segs=ORDER.filter(x=>dec[x].confirmed&&dec[x].minutes).map(x=>`<span class="seg${ov?' bad':''}" style="flex:${dec[x].minutes}">${C(x).name} ${dec[x].minutes}</span>`).join('')+(pend?`<span class="seg pend" style="flex:${pend}">${c.name} +${pend}?</span>`:'')+(left-pend>0?`<span class="seg free" style="flex:${left-pend}">${left-pend} free</span>`:'');
  $('ttBar').innerHTML=segs||`<span class="seg free" style="flex:1">${b} free</span>`;
- $('ttAvail').textContent=b+' min';$('ttCommit').textContent=used+' min';$('ttLeft').textContent=over?`Over by ${used-b} min`:left+' min';
- $('ttLeft').classList.toggle('warn',over);
- const rows=ORDER.filter(x=>dec[x].confirmed).map(x=>`<li><b>${C(x).name}</b><span>${esc(C(x).actions[dec[x].action].title)}</span><span class="m">${dec[x].minutes?dec[x].minutes+' min':'no coaching time'}</span><button type="button" class="linkbtn" data-revise="${x}">Revise</button></li>`).join('');
- $('ttList').innerHTML=rows||`<li class="none">No decisions approved yet.</li>`;
- $('ttWarn').hidden=!over;if(over)$('ttWarn').textContent=`Over budget: ${used} min approved, but only ${b} min are available. Revise a decision below before this plan works.`;
- $('ttPend').textContent=pend?`If you approve: ${used+pend} of ${b} min committed, ${b-used-pend} left.`:''}
+ $('ttAvail').textContent=b+' min';$('ttCommit').textContent=used+' min';$('ttLeft').textContent=ov?`Over by ${used-b} min`:left+' min';$('ttLeft').classList.toggle('warn',ov);
+ $('ttWarn').hidden=!ov;
+ if(ov)$('ttWarn').innerHTML=`<p><strong>Needs revision.</strong> ${used} min of coaching are approved, but only ${b} min are available, so this plan is not workable as it stands. Your decisions are kept for review: revise a coaching decision below${b<30?`, or go back to 30 min`:``}.</p>${b<30?`<button type="button" class="btn secondary" data-budget="30">Go back to 30 min</button>`:``}`;
+ const item=x=>`<div class="it"><b>${C(x).name}</b><span class="t">${esc(C(x).actions[dec[x].action].title)}</span>${dec[x].minutes?`<span class="m">${dec[x].minutes} min</span>`:``}${needsRevision(x)?`<em class="nr">Needs revision</em>`:``}<button type="button" class="linkbtn" data-revise="${x}" aria-label="Revise ${C(x).name}'s decision">Revise</button></div>`;
+ const rows=GROUPS.map(([k,label])=>{const ids=ORDER.filter(x=>kindOf(x)===k);return ids.length?`<li data-group="${k}"><span class="g">${label}</span><div class="its">${ids.map(item).join('')}</div></li>`:''}).join('');
+ const reassess=ORDER.filter(x=>dec[x].confirmed&&dec[x].action===`override`),undec=ORDER.filter(x=>!dec[x].confirmed);
+ $('ttList').innerHTML=(rows||`<li class="none">No decisions approved yet.</li>`)+(reassess.length?`<li data-group="reassess"><span class="g">Reassess at next check-in</span><div class="its"><p>${names(reassess)}: you overrode the AI suggestion, so compare the new evidence with it. Neither is assumed right.</p></div></li>`:``)+(undec.length?`<li data-group="undecided"><span class="g">Not decided yet</span><div class="its">${undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join('')}</div></li>`:``);
+ $('ttPend').textContent=pend?`If you approve: ${used+pend} of ${b} min committed, ${b-used-pend} left.`:'';
+ renderCompare()}
+/* Two hypothetical plans side by side. Read-only: the manager decides in each learner's panel. */
+function planFacts(plan){const b=budget(),coach=ORDER.filter(id=>plan[id]&&plan[id].minutes),other=ORDER.filter(id=>plan[id]&&!plan[id].minutes),undec=ORDER.filter(id=>!plan[id]);
+ const used=coach.reduce((n,id)=>n+plan[id].minutes,0);return {b,coach,other,undec,used,left:b-used}}
+function tradeoffs(plan,f){const t=[],coached=id=>!!(plan[id]&&plan[id].minutes);
+ if(!coached(TOP))t.push(`${C(TOP).name}, the AI's top priority (${C(TOP).practice.sum.toLowerCase()}), gets no coaching in this plan.`);
+ f.coach.forEach(id=>{const k=C(id),tr=EVIDENCE_TRAIT[id];
+  if(tr===`repeat`)t.push(`Puts time where the gap repeats. Still not observed with real clients.`);
+  if(tr===`thin`)t.push(`Coaches ${k.name} on thin evidence (${k.practice.sum.toLowerCase()}). A cheaper practice might show the same.`);
+  if(tr===`nogap`)t.push(`Spends ${plan[id].minutes} min on ${k.name}, where practice shows no gap.`);
+  if(tr===`one-scenario`)t.push(`Coaches ${k.name} before ${k.pos} progress is tested in a new scenario.`)});
+ const wait=f.other.filter(id=>EVIDENCE_TRAIT[id]===`thin`);if(wait.length)t.push(`${names(wait)} get${wait.length>1?``:`s`} more evidence first, so a real gap could wait a week.`);
+ if(f.left>0)t.push(`${f.left} min left unallocated.`);if(f.left<0)t.push(`Over budget by ${-f.left} min: needs revision.`);
+ if(f.undec.length)t.push(`No decision yet for ${names(f.undec)}.`);
+ t.push(`Based on simulated practice only. No outcome is known.`);return t}
+function planCard(title,plan,tag){const f=planFacts(plan);
+ const dl=[[`Immediate coaching`,f.coach.length?f.coach.map(id=>`${C(id).name} (${plan[id].minutes} min)`).join(`, `):`No one`],
+  [`Practice, review or monitoring instead`,f.other.length?f.other.map(id=>`${C(id).name}: ${esc(C(id).actions[plan[id].action].title)}`).join(`; `):`No one`],
+  [`Minutes`,`${f.used} of ${f.b} committed, `+(f.left<0?`over by ${-f.left}`:`${f.left} left`)],
+  [`Evidence behind each coaching priority`,f.coach.length?f.coach.map(id=>`${C(id).name}: ${esc(C(id).practice.sum)} (${C(id).pillTxt.toLowerCase()})`).join(`; `):`No coaching priority`]];
+ return `<article class="plancard"><h5>${title} <span class="lyr hyp">${tag}</span></h5><dl>${dl.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div><dt>Trade-offs and limits</dt><dd><ul>${tradeoffs(plan,f).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></dd></div></dl></article>`}
+function renderCompare(){const b=budget(),aiM=Math.round(b*2/3);const ai={},mine={};
+ ORDER.forEach(id=>{ai[id]={action:`accept`,minutes:C(id).actions.accept.coach?aiM:0};if(dec[id].confirmed)mine[id]={action:dec[id].action,minutes:dec[id].minutes}});
+ const same=ORDER.every(id=>mine[id]&&mine[id].action===ai[id].action&&mine[id].minutes===ai[id].minutes);
+ $('compareBody').innerHTML=`<p class="cmp-lead">Two hypothetical plans within your ${b}-minute budget. This compares what each plan commits and the evidence behind it, not results. Nothing here is applied: you decide in each learner's panel.</p>${same?`<p class="cmp-same">Your plan matches the AI's suggested plan.</p>`:``}<div class="cmp-grid">${planCard(`The AI's suggested plan`,ai,`Hypothetical`)}${planCard(`Your plan so far`,mine,`Your demo decisions`)}</div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-budget]');if(b){const r=document.querySelector(`input[name="demoBudget"][value="${b.dataset.budget}"]`);r.checked=true;afterDecisionChange();$('ttLive').textContent=`Budget set to ${b.dataset.budget} min.`}
+ const d=e.target.closest('[data-decidefor]');if(d){setExplored(d.dataset.decidefor);$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const f=document.querySelector('#decideRow [data-decide]');if(f)f.focus({preventScroll:true})}});
 function decidedText(){const c=cur(),d=dec[explored];let t=c.actions[d.action].decided.replace(`{mine}`,d.minutes);if(d.action===`override`)t+=` Reason: `+d.reason+(d.note.trim()?` (`+d.note.trim()+`)`:``)+`.`;return t}
 function drawFollow(){const id=explored,d=dec[id],f=FOLLOW[id][d.action],review=f.kind===`review`;
- $('fuPlan').textContent=fill(f.plan,d.minutes);$('fuEvent').textContent=f.event;
+ $('fuPlan').textContent=(needsRevision(id)?`Needs revision before it could happen: `:``)+fill(f.plan,d.minutes);$('fuEvent').textContent=f.event;
  $('fuRespH').textContent=review?`What you might conclude (hypothetical)`:`Hypothetical learner response`;
  $('fuNoLearner').hidden=!review;
  $('outcomeChoices').innerHTML=f.opts.map((o,i)=>`<button type="button" data-outcome="${i}" aria-pressed="${d.outcome===String(i)}">${esc(o.label)}</button>`).join('');
@@ -1099,14 +1196,15 @@ function renderLab(){const c=cur(),d=dec[explored],id=explored;
  $('decisionStatus').textContent=d.confirmed?`Demo decision made on this page only. No assignment sent, nothing saved.`:blocked?`Not enough coaching time is free. Revise another decision or choose another action.`:d.action?(d.action===`override`?`Choose a reason for the override, then approve.`:`Ready for your approval. This demo sends nothing.`):`Choose a management action for ${c.name}. This demo never sends assignments.`;
  renderTeam();
  $('decided').hidden=!d.confirmed;$('followupDetails').hidden=!d.confirmed;if(!d.confirmed)$('followupDetails').open=false;
- if(d.confirmed){$('decidedTxt').textContent=decidedText();drawFollow()}}
-function afterDecisionChange(){renderLab();renderChainDecision();renderCtx();if(step===1)renderRoute()}
+ if(d.confirmed){$('decidedTxt').textContent=decidedText();drawFollow()}
+ $('decNeeds').hidden=!needsRevision(id);if(needsRevision(id))$('decNeeds').innerHTML=`<strong>Needs revision.</strong> The team plan is over budget, so this coaching time is not workable as it stands. Revise it or another coaching decision in the team plan below.`}
+function afterDecisionChange(){renderLab();renderChainDecision();renderCtx();if(step===1)renderRoute();if(step===2)renderRecap()}
 $('decideRow').addEventListener('click',e=>{const b=e.target.closest('[data-decide]'),d=dec[explored];if(!b||d.confirmed)return;d.action=b.dataset.decide;
  if(d.action===`verify`&&FOLLOW[explored].verify.kind===`review`)$('inspect').open=true;renderLab();renderCtx()});
 $('minOpts').addEventListener('change',e=>{if(e.target.name===`minSel`){dec[explored].minSel=+e.target.value;renderLab()}});
 $('decisionReason').addEventListener('change',()=>{dec[explored].reason=$('decisionReason').value});
 $('decisionNote').addEventListener('input',()=>{dec[explored].note=$('decisionNote').value});
-$('teamTime').addEventListener('change',e=>{if(e.target.name===`demoBudget`){renderLab();renderCtx()}});
+$('teamTime').addEventListener('change',e=>{if(e.target.name===`demoBudget`){afterDecisionChange();$('ttLive').textContent=over()?`Needs revision: approved coaching exceeds ${budget()} min.`:`Budget set to ${budget()} min.`}});
 $('confirmDecision').onclick=()=>{const d=dec[explored];if(!d.action||d.confirmed)return;
  if(d.action===`override`&&!d.reason){$('decisionStatus').textContent=`Choose an override reason first.`;$('decisionReason').focus();return}
  if(isCoach(explored,d.action)){fitMinutes(explored);if(!d.minSel){renderLab();return}d.minutes=d.minSel}else d.minutes=0;
@@ -1123,7 +1221,7 @@ $('outcomeChoices').addEventListener('click',e=>{const b=e.target.closest('[data
 /* ---------- context bar: pick, AI suggestion, exploring, action ---------- */
 function renderCtx(){if(!explored)return;const d=dec[explored],c=cur();
  $('cxPick').textContent=pick?C(pick).name:`Not chosen yet`;$('cxAI').textContent=C(TOP).name;$('cxNow').textContent=c.name;
- $('cxAct').textContent=d.confirmed?c.actions[d.action].title+(d.minutes?` · ${d.minutes} min`:``):d.action?`Choosing…`:`Not decided`;
+ $('cxAct').textContent=d.confirmed?c.actions[d.action].title+(d.minutes?` · ${d.minutes} min`:``)+(needsRevision(explored)?` · needs revision`:``):d.action?`Choosing…`:`Not decided`;
  const sw=$('cxSwitch');let target=null,label=``;
  if(pick&&explored!==pick){target=pick;label=`Back to your pick: `+C(pick).name}else if(explored!==TOP){target=TOP;label=`Explore the AI's pick: `+C(TOP).name}
  sw.hidden=!target;if(target){sw.dataset.explore=target;sw.textContent=label}}
@@ -1135,9 +1233,10 @@ function renderStep2(){const c=cur(),s=c.s2;
 const STUDIOS=[[`L`,`Leadership`],[`K`,`Knowledge`],[`C`,`Client`],[`P`,`Practice`]];
 function renderRoute(){const id=explored,c=cur(),d=dec[id],el=$('route');
  if(!d.confirmed){el.className='route illus';
-  el.innerHTML=`<p class="route-k">Optional illustration</p><h3>${pick?`No demo decision is confirmed for ${c.name}.`:`You have not chosen an agent yet, so this shows the AI's top suggestion, ${c.name}.`}</h3><p>The Studio examples below show what each Studio could do for this case. Nothing here carries out a management decision, and nothing has been assigned.</p><div class="row"><button type="button" class="btn secondary" data-todecide="1">${pick?`Decide for ${c.name}`:`Make a coaching call first`}</button></div>`;return}
+  el.innerHTML=`<p class="route-k"><span class="lyr gen">General demonstration</span> Optional illustration</p><h3>${pick?`No demo decision is confirmed for ${c.name}.`:`You have not chosen an agent yet, so this shows the AI's top suggestion, ${c.name}.`}</h3><p>The Studio examples below show what each Studio could do for this case. Nothing here carries out a management decision, and nothing has been assigned.</p><div class="row"><button type="button" class="btn secondary" data-todecide="1">${pick?`Decide for ${c.name}`:`Make a coaching call first`}</button></div>`;return}
  const r=ROUTE[id][d.action],a=c.actions[d.action];el.className='route set';
- el.innerHTML=`<p class="route-k">Your approved demo decision</p><h3>${c.name}: ${esc(a.title)}${d.minutes?`, ${d.minutes} min`:``}</h3><p>${esc(fill(FOLLOW[id][d.action].plan,d.minutes))}</p><ul class="route-grid">${STUDIOS.map(([k,n])=>`<li class="${r[k]?'on':'off'}"><b>${n}</b><span>${r[k]?esc(fill(r[k],d.minutes)):`Not used by this decision.`}</span></li>`).join('')}<li class="on r-hub"><b>Hub</b><span>Keeps your decision${d.action===`override`?`, your reason`:``} and any new evidence for reassessment.</span></li></ul><p class="small">Fictional. Nothing was sent or assigned. The Studio examples further down are a general illustration of each Studio, not a record of what this decision started.</p>`}
+ const nr=needsRevision(id);el.className='route set'+(nr?' bad':'');
+ el.innerHTML=`<p class="route-k"><span class="lyr dec">Your decision</span> Your approved demo decision, fictional${nr?` <em class="nr">Needs revision</em>`:``}</p><h3>${c.name}: ${esc(a.title)}${d.minutes?`, ${d.minutes} min`:``}</h3>${nr?`<p class="route-warn">The team plan is over budget, so this coaching time is not workable as it stands. <button type="button" class="linkbtn" data-todecide="1">Revise in step 1</button></p>`:``}<p>${esc(fill(FOLLOW[id][d.action].plan,d.minutes))}</p><p class="route-sub"><span class="lyr hyp">Hypothetical workflow</span> What the Studios would do for this decision. Nothing was sent or assigned.</p><ul class="route-grid">${STUDIOS.map(([k,n])=>`<li class="${r[k]?'on':'off'}"><b>${n}</b><span>${r[k]?esc(fill(r[k],d.minutes)):`Not used by this decision.`}</span></li>`).join('')}<li class="on r-hub"><b>Hub</b><span>Keeps your decision${d.action===`override`?`, your reason`:``} and any new evidence for reassessment.</span></li></ul><p class="small">Fictional. Nothing was sent or assigned. The Studio examples further down are a general illustration of each Studio, not a record of what this decision started.</p>`}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-todecide]'))return;go(0);if(locked)setTimeout(()=>{$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'})},still?0:300)});
 function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
 function renderK(){runTok++;const s=cur().s2;$('showK').classList.remove('read');
@@ -1169,17 +1268,34 @@ $('hubJump').onclick=()=>{stop=4;drawStop()};
 /* ---------- step 3 ---------- */
 const CONVS=["“Your premium is too high”","Comparing a competitor's quote","“I need to think about it”","The first call to a new prospect","Asking for the first meeting","Following up after silence"];
 $('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
-function chosen(){const a=[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);const o=$('own').value.trim();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
-function drawPlan(){const a=chosen();document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
- $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;
- $('pri').innerHTML=(a.length?a.map(x=>'<span>'+esc(x)+'</span>').join(''):'')+(a.length<2?'<span class="empty">'+(a.length?'one more conversation':'choose two conversations')+'</span>':'');
+/* Pilot priorities: at most two, presets or the manager's own. Never drop the manager's own silently. */
+const own=()=>$('own').value.trim();
+const presets=()=>[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);
+const goalConflict=()=>!!own()&&presets().length===2;
+function chosen(){const a=presets();const o=own();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
+function drawPlan(){const a=chosen(),o=own(),clash=goalConflict();
+ document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
+ $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;$('carrySize').textContent=$('size').value;
+ $('pri').innerHTML=(a.length?a.map(x=>'<span>'+esc(x)+'</span>').join(''):'')+(a.length<2?'<span class="empty">'+(a.length?'one more conversation (optional)':'choose up to two conversations')+'</span>':'');
+ $('conflict').hidden=!clash;$('carryMiss').hidden=!clash;
+ if(clash){const p=presets();$('conflictMsg').innerHTML=`Your own conversation, <strong>“${esc(o)}”</strong>, is not included yet: two conversations are already chosen. Which should it replace?`;
+  $('conflictBtns').innerHTML=p.map(x=>`<button type="button" class="btn secondary" data-replace="${CONVS.indexOf(x)}">Replace ${esc(x)}</button>`).join('')+`<button type="button" class="linkbtn" data-leaveout="1">Leave mine out</button>`;
+  $('carryMiss').innerHTML=`Not included yet: “${esc(o)}”. Choose what it replaces, or leave it out.`}
+ $('chipHint').textContent=presets().length===2&&!o?'Two chosen. Unselect one to change it.':'Pick up to two in total, including your own.';
  const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
-$('chips').addEventListener('change',e=>{const on=document.querySelectorAll('#chips input:checked');if(on.length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one to change it.'}else $('chipHint').textContent='Pick up to two, or write your own below.';drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();if(full)$('chipHint').textContent='Both slots are full. Unselect one to include your custom conversation.';$('chipHint').classList.toggle('warn',full)});
-$('own').addEventListener('input',()=>{drawPlan();const full=document.querySelectorAll('#chips input:checked').length===2&&!!$('own').value.trim();$('chipHint').textContent=full?'Both preset slots are full. Unselect one to include your custom conversation.':'Pick up to two conversations total.';$('chipHint').classList.toggle('warn',full)});$('size').addEventListener('change',drawPlan);
+$('chips').addEventListener('change',e=>{if(presets().length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one first.';return}drawPlan()});
+$('own').addEventListener('input',drawPlan);$('size').addEventListener('change',drawPlan);
+document.addEventListener('click',e=>{const r=e.target.closest('[data-replace]'),l=e.target.closest('[data-leaveout]');
+ if(r){const i=document.querySelector(`#chips input[value="${r.dataset.replace}"]`);if(i)i.checked=false;drawPlan();$('pri').focus({preventScroll:true});$('goalLive').textContent='Replaced. Carried into your request: '+chosen().join(' and ')+'.'}
+ if(l){$('own').value='';drawPlan();$('goalLive').textContent='Your own conversation was left out. Carried into your request: '+chosen().join(' and ')+'.'}});
+$('pilotLink').addEventListener('click',e=>{if(!goalConflict())return;e.preventDefault();$('conflict').scrollIntoView({behavior:still?'auto':'smooth',block:'center'});const b=document.querySelector('#conflictBtns button');if(b)b.focus({preventScroll:true});$('goalLive').textContent='Choose what your own conversation replaces, or leave it out, before requesting.'});
 function renderRecap(){const done=ORDER.filter(id=>dec[id].confirmed),b=budget(),used=committed(null);
  const pickLine=!pick?`<li>You have not chosen an agent yet.</li>`:pick===TOP?`<li>You picked <strong>${C(pick).name}</strong>, the same agent the AI suggested.</li>`:`<li>You picked <strong>${C(pick).name}</strong>. The AI's top suggestion was <strong>${C(TOP).name}</strong>.</li>`;
- const decLines=done.map(id=>`<li>${C(id).name}: <strong>${esc(C(id).actions[dec[id].action].title)}</strong>${dec[id].minutes?`, ${dec[id].minutes} min`:``}</li>`).join(``);
- const time=done.length?(used>b?`<li class="warn">Coaching time: ${used} min approved, but only ${b} min available. <button type="button" class="linkbtn" data-todecide="1">Revise in step 1</button></li>`:`<li>Coaching time: ${used} of ${b} min committed, ${b-used} left.</li>`):``;
+ const it=id=>`${C(id).name}: <strong>${esc(C(id).actions[dec[id].action].title)}</strong>${dec[id].minutes?`, ${dec[id].minutes} min`:``}${needsRevision(id)?` <em class="nr">Needs revision</em>`:``}`;
+ const decLines=GROUPS.map(([k,label])=>{const ids=done.filter(x=>kindOf(x)===k);return ids.length?`<li><span class="rg">${label}</span> ${ids.map(it).join(`; `)}</li>`:``}).join(``)
+  +(done.some(x=>dec[x].action===`override`)?`<li><span class="rg">Reassess at next check-in</span> ${names(done.filter(x=>dec[x].action===`override`))}, against the AI suggestion</li>`:``)
+  +(done.length&&done.length<ORDER.length?`<li><span class="rg">Not decided yet</span> ${names(ORDER.filter(x=>!dec[x].confirmed))}</li>`:``);
+ const time=done.length?(used>b?`<li class="warn"><strong>Plan status: Needs revision.</strong> Coaching time: ${used} min approved, but only ${b} min available. <button type="button" class="linkbtn" data-todecide="1">Revise in step 1</button></li>`:`<li>Plan status: within budget. Coaching time: ${used} of ${b} min committed, ${b-used} left.</li>`):``;
  $('recap').hidden=false;
  $('recap').innerHTML=`<p class="rc-h">Your demo, recapped</p><ul>${pickLine}${decLines}${time}${done.length?``:`<li>No demo decision yet. The pilot request below does not depend on one. <button type="button" class="linkbtn" data-go="0">Make a coaching call</button></li>`}</ul><p class="small">Fictional decisions about a fictional team. Nothing was sent or saved. Demo choices stay on this page and reset when you reload.</p>`}
 
