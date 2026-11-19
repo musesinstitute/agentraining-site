@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>AgentTraining.ai — Executive Demo V5.8 | Manager Impact Review</title>
+<title>AgentTraining.ai — Executive Demo V5.9.1 | Manager Impact Review</title>
 <style>
 :root{--bg:#ecf1ed;--ink:#16261f;--muted:#64786e;--green:#165846;--pale:#d9ece2;--border:#d5ded6;--gold:#a16c28}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -68,51 +68,293 @@
 .ctaWrap{display:flex;flex-direction:column;align-items:center;gap:4px}.ctabtn{display:inline-block;background:#165846;color:#fff;font:800 16px Arial,sans-serif;padding:12px 22px;border-radius:11px;box-shadow:0 10px 22px #113d2c33;cursor:default;user-select:none}
 .pilot58{text-align:center;font:700 13px Arial,sans-serif;color:#165846;border:1px solid #b9d5c3;border-radius:10px;padding:7px;background:#fff}.pilot58 small{display:block;font:400 10.5px Arial,sans-serif;color:#5b7263;margin-top:2px}
 .endtags{display:flex;justify-content:center}
+/* V5.9.1 — S3 two contrasting scenarios (A collapses when B starts) */
+.scA,.scB{background:#fff;border:1px solid #d9e1d9;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:5px}.scB{border-color:#dcc697;background:#fffdf7}
+.schead{display:flex;align-items:center;gap:8px}.schead svg{width:28px;height:26px;flex:0 0 28px;display:block}
+.schead .aiStack{margin-right:5px}.sclab{font:800 9.5px/1.3 ui-monospace,monospace;letter-spacing:.2px;text-transform:uppercase;color:#165846}.scB .sclab{color:#7a4f12}.sclab small{display:block;font:600 10.5px/1.3 Arial,sans-serif;letter-spacing:0;text-transform:none;color:#5d7064}
+.msg.sm{padding:6px 10px;max-width:93%}.msg.sm p{font-size:13.5px;line-height:1.34;margin-top:2px}.msg.sm p+p{margin-top:3px}
+.scBody{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:hidden;transition:max-height .7s ease,opacity .5s ease}
+.visualShell .scA.out,.visualShell .cA.out{opacity:.72}.scA.out .scBody,.cA.out .cBody{max-height:0;opacity:0}
+.scSum,.cSum{display:none;font:11px/1.35 Arial,sans-serif;color:#5d7064}.scA.out .scSum,.cA.out .cSum{display:block}
+/* B cards take no space until revealed, so the A card can fold while B opens */
+.scB,.cB{max-height:440px;transition:opacity .55s ease .2s,transform .55s ease .2s,max-height .8s ease .2s}.scB:not(.on),.cB:not(.on){max-height:0;padding-top:0;padding-bottom:0;border-width:0;overflow:hidden}
+.visualShell{padding-bottom:2px;max-height:482px} /* room for the 10px cue offset; content allowance stays 470px */
+/* V5.9.1 — S4 coaching for both levels */
+.cA,.cB{border:1px solid #d9e1d9;border-radius:12px;padding:7px 10px;background:#fff;display:flex;flex-direction:column;gap:5px}.cB{border-color:#dcc697;background:#fffdf7}
+.clab{font:800 9.5px ui-monospace,monospace;letter-spacing:.7px;text-transform:uppercase;color:#165846}.cB .clab{color:#7a4f12}
+.cBody{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:hidden;transition:max-height .7s ease,opacity .5s ease}
+.cA .said{padding:6px 10px}.cA .said p{font-size:13px}.cA .fb,.cB .fb{padding:5px 10px}.cA .fb p,.cB .fb p{font-size:12.5px}.cA .fb.better p,.cB .fb.better p{font-size:13.5px}
+.fb.good{border-color:#3f8a64;background:#eef7f1}.fb.good p{color:#1f4a35}
+.qchips{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}.qchips span{text-transform:none;letter-spacing:0;font:700 11px Arial,sans-serif;color:#165846;background:#fff;border:1px solid #b9d5c3;border-radius:100px;padding:3px 9px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5px}.principle{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:7px 6px;border-radius:11px;background:#165846}.principle span{font:800 9.5px ui-monospace,monospace;letter-spacing:.1px;color:#fff;text-transform:uppercase}.principle i{font-style:normal;color:#9fd4b4;font-weight:800}
+.vision58.slim{padding:5px 9px;font:11px/1.4 Arial,sans-serif;color:#5a3a12}
+/* V5.9.1 — S5 skill levels + executive message */
+.tx em.nt{font-style:normal;font:10.5px Arial,sans-serif;color:#6d4f1e;background:#fbf6ea;border-radius:5px;padding:1px 5px;margin-left:4px;white-space:nowrap}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:5px}.levels>div{background:#fff;border:1px solid #cfe2d4;border-radius:10px;padding:6px 9px}.levels>div.adv{border-color:#dcc697;background:#fffdf7}.levels .lv{display:inline-block;font:800 9px ui-monospace,monospace;letter-spacing:.8px;color:#fff;background:#165846;border-radius:5px;padding:1px 6px}.levels .adv .lv{background:#7a4f12}.levels b{display:block;margin-top:4px;font:700 12px/1.3 Georgia,serif;color:#1f3a2d}.levels small{display:block;font:10.5px/1.3 Arial,sans-serif;color:#5b7263;margin-top:2px}
+.exec59{text-align:center;font:15px/1.45 Georgia,serif;color:#2c4438;padding:8px 10px;border-top:1px solid #cfe2d4;border-bottom:1px solid #cfe2d4}.exec59 strong{color:#0d724d;font-weight:700}
+.hubline{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}.hubline b{font:900 10px ui-monospace,monospace;letter-spacing:1px;color:#fff;background:#165846;border-radius:6px;padding:4px 7px}.hubline>span:not(.tag){font:700 11px Arial,sans-serif;color:#1f3a2d;background:#fff;border:1px solid #cfe2d4;border-radius:7px;padding:3px 7px}
 @media(max-width:790px){.wrap{padding:13px 10px 32px}.stage{min-height:auto}.stageHeader{padding:18px 18px 8px}.stageMain{grid-template-columns:1fr;gap:10px;min-height:auto;padding:0 16px 70px}.screenText{padding:6px 0}.screenText h1{font-size:clamp(31px,8vw,46px);margin:8px 0 10px}.screenText .deck{font-size:15px;line-height:1.45}.visualShell{max-width:480px;max-height:none;overflow:visible}.stageFoot{left:16px;right:16px;bottom:12px;flex-direction:column;align-items:flex-start;gap:2px}.subtitles{padding:14px 16px}.subLabel{display:none}.below{grid-template-columns:1fr}.stage::before{opacity:.4}}
-@media(max-width:520px){.outs{grid-template-columns:1fr}.pillars{grid-template-columns:1fr 1fr}.ev3{grid-template-columns:1fr}.msg p{font-size:15.5px}.ctop .tag,.khead .tag{margin-left:0}.ctabtn{font-size:15px}}
+@media(max-width:520px){.outs{grid-template-columns:1fr}.levels,.duo{grid-template-columns:1fr}.tx em.nt{white-space:normal}.pillars{grid-template-columns:1fr 1fr}.ev3{grid-template-columns:1fr}.msg p{font-size:15.5px}.ctop .tag,.khead .tag{margin-left:0}.ctabtn{font-size:15px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* V5.9.1: high-stakes client narrative — content is fictional, commercial opportunity is conditional */
+.opportunity{display:flex;justify-content:space-between;align-items:center;gap:7px;background:#e7f2e8;border:1px solid #9ec5ad;border-radius:7px;padding:6px 8px;color:#15513a;font:10px/1.3 Arial,sans-serif}
+.opportunity b{font:800 10px ui-monospace,monospace}.opportunity span{text-align:right;color:#5d7064}
+.visualShell [data-cue]:not(.on){display:none!important}
+.scB [data-out].out,.cB [data-out].out{display:none!important}
+.scB .msg.sm{padding:5px 8px}.scB .msg.sm p{font-size:12px;line-height:1.25}.scB{gap:4px}
+.scB .schead{gap:5px}.scB .sclab{font-size:9px}.scB .sclab small{font-size:9px}
+.case-amount{font:900 18px Georgia,serif;color:#8e5b16}.case-facts{display:grid;grid-template-columns:1fr 1fr;gap:5px}.case-facts>span{border:1px solid #dcc697;border-radius:8px;padding:5px 7px;background:#fff;color:#6d4f1e;font:10px/1.3 Arial,sans-serif}
+@media(max-width:790px){.visualShell{max-height:none}.scB .msg.sm p{font-size:13px}}
 </style></head><body><div class="wrap">
-<div class="brandbar"><div><div class="brand">AgentTraining<i>.ai</i></div><div class="eyebrow">Executive Demo V5.8 · 3-minute manager impact cut · DRAFT for review · not on the live site</div></div><div class="toptools"><span class="eyebrow">Narration · approval pending</span><button id="reviewToggle" class="chip" aria-pressed="false">Director notes</button></div></div>
+<div class="brandbar"><div><div class="brand">AgentTraining<i>.ai</i></div><div class="eyebrow">Executive Demo V5.9.1 · 3:20 manager impact cut · two AI clients · high-value case · DRAFT for review · not on the live site</div></div><div class="toptools"><span class="eyebrow">Narration · approval pending</span><button id="reviewToggle" class="chip" aria-pressed="false">Director notes</button></div></div>
 <div class="frame">
  <section class="stage" id="stage" aria-label="Animated demo preview">
   <div class="stageHeader"><span class="storyChapter" id="chapterText">MANAGER IMPACT</span><span class="storyMoment" id="momentText">01 / The Problem</span></div>
   <div class="stageMain" id="sceneBody"><div class="screenText fadeFrame" id="screenText"><h1 id="headline"></h1><div class="deck" id="deck"></div></div><div class="screenVisual"><div class="visualShell" id="visualShell"></div></div></div>
-  <div class="stageFoot"><span class="notice">ILLUSTRATIVE STORYBOARD · NOT A RECORDED CUSTOMER CALL</span><span class="audienceMark">VISUAL DIRECTION / V5.8</span></div>
+  <div class="stageFoot"><span class="notice">ILLUSTRATIVE STORYBOARD · NOT A RECORDED CUSTOMER CALL</span><span class="audienceMark">VISUAL DIRECTION / V5.9.1</span></div>
  </section>
- <div class="subtitles"><span class="subtitleNum" id="subtitleNum">01</span><span class="subtitleText" id="subtitleText">Press Play to preview the 3-minute sequence.</span><span class="subLabel">SCRIPT / V5.8</span></div>
+ <div class="subtitles"><span class="subtitleNum" id="subtitleNum">01</span><span class="subtitleText" id="subtitleText">Press Play to preview the 3:20 sequence.</span><span class="subLabel">SCRIPT / V5.9.1</span></div>
  <div class="playback"><div class="segments" id="segments" aria-label="Scenes"></div>
-  <input class="scrub" id="scrub" type="range" min="0" max="180" step="0.1" value="0" aria-label="Timeline scrubber">
-  <div class="controls"><div class="cLeft"><button class="button primary" id="play">▶ Play</button><button class="button" id="restart" title="Restart from 0:00">↺ Restart</button><button class="button" id="prev" title="Previous scene">←</button><button class="button" id="next" title="Next scene">→</button><span class="time" id="clock">00:00 / 03:00</span></div>
+  <input class="scrub" id="scrub" type="range" min="0" max="200" step="0.1" value="0" aria-label="Timeline scrubber">
+  <div class="controls"><div class="cLeft"><button class="button primary" id="play">▶ Play</button><button class="button" id="restart" title="Restart from 0:00">↺ Restart</button><button class="button" id="prev" title="Previous scene">←</button><button class="button" id="next" title="Next scene">→</button><span class="time" id="clock">00:00 / 03:20</span></div>
   <div class="cRight"><button class="button" id="voice" aria-pressed="false" title="Optional browser speech for preview only; not the recorded voiceover">Browser voice: off</button><span class="voiceNote">Optional preview only — not the recorded voiceover</span></div></div></div>
 </div>
-<div class="below"><div class="info"><h2>V5.8 — what this cut says</h2><p><strong>Turn your team’s knowledge into AI practice — and practice into stronger agents.</strong></p><p>Audience: insurance agency and team managers. Goal: make the manager want to explore how it works. Three pillars: <strong>AI intelligence</strong> (knowledge → training), <strong>AI practice + personal coach</strong>, <strong>team growth</strong>. David = trainee agent (learner). Michael = fictional potential client played by the AI.</p><div class="sceneList" id="sceneList"></div></div>
+<div class="below"><div class="info"><h2>V5.9.1 — what this cut says</h2><p><strong>Turn your team’s knowledge into AI practice — and practice into stronger agents.</strong></p><p><strong>From everyday protection to potential multi-million-dollar cases — train the skills to earn the conversation.</strong></p><p>Audience: insurance agency and team managers. Goal: make the manager want to explore how it works. Three pillars: <strong>AI intelligence</strong> (knowledge → training), <strong>AI practice + personal coach</strong>, <strong>team growth</strong>. David = trainee agent (learner). Michael = fictional everyday family client played by the AI (Scenario A). Richard = fictional high-net-worth business owner who already has an advisor, played by the AI (Scenario B). All dialogue and coaching wording are illustrative simulations.</p><div class="sceneList" id="sceneList"></div></div>
 <div class="info"><h2>Status tags used on screen</h2><ul><li><span class="tag built">BUILT · UAT PENDING</span> exists in code; full end-to-end live UAT not yet passed.</li><li><span class="tag early">EARLY · VERIFY IN UAT</span> / <span class="tag early">CONCEPT VIEW</span> partial or not yet a shipped screen.</li><li><span class="tag illus">ILLUSTRATIVE</span> authored example wording or labels, not product output.</li><li><span class="tag vision">VISION / IN DEVELOPMENT — NOT YET AVAILABLE</span> future capability.</li></ul><div class="reviewerTools" id="reviewerTools"><p id="reviewNote"></p><div class="voices" id="reviewVoices"></div><p id="reviewGuard"></p></div></div></div>
-<p class="footer">Self-contained offline preview: no remote assets, analytics or API calls. Captions and visual cues follow the 3:00 editing timeline. Optional browser speech is not a recorded voiceover and its timing varies. Practice is simulated; no real client call is recorded or monitored. Nothing on the live website was changed.</p>
+<p class="footer">Self-contained offline preview: no remote assets, analytics or API calls. Captions and visual cues follow the 3:20 editing timeline. Optional browser speech is not a recorded voiceover and its timing varies. Practice is simulated; no real client call is recorded or monitored. Nothing on the live website was changed.</p>
 </div><script>
-/* V5.8 script: 6 scenes, 180 s. Each voice entry = [spoken line, pause ms used by alloc()]. */
+/* V5.9.1 script (revision of V5.8): 6 scenes, 180 s, two AI clients (Michael, Richard). Each voice entry = [spoken line, pause ms used by alloc()]. */
 const SCENES=[
- {"n":"01","label":"The Problem","win":"0:00–0:20","head":"Training finished.<br><em>Ready for real conversations?</em>","deck":"Course completions and test results do not show how an agent handles a client conversation.","vis":"hook",
-  "voice":[["Your agents finish courses and pass tests.",500],["But are they ready for the conversations that matter?",700],["Usually, you find out only when a real client is on the line.",600],["AgentTraining.ai turns your team’s knowledge into AI practice — and practice into stronger agents.",900]],
-  "note":"Problem first, solution by 0:20. No family backstory.","guard":"No claim about real-call monitoring or proven outcomes."},
- {"n":"02","label":"Knowledge → AI Intelligence","win":"0:20–0:52","head":"Your knowledge.<br><em>Turned into practice.</em>","deck":"Approved materials → source-linked key points → question bank and practice scenarios → your review.","vis":"knowledge",
-  "voice":[["Start with your approved company materials.",500],["AI pulls out the key points and links each one back to its source.",500],["It flags which topics look most important — as suggestions for you to review.",500],["Then it creates a question bank and different practice scenarios: different clients, objections, and products.",600],["You review what it creates before your team uses it.",900]],
-  "note":"Source links, question bank and scenario generation exist in code (manager review required). Topic prioritization is only a core/supporting flag today: show as reviewable suggestion, tagged EARLY.","guard":"Not a fully validated document-to-scenario workflow; no team-growth prediction."},
- {"n":"03","label":"AI Client Simulation","win":"0:52–1:25","head":"A safe place<br><em>to practice.</em>","deck":"David, a trainee agent, practices in a text chat with an AI playing Michael, a fictional potential client.","vis":"chat",
-  "voice":[["Now David, a new agent on your team, practices with an AI client.",400],["The AI plays Michael, a fictional potential client.",500],["Michael says: “I’m not sure we need more life insurance.”",700],["David answers in the practice chat.",400],["“Our term life policy is affordable, and it protects your family for twenty years.”",700],["It is practice, not a live client call — so a weak answer costs nothing.",900]],
-  "note":"Text-first working path. Voice input today = speech-to-text dictation into the chat box; AI replies in text.","guard":"Simulated practice — not a live client call. No live two-way voice shown as available."},
- {"n":"04","label":"Personal AI Coach","win":"1:25–1:57","head":"A personal coach<br><em>after every answer.</em>","deck":"Specific feedback, why it matters, a better way to say it — then a retry with the same AI client.","vis":"coach",
-  "voice":[["Then the AI Coach looks at what David actually said.",400],["“You explained the product before asking about Michael’s needs.”",600],["Why it matters: Michael has not said what worries him yet.",600],["A better way to say it: “That’s fair. What makes you feel your current coverage may be enough?”",600],["David tries again, with the same AI client.",500],["Specific feedback, right after each answer.",900]],
-  "note":"Per-answer AI coach feedback exists (scores, strengths, tips). The exact why / better-wording format shown is authored and not verified as production output.","guard":"Spoken two-way coaching and coaching modes are VISION / IN DEVELOPMENT — NOT YET AVAILABLE."},
- {"n":"05","label":"Manager · Team Growth","win":"1:57–2:26","head":"AI recommends.<br><em>You decide.</em>","deck":"Review the practice evidence, choose the next assignment, and see how the studios fit together.","vis":"manager",
-  "voice":[["You, the manager, can review the practice transcript and the coaching notes.",400],["Empathy, knowledge, next step — the evidence is in David’s own words.",500],["Then you choose his next practice.",500],["Practice, Client, Knowledge, and Leadership studios are designed to work together in one Team Growth Hub.",600],["The AI recommends. You decide.",900]],
-  "note":"Manager view in the pilot shows Empathy / Knowledge / Closing scores and a coach summary. Team Growth Hub is a concept view, not a shipped screen.","guard":"No automatic assignment, no promised retention, recruiting or sales results."},
- {"n":"06","label":"Outcome · Next Step","win":"2:26–3:00","head":"Turn knowledge into practice —<br><em>and practice into stronger agents.</em>","deck":"Explore how it works, or request a 14-day private pilot (by request; subject to confirmation).","vis":"cta",
-  "voice":[["Knowledge becomes practice.",500],["Practice becomes coaching.",500],["Coaching builds better preparation, and your team keeps developing.",600],["Your materials. AI practice. Personal coaching. Your decisions.",700],["See how your agents prepare — before the conversations that matter.",600],["Start with one team and two important client conversations.",500],["Explore how it works.",600],["Or request a fourteen-day private pilot for your team.",1000]],
-  "note":"Explore How It Works has no verified destination yet: shown as a labeled prototype action that does not navigate.","guard":"Pilot by request; subject to confirmation. Future voice coaching repeated as VISION on the endcard."}
+ {
+  "n": "01",
+  "label": "The Problem",
+  "win": "0:00–0:20",
+  "head": "Training finished.<br><em>Ready for real conversations?</em>",
+  "deck": "Course completions and test results do not show how an agent handles a client conversation.",
+  "vis": "hook",
+  "voice": [
+   [
+    "Your agents finish courses and pass tests.",
+    500
+   ],
+   [
+    "But are they ready for the conversations that matter?",
+    700
+   ],
+   [
+    "Usually, you find out only when a real client is on the line.",
+    600
+   ],
+   [
+    "AgentTraining.ai turns your team’s knowledge into AI practice — and practice into stronger agents.",
+    900
+   ]
+  ],
+  "note": "Problem first; solution by 0:20. No implication of live-client monitoring.",
+  "guard": "No real-call monitoring, no claim of proven sales improvement."
+ },
+ {
+  "n": "02",
+  "label": "Knowledge → AI Intelligence",
+  "win": "0:20–0:47",
+  "head": "Your knowledge.<br><em>Turned into practice.</em>",
+  "deck": "Approved materials → source-linked key points → question bank and practice scenarios → your review.",
+  "vis": "knowledge",
+  "voice": [
+   [
+    "Start with your approved company materials.",
+    500
+   ],
+   [
+    "AI pulls out the key points and links each one back to its source.",
+    500
+   ],
+   [
+    "It flags which topics look most important — as suggestions for you to review.",
+    500
+   ],
+   [
+    "Then it creates questions and practice scenarios — from everyday families to high-net-worth business owners.",
+    600
+   ],
+   [
+    "You review it all before your team uses it.",
+    900
+   ]
+  ],
+  "note": "Source links and generated banks exist in code but require end-to-end UAT; topic priority is only core/supporting suggestions.",
+  "guard": "Knowledge-to-practice is subject to full UAT, not a validated growth-prediction engine."
+ },
+ {
+  "n": "03",
+  "label": "AI Client Simulation",
+  "win": "0:47–1:45",
+  "head": "Two clients.<br><em>One high-stakes challenge.</em>",
+  "deck": "David trains with fictional AI clients Michael and Richard. Richard’s business has doubled in value: can David discover a legitimate high-value protection need without pushing a policy?",
+  "vis": "chat",
+  "voice": [
+   [
+    "David practices two client conversations.",
+    300
+   ],
+   [
+    "Michael: “I’m not sure we need more life insurance.”",
+    450
+   ],
+   [
+    "David pitches a product too soon.",
+    250
+   ],
+   [
+    "Richard: “I already have an insurance agent. Why should I talk to you?”",
+    500
+   ],
+   [
+    "David: “I respect that relationship. I’m not asking you to switch advisors.”",
+    500
+   ],
+   [
+    "“Would you consider a second opinion on your family and business protection?”",
+    500
+   ],
+   [
+    "Richard: “My business is worth twelve million dollars now, nearly twice what it was three years ago.”",
+    500
+   ],
+   [
+    "“What would you check that my agent hasn’t already covered?”",
+    500
+   ],
+   [
+    "David: “Whether your buy-sell funding and key-person protection still fit — ideally with your advisor involved.”",
+    700
+   ],
+   [
+    "The goal isn’t an instant sale. It’s earning the right to a meaningful review.",
+    700
+   ]
+  ],
+  "note": "Fictional $12 million business valuation and growth are scripted scenario facts, not verified policy or actual coverage gap. Two text-chat simulations; audio input means dictation to text only.",
+  "guard": "No implied existing coverage deficiency, insurance recommendation, booked appointment or certain seven-figure sale."
+ },
+ {
+  "n": "04",
+  "label": "Personal AI Coach",
+  "win": "1:45–2:28",
+  "head": "Train for the<br><em>multi-million-dollar conversation.</em>",
+  "deck": "The AI Coach turns an intimidating high-value prospect into a specific, teachable discovery process — without assuming the client needs a new policy.",
+  "vis": "coach",
+  "voice": [
+   [
+    "The AI Coach reviews what David actually said.",
+    400
+   ],
+   [
+    "With Michael, ask about needs before pitching products.",
+    500
+   ],
+   [
+    "With Richard, respect the advisor — then examine what changed as the company grew.",
+    500
+   ],
+   [
+    "Could buy-sell funding or key-person protection now be insufficient?",
+    600
+   ],
+   [
+    "Evaluate existing policies and financial obligations before recommending changes.",
+    500
+   ],
+   [
+    "If a documented shortfall exists, the discussion might involve multi-million-dollar coverage.",
+    500
+   ],
+   [
+    "But that is a question to investigate, never a guaranteed sale.",
+    700
+   ],
+   [
+    "Respect, discover, validate, earn the next conversation.",
+    900
+   ]
+  ],
+  "note": "Example coaching only. A $12m business valuation does not imply or establish an insurance gap. Business-succession funding and key-person needs require actual facts and appropriate expert review.",
+  "guard": "No product recommendation or policy replacement without needs analysis, licensing, underwriting and appropriate professional advice."
+ },
+ {
+  "n": "05",
+  "label": "Manager · Team Growth",
+  "win": "2:28–2:55",
+  "head": "Develop agents for<br><em>higher-value opportunities.</em>",
+  "deck": "Managers can coach the everyday foundations and the skills needed to investigate complex cases — then choose the right next practice.",
+  "vis": "manager",
+  "voice": [
+   [
+    "As manager, you review both practice transcripts and coach notes.",
+    400
+   ],
+   [
+    "Michael builds fundamentals. Richard prepares agents for complex, high-value conversations.",
+    500
+   ],
+   [
+    "A documented need could lead to a multi-million-dollar policy discussion — not a promised sale.",
+    400
+   ],
+   [
+    "You choose the next practice. AI recommends. You decide.",
+    900
+   ]
+  ],
+  "note": "Manager transcript and coach review are in pilot; level labels and suggested assignments are illustrative, and Team Growth Hub is concept only.",
+  "guard": "Commercial potential is hypothetical, not income, conversion or coverage outcome. No automatic assignments."
+ },
+ {
+  "n": "06",
+  "label": "Outcome · Next Step",
+  "win": "2:55–3:20",
+  "head": "Turn knowledge into practice —<br><em>and practice into stronger agents.</em>",
+  "deck": "Explore how it works, or request a 14-day private pilot (by request; subject to confirmation).",
+  "vis": "cta",
+  "voice": [
+   [
+    "Knowledge becomes practice.",
+    500
+   ],
+   [
+    "Practice becomes coaching.",
+    500
+   ],
+   [
+    "Coaching builds better preparation, and your team keeps developing.",
+    600
+   ],
+   [
+    "Your materials. AI practice. Personal coaching. Your decisions.",
+    700
+   ],
+   [
+    "Start with one team and two important client conversations.",
+    500
+   ],
+   [
+    "Explore how it works.",
+    600
+   ],
+   [
+    "Or request a fourteen-day private pilot for your team.",
+    1000
+   ]
+  ],
+  "note": "Explore How It Works has no verified destination. Keep prototype label instead of a dead clickable control.",
+  "guard": "Pilot by request; subject to confirmation; spoken two-way AI practice remains in development."
+ }
 ];
 
 const DAV='<svg viewBox="0 0 80 72" aria-hidden="true"><circle cx="40" cy="21" r="14" fill="#d8a47e"/><path d="M9 72Q12 42 40 42Q68 42 71 72" fill="#28705b"/></svg>';
 const MIK='<svg viewBox="0 0 80 72" aria-hidden="true"><circle cx="40" cy="21" r="14" fill="#c7906f"/><path d="M9 72Q12 42 40 42Q68 42 71 72" fill="#4c6984"/></svg>';
+const RIC='<svg viewBox="0 0 80 72" aria-hidden="true"><path d="M26 18Q27 5 40 5Q53 5 54 18" fill="#9aa3a8"/><circle cx="40" cy="22" r="14" fill="#d2a07f"/><path d="M9 72Q12 42 40 42Q68 42 71 72" fill="#2e3b4e"/><path d="M36 43L40 58L44 43" fill="#a16c28"/></svg>';
 const VIS={
 hook:`<div class="card58"><span class="minilabel">What you can count today</span>
 <div class="ledger-row" data-cue="0"><b>Courses finished</b><span class="mk">✓ counted</span></div>
@@ -126,56 +368,70 @@ knowledge:`<div class="kflow">
 <div class="card58" data-cue="1"><div class="khead"><span class="kn">2</span>Key points, linked to source <span class="tag built">BUILT · UAT PENDING</span></div><ul class="kpts"><li>Term vs. permanent life coverage<i>guide · p.4</i></li><li>Responding to “we already have enough”<i>handbook · §2</i></li></ul></div>
 <div class="card58" data-cue="2"><div class="khead"><span class="kn">3</span>Suggested priorities <span class="tag early">EARLY · VERIFY IN UAT</span></div><div class="prio"><span class="p core">Core</span>Needs discovery <span class="p sup">Supporting</span>Policy riders</div><small>Suggestions for your review — not a prediction of team results.</small></div>
 <div class="outs" data-cue="3"><div class="card58"><div class="khead"><span class="kn">4</span>Question bank</div><div class="qlist"><span>When is term life a fit?</span><span>+ more, each source-linked</span></div></div>
-<div class="card58"><div class="khead"><span class="kn">4</span>Practice scenarios <span class="tag illus">EXAMPLES</span></div><div class="scenKey"><span>Client</span><span>Objection</span><span>Product</span></div><div class="scen"><b>Young parent</b><i>“Not sure we need more.”</i><em>Term life</em></div><div class="scen"><b>Business owner</b><i>“I’m too busy.”</i><em>Key person</em></div><div class="scen"><b>Near-retiree</b><i>“It costs too much.”</i><em>Final expense</em></div></div></div>
+<div class="card58"><div class="khead"><span class="kn">4</span>Practice scenarios <span class="tag illus">EXAMPLES</span></div><div class="scenKey"><span>Client</span><span>Objection</span><span>Product</span></div><div class="scen"><b>Young parent</b><i>“Not sure we need more.”</i><em>Term life</em></div><div class="scen"><b>High-net-worth owner</b><i>“I already have an agent.”</i><em>Coverage review</em></div><div class="scen"><b>Near-retiree</b><i>“It costs too much.”</i><em>Final expense</em></div></div></div>
 <div class="review58" data-cue="4"><span class="kn">5</span>You review before your team uses it <span class="alabel">Approve</span><span class="alabel">Edit</span><span class="tag illus">ILLUSTRATIVE LABELS</span></div>
 </div>`,
 
 chat:`<div class="chat58">
-<div class="simbar" data-cue="0">SIMULATED PRACTICE — NOT A LIVE CLIENT CALL</div>
-<div class="pair58"><div class="who" data-cue="0">${DAV}<span><b>DAVID</b>Trainee agent (learner)</span></div><strong data-cue="1">⇄</strong><div class="who" data-cue="1"><span class="aiStack"><em>AI</em>${MIK}</span><span><b>AI AS MICHAEL</b>Fictional potential client</span></div></div>
-<div class="msg client" data-cue="2"><span>MICHAEL · AI</span><p>“I’m not sure we need more life insurance.”</p></div>
-<div class="inputbar" data-cue="3" data-out="4"><span class="typing">David is typing…</span><span class="mic">🎤 voice input = dictation to text</span></div>
-<div class="msg agent" data-cue="4"><span>DAVID</span><p>“Our term life policy is affordable, and it protects your family for twenty years.”</p></div>
-<div class="tagrow" data-cue="5"><span class="tag built">TEXT PRACTICE CHAT · IN PILOT</span><span class="tag illus">AUTHORED EXAMPLE DIALOGUE</span></div>
+<div class="simbar" data-cue="0">SIMULATED PRACTICE — NOT A LIVE CLIENT CALL · DAVID, TRAINEE AGENT</div>
+<div class="scA" data-cue="1" data-out="3"><div class="schead"><span class="aiStack"><em>AI</em>${MIK}</span><span class="sclab">Scenario A — Michael: Everyday Family Protection<small>AI plays Michael, a fictional potential client</small></span></div>
+<div class="scBody"><div class="msg client sm"><span>MICHAEL · AI</span><p>“I’m not sure we need more life insurance.”</p></div>
+<div class="msg agent sm" data-cue="2"><span>DAVID</span><p>“Our term life policy is affordable, and it protects your family for twenty years.”</p></div></div>
+<div class="scSum">David led with the product → coached in the next scene</div></div>
+<div class="scB" data-cue="3"><div class="schead"><span class="aiStack"><em>AI</em>${RIC}</span><span class="sclab">Scenario B — Richard: Millionaire Business Owner · Existing Advisor<small>Illustrative prospect: business value $12M (fictional)</small></span></div>
+ <div class="msg client sm" data-out="6"><span>RICHARD · AI</span><p>“I already have an insurance agent. Why should I talk to you?”</p></div>
+ <div class="msg agent sm" data-cue="4" data-out="7"><span>DAVID</span><p>“I respect that relationship. I’m not asking you to switch advisors.”</p></div>
+ <div class="msg agent sm" data-cue="5" data-out="7"><span>DAVID</span><p>“Would you consider a second opinion on your family and business protection?”</p></div>
+ <div class="msg client sm" data-cue="6"><span>RICHARD · AI</span><p>“My business is worth $12M now, nearly twice what it was three years ago.”</p></div>
+ <div class="msg client sm" data-cue="7" data-out="9"><span>RICHARD · AI</span><p>“What would you check that my agent hasn’t already covered?”</p></div>
+ <div class="msg agent sm" data-cue="8"><span>DAVID</span><p>“Whether your buy-sell funding and key-person protection still fit — with your advisor involved.”</p></div>
+ <div class="opportunity" data-cue="9"><b>POTENTIAL HIGH-VALUE REVIEW</b><span>Need not established · No policy proposed</span></div></div>
+<div class="tagrow" data-cue="8"><span class="tag built">TEXT PRACTICE CHAT · IN PILOT</span><span class="tag illus">AUTHORED EXAMPLE DIALOGUE</span><span class="tag illus">🎤 VOICE INPUT = DICTATION TO TEXT</span></div>
 </div>`,
 
 coach:`<div class="coach58">
-<div class="ctop"><span class="aiMini">AI</span><b>AI COACH</b><span class="tag illus">EXAMPLE COACHING · ILLUSTRATIVE WORDING</span></div>
-<div class="said" data-cue="0"><span>What David said</span><p>“<mark>Our term life policy is affordable</mark>, and it protects your family for twenty years.”</p></div>
-<div class="fb" data-cue="1"><span>Feedback</span><p>You explained the product before asking about Michael’s needs.</p></div>
-<div class="fb why" data-cue="2"><span>Why it matters</span><p>Michael has not said what worries him yet.</p></div>
-<div class="fb better" data-cue="3"><span>A better way to say it</span><p>“That’s fair. What makes you feel your current coverage may be enough?”</p></div>
-<div class="retry" data-cue="4"><span>David · retry · same AI client</span><p>“That’s fair, Michael. What makes you feel your current coverage may be enough?”</p></div>
-<div class="vision58" data-cue="5"><span class="tag vision">VISION / IN DEVELOPMENT — NOT YET AVAILABLE</span><p>Spoken two-way practice, and a choice of coaching during or after the conversation.</p></div>
+<div class="ctop"><span class="aiMini">AI</span><b>AI COACH</b><span class="tag illus">EXAMPLE COACHING · ILLUSTRATIVE</span></div>
+<div class="cA" data-cue="0" data-out="2"><span class="clab">Michael · foundation</span>
+<div class="cBody"><div class="said"><span>David said</span><p>“<mark>Our term life policy is affordable</mark>, and it protects your family for twenty years.”</p></div>
+<div class="fb better" data-cue="1"><span>Coach</span><p>Ask about his needs before pitching a policy.</p></div></div><div class="cSum">Foundation: needs before products</div></div>
+<div class="cB" data-cue="2"><span class="clab">Richard · advanced · high-value opportunity (illustrative)</span>
+<div class="fb good" data-out="4"><span>Strength</span><p>David respected the existing advisor instead of pushing a replacement.</p></div>
+<div class="case-facts" data-cue="3"><span><b>Business valuation</b><br><strong class="case-amount">$12M</strong> · fictional</span><span><b>Changed since review</b><br>Nearly doubled in 3 years</span></div>
+<div class="fb why" data-cue="4" data-out="6"><span>Investigate — don't presume a gap</span><div class="qchips"><span>Buy-sell funding</span><span>Key-person loss</span><span>Existing policies</span></div></div>
+<div class="fb better" data-cue="5"><span>Coach: qualify before recommending</span><p>“Could we review the succession obligations and funding with your advisor before deciding whether any additional coverage is appropriate?”</p></div>
+<div class="opportunity" data-cue="6"><b>Multi-million-dollar coverage?</b><span>Possible only if justified by documented needs</span></div></div>
+<div class="principle" data-cue="7"><span>Respect</span><i>→</i><span>Discover</span><i>→</i><span>Validate</span><i>→</i><span>Earn the Next Conversation</span></div>
+<div class="vision58 slim" data-cue="7"><span class="tag vision">VISION / IN DEVELOPMENT — NOT YET AVAILABLE</span> Spoken two-way practice and live coaching modes.</div>
 </div>`,
 
 manager:`<div class="mgr58">
 <div class="card58" data-cue="0"><div class="mhead"><b>YOU · TEAM MANAGER</b><span class="tag illus">ILLUSTRATIVE VIEW</span></div>
-<div class="tx"><span>Transcript · David · practice 1 (simulated)</span><p><i>Michael:</i> I’m not sure we need more life insurance.</p><p><i>David:</i> Our term life policy is affordable…</p><p class="note">Coach note: explained the product before asking about needs.</p></div></div>
-<div class="ev3" data-cue="1"><div><b>Empathy</b><small>Needs not explored yet</small></div><div><b>Knowledge</b><small>Product facts stated clearly</small></div><div><b>Next step</b><small>None proposed yet</small></div></div>
-<div class="assign" data-cue="2"><span class="alabel">Assign: “Not sure we need more” · round 2</span><small>Illustrative label · you choose · no automatic assignment</small></div>
-<div class="hub58" data-cue="3"><div class="hubc">TEAM GROWTH HUB</div><span>Practice Studio</span><span>Client Studio</span><span>Knowledge Studio</span><span>Leadership Studio</span><span class="tag early">CONCEPT VIEW · NOT A SHIPPED SCREEN</span></div>
-<div class="bigDecision" data-cue="4">THE AI RECOMMENDS. <strong>YOU DECIDE.</strong></div>
+<div class="tx"><span>Practice transcripts · David</span><p><i>A · Michael:</i> Product-first pitch <em class="nt">coach: needs discovery</em></p><p><i>B · Richard:</i> $12M business / existing advisor <em class="nt">coach: validate actual funding needs</em></p></div></div>
+<div class="levels" data-cue="1"><div><span class="lv">Foundation</span><b>Everyday family protection</b><small>Michael — discover needs</small></div><div class="adv"><span class="lv">Advanced</span><b>Potential multi-million-dollar case</b><small>Richard — qualify, don't assume</small></div></div>
+<div class="assign" data-cue="2"><span class="alabel">Next: Michael · needs-first retry</span><span class="alabel">Next: Richard · funding discovery</span><small>Illustrative manager choices · no automatic assignment</small></div>
+<div class="exec59" data-cue="2">Prepare agents for <strong>high-value protection conversations</strong> — before the real prospect meeting.<small style="display:block;font:11px Arial,sans-serif;color:#5d7064">Potential coverage size, client need and sales outcome are not established.</small></div>
+<div class="hubline" data-cue="3"><b>TEAM GROWTH HUB</b><span>Practice</span><span>Client</span><span>Knowledge</span><span>Manager</span><span class="tag early">CONCEPT VIEW</span></div>
+<div class="bigDecision" data-cue="3">THE AI RECOMMENDS. <strong>YOU DECIDE.</strong></div>
 </div>`,
 
 cta:`<div class="cta58">
 <div class="chain"><span data-cue="0">Knowledge</span><i data-cue="0">→</i><span data-cue="0" data-late style="transition-delay:.8s">Practice</span><i data-cue="1">→</i><span data-cue="1">Coaching</span><i data-cue="2">→</i><span data-cue="2">Better preparation</span><i data-cue="2" data-late style="transition-delay:1.4s">→</i><span data-cue="2" data-late style="transition-delay:1.4s">Team development</span></div>
 <div class="pillars" data-cue="3"><span>Your materials</span><span>AI practice</span><span>Personal coaching</span><span>Your decisions</span></div>
-<div class="see58" data-cue="4">See how your agents prepare — before the conversations that matter.</div>
-<div class="start58" data-cue="5">Start with <b>one team</b> and <b>two important client conversations</b>.</div>
-<div class="ctaWrap" data-cue="6"><span class="ctabtn" role="note" aria-label="Explore How It Works — prototype action, no link yet">Explore How It Works →</span><span class="tag illus">PROTOTYPE ACTION · NO LINK YET</span></div>
-<div class="pilot58" data-cue="7">Request a 14-Day Private Pilot<small>By request; subject to confirmation</small></div>
+<div class="start58" data-cue="4">Start with <b>one team</b> and <b>two important client conversations</b>.</div>
+<div class="ctaWrap" data-cue="5"><span class="ctabtn" role="note" aria-label="Explore How It Works — prototype action, no link yet">Explore How It Works →</span><span class="tag illus">PROTOTYPE ACTION · NO LINK YET</span></div>
+<div class="pilot58" data-cue="6">Request a 14-Day Private Pilot<small>By request; subject to confirmation</small></div>
 <div class="endtags"><span class="tag vision">Spoken two-way AI coaching: VISION / IN DEVELOPMENT — NOT YET AVAILABLE</span></div>
 </div>`
 };
 
 const SCREEN=SCENES;
-const DURATION=[20,32,33,32,29,34];
-const TOTAL=DURATION.reduce((a,b)=>a+b,0); // 180 s
+const DURATION=[20,27,58,43,27,25];
+const TOTAL=DURATION.reduce((a,b)=>a+b,0); // 200 s
 const START=DURATION.map((d,i)=>DURATION.slice(0,i).reduce((a,b)=>a+b,0));
 const $=id=>document.getElementById(id);
 const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 let idx=0,progress=0,playing=false,voiceOn=false,stamp=0,lastCue=-1,timer=null,scrubbing=false;
+$('scrub').max=TOTAL; // stay in sync if a later cut changes scene durations
 const voiceEnabled=!!('speechSynthesis' in window);
 function fmt(t){t=Math.floor(Math.max(0,t)+1e-6);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
 function overall(){return START[idx]+progress}
