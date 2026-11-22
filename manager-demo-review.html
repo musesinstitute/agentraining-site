@@ -1365,7 +1365,8 @@ function buildPlan(){const b=budget(),used=committed(null),left=b-used,ov=used>b
  head+=ev.length?(coach.length?`, and check ${nm(ev)} before spending more time.`:`. Check ${nm(ev)} before spending coaching time.`):`.`;
  const status=ov?`Plan status: Needs revision. Coaching time: ${used} min approved, but only ${b} min available.`:`Plan status: within budget. Coaching time: ${used} of ${b} min committed, ${left} left.`;
  const pickLine=!pick?`You have not chosen an agent yet.`:pick===TOP?`You picked ${C(pick).name}, the same agent the AI suggested.`:`You picked ${C(pick).name}. The AI's top suggestion was ${C(TOP).name}.`;
- return {b,used,left,ov,items,coach,ev,rest,undec,head,status,pickLine,ai:`AI's top priority: ${C(TOP).name} (${C(TOP).practice.sum.toLowerCase()}).`}}
+ const pickShort=pick&&pick!==TOP?`You picked ${C(pick).name}.`:pickLine;
+ return {b,used,left,ov,items,coach,ev,rest,undec,head,status,pickLine,pickShort,ai:`AI's top priority: ${C(TOP).name} (${C(TOP).practice.sum.toLowerCase()}).`}}
 function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
  if(!P.items.length){el.className='ap empty';el.innerHTML=`<p class="ap-k"><span class="lyr dec">Manager action plan</span> Fictional team</p><h3>Your action plan for next week appears here once you make a demo decision.</h3><ul class="ap-ctx"><li>${esc(P.pickLine)}</li><li>No demo decision yet. The pilot request below does not depend on one.</li></ul><div class="row"><button type="button" class="btn" data-go="0">Make a coaching call</button></div><p class="small">Demo choices stay on this page and reset when you reload.</p>`;return}
  const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} ${i.minutes} min`:i.name).join(`, `):`No one`;
@@ -1379,7 +1380,7 @@ function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
   <div role="listitem" class="kpi k-cap${P.ov?' bad':''}"><span>Capacity</span><b>${P.ov?`Over by ${-P.left}`:`${P.left} min left`}</b><small>of ${P.b} min · ${P.ov?`Needs revision`:`Within budget`}</small></div>
  </div>
  <p class="ap-status">${esc(P.status)}${P.ov?` <button type="button" class="linkbtn on-dark" data-todecide="1">Revise in step 1</button>`:``}</p>
- <p class="ap-ai">${esc(P.ai)} ${esc(P.pickLine)}</p>
+ <p class="ap-ai">${esc(P.ai)} ${esc(P.pickShort)}</p>
  <div class="ap-copy"><button type="button" class="btn hi" data-copyplan="1">Copy action plan</button><span id="copyStatus" role="status" aria-live="polite">Plain text for your notes. Nothing is stored or sent.</span></div>
  <textarea id="copyFallback" class="copyfb" readonly hidden aria-label="Action plan as plain text"></textarea></div>
  <ol class="ap-items">${P.items.map((i,n)=>`<li class="ap-item c-${i.cat}" data-id="${i.id}"><div class="ap-ih"><span class="ap-n">${n+1}</span><h4>${i.name}: <strong>${esc(i.title)}</strong>${i.minutes?`, ${i.minutes} min`:``}</h4><span class="ap-cat">${CATS[i.cat]}</span>${i.nr?`<em class="nr">Needs revision</em>`:``}<span class="ap-rev">Review: ${esc(i.review)}</span></div>
@@ -1387,7 +1388,7 @@ function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
  ${P.undec.length?`<p class="ap-undec"><strong>Not decided yet:</strong> ${P.undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join(' ')} <span class="small">No action is planned for them.</span></p>`:``}
  <p class="small ap-foot">Fictional people, evidence, documents and follow-up. Demo decisions only: nothing was assigned, sent or saved, and no result is claimed. Days count from the day you approve; they are relative periods, not calendar dates. Demo choices stay on this page and reset when you reload.</p>`}
 function planText(){const P=buildPlan(),L=[];
- L.push(`Manager action plan: next week`,`Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.`,``,P.head,P.status,`${P.ai} ${P.pickLine}`,``);
+ L.push(`Manager action plan: next week`,`Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.`,``,P.head,P.status,`${P.ai} ${P.pickShort}`,``);
  const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} (${i.minutes} min)`:i.name).join(`, `):`none`;
  L.push(`Coach: ${nm(P.coach)}`,`More evidence first: ${nm(P.ev)}`,`Practice, stretch or monitor: ${nm(P.rest)}`,`Not decided yet: ${P.undec.length?names(P.undec):`none`}`,``);
  P.items.forEach((i,n)=>{L.push(`${n+1}. ${i.name}: ${i.title}${i.minutes?`, ${i.minutes} min`:``} [${CATS[i.cat]}]${i.nr?` [Needs revision]`:``}`,`   Review: ${i.review}.`);i.trace.forEach(([k,t])=>L.push(`   ${k}: ${t.v}`));L.push(``)});

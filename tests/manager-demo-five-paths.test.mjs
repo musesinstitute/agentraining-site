@@ -439,7 +439,8 @@ describe('Manager Demo: five complete learner paths', () => {
       await page.click('#nextStop >> nth=0');
       await page.click('[data-go="2"] >> nth=0');
       const recap = await text(page, '#actionPlan');
-      assert.match(recap, /You picked John\. The AI's top suggestion was Michelle\./);
+      assert.match(recap, /AI's top priority: Michelle \(same gap in 4 of 4 attempts\)\. You picked John\./);
+      assert.doesNotMatch(recap, /top suggestion was/, 'the AI priority is named once, not twice');
       assert.match(recap, /John: One more practice/);
       assert.match(recap, /Michelle: Coach now/);
       assert.match(recap, /nothing was assigned, sent or saved/);
