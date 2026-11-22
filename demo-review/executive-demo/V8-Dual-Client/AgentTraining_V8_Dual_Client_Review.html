@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Latest Review — V8 Dual Client 3:45 | AgentTraining.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one quiet white stage on cool paper; a single column of calm type per scene; colour appears only on Michael's replies. Single light theme by choice. */
+:root{
+ color-scheme:light;
+ --paper:#eef1f4; --stage:#fcfdfe; --ink:#17222f; --muted:#5a6777; --faint:#8a95a3; --line:#d8dee6;
+ --accent:#2c5a7a; --accent-soft:#e6eef4;
+ --shut:#96483a; --shut-soft:#f6ebe8; --open:#2a6e52; --open-soft:#e7f2ec;
+ --display:'Source Serif 4',Georgia,'Times New Roman',serif;
+ --body:'IBM Plex Sans','Segoe UI',Arial,sans-serif;
+ --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:20px 20px 48px}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.brand{font:600 20px var(--display);letter-spacing:-.2px}.brand i{font-style:normal;color:var(--accent)}
+.label{font:600 10px/1.7 var(--mono);letter-spacing:1.3px;color:var(--faint);text-transform:uppercase}
+.player{background:var(--stage);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px #17222f0a,0 18px 44px #17222f12}
+.stage{height:700px;position:relative;overflow:hidden;background:var(--stage)}
+.chapterbar{display:flex;align-items:center;justify-content:space-between;padding:24px 40px 0}
+.chapter{font:600 10.5px var(--mono);letter-spacing:1.8px;color:var(--accent)}
+.position{font:500 11px var(--mono);color:var(--faint)}
+.headline{padding:8px 40px 0;font:italic 400 14.5px/1.4 var(--display);color:var(--muted);min-height:22px}
+.frame{position:absolute;inset:92px 40px 52px;display:flex;align-items:center;justify-content:center}
+@keyframes sceneIn{from{opacity:0}to{opacity:1}}
+.stageFoot{position:absolute;bottom:18px;left:40px;right:40px;display:flex;justify-content:space-between;gap:14px;font:600 10px/1.5 var(--mono);letter-spacing:.9px;color:var(--muted)}
+.stageFoot .rt{color:var(--faint);font-weight:500}
+[data-t]{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease}
+[data-t].on{opacity:1;transform:none}
+[data-off]{transition:opacity 1s ease,transform 1s ease}
+.off,[data-t].on.off{opacity:0}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:600 17px var(--display);background:var(--accent-soft);color:var(--accent);flex:0 0 44px}
+.av.you{background:#edeff2;color:var(--muted);font:600 10px var(--mono);letter-spacing:1px}
+/* Scene 1 */
+.ledger{width:100%;max-width:600px}
+.ledger .label{margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 2px;border-bottom:1px solid var(--line);font:400 20px var(--display)}
+.row span{font:600 10px var(--mono);letter-spacing:1.2px;color:var(--faint);white-space:nowrap}
+.row.unseen{border-bottom:1px dashed var(--faint);color:var(--muted);font-style:italic}
+.row.unseen span{color:var(--shut);font-style:normal}
+.intro{display:flex;align-items:center;gap:12px;margin-top:26px}
+.intro b{font:600 17px var(--display)}.intro small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+/* Scene 2 */
+.cast{width:100%;max-width:820px}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.role{border:1px solid var(--line);border-radius:12px;padding:20px 18px;background:#fff;min-height:168px}
+.role b{display:block;margin-top:14px;font:600 20px var(--display)}
+.role small{display:block;margin-top:6px;color:var(--muted);font-size:13.5px;line-height:1.5}
+.ask{margin-top:30px;font:400 clamp(21px,2.5vw,27px)/1.35 var(--display);text-wrap:balance}
+.ask em{color:var(--muted)}
+/* Scene 3 */
+.quiet{width:100%;max-width:760px;display:grid}
+.quiet>div{grid-area:1/1;align-self:center}
+.nots p{margin:0;padding:11px 0;font:400 22px/1.4 var(--display);color:var(--muted);border-bottom:1px solid var(--line)}
+.nots p:last-child{border-bottom:none}
+.nots p q{color:var(--ink);quotes:"“" "”"}
+.shaped{font:italic 400 clamp(22px,2.7vw,29px)/1.45 var(--display);color:var(--muted);text-wrap:balance}
+.question{font:400 clamp(30px,4.3vw,50px)/1.22 var(--display);letter-spacing:-.4px;text-wrap:balance}
+/* Scene 4 */
+.release{width:100%;max-width:880px}
+.now{font:400 clamp(30px,3.8vw,42px) var(--display);letter-spacing:-.3px;margin-bottom:26px}
+.steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch}
+.step{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff}
+.step .label{color:var(--accent)}
+.step b{display:block;margin-top:8px;font:600 18px/1.3 var(--display)}
+.step small{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+.arrow{align-self:center;color:var(--faint);font-size:18px}
+.notcourse{margin-top:26px;font:italic 400 20px/1.4 var(--display);color:var(--muted)}
+.notcourse b{font-style:normal;font-weight:400;color:var(--ink)}
+/* Scene 5 */
+.loop{width:100%;max-width:1000px}
+.watch{font:400 23px var(--display);margin-bottom:14px}
+.watch s{color:var(--faint)}.watch b{font-weight:600;color:var(--accent)}
+.split{display:grid;grid-template-columns:1fr 220px 1fr;gap:14px;align-items:start}
+.attempt{border:1px solid var(--line);border-radius:12px;padding:14px 16px 16px;background:#fff;transition:opacity .6s}
+.attempt.rest .bub.d{opacity:.55}
+.bub{border-radius:10px;padding:10px 13px;margin-top:10px;font:400 14.5px/1.5 var(--display);transition:opacity .6s}
+.bub i{display:block;font:600 9.5px var(--mono);letter-spacing:1.1px;font-style:normal;margin-bottom:3px;color:var(--faint)}
+.bub.d{background:#f4f6f8;color:var(--muted)}
+.bub.m{background:var(--accent-soft);border:1px solid var(--accent);color:var(--ink);font-size:16px}
+.bub.m i{color:var(--accent)}
+.tag{display:inline-block;margin-top:12px;border-radius:6px;padding:5px 10px;font:600 10px var(--mono);letter-spacing:1.5px}
+.tag.shut{background:var(--shut-soft);color:var(--shut);border:1px solid #dcc0b9}
+.tag.open{background:var(--open-soft);color:var(--open);border:1px solid #b9d6c7}
+.note{margin-left:10px;font:500 11px var(--mono);color:var(--muted)}
+.punch{margin-top:16px;font:400 21px/1.35 var(--display);color:var(--muted)}.punch b{font-weight:600;color:var(--ink)}
+.coach{margin-top:34px;border-left:2px solid var(--accent);padding:4px 0 4px 14px;font:italic 400 15px/1.5 var(--display)}
+.coach .label{font-style:normal;color:var(--accent);margin-bottom:6px}
+.after{margin-top:10px;display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+.after span{font:400 16px var(--display);color:var(--muted)}
+.after strong{font:600 21px var(--display)}
+/* Scene 6 */
+.invite{width:100%;max-width:600px}
+.inv1{font:400 21px var(--display);color:var(--muted)}
+.inv2{font:400 clamp(27px,3.4vw,38px)/1.25 var(--display);letter-spacing:-.3px;margin-top:6px}
+.plan{list-style:none;margin:24px 0 0;padding:0;border-top:1px solid var(--line)}
+.plan li{padding:12px 2px;border-bottom:1px solid var(--line);font-size:15.5px;display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:baseline}
+.plan .label{color:var(--accent)}
+.cta{display:inline-block;margin-top:26px;background:var(--accent);color:#fff;border-radius:8px;padding:14px 24px;font:600 16px var(--body)}
+.ctasmall{margin-top:9px;font:500 10.5px var(--mono);letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.proto{margin-top:20px;font:500 9.5px var(--mono);letter-spacing:.8px;color:var(--faint)}
+/* caption + controls */
+.captionBar{border-top:1px solid var(--line);background:#f7f9fb;min-height:78px;display:flex;align-items:center;gap:16px;padding:14px 40px}
+.who{font:600 10px var(--mono);letter-spacing:1.5px;color:var(--accent);min-width:84px}
+.captionTxt{font:400 clamp(15px,1.55vw,19px)/1.45 var(--display);max-width:860px}
+.captionKind{margin-left:auto;font:500 9.5px var(--mono);letter-spacing:.6px;color:var(--faint);white-space:nowrap}
+.silent .stage *{transition:none!important}
+.controlarea{background:#fff;padding:12px 22px 16px;border-top:1px solid var(--line)}
+.segments{display:flex;gap:5px;margin-bottom:11px}
+.segment{height:6px;background:#e3e8ee;border:none;border-radius:20px;position:relative;cursor:pointer;overflow:hidden;padding:0}
+.fill{position:absolute;inset:0 auto 0 0;background:var(--accent);width:0}
+.scrub{width:100%;accent-color:var(--accent);margin:0 0 12px;cursor:pointer}
+.controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.mainctrl,.auxctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 14px;border-radius:8px;font:600 13px var(--body);cursor:pointer}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{color:#fff;background:var(--accent);border-color:var(--accent);min-width:105px}
+.btn:focus-visible,input:focus-visible,.segment:focus-visible,.navbtn:focus-visible{outline:3px solid #7fa6c0;outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.clock{font:500 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.meta{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px}
+.panel{background:var(--stage);border:1px solid var(--line);border-radius:12px;padding:18px 22px}
+.panel h2{font:600 11px var(--mono);letter-spacing:1.3px;color:var(--accent);margin:0 0 9px;text-transform:uppercase}
+.panel p{font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 0 8px;max-width:65ch}
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.navbtn{border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 10px;border-radius:7px;font:500 12px var(--body);cursor:pointer}
+.navbtn.current{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.truth{padding:9px 12px;border-left:2px solid var(--accent);background:#f4f7fa;border-radius:0 6px 6px 0;margin-top:12px!important;color:var(--ink)!important}
+.notes{display:none}.expanded .notes{display:block}
+.footnote{color:var(--faint);font-size:11.5px;line-height:1.5;margin-top:14px}
+@media(max-width:860px){
+ .wrap{padding:12px 16px 36px}.stage{height:auto;min-height:640px}
+ .chapterbar{padding:16px 16px 0}.headline{padding:8px 16px 0}
+ .frame{position:static;padding:18px 16px 70px;min-height:500px}
+ .stageFoot{left:16px;right:16px;bottom:10px;font-size:9px}
+ .captionBar{padding:12px 16px}.captionKind{display:none}.who{min-width:68px}
+ .roles,.split,.steps{grid-template-columns:1fr}.arrow{display:none}.coach{margin-top:0}
+ .role{min-height:0}.meta{grid-template-columns:1fr}.row{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+.richard{max-width:900px}.richard .roles{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}.richard .role{min-height:180px}.richard .coach{margin:14px 0;border-left:3px solid var(--accent);padding:13px 18px}.richard .ask{margin-top:12px;font-size:clamp(20px,2.2vw,27px)}a.cta{display:inline-block;text-decoration:none}a.cta:focus-visible{outline:3px solid var(--accent);outline-offset:3px}@media(max-width:650px){.richard .roles{grid-template-columns:1fr;gap:8px}.richard .role{min-height:0;padding:11px 13px}.richard .role b{margin-top:5px}.richard .coach{margin:9px 0;padding:10px 12px}}
+</style></head>
+<body><main class="wrap">
+<header class="mast"><div><div class="brand">AgentTraining<i>.ai</i></div><div class="label">LATEST REVIEW · V8 DUAL CLIENT · 3:45 · NOV 21, 2026</div></div><div class="label">NEW SCRIPTED REVIEW · NOT PRODUCTION</div></header>
+
+<section class="player" aria-label="V8 dual client 3 minute 45 second review">
+ <div id="stage" class="stage">
+  <div class="chapterbar"><span id="chapter" class="chapter"></span><span id="position" class="position"></span></div>
+  <div id="headline" class="headline"></div>
+  <div id="frame" class="frame"></div>
+  <div class="stageFoot"><span id="truthL"></span><span class="rt">V8 DUAL CLIENT · LATEST REVIEW</span></div>
+ </div>
+ <div class="captionBar" aria-live="off"><span class="who" id="who"></span><span id="captionTxt" class="captionTxt"></span><span class="captionKind">NARRATION SCRIPT</span></div>
+ <div class="controlarea">
+  <div id="segments" class="segments"></div>
+  <input id="scrub" class="scrub" type="range" min="0" max="225" step="0.01" value="0" aria-label="Timeline">
+  <div class="controls">
+   <div class="mainctrl"><button class="btn primary" id="play">▶ Play</button><button class="btn" id="restart">↻ Restart</button><button class="btn" id="prev" aria-label="Previous scene">←</button><button class="btn" id="next" aria-label="Next scene">→</button><span class="clock" id="clock">00:00 / 03:45</span></div>
+   <div class="auxctrl"><button class="btn" id="toggleVoice" aria-pressed="false">Preview voice: off</button><button class="btn" id="showNotes" aria-pressed="false">Director notes</button></div>
+  </div>
+ </div>
+</section>
+
+<div class="meta"><section class="panel"><h2>V8 · Dual-client review</h2><p>Michael (family budget) and Richard (high-net-worth business owner) are introduced together at the opening. Each initially declines; targeted practice makes the second approach more relevant. Each agrees only to a conversation, not a purchase.</p><div class="nav" id="nav"></div></section><section class="panel"><h2>Review safeguards</h2><p>All dialogue and AI Coach feedback is scripted, fictional and text-based. This is an interactive storyboard, not recorded footage, validated AI performance or real client conversion. No live spoken AI roleplay is claimed. The pilot is subject to confirmation.</p><p class="truth notes" id="reviewNote"></p></section></div><p class="footnote">NEW V8 CONCEPT REVIEW · Based on PR #68's V7 HTML playback shell. Older V7 and V5.9.1 files are preserved. No production change. Preview voice is browser-generated and approximate.</p></main>
+<script>
+const TOTAL=225;
+const SCENES=[{"num":"01","label":"Two Clients","start":0,"end":28,"head":"Two markets. Different needs. One training challenge.","truth":"SCRIPTED SIMULATION · NOT REAL CLIENTS","note":"Introduce both clients up front."},{"num":"02","label":"Two Closed Doors","start":28,"end":65,"head":"Michael and Richard each decline David's first approach.","truth":"FICTIONAL DIALOGUE · INITIAL OBJECTIONS","note":"Two refusals represent different objections; neither suggests an actual failed sale."},{"num":"03","label":"Manager's Blind Spot","start":65,"end":88,"head":"How can a manager coach the conversation they never saw?","truth":"ILLUSTRATIVE MANAGER PROBLEM","note":"Keep a purposeful 2.6-second pause at 82.4–85.0."},{"num":"04","label":"Targeted Practice","start":88,"end":116,"head":"Approved knowledge. Two simulated conversations. Evidence to review.","truth":"ILLUSTRATIVE WORKFLOW · VERIFY PRODUCT FEATURES","note":"No unverified claims about live voice or automatic assignment."},{"num":"05","label":"Michael Opens","start":116,"end":158,"head":"Lead with the family's concern rather than a product pitch.","truth":"SIMULATED PRACTICE · NOT A REAL SALES RESULT","note":"Rejection then revised question and Michael's volunteered concern."},{"num":"06","label":"Richard Opens","start":158,"end":203,"head":"A business owner responds to a thoughtful coverage-review question.","truth":"SIMULATED PRACTICE · NOT FINANCIAL ADVICE","note":"Do not assume a gap or recommend a policy; Richard agrees only to a review."},{"num":"07","label":"Manager Impact","start":203,"end":225,"head":"See the coaching evidence. Assign the next practice. Invite the pilot.","truth":"ILLUSTRATIVE MANAGER VIEW · PILOT BY REQUEST","note":"Do not depict speculative automatic capabilities or claim conversion uplift."}];
+const N="NARRATOR";
+const CUES=[{"s":0,"e":5,"who":"NARRATOR","t":"Two clients. Two very different lives."},{"s":5,"e":11,"who":"NARRATOR","t":"Michael is raising a family and watching every dollar."},{"s":11,"e":19,"who":"NARRATOR","t":"Richard runs a successful business, with significant assets and responsibilities."},{"s":19,"e":28,"who":"NARRATOR","t":"For David, the insurance agent, each could become an important conversation. But both doors are about to close."},{"s":28,"e":35,"who":"DAVID","t":"Michael, I've got some great insurance plans. Can I walk you through them?"},{"s":35,"e":39,"who":"MICHAEL","t":"Not right now. The family budget is tight."},{"s":39,"e":44,"who":"NARRATOR","t":"The first door closes. Now Richard."},{"s":44,"e":51,"who":"DAVID","t":"Richard, could I show you a new policy for your business?"},{"s":51,"e":57,"who":"RICHARD","t":"I already have an insurance agent. We're covered."},{"s":57,"e":65,"who":"NARRATOR","t":"The second door closes. Different customers. The same missed opportunity to listen."},{"s":65,"e":73,"who":"NARRATOR","t":"As David's manager, you can count completed courses and passing scores."},{"s":73,"e":82.4,"who":"NARRATOR","t":"But can you see how he handles a family's budget concerns, or a sophisticated owner's existing coverage?"},{"s":82.4,"e":85,"who":"","t":"","sil":1},{"s":85,"e":88,"who":"NARRATOR","t":"Now you can practice for both."},{"s":88,"e":97,"who":"NARRATOR","t":"Start with company-approved knowledge. Build two realistic, text-based practice scenarios."},{"s":97,"e":106,"who":"NARRATOR","t":"Let David rehearse, hear targeted AI Coach feedback, and try again."},{"s":106,"e":116,"who":"NARRATOR","t":"For the manager, the value is the evidence: which questions improved, and what still needs attention."},{"s":116,"e":122,"who":"NARRATOR","t":"First, Michael. The coach flags David's product-first opening."},{"s":122,"e":131,"who":"AI COACH","t":"Ask about the family's priorities. Don't begin with a plan or assume what they can afford."},{"s":131,"e":140,"who":"DAVID","t":"Michael, I know budgets matter. What would you most want to protect for your children if your income changed?"},{"s":140,"e":149,"who":"MICHAEL","t":"Keeping the kids secure. My wife and I have been meaning to talk about that."},{"s":149,"e":158,"who":"NARRATOR","t":"The door opens to a conversation. Not a sale, and not a promise—just a better question."},{"s":158,"e":165,"who":"NARRATOR","t":"Now Richard: an established business owner with an existing advisor."},{"s":165,"e":172,"who":"AI COACH","t":"Acknowledge his advisor. Explore changes to business risks without assuming a coverage gap."},{"s":172,"e":181,"who":"DAVID","t":"That makes sense. Since the business expanded, when did you last review key-person and ownership-continuity protection?"},{"s":181,"e":190,"who":"RICHARD","t":"It's been a while, actually. We've added partners and grown quite a bit."},{"s":190,"e":198,"who":"DAVID","t":"Would it help to review what you already have with your advisor before considering any changes?"},{"s":198,"e":203,"who":"RICHARD","t":"Yes. That's worth a closer look."},{"s":203,"e":210,"who":"NARRATOR","t":"Two closed doors. Two different approaches. Two conversations reopened."},{"s":210,"e":218,"who":"NARRATOR","t":"A manager can review practice evidence, coach weak spots, and choose what the team practices next."},{"s":218,"e":225,"who":"NARRATOR","t":"From everyday families to business owners, prepare your team for better conversations. Request a fourteen-day private pilot."}];
+const TPL=["<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">TWO CLIENTS · ONE AGENT</div><div class=\"roles\" style=\"margin-top:20px\"><div class=\"role\"><div class=\"av\">M</div><b>Michael</b><small>A parent raising children and managing a family budget.</small></div><div class=\"role\"><div class=\"av\">R</div><b>Richard</b><small>A successful business owner with significant assets, partners and complex responsibilities.</small></div><div class=\"role\"><div class=\"av\">D</div><b>David</b><small>The agent. One-size-fits-all opening—or a conversation tailored to each?</small></div></div><div class=\"ask\">Two different customers. <em>Two doors to open.</em></div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">BEFORE COACHING · BOTH DOORS CLOSED</div><div class=\"roles\" style=\"grid-template-columns:repeat(2,minmax(0,1fr));margin-top:20px\"><div class=\"role\"><b>Michael · Family</b><div class=\"bub d\"><i>DAVID</i>I've got some great insurance plans. Can I walk you through them?</div><div class=\"bub m\"><i>MICHAEL</i>Not right now. The family budget is tight.</div><span class=\"tag shut\">DOOR CLOSED</span></div><div class=\"role\"><b>Richard · Business owner</b><div class=\"bub d\"><i>DAVID</i>Could I show you a new policy for your business?</div><div class=\"bub m\"><i>RICHARD</i>I already have an insurance agent. We're covered.</div><span class=\"tag shut\">DOOR CLOSED</span></div></div><div class=\"ask\">Different objections. <em>Same missed opportunity to listen.</em></div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">THE MANAGER'S QUESTION</div><div class=\"question\" style=\"margin-top:55px\">You can count courses completed.<p style=\"font-size:27px;color:var(--muted)\">But can you see what your agent actually says to each kind of client?</p></div><div class=\"ask\">How can you coach <em>what you cannot see?</em></div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">AGENTTRAINING.AI · TARGETED REHEARSAL</div><div class=\"steps\" style=\"margin-top:34px\"><div class=\"step\"><div class=\"label\">Knowledge</div><b>Approved company material</b><small>Source-based guidance to review</small></div><div class=\"arrow\">→</div><div class=\"step\"><div class=\"label\">Practice</div><b>Two distinct roleplays</b><small>Family budget and business-owner protection</small></div><div class=\"arrow\">→</div><div class=\"step\"><div class=\"label\">Manager</div><b>Review coaching evidence</b><small>Choose the next assignment</small></div></div><div class=\"notcourse\">Not just more content. <b>More relevant practice.</b></div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">MICHAEL · FROM OBJECTION TO DISCOVERY</div><div class=\"split\" style=\"grid-template-columns:1fr 1fr\"><div class=\"attempt\"><div class=\"label\">Before · product pitch</div><div class=\"bub m\"><i>MICHAEL</i>Not right now. The family budget is tight.</div><span class=\"tag shut\">DOOR CLOSED</span></div><div class=\"attempt\"><div class=\"label\">After · family-first question</div><div class=\"bub d\"><i>DAVID</i>What would you most want to protect for your children if your income changed?</div><div class=\"bub m\"><i>MICHAEL</i>Keeping the kids secure. My wife and I have been meaning to talk about that.</div><span class=\"tag open\">DOOR OPEN TO CONVERSATION</span></div></div><div class=\"coach\"><div class=\"label\">AI Coach · scripted feedback</div>Ask about priorities before proposing a product. Do not assume affordability.</div><div class=\"punch\">The client volunteers a real concern. <b>No sale is claimed.</b></div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">RICHARD · A MORE COMPLEX CONVERSATION</div><div class=\"split\" style=\"grid-template-columns:1fr 1fr\"><div class=\"attempt\"><div class=\"label\">Before · product-first</div><div class=\"bub m\"><i>RICHARD</i>I already have an insurance agent. We're covered.</div><span class=\"tag shut\">DOOR CLOSED</span></div><div class=\"attempt\"><div class=\"label\">After · needs-first</div><div class=\"bub d\"><i>DAVID</i>Since your business expanded, when did you last review key-person and ownership-continuity protection?</div><div class=\"bub m\"><i>RICHARD</i>We've added partners and grown. It's been a while.</div><div class=\"bub d\"><i>DAVID</i>Could we review your existing coverage with your advisor before considering changes?</div><div class=\"bub m\"><i>RICHARD</i>Yes. That's worth a closer look.</div><span class=\"tag open\">DOOR OPEN TO REVIEW</span></div></div><div class=\"coach\"><div class=\"label\">AI Coach · scripted feedback</div>Respect the existing advisor; verify business facts and coverage before recommending anything.</div></div>","<div class=\"cast\" style=\"max-width:940px\"><div class=\"label\">TWO CLIENTS · ONE TEAM DEVELOPMENT LOOP</div><div class=\"roles\" style=\"grid-template-columns:repeat(2,minmax(0,1fr));margin-top:20px\"><div class=\"role\"><div class=\"av\">M</div><b>Michael</b><small>Family priorities surfaced</small><span class=\"tag open\">CONVERSATION OPEN</span></div><div class=\"role\"><div class=\"av\">R</div><b>Richard</b><small>Existing protection review welcomed</small><span class=\"tag open\">CONVERSATION OPEN</span></div></div><div class=\"steps\" style=\"margin-top:20px\"><div class=\"step\"><div class=\"label\">Practice</div><b>Two client types</b></div><div class=\"arrow\">→</div><div class=\"step\"><div class=\"label\">Coach</div><b>Identify blind spots</b></div><div class=\"arrow\">→</div><div class=\"step\"><div class=\"label\">Manager</div><b>Choose next assignment</b></div></div><div class=\"ask\">From everyday families to high-value business owners, <em>train agents to open more doors.</em></div><div class=\"ctasmall\">14-day private pilot · By request · Subject to confirmation</div></div>"];
+const $=id=>document.getElementById(id);
+let time=0,playing=false,lastStamp=0,frameReq=null,voice=false,lastCue=-1,lastScene=-1,dragging=false,beats=[],offs=[];
+let canSpeak=('speechSynthesis' in window);
+function fmt(t){let x=Math.floor(Math.max(0,t));return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0')}
+function sceneOf(t){const i=SCENES.findIndex(x=>t>=x.start&&t<x.end);return i<0?SCENES.length-1:i}
+function cueOf(t){const i=CUES.findIndex(c=>t>=c.s&&t<c.e);return i<0?CUES.length-1:i}
+function stopVoice(){if(canSpeak)try{speechSynthesis.cancel()}catch(e){}}
+function speak(txt){if(!voice||!canSpeak||!txt)return;stopVoice();try{const u=new SpeechSynthesisUtterance(txt.replace(/[“”…]/g,''));u.lang='en-US';u.rate=1;speechSynthesis.speak(u)}catch(e){}}
+function draw(){
+ const si=sceneOf(time),s=SCENES[si],ci=cueOf(time),c=CUES[ci],sil=!!c.sil;
+ document.body.classList.toggle('silent',sil);
+ if(si!==lastScene){
+  lastScene=si;
+  const fr=$('frame');fr.innerHTML=TPL[si];fr.style.animation='none';void fr.offsetWidth;fr.style.animation='sceneIn .5s ease';
+  beats=[...document.querySelectorAll('#frame [data-t]')];
+  offs=[...document.querySelectorAll('#frame [data-off]')];
+  $('chapter').textContent='SCENE '+s.num+' · '+s.label.toUpperCase();
+  $('position').textContent=s.num+' / 07';
+  $('headline').textContent=s.head;
+  $('truthL').textContent=s.truth;
+  $('reviewNote').textContent=s.note;
+  document.querySelectorAll('.navbtn').forEach((b,i)=>b.classList.toggle('current',i===si));
+ }
+ beats.forEach(el=>el.classList.toggle('on',time>=+el.dataset.t));
+ offs.forEach(el=>el.classList.toggle('off',time>=+el.dataset.off));
+ 
+ $('clock').textContent=fmt(time)+' / '+fmt(TOTAL);
+ if(!dragging)$('scrub').value=time.toFixed(2);
+ $('segments').querySelectorAll('button').forEach((b,i)=>{
+  const sc=SCENES[i];let v=time>=sc.end?100:time<=sc.start?0:100*(time-sc.start)/(sc.end-sc.start);
+  b.firstElementChild.style.width=v+'%';
+ });
+ if(ci!==lastCue){
+  lastCue=ci;
+  $('captionTxt').textContent=sil?'':c.t;
+  $('who').textContent=sil?'':(c.who||'');
+  stopVoice();
+  if(playing&&c.t&&!sil)speak(c.t);
+ }
+}
+function setPlaying(v){
+ if(frameReq!==null){cancelAnimationFrame(frameReq);frameReq=null}
+ playing=v;$('play').textContent=playing?'Ⅱ Pause':time>=TOTAL?'▶ Play':'▶ '+(time>0?'Resume':'Play');
+ if(!playing){stopVoice();return}
+ lastStamp=performance.now();frameReq=requestAnimationFrame(tick);
+}
+function tick(){if(!playing)return;const now=performance.now();time=Math.min(TOTAL,time+Math.min(.24,Math.max(0,(now-lastStamp)/1000)));lastStamp=now;draw();if(time>=TOTAL){setPlaying(false);return}frameReq=requestAnimationFrame(tick)}
+function seek(t){time=Math.min(TOTAL,Math.max(0,t));lastCue=-1;stopVoice();draw();lastStamp=performance.now()}
+function jump(i){seek(SCENES[Math.max(0,Math.min(SCENES.length-1,i))].start)}
+function setup(){
+ SCENES.forEach((s,i)=>{
+  const b=document.createElement('button');b.className='segment';b.style.flex=String(s.end-s.start);b.title=s.num+' '+s.label;b.setAttribute('aria-label','Go to scene '+s.num);b.innerHTML='<span class="fill"></span>';b.onclick=()=>jump(i);$('segments').appendChild(b);
+  const nav=document.createElement('button');nav.className='navbtn';nav.textContent=s.num+' '+s.label;nav.onclick=()=>jump(i);$('nav').appendChild(nav);
+ });
+ $('play').onclick=()=>{if(time>=TOTAL&&!playing)seek(0);setPlaying(!playing)};
+ $('restart').onclick=()=>{seek(0);setPlaying(true)};
+ $('prev').onclick=()=>jump(sceneOf(time)-1);
+ $('next').onclick=()=>jump(sceneOf(time)+1);
+ $('scrub').addEventListener('input',()=>{dragging=true;seek(Number($('scrub').value))});
+ $('scrub').addEventListener('change',()=>{dragging=false;seek(Number($('scrub').value))});
+ $('toggleVoice').onclick=()=>{voice=!voice&&canSpeak;stopVoice();$('toggleVoice').textContent=voice?'Preview voice: on':'Preview voice: off';$('toggleVoice').setAttribute('aria-pressed',String(voice))};
+ if(!canSpeak)$('toggleVoice').disabled=true;
+ $('showNotes').onclick=()=>{const yes=document.body.classList.toggle('expanded');$('showNotes').setAttribute('aria-pressed',String(yes))};
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlaying(false)});
+ document.addEventListener('keydown',e=>{if(e.target.matches('button,input,textarea,select'))return;
+  if(e.code==='Space'){e.preventDefault();$('play').click()}
+  else if(e.code==='ArrowRight')jump(sceneOf(time)+1);
+  else if(e.code==='ArrowLeft')jump(sceneOf(time)-1)});
+ draw();
+}
+setup();
+</script></body></html>
