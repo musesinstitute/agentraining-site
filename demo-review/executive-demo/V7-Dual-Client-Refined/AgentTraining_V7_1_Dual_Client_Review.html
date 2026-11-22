@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>AgentTraining.ai | Latest Manager-First Dual Client Review · 3:30</title><style>
+:root{--bg:#edf0f3;--paper:#fbfcfd;--ink:#172330;--muted:#556474;--line:#d7dfe7;--accent:#285b79;--accentlight:#e8f1f6;--red:#995448;--redlight:#f8eeeb;--green:#2e7055;--greenlight:#ebf5ef}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}a{color:inherit}
+main{max-width:1150px;margin:auto;padding:22px 20px 55px}
+.mast{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.logo{font-family:Georgia,serif;font-size:21px;font-weight:bold}.logo em{color:var(--accent);font-style:normal}
+.kicker{font:600 11px/1.7 ui-monospace,monospace;letter-spacing:1.1px;color:var(--muted);text-transform:uppercase}
+.viewer{border:1px solid var(--line);background:var(--paper);border-radius:15px;overflow:hidden;box-shadow:0 15px 35px #17233012}
+.stage{height:605px;position:relative;display:flex;flex-direction:column}
+.header{display:flex;justify-content:space-between;align-items:baseline;padding:24px 34px 8px}
+.chap{font:700 11px ui-monospace,monospace;color:var(--accent);letter-spacing:1.3px}
+.headline{font:italic 16px Georgia,serif;color:var(--muted);padding:4px 34px 0}
+.frame{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 34px 44px}
+.foot{position:absolute;left:34px;right:34px;bottom:15px;display:flex;justify-content:space-between;gap:12px;font:600 10px ui-monospace,monospace;color:var(--muted);letter-spacing:.7px}
+.scene{width:100%;max-width:970px}
+.title{font:400 clamp(28px,3.2vw,43px)/1.15 Georgia,serif;letter-spacing:-.6px;margin:12px 0 18px}
+.sub{font:italic 19px Georgia,serif;color:var(--muted);line-height:1.5}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.cols.three{grid-template-columns:1fr 1fr 1fr}
+.panel{background:white;border:1px solid var(--line);padding:19px;border-radius:12px}
+.panel h3{font:600 24px Georgia,serif;margin:8px 0}
+.panel p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 11px}
+.eyebrow{font:700 10px ui-monospace,monospace;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent)}
+.line{border-top:1px solid var(--line);padding:13px 0;font:20px/1.35 Georgia,serif}
+.bubble{border-radius:9px;padding:12px 13px;margin:9px 0;font:17px/1.42 Georgia,serif;background:#f3f6f8}
+.bubble.client{background:var(--accentlight)}
+.bubble .speaker{display:block;font:700 10px ui-monospace,monospace;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.state{display:inline-block;font:700 10px ui-monospace,monospace;letter-spacing:.9px;padding:7px 10px;border-radius:7px;margin-top:8px}
+.closed{color:var(--red);background:var(--redlight);border:1px solid #e1c3bc}
+.open{color:var(--green);background:var(--greenlight);border:1px solid #bfd9c9}
+.divider{height:1px;background:var(--line);margin:22px 0}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.flow .panel{padding:16px}.flow h3{font-size:19px}
+.highlight{color:var(--accent);font-weight:600}
+.coach{margin-top:16px;border-left:3px solid var(--accent);padding:10px 16px;background:#f4f8fb;font:italic 18px Georgia,serif}
+.notice{color:var(--muted);font:13px/1.5 system-ui,sans-serif;margin-top:16px}
+.metric{font:600 13px ui-monospace,monospace;color:var(--muted);margin-bottom:12px}
+.bigcall{font:400 34px/1.24 Georgia,serif;margin-top:16px}
+.cta{display:inline-block;margin-top:22px;padding:14px 23px;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-weight:700}
+.cta:hover{background:#1f4863}.cta:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #81b6d5;outline-offset:2px}
+[data-at]{opacity:0;transform:translateY(8px);transition:opacity .38s ease,transform .38s ease}
+[data-at].shown{opacity:1;transform:none}
+.silence .caption{background:#f0f3f6}
+.caption{min-height:80px;display:flex;align-items:center;gap:18px;padding:13px 34px;background:#f7f9fa;border-top:1px solid var(--line)}
+.who{min-width:110px;font:700 10px ui-monospace,monospace;color:var(--accent);letter-spacing:.9px}
+.words{font:17px/1.4 Georgia,serif}
+.controls{background:white;border-top:1px solid var(--line);padding:14px 28px}
+.ruler{display:flex;gap:4px;margin-bottom:12px}
+.jump{height:6px;border:0;border-radius:5px;background:#dce5ec;padding:0;cursor:pointer;overflow:hidden}
+.progress{display:block;background:var(--accent);width:0;height:100%}
+.scrub{width:100%;accent-color:var(--accent);margin:0 0 10px}
+.toolbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.left,.right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{background:white;border:1px solid var(--line);color:var(--ink);padding:9px 12px;cursor:pointer;border-radius:7px;font-size:13px;font-weight:600}
+.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.clock{font:600 12px ui-monospace,monospace;color:var(--muted);margin-left:5px}
+.details{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:17px}
+.infocard{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:17px 20px}
+.infocard h2{margin:0 0 7px;font:700 12px ui-monospace,monospace;color:var(--accent);letter-spacing:.5px}
+.infocard p{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 8px}
+.nav{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.nav button{border:1px solid var(--line);border-radius:6px;background:white;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--muted)}
+.nav button.active{background:var(--accentlight);color:var(--accent);border-color:var(--accent)}
+.fine{font-size:11px;color:var(--muted);margin:14px 0;line-height:1.5}
+@media(max-width:780px){main{padding:12px}.stage{height:auto;min-height:640px}.frame{padding:24px 14px 68px;min-height:505px}.header{padding:18px 14px 6px}.headline{padding:4px 14px}.foot{left:14px;right:14px;font-size:9px}.cols,.cols.three,.flow,.details{grid-template-columns:1fr}.panel{padding:12px}.panel h3{font-size:21px}.title{font-size:28px}.bubble{font-size:15px}.sub{font-size:16px}.coach{font-size:15px}.caption{padding:12px 14px}.who{min-width:75px}.words{font-size:15px}.controls{padding:12px 14px}.frame .scene{max-height:none}.stage:has(.scene) .frame{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head>
+<body><main><header class="mast"><div><div class="logo">AgentTraining<em>.ai</em></div><div class="kicker">V7.1 · MANAGER-FIRST / DUAL CLIENT · 03:30</div></div><div class="kicker">SCRIPTED REVIEW ONLY · NOT PRODUCTION</div></header>
+<section class="viewer" aria-label="Interactive 3 minute 30 second dual-client manager-first storyboard">
+<div class="stage"><div class="header"><span class="chap" id="chapter"></span><span class="kicker" id="position"></span></div><div class="headline" id="headline"></div><div class="frame" id="frame"></div><div class="foot"><span id="truth"></span><span>V7.1 · MICHAEL + RICHARD</span></div></div>
+<div class="caption" aria-live="off"><span class="who" id="who"></span><span class="words" id="words"></span></div>
+<div class="controls"><div class="ruler" id="ruler"></div><input id="scrub" class="scrub" type="range" min="0" max="210" step=".01" value="0" aria-label="Review timeline">
+<div class="toolbar"><div class="left"><button class="btn primary" id="play">▶ Play</button><button class="btn" id="restart">↻ Restart</button><button class="btn" id="prev" aria-label="Previous scene">←</button><button class="btn" id="next" aria-label="Next scene">→</button><span id="clock" class="clock">00:00 / 03:30</span></div><div class="right"><button id="voice" class="btn" aria-pressed="false">Preview voice: off</button></div></div></div></section>
+<div class="details"><div class="infocard"><h2>REVIEW CHAPTERS</h2><p>Manager first; two customers introduced early; both doors close; the same learner rehearses two different approaches; each fictional prospect responds; manager chooses the next practice.</p><div class="nav" id="nav"></div></div>
+<div class="infocard"><h2>HONESTY + REVIEW NOTES</h2><p id="note"></p><p><strong>Scripted example:</strong> No real clients, real calls, demonstrated live two-way voice, conversion data, promised sale, assumed coverage gap or policy suitability decision. The website's optional voice reads an approximate preview only.</p><p><strong>Next step:</strong> The single CTA leads to the PR #75 interactive Manager Demo preview; pilot request follows there. Verify that preview before real outreach.</p></div></div>
+<p class="fine">Draft review on PR #68. V7 2:48 and V8 3:45 remain untouched. Master is unchanged. Browser timing and recorded production narration are not certified by this file.</p>
+</main><script>
+const TOTAL=210;
+const SCENES=[{"label":"The Manager's Question","start":0,"end":25,"head":"You can measure training. Can you see what happens when a client says no?","note":"Directly address managers in the opening, introduce both client types by 25 seconds."},{"label":"Two Closed Doors","start":25,"end":66,"head":"Two different prospects. Two reasons to say no.","note":"Both clients decline. Restore the original 2.6-second deliberate silence at 1:03.4–1:06."},{"label":"A Different Kind of Practice","start":66,"end":92,"head":"Approved knowledge becomes targeted, reviewable practice.","note":"All workflow and coaching output shown here are illustrative, not verified live two-way voice."},{"label":"Michael: Door Reopens","start":92,"end":133,"head":"A family-first question unlocks the real concern.","note":"Michael volunteers his own motivation; no promise of an appointment or sale."},{"label":"Richard: Door Reopens","start":133,"end":182,"head":"A growing business deserves a thoughtful review, not a new-policy pitch.","note":"No coverage gap or required coverage amount assumed; keep current insurance agent respected."},{"label":"The Manager's Decision","start":182,"end":210,"head":"See the difference. Decide what your agents practice next.","note":"One real clickable CTA goes to PR #75's interactive Manager Demo, then to pilot request."}];
+const CUES=[{"s":0,"e":4,"who":"NARRATOR","t":"You know how many agents finish training."},{"s":4,"e":9,"who":"NARRATOR","t":"But do you know what happens when a client says no?"},{"s":9,"e":13,"who":"NARRATOR","t":"Meet David, preparing for two very different prospects."},{"s":13,"e":19,"who":"NARRATOR","t":"Michael is raising children, with a tight family budget."},{"s":19,"e":25,"who":"NARRATOR","t":"Richard runs a growing business, with substantial assets and partners."},{"s":25,"e":31,"who":"DAVID","t":"Michael, I've got a great insurance plan. May I show it to you?"},{"s":31,"e":35,"who":"MICHAEL","t":"Not right now. Our budget is tight."},{"s":35,"e":41,"who":"DAVID","t":"Richard, may I show you a new policy for your business?"},{"s":41,"e":46,"who":"RICHARD","t":"I already have an insurance agent. We're covered."},{"s":46,"e":52,"who":"NARRATOR","t":"Two doors close. For very different reasons."},{"s":52,"e":57,"who":"NARRATOR","t":"Courses and test scores don't show these moments."},{"s":57,"e":63.4,"who":"NARRATOR","t":"How can you coach a conversation you never saw?"},{"s":63.4,"e":66,"who":"","t":"","sil":true},{"s":66,"e":68,"who":"NARRATOR","t":"Now you can."},{"s":68,"e":75,"who":"NARRATOR","t":"Start with approved company knowledge. Build two distinct practice conversations."},{"s":75,"e":81,"who":"NARRATOR","t":"An AI Coach highlights what David missed in each."},{"s":81,"e":86,"who":"NARRATOR","t":"He practices again. You can examine what changed."},{"s":86,"e":92,"who":"NARRATOR","t":"The AI recommends. You decide."},{"s":92,"e":98,"who":"NARRATOR","t":"First, Michael. Budget concerns aren't a reason to pitch harder."},{"s":98,"e":104,"who":"AI COACH · ILLUSTRATIVE","t":"Ask about his family priorities, not a product."},{"s":104,"e":114,"who":"DAVID","t":"Michael, I hear you about the budget. What would you most want protected for your children if your income changed?"},{"s":114,"e":124,"who":"MICHAEL","t":"Keeping the kids secure. My wife and I have been meaning to discuss that."},{"s":124,"e":133,"who":"NARRATOR","t":"The first door opens to conversation. Not a sale. Michael supplies the reason."},{"s":133,"e":139,"who":"NARRATOR","t":"Now Richard: an established business owner, with a very different concern."},{"s":139,"e":145,"who":"AI COACH · ILLUSTRATIVE","t":"Respect his insurance agent. Ask what changed. Never assume a gap."},{"s":145,"e":155,"who":"DAVID","t":"Understood. Since your business expanded, when did you last review key-person and ownership-continuity protection?"},{"s":155,"e":166,"who":"RICHARD","t":"It's been a while, actually. We've added partners and grown quite a bit."},{"s":166,"e":173,"who":"DAVID","t":"Would it be worth reviewing what you have with your insurance agent?"},{"s":173,"e":179,"who":"RICHARD","t":"Yes. That's worth a closer look."},{"s":179,"e":182,"who":"NARRATOR","t":"The second door opens."},{"s":182,"e":189,"who":"NARRATOR","t":"Two clients. Two different approaches. Two conversations reopened."},{"s":189,"e":196,"who":"NARRATOR","t":"For a manager, the value is evidence: what improved, what still needs work."},{"s":196,"e":203,"who":"NARRATOR","t":"From families to business owners, choose what your team practices next."},{"s":203,"e":210,"who":"NARRATOR","t":"Explore the interactive Manager Demo, then decide about a fourteen-day pilot."}];
+const TPL=["<div class=\"scene\">\n<div class=\"eyebrow\" data-at=\"0\">FOR THE TEAM LEADER</div>\n<div class=\"title\" data-at=\"0\">You can measure training.<div class=\"highlight\">Can you see readiness?</div></div>\n<div class=\"cols\">\n<div class=\"panel\" data-at=\"13\"><div class=\"eyebrow\">FAMILY PROTECTION</div><h3>Michael</h3><p>Raising two children. Every dollar in the family budget has a job.</p><div class=\"metric\">Everyday family conversations</div></div>\n<div class=\"panel\" data-at=\"19\"><div class=\"eyebrow\">BUSINESS-OWNER PROTECTION</div><h3>Richard</h3><p>A successful business owner with substantial assets, partners and expanding responsibilities.</p><div class=\"metric\">Higher-complexity opportunities</div></div>\n</div><div class=\"notice\" data-at=\"9\">David is one agent, preparing for two very different prospects.</div></div>","<div class=\"scene\"><div class=\"eyebrow\">BEFORE PRACTICE</div><div class=\"title\">Two closed doors.</div>\n<div class=\"cols\">\n<div class=\"panel\"><h3>Michael</h3><div class=\"bubble\" data-at=\"25\"><span class=\"speaker\">DAVID</span>I've got a great insurance plan. May I show it to you?</div><div class=\"bubble client\" data-at=\"31\"><span class=\"speaker\">MICHAEL</span>Not right now. Our budget is tight.</div><div class=\"state closed\" data-at=\"31\">DOOR CLOSED</div></div>\n<div class=\"panel\"><h3>Richard</h3><div class=\"bubble\" data-at=\"35\"><span class=\"speaker\">DAVID</span>May I show you a new policy for your business?</div><div class=\"bubble client\" data-at=\"41\"><span class=\"speaker\">RICHARD</span>I already have an insurance agent. We're covered.</div><div class=\"state closed\" data-at=\"41\">DOOR CLOSED</div></div></div>\n<div class=\"bigcall\" data-at=\"57\">How can you coach the conversation <em>you never saw?</em></div>\n</div>","<div class=\"scene\">\n<div class=\"eyebrow\">AN ILLUSTRATIVE PRACTICE WORKFLOW</div><div class=\"title\" data-at=\"66\">Now you can.</div>\n<div class=\"flow\"><div class=\"panel\" data-at=\"68\"><div class=\"eyebrow\">01 · Knowledge</div><h3>Approved sources</h3><p>Begin with company-reviewed materials.</p></div>\n<div class=\"panel\" data-at=\"71\"><div class=\"eyebrow\">02 · Practice</div><h3>Two scenarios</h3><p>Family priorities and business continuity.</p></div>\n<div class=\"panel\" data-at=\"75\"><div class=\"eyebrow\">03 · AI Coach</div><h3>Specific feedback</h3><p>What David said, what he missed.</p></div>\n<div class=\"panel\" data-at=\"81\"><div class=\"eyebrow\">04 · Manager</div><h3>Review the change</h3><p>Decide which skills to develop next.</p></div></div>\n<div class=\"bigcall\" data-at=\"86\">The AI recommends. <span class=\"highlight\">You decide.</span></div>\n<div class=\"notice\">Scripted illustration · no recorded client calls or verified live voice roleplay</div></div>","<div class=\"scene\"><div class=\"eyebrow\">CLIENT ONE · MICHAEL</div><div class=\"title\">A better question opens the first door.</div>\n<div class=\"cols\">\n<div class=\"panel\"><div class=\"eyebrow\">Before</div><div class=\"bubble client\"><span class=\"speaker\">MICHAEL</span>Not right now. Our budget is tight.</div><span class=\"state closed\">CLOSED</span><div class=\"coach\" data-at=\"98\">Coach: Start with the family's priorities, not a product.</div></div>\n<div class=\"panel\"><div class=\"eyebrow\">After targeted practice</div><div class=\"bubble\" data-at=\"104\"><span class=\"speaker\">DAVID</span>What would you most want protected for your children if your income changed?</div><div class=\"bubble client\" data-at=\"114\"><span class=\"speaker\">MICHAEL</span>Keeping the kids secure. My wife and I have been meaning to discuss that.</div><span class=\"state open\" data-at=\"124\">OPEN TO CONVERSATION</span></div></div>\n<div class=\"notice\" data-at=\"124\">Not a sale or a real prospect outcome. The fictional client volunteers his own concern.</div></div>","<div class=\"scene\"><div class=\"eyebrow\">CLIENT TWO · RICHARD</div><div class=\"title\">A business-owner conversation requires a different question.</div>\n<div class=\"cols\">\n<div class=\"panel\"><div class=\"eyebrow\">Before</div><div class=\"bubble client\"><span class=\"speaker\">RICHARD</span>I already have an insurance agent. We're covered.</div><span class=\"state closed\">CLOSED</span><div class=\"coach\" data-at=\"139\">Coach: Respect the current insurance agent. Never assume a protection gap.</div></div>\n<div class=\"panel\"><div class=\"eyebrow\">After targeted practice</div>\n<div class=\"bubble\" data-at=\"145\"><span class=\"speaker\">DAVID</span>Since your business expanded, when did you last review key-person and ownership-continuity protection?</div>\n<div class=\"bubble client\" data-at=\"155\"><span class=\"speaker\">RICHARD</span>It's been a while, actually. We've added partners and grown quite a bit.</div>\n<div class=\"bubble\" data-at=\"166\"><span class=\"speaker\">DAVID</span>Worth reviewing what you have with your insurance agent?</div>\n<div class=\"bubble client\" data-at=\"173\"><span class=\"speaker\">RICHARD</span>Yes. That's worth a closer look.</div><span class=\"state open\" data-at=\"179\">OPEN TO COVERAGE REVIEW</span></div></div>\n<div class=\"notice\">No assumed shortfall, insurance amount or promised purchase; an illustrative invitation to review existing protection.</div></div>","<div class=\"scene\">\n<div class=\"eyebrow\">THE MANAGER'S SEAT</div>\n<div class=\"title\" data-at=\"182\">Two clients. <span class=\"highlight\">Two doors reopened.</span></div>\n<div class=\"cols\"><div class=\"panel\" data-at=\"182\"><div class=\"eyebrow\">Michael · everyday families</div><h3>Family priorities surfaced</h3><span class=\"state open\">CONVERSATION OPEN</span></div>\n<div class=\"panel\" data-at=\"182\"><div class=\"eyebrow\">Richard · business owners</div><h3>Existing protection review welcomed</h3><span class=\"state open\">CONVERSATION OPEN</span></div></div>\n<div class=\"sub\" data-at=\"189\" style=\"margin-top:17px\">Review practice evidence. Spot weaknesses. Choose the team's next assignment.</div>\n<div data-at=\"203\"><a class=\"cta\" href=\"https://deploy-preview-75--magical-platypus-ba1dfe.netlify.app/manager-demo-review.html\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the Interactive Manager Demo →</a>\n<div class=\"notice\">Film → Interactive Manager Demo (PR #75 preview) → Request the 14-day private pilot</div></div>\n</div>"];
+const $=id=>document.getElementById(id);
+const canSpeak=('speechSynthesis' in window);
+let time=0,playing=false,req=null,lastStamp=0,lastScene=-1,lastCue=-1,voice=false,drag=false,timed=[];
+function format(t){const n=Math.floor(t);return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+function sceneAt(t){const i=SCENES.findIndex(s=>t>=s.start&&t<s.end);return i<0?SCENES.length-1:i}
+function cueAt(t){const i=CUES.findIndex(c=>t>=c.s&&t<c.e);return i<0?CUES.length-1:i}
+function stopSpeech(){if(canSpeak)try{speechSynthesis.cancel()}catch(e){}}
+function say(t){if(!voice||!canSpeak||!t)return;stopSpeech();try{const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=1;speechSynthesis.speak(u)}catch(e){}}
+function render(){
+const si=sceneAt(time),ci=cueAt(time),c=CUES[ci],s=SCENES[si];
+document.body.classList.toggle('silence',!!c.sil);
+if(si!==lastScene){
+ lastScene=si;$('frame').innerHTML=TPL[si];
+ timed=[...$('frame').querySelectorAll('[data-at]')];
+ $('chapter').textContent='SCENE '+String(si+1).padStart(2,'0')+' · '+s.label.toUpperCase();
+ $('position').textContent=(si+1)+' / '+SCENES.length;
+ $('headline').textContent=s.head;$('truth').textContent='FICTIONAL TEXT-BASED DEMONSTRATION';
+ $('note').textContent=s.note;
+ document.querySelectorAll('.nav button').forEach((b,j)=>b.classList.toggle('active',j===si));
+}
+timed.forEach(el=>el.classList.toggle('shown',time>=Number(el.dataset.at)));
+$('clock').textContent=format(time)+' / '+format(TOTAL);
+if(!drag)$('scrub').value=String(time);
+document.querySelectorAll('.ruler button').forEach((b,j)=>{
+const x=SCENES[j],p=time<=x.start?0:time>=x.end?100:(time-x.start)/(x.end-x.start)*100;
+b.firstElementChild.style.width=p+'%';
+});
+if(ci!==lastCue){
+lastCue=ci;$('who').textContent=c.sil?'':c.who;$('words').textContent=c.sil?'':c.t;
+stopSpeech();if(playing&&!c.sil)say(c.t);
+}
+}
+function play(v){
+if(req!==null){cancelAnimationFrame(req);req=null}
+playing=v;$('play').textContent=v?'Ⅱ Pause':'▶ '+(time>=TOTAL?'Replay':time>0?'Resume':'Play');
+if(!v){stopSpeech();return}lastStamp=performance.now();req=requestAnimationFrame(tick);
+}
+function tick(){
+if(!playing)return;
+const now=performance.now();time=Math.min(TOTAL,time+Math.max(0,Math.min(0.25,(now-lastStamp)/1000)));lastStamp=now;
+render();if(time>=TOTAL){play(false);return}req=requestAnimationFrame(tick);
+}
+function seek(v){time=Math.max(0,Math.min(TOTAL,v));lastCue=-1;stopSpeech();render();lastStamp=performance.now()}
+function jump(i){seek(SCENES[Math.max(0,Math.min(SCENES.length-1,i))].start)}
+function init(){
+SCENES.forEach((s,i)=>{
+const b=document.createElement('button');b.className='jump';b.style.flex=String(s.end-s.start);
+b.title=s.label;b.setAttribute('aria-label','Jump to '+s.label);b.innerHTML='<span class="progress"></span>';b.onclick=()=>jump(i);$('ruler').appendChild(b);
+const n=document.createElement('button');n.textContent=String(i+1).padStart(2,'0')+' '+s.label;n.onclick=()=>jump(i);$('nav').appendChild(n);
+});
+$('play').onclick=()=>{if(time>=TOTAL&&!playing)seek(0);play(!playing)};
+$('restart').onclick=()=>{seek(0);play(true)};
+$('prev').onclick=()=>jump(sceneAt(time)-1);$('next').onclick=()=>jump(sceneAt(time)+1);
+$('scrub').addEventListener('input',()=>{drag=true;seek(Number($('scrub').value))});
+$('scrub').addEventListener('change',()=>{drag=false;seek(Number($('scrub').value))});
+$('voice').onclick=()=>{voice=canSpeak&&!voice;stopSpeech();$('voice').setAttribute('aria-pressed',String(voice));$('voice').textContent='Preview voice: '+(voice?'on':'off')};
+if(!canSpeak)$('voice').disabled=true;
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)play(false)});
+document.addEventListener('keydown',e=>{if(e.target.closest('button,input,a'))return;if(e.code==='Space'){e.preventDefault();$('play').click()}});
+render();
+}
+init();
+</script></body></html>
