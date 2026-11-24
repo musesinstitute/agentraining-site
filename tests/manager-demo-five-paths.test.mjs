@@ -62,7 +62,7 @@ async function openDemo({ width = 1366, height = 900, motion = 'reduce', permiss
   page.on('pageerror', e => errors.push(String(e)));
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
   page.on('request', r => { if (!/fonts\.(googleapis|gstatic)\.com/.test(r.url())) requests.push(r.method() + ' ' + r.url()); });
-  await page.goto(baseUrl + PAGE);
+  await page.goto(baseUrl + PAGE + '?tour=complete');
   return { page, context, requests, errors };
 }
 const text = async (page, sel) => (await page.textContent(sel)).replace(/\s+/g, ' ').trim();
@@ -89,55 +89,50 @@ const minOptions = page => page.$$eval('#minOpts input', els => els.map(i => [+i
 const noOverflow = page => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
 describe('Manager Demo: five complete learner paths', () => {
-  test('guided tour introduces four Studios, the Hub, then the manager challenge one page at a time', async () => {
+  test('seven separate tour pages explain four Studios, Hub and manager challenge in order', async () => {
     const { page, context, errors } = await openDemo();
+    const slugs=['welcome','knowledge','practice','client','leadership','hub','challenge'];
     try {
-      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining[.]ai/);
-      assert.equal(await page.locator('#tourShell [data-tour-step]').count(), 7);
-      const expected = [
-        'Knowledge Studio', 'Practice Studio', 'Client Studio', 'Leadership Studio',
-      ];
-      assert.equal(await page.locator('#tourShell [data-tour-step]:visible').count(), 1);
-      assert.match(await text(page, '#tourProgress'), /1 of 7/);
-      assert.equal(await page.isDisabled('#tourPrev'), true);
-      for (let i = 1; i < 7; i++) {
-        await page.click('#tourNext');
-        assert.equal(await page.locator('#tourShell [data-tour-step]:visible').count(), 1, 'Only one tour page should be visible');
-        assert.match(await text(page, '#tourProgress'), new RegExp((i+1)+' of 7'));
-        if (i <= 4) {
-          assert.equal(await text(page, '#tourShell [data-tour-step="'+i+'"] .orient-card h3'), expected[i-1]);
-          const description = await text(page, '#tourShell [data-tour-step="'+i+'"] .orient-card p');
-          assert.ok(description.length > 70, 'Each Studio explains its manager-facing value');
+      await page.goto(baseUrl+'/manager-demo-review.html');
+      await page.waitForURL(/manager-tour-welcome[.]html$/);
+      for (let i=0;i<slugs.length;i++) {
+        const slug=slugs[i];
+        assert.match(page.url(),new RegExp('manager-tour-'+slug+'[.]html$'));
+        assert.match(await text(page,'.progress strong'),new RegExp('Step '+(i+1)+' of 7'));
+        assert.equal(await page.locator('main h1').count(),1);
+        assert.ok((await text(page,'main')).length>130,'Each chapter contains a useful explanation');
+        assert.equal(await page.locator('.footer .nav .next').count(),1);
+        if (i>0) {
+          assert.equal(await page.locator('.footer .nav .previous').count(),1);
+          assert.match(await page.getAttribute('.footer .nav .previous','href'),new RegExp('manager-tour-'+slugs[i-1]));
         }
-        if (i === 5) {
-          assert.match(await text(page, '#tourShell [data-tour-step="5"]'), /AI recommends; the manager decides/);
-          assert.equal(await page.locator('#tourShell [data-tour-step="5"] .sys svg').count(), 1);
-        }
+        if (i===5) assert.match(await text(page,'.hub-grid'),/Knowledge Studio.*Practice Studio.*Team Growth.*Client Studio.*Leadership Studio/);
+        if (i===slugs.length-1) break;
+        await page.click('.footer .nav .next');
       }
-      assert.equal(await page.isVisible('#tourNext'), false);
-      await page.click('#tourPrev');
-      assert.match(await text(page, '#tourProgress'), /6 of 7/);
-      await page.click('#tourNext');
-      await page.click('#startDemo');
-      await page.waitForFunction(() => document.activeElement?.closest('#team') !== null);
-      assert.equal(await page.locator('#team label[data-p]').count(), 5);
-      assert.deepEqual(errors, []);
-    } finally { await context.close(); }
+      await page.click('.footer .nav .next');
+      await page.waitForURL(/manager-demo-review[.]html[?]tour=complete#make-the-call$/);
+      assert.equal(await page.locator('#team label[data-p]').count(),5);
+      assert.deepEqual(errors,[]);
+    } finally {await context.close();}
   });
 
-  test('tour can be skipped on phone without sacrificing manager decision access', async () => {
-    const { page, context, errors } = await openDemo({ width: 320, height: 740 });
+  test('tour prev/next arrows and skip path work at 320px', async () => {
+    const { page, context, errors }=await openDemo({width:320,height:740});
     try {
-      await page.click('#tourNext');
-      assert.match(await text(page, '#tourProgress'), /2 of 7/);
-      assert.equal(await noOverflow(page), true);
-      await page.click('#tourSkip');
-      await page.waitForFunction(() => document.activeElement?.closest('#team') !== null);
-      await pickAndLock(page, 'david');
-      assert.equal(await text(page, '#cxPick'), 'David');
-      assert.equal(await noOverflow(page), true);
-      assert.deepEqual(errors, []);
-    } finally { await context.close(); }
+      await page.goto(baseUrl+'/manager-tour-welcome.html');
+      await page.click('.footer .nav .next');
+      assert.match(page.url(),/manager-tour-knowledge[.]html$/);
+      assert.equal(await noOverflow(page),true);
+      await page.click('.footer .nav .previous');
+      assert.match(page.url(),/manager-tour-welcome[.]html$/);
+      await page.click('.footer .nav .previous');
+      await page.waitForURL(/manager-demo-review[.]html[?]tour=complete#make-the-call$/);
+      await pickAndLock(page,'david');
+      assert.equal(await text(page,'#cxPick'),'David');
+      assert.equal(await noOverflow(page),true);
+      assert.deepEqual(errors,[]);
+    } finally {await context.close();}
   });
 
   for (const id of Object.keys(EXPECT)) {
@@ -424,7 +419,7 @@ describe('Manager Demo: five complete learner paths', () => {
     const { page, context } = await openDemo();
     try {
       assert.doesNotMatch(await text(page, '#intro0'), /identical/);
-      await page.click('#tourSkip');
+      await page.click('#startDemo');
       await page.click('label[data-p="michelle"]');
       await page.click('#lock');
       await page.waitForSelector('#reveal:not([hidden])');
