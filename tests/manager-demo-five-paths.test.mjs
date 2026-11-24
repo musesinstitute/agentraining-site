@@ -117,6 +117,32 @@ describe('Manager Demo: five complete learner paths', () => {
     } finally {await context.close();}
   });
 
+  test('all tour chapters show distinct icons, full captions and opt-in speech controls', async () => {
+    const {page, context, errors}=await openDemo();
+    const slugs=['welcome','knowledge','practice','client','leadership','hub','challenge'];
+    try {
+      for(const slug of slugs){
+        await page.goto(baseUrl+'/manager-tour-'+slug+'.html');
+        assert.equal(await page.locator('.studio-icon svg').count(),1,slug+' icon missing');
+        assert.equal(await page.locator('.narration-lines [data-caption-line]').count()>=4,true,slug+' captions missing');
+        assert.equal(await page.locator('.narration-lines [data-caption-line]:visible').count()>=4,true,slug+' captions not visible');
+        assert.equal(await page.locator('#tourRead').count(),1,slug+' listen button missing');
+        assert.equal(await page.locator('#tourStop').isHidden(),true,'Stop must remain hidden until speech starts');
+        assert.match(await text(page,'.narration-note'),/optional/);
+      }
+      await page.goto(baseUrl+'/manager-tour-knowledge.html');
+      assert.match(await text(page,'.pane'),/Levels 1–5/);
+      assert.match(await text(page,'.pane'),/importance/);
+      assert.match(await text(page,'.pane'),/relevance/);
+      await page.goto(baseUrl+'/manager-tour-practice.html');
+      assert.match(await text(page,'.pane'),/Layer 1/);
+      assert.match(await text(page,'.pane'),/Layer 2/);
+      await page.goto(baseUrl+'/manager-tour-client.html');
+      assert.match(await text(page,'.pane'),/case portfolio/);
+      assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+
   test('tour prev/next arrows and skip path work at 320px', async () => {
     const { page, context, errors }=await openDemo({width:320,height:740});
     try {
