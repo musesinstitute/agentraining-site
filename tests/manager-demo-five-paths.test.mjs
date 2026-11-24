@@ -346,6 +346,7 @@ describe('Manager Demo: five complete learner paths', () => {
       const recap = await text(page, '#actionPlan');
       assert.match(recap, /You have not chosen an agent yet\./);
       assert.match(recap, /No demo decision yet\. The pilot request below does not depend on one\./);
+       assert.ok(await page.isVisible('#actionPlan #apHead'), 'empty action plan has its accessible heading');
       assert.ok(await page.isVisible('#pilotLink'));
       assert.ok(await page.isHidden('#ctxbar'));
 
@@ -654,6 +655,9 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await text(page, '#ttStatus'), 'Needs revision');
       assert.match(await text(page, '#ttWarn'), /Needs revision\. 30 min of coaching are approved, but only 15 min are available, so this plan is not workable as it stands\. Your decisions are kept for review/);
       assert.match(await text(page, '#ttLive'), /Needs revision/);
+       // The comparison must acknowledge an over-budget manager plan.
+       assert.match(await text(page, '#compareBody .cmp-lead'), /your current demo plan is over by 15 min and needs revision/);
+       assert.doesNotMatch(await text(page, '#compareBody .cmp-lead'), /Two hypothetical plans within/);
       assert.equal(await page.$$eval('.tt-bar .seg.bad', els => els.length), 2);
       const tags = await page.$$eval('#ttList .it', els => els.map(it => it.querySelector('b').textContent + (it.querySelector('.nr') ? ' NR' : '')));
       assert.deepEqual(tags, ['Michelle NR', 'Grace NR', 'John'], 'decisions are preserved; only coaching is flagged');
@@ -937,7 +941,7 @@ describe('Manager Demo: five complete learner paths', () => {
         '1. Michelle: Coach now, 20 min [Coach]', '   Review: Day 2, after the new practice.',
         '2. Grace: Coach her anyway, 10 min [Coach]', '   Knowledge source: Missing: no approved source is linked to this coaching yet.',
         '4. John: Review it yourself [More evidence first]', '   Your decision: Chose to verify first. The AI suggested: One more practice.',
-        'Days count from the day you approve: relative periods, not calendar dates.']) assert.ok(lines.includes(want), `copied text includes: ${want}`);
+        'Review days are relative to a fictional demo decision, not actual approval or calendar dates.']) assert.ok(lines.includes(want), `copied text includes: ${want}`);
       assert.doesNotMatch(clip, /<[a-z]/i, 'plain text, no markup');
       assert.equal(clip, await page.evaluate(() => planText()), 'the copy is exactly what the page shows');
       assert.equal(requests.length, before, 'copying sends nothing');
