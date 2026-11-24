@@ -89,28 +89,53 @@ const minOptions = page => page.$$eval('#minOpts input', els => els.map(i => [+i
 const noOverflow = page => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
 describe('Manager Demo: five complete learner paths', () => {
-  test('welcomes the manager and explains all four Studios and Hub before the team decision', async () => {
+  test('guided tour introduces four Studios, the Hub, then the manager challenge one page at a time', async () => {
     const { page, context, errors } = await openDemo();
     try {
-      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining\.ai/);
-      assert.equal(await page.locator('#platform-tour .orient-card').count(), 4);
-      const studios = await page.locator('#platform-tour .orient-card h3').allTextContents();
-      assert.deepEqual(studios.map(s => s.trim()), [
-        'Practice Studio', 'Client Studio', 'Knowledge Studio', 'Leadership Studio',
-      ]);
-      for (const card of await page.locator('#platform-tour .orient-card').all()) {
-        assert.ok((await card.locator('p').textContent()).trim().length > 50, 'Every Studio explains what it does');
+      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining\\.ai/);
+      assert.equal(await page.locator('#tourShell [data-tour-step]').count(), 7);
+      const expected = [
+        'Knowledge Studio', 'Practice Studio', 'Client Studio', 'Leadership Studio',
+      ];
+      assert.equal(await page.locator('#tourShell [data-tour-step]:visible').count(), 1);
+      assert.match(await text(page, '#tourProgress'), /1 of 7/);
+      assert.equal(await page.isDisabled('#tourPrev'), true);
+      for (let i = 1; i < 7; i++) {
+        await page.click('#tourNext');
+        assert.equal(await page.locator('#tourShell [data-tour-step]:visible').count(), 1, 'Only one tour page should be visible');
+        assert.match(await text(page, '#tourProgress'), new RegExp((i+1)+' of 7'));
+        if (i <= 4) {
+          assert.equal(await text(page, '#tourShell [data-tour-step="'+i+'"] .orient-card h3'), expected[i-1]);
+          const description = await text(page, '#tourShell [data-tour-step="'+i+'"] .orient-card p');
+          assert.ok(description.length > 70, 'Each Studio explains its manager-facing value');
+        }
+        if (i === 5) {
+          assert.match(await text(page, '#tourShell [data-tour-step="5"]'), /AI recommends; the manager decides/);
+          assert.equal(await page.locator('#tourShell [data-tour-step="5"] .sys svg').count(), 1);
+        }
       }
-      assert.match(await text(page, '#platform-tour .orient-hub'), /AI recommends\. The manager decides\./);
-      const order = await page.evaluate(() => ({
-        welcome: document.querySelector('.hero').compareDocumentPosition(document.querySelector('#platform-tour')),
-        next: document.querySelector('#platform-tour').compareDocumentPosition(document.querySelector('#p0')),
-      }));
-      assert.ok(order.welcome & 4);
-      assert.ok(order.next & 4);
+      assert.equal(await page.isVisible('#tourNext'), false);
+      await page.click('#tourPrev');
+      assert.match(await text(page, '#tourProgress'), /6 of 7/);
+      await page.click('#tourNext');
       await page.click('#startDemo');
       await page.waitForFunction(() => document.activeElement?.closest('#team') !== null);
       assert.equal(await page.locator('#team label[data-p]').count(), 5);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
+  test('tour can be skipped on phone without sacrificing manager decision access', async () => {
+    const { page, context, errors } = await openDemo({ width: 320, height: 740 });
+    try {
+      await page.click('#tourNext');
+      assert.match(await text(page, '#tourProgress'), /2 of 7/);
+      assert.equal(await noOverflow(page), true);
+      await page.click('#tourSkip');
+      await page.waitForFunction(() => document.activeElement?.closest('#team') !== null);
+      await pickAndLock(page, 'david');
+      assert.equal(await text(page, '#cxPick'), 'David');
+      assert.equal(await noOverflow(page), true);
       assert.deepEqual(errors, []);
     } finally { await context.close(); }
   });
