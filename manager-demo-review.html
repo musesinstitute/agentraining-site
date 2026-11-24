@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgentTraining.ai | Manager Demo</title>
-<meta name="description" content="Take the manager's seat: make one coaching decision, see where the evidence came from, and sketch a 14-day pilot for your own team.">
+<meta name="description" content="Welcome to AgentTraining.ai: meet four connected Studios and the Team Growth and Retention Hub, then take the manager's seat to make coaching decisions and sketch a 14-day pilot.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
@@ -49,6 +49,29 @@ h1{font:400 clamp(34px,3.9vw,56px)/1.06 var(--serif);letter-spacing:-.025em;marg
 .hero-cta .btn{font-size:18px;padding:16px 26px;box-shadow:0 12px 26px -12px #1f4fd6}
 .hero-cta span{font-size:14.5px;color:var(--slate)}
 .fiction{margin-top:22px;font-size:14px;color:var(--slate)}
+.welcome-k{font:600 12px/1.4 var(--sans);color:var(--royal);letter-spacing:.13em;text-transform:uppercase;margin-top:24px}
+/* A short orientation between the executive film and the manager's first decision. */
+.orient{background:var(--sheet);border-bottom:1px solid var(--line);padding:50px 0 58px}
+.orient-k{font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--royal)}
+.orient h2{font:400 clamp(27px,3.5vw,41px)/1.1 var(--serif);margin-top:8px;max-width:24em}
+.orient-sub{margin-top:12px;max-width:58em;color:var(--body);font-size:16px}
+.orient-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:26px}
+.orient-card{border:1px solid var(--line);border-top:4px solid var(--royal);border-radius:5px;background:var(--paper);padding:20px 18px 22px;min-width:0}
+.orient-card:nth-child(2){border-top-color:#257f76}
+.orient-card:nth-child(3){border-top-color:#ab781f}
+.orient-card:nth-child(4){border-top-color:#503eaa}
+.orient-card .orient-n{display:block;font:600 12px var(--mono);color:var(--slate);margin-bottom:9px}
+.orient-card h3{font:600 23px/1.15 var(--serif);color:var(--ink)}
+.orient-card p{font-size:14.5px;line-height:1.52;margin-top:10px;color:var(--body)}
+.orient-card strong{color:var(--ink)}
+.orient-hub{margin-top:16px;background:var(--sky);border:1px solid #c3d2f5;border-left:5px solid var(--royal);border-radius:5px;padding:18px 22px}
+.orient-hub h3{font:600 23px/1.2 var(--serif)}
+.orient-hub p{margin-top:6px;font-size:15px;color:var(--body);max-width:65em}
+.orient-next{margin-top:28px;border-top:1px solid var(--line);padding-top:22px}
+.orient-next>p{font-size:17px;max-width:55em;color:var(--body)}
+.orient-next>p strong{color:var(--ink)}
+@media(max-width:860px){.orient-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.orient{padding:35px 0 40px}.orient-grid{grid-template-columns:1fr;gap:9px}.orient-card{padding:16px 18px}.orient-card p{margin-top:6px}.orient-next .hero-cta{margin-top:16px}}
 
 /* step navigation: a true sequence, so it is numbered */
 .stepsbar{border-bottom:1px solid var(--line)}
@@ -640,10 +663,10 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 <header class="hero"><div class="wrap">
  <div class="hero-text">
   <p class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="12" fill="none" stroke="#1f4fd6" stroke-width="2.4" stroke-dasharray="4.2 3"/><circle cx="16" cy="17" r="6.4" fill="#1f4fd6"/><circle cx="16" cy="5" r="3.4" fill="#ffe600" stroke="#0f1b33" stroke-width="1.3"/></svg><strong class="wordmark">AgentTraining<span class="dot">.ai</span></strong><span class="tag">Manager demo</span></p>
-  <h1>Know which agent needs your coaching before the client meeting.</h1>
-  <p class="lede">Practice evidence from four connected Studios, gathered in one Hub. The AI recommends. You decide.</p>
-  <div class="hero-cta"><button class="btn" type="button" id="startDemo">Make one coaching call</button><span>About four minutes: pick, decide, plan. No sign-up.</span></div>
-  <p class="fiction">Every person, document and result in this demo is fictional.</p>
+  <p class="welcome-k">Welcome to AgentTraining.ai</p>
+  <h1>Four Studios. One Hub. Better coaching decisions.</h1>
+  <p class="lede">Before you take the manager's seat, discover how four connected Studios help agents build skills and help leaders make evidence-based coaching decisions.</p>
+  <p class="fiction">This is a fictional demonstration. No real learner records or assignments are used.</p>
  </div>
  <figure class="sys">
   <svg viewBox="0 0 680 600" role="img" aria-label="Knowledge, Client and Practice Studios send evidence and context into the Team Growth and Retention Hub. The Hub sends decisions to Leadership Studio, where you sit. The four Studios form a continuing cycle.">
@@ -669,6 +692,23 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
   <figcaption><ul class="legend"><li class="lg-in">Evidence and context flow in</li><li class="lg-out">Decisions flow out to you</li></ul><p class="cycle-line">Practice evidence → your judgment → targeted coaching → new practice → reassessment</p></figcaption>
  </figure>
 </div></header>
+<section class="orient" id="platform-tour" aria-labelledby="orientH">
+ <div class="wrap">
+  <p class="orient-k">First · Meet the platform</p>
+  <h2 id="orientH">Four specialized Studios, each with a clear purpose.</h2>
+  <p class="orient-sub">You don't need to learn the software to follow the story. Here is what each Studio contributes to the development of an insurance team.</p>
+  <div class="orient-grid">
+   <article class="orient-card"><span class="orient-n">01 · SKILL BUILDING</span><h3>Practice Studio</h3><p><strong>Help agents perform better.</strong> Rehearse realistic client conversations, identify recurring skill gaps and receive focused AI coaching.</p></article>
+   <article class="orient-card"><span class="orient-n">02 · CLIENT UNDERSTANDING</span><h3>Client Studio</h3><p><strong>Prepare for the actual conversation.</strong> Organize the client's needs, objections and next steps so practice has a meaningful context.</p></article>
+   <article class="orient-card"><span class="orient-n">03 · TRUSTED KNOWLEDGE</span><h3>Knowledge Studio</h3><p><strong>Train from relevant source material.</strong> Turn company-approved learning resources into knowledge checks and targeted practice topics.</p></article>
+   <article class="orient-card"><span class="orient-n">04 · TEAM LEADERSHIP</span><h3>Leadership Studio</h3><p><strong>Turn evidence into action.</strong> See who needs help, compare coaching priorities, allocate limited time and review progress.</p></article>
+  </div>
+  <div class="orient-hub"><h3>One Team Growth &amp; Retention Hub connects them all.</h3><p>Practice evidence, client context and knowledge resources inform leadership decisions. The manager confirms the next coaching action; new practice creates fresh evidence for reassessment. <strong>AI recommends. The manager decides.</strong></p></div>
+  <div class="orient-next"><p><strong>Now you take the manager's seat.</strong> Five fictional agents have passed their training reports, but you have only 30 minutes to coach this week. Who needs your help most?</p>
+   <div class="hero-cta"><button class="btn" type="button" id="startDemo">Take the manager's seat</button><span>About four minutes: choose, decide, see the four Studios at work, and leave with a plan. No sign-up.</span></div>
+  </div>
+ </div>
+</section>
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
 <div class="ctxbar" id="ctxbar" hidden><div class="wrap cx" role="region" aria-label="Where you are in the demo"><p class="cx-now"><span>Exploring</span> <b id="cxNow"></b></p><dl class="cx-dl"><div><dt>Your pick</dt><dd id="cxPick"></dd></div><div class="cx-ai"><dt>AI suggests</dt><dd id="cxAI"></dd></div><div><dt>Decision</dt><dd id="cxAct"></dd></div></dl><button type="button" class="cx-switch" id="cxSwitch" hidden></button><span class="sr" id="cxLive" role="status" aria-live="polite"></span></div></div>
 <main>
