@@ -424,7 +424,7 @@ describe('Manager Demo: five complete learner paths', () => {
     const { page, context } = await openDemo();
     try {
       assert.doesNotMatch(await text(page, '#intro0'), /identical/);
-      await page.click('#startDemo');
+      await page.click('#tourSkip');
       await page.click('label[data-p="michelle"]');
       await page.click('#lock');
       await page.waitForSelector('#reveal:not([hidden])');
