@@ -1225,7 +1225,9 @@ function planCard(title,plan,tag){const f=planFacts(plan);
 function renderCompare(){const b=budget(),aiM=Math.round(b*2/3);const ai={},mine={};
  ORDER.forEach(id=>{ai[id]={action:`accept`,minutes:C(id).actions.accept.coach?aiM:0};if(dec[id].confirmed)mine[id]={action:dec[id].action,minutes:dec[id].minutes}});
  const same=ORDER.every(id=>mine[id]&&mine[id].action===ai[id].action&&mine[id].minutes===ai[id].minutes);
- $('compareBody').innerHTML=`<p class="cmp-lead">Two hypothetical plans within your ${b}-minute budget. This compares what each plan commits and the evidence behind it, not results. Nothing here is applied: you decide in each learner's panel.</p>${same?`<p class="cmp-same">Your plan matches the AI's suggested plan.</p>`:``}<div class="cmp-grid">${planCard(`The AI's suggested plan`,ai,`Hypothetical`)}${planCard(`Your plan so far`,mine,`Your demo decisions`)}</div>`}
+ const mineFacts=planFacts(mine);
+  const comparisonLead=mineFacts.left<0?`The AI's illustrative plan fits your ${b}-minute budget, but your current demo plan is over by ${-mineFacts.left} min and needs revision before it could be used.`:`Both illustrative plans are within your ${b}-minute budget.`;
+  $('compareBody').innerHTML=`<p class="cmp-lead">${comparisonLead} This compares what each plan commits and the evidence behind it, not results. Nothing here is applied: you decide in each learner's panel.</p>${same?`<p class="cmp-same">Your plan matches the AI's suggested plan.</p>`:``}<div class="cmp-grid">${planCard(`The AI's suggested plan`,ai,`Hypothetical`)}${planCard(`Your plan so far`,mine,`Your demo decisions`)}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-budget]');if(b){const r=document.querySelector(`input[name="demoBudget"][value="${b.dataset.budget}"]`);r.checked=true;afterDecisionChange();$('ttLive').textContent=`Budget set to ${b.dataset.budget} min.`}
  const d=e.target.closest('[data-decidefor]');if(d){if(step!==0)go(0,true);setExplored(d.dataset.decidefor);$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const f=document.querySelector('#decideRow [data-decide]');if(f)f.focus({preventScroll:true})}});
 function decidedText(){const c=cur(),d=dec[explored];let t=c.actions[d.action].decided.replace(`{mine}`,d.minutes);if(d.action===`override`)t+=` Reason: `+d.reason+(d.note.trim()?` (`+d.note.trim()+`)`:``)+`.`;return t}
@@ -1368,7 +1370,7 @@ function buildPlan(){const b=budget(),used=committed(null),left=b-used,ov=used>b
  const pickShort=pick&&pick!==TOP?`You picked ${C(pick).name}.`:pickLine;
  return {b,used,left,ov,items,coach,ev,rest,undec,head,status,pickLine,pickShort,ai:`AI's top priority: ${C(TOP).name} (${C(TOP).practice.sum.toLowerCase()}).`}}
 function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
- if(!P.items.length){el.className='ap empty';el.innerHTML=`<p class="ap-k"><span class="lyr dec">Manager action plan</span> Fictional team</p><h3>Your action plan for next week appears here once you make a demo decision.</h3><ul class="ap-ctx"><li>${esc(P.pickLine)}</li><li>No demo decision yet. The pilot request below does not depend on one.</li></ul><div class="row"><button type="button" class="btn" data-go="0">Make a coaching call</button></div><p class="small">Demo choices stay on this page and reset when you reload.</p>`;return}
+ if(!P.items.length){el.className='ap empty';el.innerHTML=`<p class="ap-k"><span class="lyr dec">Manager action plan</span> Fictional team</p><h3 id="apHead">Your action plan for next week appears here once you make a demo decision.</h3><ul class="ap-ctx"><li>${esc(P.pickLine)}</li><li>No demo decision yet. The pilot request below does not depend on one.</li></ul><div class="row"><button type="button" class="btn" data-go="0">Make a coaching call</button></div><p class="small">Demo choices stay on this page and reset when you reload.</p>`;return}
  const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} ${i.minutes} min`:i.name).join(`, `):`No one`;
  el.className='ap'+(P.ov?' bad':'');
  el.innerHTML=`<div class="ap-top"><p class="ap-k"><span class="lyr ill">Manager action plan</span> Next week, for a fictional team, from your demo decisions</p>
@@ -1386,13 +1388,13 @@ function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
  <ol class="ap-items">${P.items.map((i,n)=>`<li class="ap-item c-${i.cat}" data-id="${i.id}"><div class="ap-ih"><span class="ap-n">${n+1}</span><h4>${i.name}: <strong>${esc(i.title)}</strong>${i.minutes?`, ${i.minutes} min`:``}</h4><span class="ap-cat">${CATS[i.cat]}</span>${i.nr?`<em class="nr">Needs revision</em>`:``}<span class="ap-rev">Review: ${esc(i.review)}</span></div>
   <ol class="trace" aria-label="How ${i.name}'s recommendation traces back">${i.trace.map(([k,t])=>`<li class="${t.miss?'miss':t.na?'na':t.warn?'thin':''}"><b>${k}</b><span>${esc(t.v)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
  ${P.undec.length?`<p class="ap-undec"><strong>Not decided yet:</strong> ${P.undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join(' ')} <span class="small">No action is planned for them.</span></p>`:``}
- <p class="small ap-foot">Fictional people, evidence, documents and follow-up. Demo decisions only: nothing was assigned, sent or saved, and no result is claimed. Days count from the day you approve; they are relative periods, not calendar dates. Demo choices stay on this page and reset when you reload.</p>`}
+ <p class="small ap-foot">Fictional people, evidence, documents and follow-up. Demo decisions only: nothing was assigned, sent or saved, and no result is claimed. Review days are relative to a fictional demo decision, not actual approval or calendar dates. Demo choices stay on this page and reset when you reload.</p>`}
 function planText(){const P=buildPlan(),L=[];
  L.push(`Manager action plan: next week`,`Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.`,``,P.head,P.status,`${P.ai} ${P.pickShort}`,``);
  const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} (${i.minutes} min)`:i.name).join(`, `):`none`;
  L.push(`Coach: ${nm(P.coach)}`,`More evidence first: ${nm(P.ev)}`,`Practice, stretch or monitor: ${nm(P.rest)}`,`Not decided yet: ${P.undec.length?names(P.undec):`none`}`,``);
  P.items.forEach((i,n)=>{L.push(`${n+1}. ${i.name}: ${i.title}${i.minutes?`, ${i.minutes} min`:``} [${CATS[i.cat]}]${i.nr?` [Needs revision]`:``}`,`   Review: ${i.review}.`);i.trace.forEach(([k,t])=>L.push(`   ${k}: ${t.v}`));L.push(``)});
- L.push(`Days count from the day you approve: relative periods, not calendar dates.`,`From the AgentTraining.ai manager demo. Fictional people, evidence and follow-up.`);
+ L.push(`Review days are relative to a fictional demo decision, not actual approval or calendar dates.`,`From the AgentTraining.ai manager demo. Fictional people, evidence and follow-up.`);
  return L.join(`\n`)}
 async function copyPlan(){const t=planText(),st=$('copyStatus'),fb=$('copyFallback');
  const done=()=>{st.textContent=`Copied as plain text. Nothing was stored or sent.`;fb.hidden=true};
