@@ -92,7 +92,7 @@ describe('Manager Demo: five complete learner paths', () => {
   test('guided tour introduces four Studios, the Hub, then the manager challenge one page at a time', async () => {
     const { page, context, errors } = await openDemo();
     try {
-      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining\\.ai/);
+      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining[.]ai/);
       assert.equal(await page.locator('#tourShell [data-tour-step]').count(), 7);
       const expected = [
         'Knowledge Studio', 'Practice Studio', 'Client Studio', 'Leadership Studio',
