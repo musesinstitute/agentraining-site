@@ -50,29 +50,6 @@ h1{font:400 clamp(34px,3.9vw,56px)/1.06 var(--serif);letter-spacing:-.025em;marg
 .hero-cta span{font-size:14.5px;color:var(--slate)}
 .fiction{margin-top:22px;font-size:14px;color:var(--slate)}
 .welcome-k{font:600 12px/1.4 var(--sans);color:var(--royal);letter-spacing:.13em;text-transform:uppercase;margin-top:24px}
-/* A short orientation between the executive film and the manager's first decision. */
-.orient{background:var(--sheet);border-bottom:1px solid var(--line);padding:50px 0 58px}
-.orient-k{font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--royal)}
-.orient h2{font:400 clamp(27px,3.5vw,41px)/1.1 var(--serif);margin-top:8px;max-width:24em}
-.orient-sub{margin-top:12px;max-width:58em;color:var(--body);font-size:16px}
-.orient-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:26px}
-.orient-card{border:1px solid var(--line);border-top:4px solid var(--royal);border-radius:5px;background:var(--paper);padding:20px 18px 22px;min-width:0}
-.orient-card:nth-child(2){border-top-color:#257f76}
-.orient-card:nth-child(3){border-top-color:#ab781f}
-.orient-card:nth-child(4){border-top-color:#503eaa}
-.orient-card .orient-n{display:block;font:600 12px var(--mono);color:var(--slate);margin-bottom:9px}
-.orient-card h3{font:600 23px/1.15 var(--serif);color:var(--ink)}
-.orient-card p{font-size:14.5px;line-height:1.52;margin-top:10px;color:var(--body)}
-.orient-card strong{color:var(--ink)}
-.orient-hub{margin-top:16px;background:var(--sky);border:1px solid #c3d2f5;border-left:5px solid var(--royal);border-radius:5px;padding:18px 22px}
-.orient-hub h3{font:600 23px/1.2 var(--serif)}
-.orient-hub p{margin-top:6px;font-size:15px;color:var(--body);max-width:65em}
-.orient-next{margin-top:28px;border-top:1px solid var(--line);padding-top:22px}
-.orient-next>p{font-size:17px;max-width:55em;color:var(--body)}
-.orient-next>p strong{color:var(--ink)}
-@media(max-width:860px){.orient-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:520px){.orient{padding:35px 0 40px}.orient-grid{grid-template-columns:1fr;gap:9px}.orient-card{padding:16px 18px}.orient-card p{margin-top:6px}.orient-next .hero-cta{margin-top:16px}}
-
 /* step navigation: a true sequence, so it is numbered */
 .stepsbar{border-bottom:1px solid var(--line)}
 .steps{display:flex;gap:26px;list-style:none;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
@@ -657,124 +634,25 @@ select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--
 @media(max-width:860px){.ap-kpis{grid-template-columns:1fr 1fr}.trace{grid-template-columns:1fr;gap:14px}.trace li+li:before{content:"↓";left:14px;top:-14px;transform:none}.ap-rev{margin-left:0;flex-basis:100%}}
 @media(max-width:520px){.ap-top{padding:22px 18px 20px}.ap-item{padding:16px 16px 18px}.kpi{padding:12px 12px 13px}.invite{padding:20px 18px 22px}}
 
-/* Step-by-step tour: only one chapter visible at a time; no long orientation scroll. */
-.tour-shell{background:var(--sheet)}
-.tour-shell .hero.tour-slide{min-height:480px;display:flex;align-items:center}
-.tour-shell .hero .wrap{display:block;max-width:820px;text-align:center}
-.tour-shell .hero .lede,.tour-shell .hero h1{margin-left:auto;margin-right:auto}
-.tour-slide[hidden]{display:none!important}
-.tour-page{min-height:460px;display:flex;align-items:center}
-.tour-page-inner{width:100%;padding-top:8px;padding-bottom:8px}
-.tour-page .orient-card{margin-top:22px;max-width:760px;min-height:0}
-.tour-page .orient-card p{font-size:16px}
-.tour-hub-figure{margin:20px auto 0;max-width:470px}
-.tour-hub-figure .sys svg{max-width:360px}
-.tour-hub-figure .legend{margin-top:0}
-.tour-hub-figure .cycle-line{display:none}
-.tour-page:has(.tour-hub-figure){align-items:flex-start}
-.tour-controls{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding-top:16px;padding-bottom:20px;border-top:1px solid var(--line)}
-.tour-progress{font:600 14px var(--sans);color:var(--body)}
-.tour-buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tour-buttons .btn{font-size:14px;padding:11px 17px}
-.tour-skip{font-size:14px;padding:8px 6px}
-.tour-last .hero-cta{margin-top:22px}
-@media(max-width:600px){.tour-page{min-height:0;padding-top:36px;padding-bottom:34px}.tour-shell .hero.tour-slide{min-height:380px}.tour-controls{align-items:flex-start}.tour-buttons{width:100%}.tour-buttons .btn{padding:10px 13px}.tour-hub-figure .sys svg{max-width:290px}}
-
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
-</style></head>
+</style><script>
+/* Preserve deep links and the completed guided tour, but introduce new visitors through the tour. */
+if(!new URLSearchParams(location.search).has('tour') &&
+ !['#make-the-call','#the-loop','#your-team'].includes(location.hash)){
+ location.replace('manager-tour-welcome.html');
+}
+</script>
+</head>
 <body>
-<div id="tourShell" class="tour-shell" role="region" aria-label="Guided tour of AgentTraining.ai"><header class="hero tour-slide" data-tour-step="0" aria-labelledby="tourWelcome"><div class="wrap">
+<header class="hero"><div class="wrap">
  <div class="hero-text">
-  <p class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="12" fill="none" stroke="#1f4fd6" stroke-width="2.4" stroke-dasharray="4.2 3"/><circle cx="16" cy="17" r="6.4" fill="#1f4fd6"/><circle cx="16" cy="5" r="3.4" fill="#ffe600" stroke="#0f1b33" stroke-width="1.3"/></svg><strong class="wordmark">AgentTraining<span class="dot">.ai</span></strong><span class="tag">Manager demo</span></p>
-  <p class="welcome-k">Welcome to AgentTraining.ai</p>
-  <h1 id="tourWelcome" tabindex="-1">Four Studios. One Hub. Better coaching decisions.</h1>
-  <p class="lede">Before you take the manager's seat, discover how four connected Studios help agents build skills and help leaders make evidence-based coaching decisions.</p>
-  <p class="fiction">This is a fictional demonstration. No real learner records or assignments are used.</p>
+  <p class="brand"><strong class="wordmark">AgentTraining<span class="dot">.ai</span></strong><span class="tag">Interactive Manager Demo</span></p>
+  <h1>You're in the manager's seat.</h1>
+  <p class="lede">Your team has five fictional agents and limited coaching time. Choose a learner, inspect practice evidence, compare the AI suggestion and make your own decision.</p>
+  <div class="hero-cta"><button class="btn" type="button" id="startDemo">Start with the five learners</button><a href="manager-tour-welcome.html" class="btn secondary">Review platform tour</a></div>
+  <p class="fiction">Fictional learners and evidence. Nothing is sent or saved in this demo.</p>
  </div>
-
 </div></header>
-<div id="platform-tour">
-<section class="orient tour-slide tour-page" data-tour-step="1" hidden aria-labelledby="tourH1">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 2 of 7 · KNOWLEDGE STUDIO</p>
-  <h2 id="tourH1" tabindex="-1">Your company shares new information every week. Is your team absorbing it?</h2>
-  <p class="orient-sub">Product guides, compliance updates and training notes are useful only when agents can find what matters and connect it to their work.</p>
-  <article class="orient-card"><h3>Knowledge Studio</h3><p>Organize approved company materials into focused questions. Show why a topic is important and relevant to an agent's role and client conversations, rather than assuming everyone absorbed every upload. This is a training workflow illustration, not proof of mastery.</p></article>
- </div>
-</section>
-<section class="orient tour-slide tour-page" data-tour-step="2" hidden aria-labelledby="tourH2">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 3 of 7 · PRACTICE STUDIO</p>
-  <h2 id="tourH2" tabindex="-1">Knowing the answer is different from saying it to a client.</h2>
-  <p class="orient-sub">A learner can pass a course and still struggle when a customer asks a difficult, unexpected question.</p>
-  <article class="orient-card"><h3>Practice Studio</h3><p>Two complementary layers: learn the concepts and then apply them in simulated client conversations. Turn relevant knowledge into practice scenarios, rehearse objections, and receive coaching on what the agent can actually demonstrate.</p></article>
- </div>
-</section>
-<section class="orient tour-slide tour-page" data-tour-step="3" hidden aria-labelledby="tourH3">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 4 of 7 · CLIENT STUDIO</p>
-  <h2 id="tourH3" tabindex="-1">How does that training connect to a real client's needs?</h2>
-  <p class="orient-sub">Each conversation has its own context: questions, goals, objections and the next appropriate follow-up.</p>
-  <article class="orient-card"><h3>Client Studio</h3><p>Organize client-case context and explore an AI-assisted understanding map: what is known, what remains unverified, what the agent should ask, and which scenario to practise before the next conversation. Demo examples are fictional; do not enter real sensitive client records.</p></article>
- </div>
-</section>
-<section class="orient tour-slide tour-page" data-tour-step="4" hidden aria-labelledby="tourH4">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 5 of 7 · LEADERSHIP STUDIO</p>
-  <h2 id="tourH4" tabindex="-1">Who needs help—and where should you spend your limited time?</h2>
-  <p class="orient-sub">A manager cannot personally observe every conversation or coach every agent at once.</p>
-  <article class="orient-card"><h3>Leadership Studio</h3><p>Bring practice evidence and case context together, compare the strength of the evidence, decide who needs coaching, who needs another practice, and who is ready for a more difficult challenge. The manager remains in charge.</p></article>
- </div>
-</section>
-<section class="orient tour-slide tour-page" data-tour-step="5" hidden aria-labelledby="tourH5">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 6 of 7 · ONE CONNECTED SYSTEM</p>
-  <h2 id="tourH5" tabindex="-1">Four Studios serve one Team Growth &amp; Retention Hub.</h2>
-  <p class="orient-sub">Knowledge supplies trusted learning material; Practice reveals how skills are applied; Client supplies the conversation context; Leadership decides what to do next. The Hub connects the evidence and follow-up into one continuing management cycle.</p>
-  <div class="tour-hub-figure"> <figure class="sys">
-  <svg viewBox="0 0 680 600" role="img" aria-label="Knowledge, Client and Practice Studios send evidence and context into the Team Growth and Retention Hub. The Hub sends decisions to Leadership Studio, where you sit. The four Studios form a continuing cycle.">
-   <ellipse class="lp" cx="340" cy="300" rx="245" ry="230"/>
-   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(513,137) rotate(43)"/>
-   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(513,463) rotate(137)"/>
-   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(167,463) rotate(223)"/>
-   <polygon class="ar" points="-9,-7 9,0 -9,7" transform="translate(167,137) rotate(317)"/>
-   <circle class="halo" cx="340" cy="300" r="108"/>
-   <g class="ein">
-    <line x1="495" y1="300" x2="459" y2="300"/><polygon points="-8,-6 8,0 -8,6" transform="translate(459,300) rotate(180)"/>
-    <line x1="185" y1="300" x2="221" y2="300"/><polygon points="-8,-6 8,0 -8,6" transform="translate(221,300)"/>
-    <line x1="340" y1="499" x2="340" y2="418"/><polygon points="-8,-6 8,0 -8,6" transform="translate(340,418) rotate(-90)"/>
-   </g>
-   <g class="dout"><line class="dl-under" x1="340" y1="194" x2="340" y2="118"/><line class="dl" x1="340" y1="194" x2="340" y2="118"/><polygon points="-11,-10 11,0 -11,10" transform="translate(340,114) rotate(-90)"/></g>
-   <circle class="hb" cx="340" cy="300" r="108"/>
-   <text class="ht" x="340" y="288" text-anchor="middle">Team Growth &amp;</text><text class="ht" x="340" y="313" text-anchor="middle">Retention Hub</text><text class="hs" x="340" y="340" text-anchor="middle">evidence in, decisions out</text>
-   <g class="seat"><rect class="nd" x="250" y="39" width="180" height="62" rx="8"/><text class="nt" x="340" y="66" text-anchor="middle">Leadership</text><text class="ns" x="340" y="88" text-anchor="middle">your decisions</text></g>
-   <g><rect class="nd" x="495" y="269" width="180" height="62" rx="8"/><text class="nt" x="585" y="296" text-anchor="middle">Knowledge</text><text class="ns" x="585" y="318" text-anchor="middle">approved material</text></g>
-   <g><rect class="nd" x="250" y="499" width="180" height="62" rx="8"/><text class="nt" x="340" y="526" text-anchor="middle">Client</text><text class="ns" x="340" y="548" text-anchor="middle">client context</text></g>
-   <g><rect class="nd" x="5" y="269" width="180" height="62" rx="8"/><text class="nt" x="95" y="296" text-anchor="middle">Practice</text><text class="ns" x="95" y="318" text-anchor="middle">skill practice</text></g>
-  </svg>
-  <figcaption><ul class="legend"><li class="lg-in">Evidence and context flow in</li><li class="lg-out">Decisions flow out to you</li></ul><p class="cycle-line">Practice evidence → your judgment → targeted coaching → new practice → reassessment</p></figcaption>
- </figure></div>
-  <div class="orient-hub"><h3>Evidence in. Decisions out. New evidence returns.</h3><p>The Hub is an organizational model for continuous team development: <strong>AI recommends; the manager decides.</strong> This tour illustrates the intended workflow; it does not create real assignments or results.</p></div>
- </div>
-</section>
-<section class="orient tour-slide tour-page tour-last" data-tour-step="6" hidden aria-labelledby="tourH6">
- <div class="wrap tour-page-inner">
-  <p class="orient-k">Tour 7 of 7 · YOUR TURN</p>
-  <h2 id="tourH6" tabindex="-1">Now suppose you lead this team. How will you supervise them?</h2>
-  <p class="orient-sub">Five fictional agents have passed their training reports. Yet you have only 30 minutes for one-to-one coaching this week. The reports alone do not tell you who needs help most.</p>
-  <div class="orient-hub"><h3>Take the manager's seat.</h3><p>Choose David, Michelle, John, Grace or Anna. Compare what the simulated practice actually shows with the AI's suggestion. You make the decision, allocate time and leave with a manager action plan.</p></div>
-  <div class="hero-cta"><button class="btn" type="button" id="startDemo">Start the interactive manager demo</button><span>About four minutes for the decision and plan. Fictional case; nothing is sent or saved.</span></div>
- </div>
-</section>
-</div>
-<div class="tour-controls wrap" aria-label="Guided tour controls">
- <span class="tour-progress" id="tourProgress" role="status" aria-live="polite">1 of 7 · Welcome</span>
- <div class="tour-buttons"><button type="button" class="btn secondary" id="tourPrev" disabled>Previous</button>
- <button type="button" class="btn" id="tourNext">Next: Knowledge Studio</button>
- <button type="button" class="linkbtn tour-skip" id="tourSkip">Skip tour and make a decision</button></div>
-</div>
-</div>
-
 <nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
 <div class="ctxbar" id="ctxbar" hidden><div class="wrap cx" role="region" aria-label="Where you are in the demo"><p class="cx-now"><span>Exploring</span> <b id="cxNow"></b></p><dl class="cx-dl"><div><dt>Your pick</dt><dd id="cxPick"></dd></div><div class="cx-ai"><dt>AI suggests</dt><dd id="cxAI"></dd></div><div><dt>Decision</dt><dd id="cxAct"></dd></div></dl><button type="button" class="cx-switch" id="cxSwitch" hidden></button><span class="sr" id="cxLive" role="status" aria-live="polite"></span></div></div>
 <main>
@@ -1511,25 +1389,6 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-copyplan]'))cop
 
 /* reveal summary: jump straight to the manager's choice */
 document.addEventListener('click',e=>{if(!e.target.closest('#toDecision'))return;$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const b=document.querySelector('#decideRow [data-decide]:not(:disabled)');if(b)b.focus({preventScroll:true})},still?0:650)});
-/* Guided platform tour. Existing three-step manager demo starts only after the orientation. */
-const TOUR_LABELS=['Welcome','Knowledge Studio','Practice Studio','Client Studio','Leadership Studio','Team Growth & Retention Hub','Manager challenge'];
-const TOUR_SLIDES=[...document.querySelectorAll('#tourShell [data-tour-step]')];
-let tourStep=0;
-function tourShow(i,focus=true){
- tourStep=Math.max(0,Math.min(TOUR_SLIDES.length-1,i));
- TOUR_SLIDES.forEach((slide,k)=>{slide.hidden=k!==tourStep});
- $('tourProgress').textContent=(tourStep+1)+' of '+TOUR_SLIDES.length+' · '+TOUR_LABELS[tourStep];
- $('tourPrev').disabled=tourStep===0;
- $('tourNext').hidden=tourStep===TOUR_SLIDES.length-1;
- if(tourStep+1<TOUR_SLIDES.length)$('tourNext').textContent='Next: '+TOUR_LABELS[tourStep+1];
- if(focus){$('tourShell').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});
- const head=TOUR_SLIDES[tourStep].querySelector('h1,h2');
- if(head)head.focus({preventScroll:true});}
-}
-$('tourPrev').onclick=()=>tourShow(tourStep-1);
-$('tourNext').onclick=()=>tourShow(tourStep+1);
-$('tourSkip').onclick=()=>{$('startDemo').click()};
-tourShow(0,false);
 /* hero action: go straight to the first decision */
 $('startDemo').onclick=()=>{go(0,true);$('h0').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const i=document.querySelector('#team input:not(:disabled)');if(i)i.focus({preventScroll:true})},still?0:650)};
 
@@ -1544,5 +1403,9 @@ function go(i,quiet){step=i;[0,1,2].forEach(k=>{$('p'+k).hidden=k!==i});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go)});
 addEventListener('hashchange',()=>{const i=NAMES.indexOf(location.hash.slice(1));if(i>=0&&i!==step)go(i)});
 const h=NAMES.indexOf(location.hash.slice(1));go(h<0?0:h,true);
+if(new URLSearchParams(location.search).get('tour')==='complete' && location.hash==='#make-the-call') {
+  addEventListener('load',()=>{setTimeout(()=>{$('h0').scrollIntoView({behavior:'auto',block:'start'})},0)}, {once:true});
+}
+
 </script>
 </body></html>
