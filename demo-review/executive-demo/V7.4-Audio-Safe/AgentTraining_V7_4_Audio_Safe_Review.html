@@ -136,6 +136,15 @@ function say(t){
       if(token!==voiceToken)return;
       speaking=false;
       if(voiceTimer!==null){clearTimeout(voiceTimer);voiceTimer=null}
+      // The final narration may finish before its nominal 03:30 window.
+      // Close immediately rather than leaving an unwanted silent tail.
+      if(playing&&voice&&cueAt(time)===CUES.length-1){
+        time=TOTAL;
+        render();
+        play(false);
+        voiceMessage('Narration complete. The Manager Demo button remains on screen.');
+        return;
+      }
       voiceMessage('Sentence complete. Continuing the preview without cutting speech.');
     };
     u.onerror=(event)=>{
