@@ -89,6 +89,32 @@ const minOptions = page => page.$$eval('#minOpts input', els => els.map(i => [+i
 const noOverflow = page => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
 describe('Manager Demo: five complete learner paths', () => {
+  test('welcomes the manager and explains all four Studios and Hub before the team decision', async () => {
+    const { page, context, errors } = await openDemo();
+    try {
+      assert.match(await text(page, '.hero .welcome-k'), /Welcome to AgentTraining\.ai/);
+      assert.equal(await page.locator('#platform-tour .orient-card').count(), 4);
+      const studios = await page.locator('#platform-tour .orient-card h3').allTextContents();
+      assert.deepEqual(studios.map(s => s.trim()), [
+        'Practice Studio', 'Client Studio', 'Knowledge Studio', 'Leadership Studio',
+      ]);
+      for (const card of await page.locator('#platform-tour .orient-card').all()) {
+        assert.ok((await card.locator('p').textContent()).trim().length > 50, 'Every Studio explains what it does');
+      }
+      assert.match(await text(page, '#platform-tour .orient-hub'), /AI recommends\. The manager decides\./);
+      const order = await page.evaluate(() => ({
+        welcome: document.querySelector('.hero').compareDocumentPosition(document.querySelector('#platform-tour')),
+        next: document.querySelector('#platform-tour').compareDocumentPosition(document.querySelector('#p0')),
+      }));
+      assert.ok(order.welcome & 4);
+      assert.ok(order.next & 4);
+      await page.click('#startDemo');
+      await page.waitForFunction(() => document.activeElement?.closest('#team') !== null);
+      assert.equal(await page.locator('#team label[data-p]').count(), 5);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
+
   for (const id of Object.keys(EXPECT)) {
     test(`picking ${NAMES[id]} opens ${NAMES[id]}'s own case`, async () => {
       const { page, context, errors } = await openDemo();
