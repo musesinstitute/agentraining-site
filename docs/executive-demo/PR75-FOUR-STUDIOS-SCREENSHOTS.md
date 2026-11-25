@@ -9,14 +9,22 @@ Welcome → Knowledge → Practice → Client → Leadership → Hub → five-le
 
 Each Studio chapter should take ~15–20 seconds of optional narration, with four or five short captions, a recognisable feature highlight, and persistent Previous / Next arrows. Show the real UI crop in the chapter's **existing right-hand .visual area** (rather than an additional full-width section below the fold). Keep the intro compact and mobile responsive; avoid repeating the three-minute film.
 
-Capture exactly four separate real screenshots at desktop resolution, with approved **fictional or test** data, from the PR preview's actual product pages or an authenticated pilot TEST account. Never show real customer names, emails, policy details, credentials or other private records. If a view is gated and not accessible for capture, do not fabricate an image; retain the honest existing icon/flow visual.
+Capture exactly four **visually distinct** real screenshots from three product pages: Knowledge, Simulator and Manager. Client and Leadership both use different, tightly cropped areas of `manager.html?pilot=1` without the shared header or navigation. Use an authenticated pilot TEST account and **fictional or test** data only. Never show real customer names, emails, policy details, credentials or other private records. If a view is gated and not accessible for capture, do not fabricate an image; retain the honest existing icon/flow visual.
 
 | Studio | Real source to capture | Focus on 1–2 existing UI features | Caption / talk track | Do NOT imply |
 | --- | --- | --- | --- | --- |
 | Knowledge | `knowledge.html?pilot=1` | Source library / AI summary with manager review; approved practice draft if visible | “Managers weigh importance; trainees need relevance. AI facilitates that handoff.” | A working individualized importance/relevance ranking engine unless proven |
 | Practice | `simulator.html?ref=demo&pilot=1` | AI-simulated client interaction plus evidence/feedback | “Your training goal becomes an interactive client scenario.” | An unverified automatic ingestion → live scenario pipeline |
-| Client | Current Client Studio test flow (check `client.html` and pilot links) | A fictional client's case notes, objections and next steps | “Recorded client context helps focus coaching.” | Automatic capture of real client calls or a verified AI analysis when unavailable |
-| Leadership | `manager.html?pilot=1`, plus existing Team Messages if needed | Practice Results and “Message Learner” / assignment controls (choose the most coherent single crop) | “AI helps you prepare what to discuss. You message and coach the trainee directly.” | Built-in live two-way chat if the current system offers only asynchronous messages |
+| Client | `manager.html?pilot=1` — **Client Cases** | One fictional case card with needs, objections and next step; crop out page header and other dashboard sections | “Recorded client context helps focus coaching.” | Automatic capture of real client calls or a verified AI analysis when unavailable |
+| Leadership | `manager.html?pilot=1` — **Practice Results / Assign Practice** | Completed practice score and coaching summary, and existing assignment controls if genuinely visible in one crop. Keep **Client Cases** completely out of frame, as well as the shared header | “AI helps you prepare what to discuss. You coach the trainee directly.” | Built-in live two-way chat if the current system offers only asynchronous messages; an artificially combined screenshot |
+
+### Prepare the test account before capture
+
+An empty dashboard is not a useful sales demo. Before capturing, use a dedicated test manager and learner to (1) upload a non-sensitive company learning item, run its available AI analysis and approve it if the product supports that action; (2) assign and complete a practice scenario so Practice Results displays a score and coach summary; (3) create three or four **fictional** client cases with needs, objections and next steps. Ensure no actual customer names, emails, policy details or identities appear anywhere in the capture. Do not use a screenshot showing only `0 cases`, `0 results`, or `Loading team priorities…`.
+
+**Evidence boundary:** the current Knowledge UI has AI summaries and manager review, but an automated individualized importance/relevance ranking engine is **not verified**. Never manufacture a ranked list or a ranking approval button; capture only controls and analysis truly visible in the deployed product. Similarly, no automatic capture of prospect calls or full real-time chat should be implied. If a claim cannot be supported by the UI, keep the existing illustrated icon instead.
+
+`client.html` is a marketing/explanation page (e.g., “Two growth pipelines,” “CRM tracks. We develop.”), **not** the Client Cases product screen. Do not use it as a capture source. Although Client and Leadership screenshots both come from `manager.html`, their crops must look clearly different and must not include the shared top page header or sidebar.
 
 ### Crop and UI rules
 
