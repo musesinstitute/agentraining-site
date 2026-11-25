@@ -50,3 +50,7 @@ h1{font:400 clamp(32px,4.5vw,61px)/1.09 Georgia,serif;letter-spacing:-.025em;mar
 .narration-status{font-size:12px;color:var(--muted);margin:8px 0 0;min-height:18px}
 @media(max-width:760px){.studio-icon{width:52px;height:52px}.studio-icon svg{width:35px;height:35px}.narration{padding:14px 16px}.narration-lines li{font-size:14px}.narration-head{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.narration-lines li{transition:none}}
+
+/* Keep the active narration line clear of the sticky tour navigation on phones. */
+html{scroll-padding-bottom:160px}
+.narration-lines li{scroll-margin-bottom:160px;scroll-margin-top:18px}
