@@ -41,6 +41,8 @@
     speech.onstart = () => {
       if (active && id === token) {
         mark(current);
+        // Keep each spoken caption in view, including on narrow phones with a sticky footer.
+        lines[current].scrollIntoView({ block: 'center', behavior: 'auto' });
         status.textContent = 'Reading caption ' + (current + 1) + ' of ' + lines.length;
       }
     };
