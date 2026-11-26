@@ -1,6 +1,8 @@
 # PR #75 — Four Studios screenshot capture and placement brief
 
-Status: **planned; no screenshots have been captured or added.** Only use current, real product UI. Do not synthesize or fabricate a dashboard, AI ranking, client interaction, or live messaging. This brief is for visual UAT and the next asset pass, not proof of implementation.
+Status: **Four product screenshots captured and embedded in the Manager Tour.** Each chapter links to its full-size image and identifies the data as illustrative.
+
+The Knowledge, Client and Leadership captures were made on November 26, 2026 in the PR #75 Deploy Preview. Knowledge shows the original fictional premium-comparison notes after AI analysis at Manager Review, with the approval control visible. Client shows one fictional case card. Leadership shows the competency scores and Coach summary from a completed Quick Practice using that fictional case. The Leadership crop excludes account details and the separate assignment panel. Practice uses the previously captured simulator screenshot. The four screenshots illustrate the Studios independently.
 
 ## Placement in the pre-Pilot manager demo
 
