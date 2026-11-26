@@ -117,13 +117,25 @@ describe('Manager Demo: five complete learner paths', () => {
     } finally {await context.close();}
   });
 
-  test('all tour chapters show distinct icons, full captions and opt-in speech controls', async () => {
+  test('tour chapters show product screenshots or icons, full captions and opt-in speech controls', async () => {
     const {page, context, errors}=await openDemo();
     const slugs=['welcome','knowledge','practice','client','leadership','hub','challenge'];
+    const studioSlugs = new Set(['knowledge', 'practice', 'client', 'leadership']);
     try {
       for(const slug of slugs){
         await page.goto(baseUrl+'/manager-tour-'+slug+'.html');
-        assert.equal(await page.locator('.studio-icon svg').count(),1,slug+' icon missing');
+        if (studioSlugs.has(slug)) {
+          const figure = page.locator('.studio-screenshot');
+          const image = figure.getByRole('img');
+          const asset = await image.getAttribute('src');
+          assert.match(asset, new RegExp('PR75-' + slug + '-Studio\\.webp$', 'i'));
+          assert.equal(await image.evaluate(element => element.complete && element.naturalWidth > 0), true, slug + ' screenshot failed to load');
+          assert.ok(await image.getAttribute('alt'), slug + ' screenshot alt text missing');
+          assert.equal(await figure.getByRole('link').getAttribute('href'), asset);
+          assert.match(await figure.locator('figcaption').textContent(), /Actual product UI — illustrative test data/);
+        } else {
+          assert.equal(await page.locator('.studio-icon svg').count(),1,slug+' icon missing');
+        }
         assert.equal(await page.locator('.narration-lines [data-caption-line]').count()>=4,true,slug+' captions missing');
         assert.equal(await page.locator('.narration-lines [data-caption-line]:visible').count()>=4,true,slug+' captions not visible');
         assert.equal(await page.locator('#tourRead').count(),1,slug+' listen button missing');
@@ -152,7 +164,7 @@ describe('Manager Demo: five complete learner paths', () => {
       assert.equal(await noOverflow(page),true);
       await page.click('.footer .nav .previous');
       assert.match(page.url(),/manager-tour-welcome[.]html$/);
-      await page.click('.footer .nav .previous');
+      await page.click('.footer .nav .skip');
       await page.waitForURL(/manager-demo-review[.]html[?]tour=complete#make-the-call$/);
       await pickAndLock(page,'david');
       assert.equal(await text(page,'#cxPick'),'David');
