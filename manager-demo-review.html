@@ -1,8 +1,1412 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgentTraining.ai | Manager Demo — Review Edition</title>
-<style>:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17243a;background:#f3f6fc}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#10234a,#2455ba);color:#fff;padding:54px max(24px,calc((100vw - 1000px)/2))}main{max-width:1000px;margin:auto;padding:30px 22px 70px}h1{font-size:clamp(30px,5vw,50px);line-height:1.15;margin:12px 0}h2{font-size:23px}.sub{font-size:18px;max-width:750px;line-height:1.6}.tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.card{background:white;border:1px solid #dce4f2;border-radius:16px;padding:23px;margin:16px 0;box-shadow:0 6px 18px #17243a09}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.grid .card{margin:0}.btn{display:inline-block;background:#2455ba;color:white;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:750;margin:8px 8px 0 0}.btn.secondary{background:#e8efff;color:#143879}.muted{color:#53647b;line-height:1.55}li{margin:8px 0}a:focus-visible{outline:3px solid #f2ad38;outline-offset:3px}</style></head>
-<body><header><div class="tag">AgentTraining.ai · External review edition · PR #61</div><h1>Train Every Advisor.<br>Coach Every Manager.<br>Grow Every Team.</h1><p class="sub">One guided executive demo: identify team risk, understand the Four Studios, examine evidence, and make accountable coaching decisions across five fictional advisors.</p><a class="btn" href="manager-demo-opening.html">Start the four-page demo →</a></header>
-<main><section class="card"><h2>Review scope</h2><p class="muted">This is a pre-merge demonstration for feedback. The learner profiles, scores, dialogue, recommendations and Day 7 outcomes are fictional. The decision controls are simulations; no real assignments, notifications or learner records are created by the demo.</p></section>
-<section class="grid" aria-label="Four pages"><div class="card"><div class="tag">01 · Risk</div><h2>Manager Risk Briefing</h2><p class="muted">Why performance gaps go unnoticed and what managers need to see.</p><a class="btn secondary" href="manager-demo-opening.html">Open page 1 →</a></div><div class="card"><div class="tag">02 · Architecture</div><h2>Four Studios & Hub</h2><p class="muted">Practice, Client, Knowledge and Leadership connected by a team growth loop.</p><a class="btn secondary" href="manager-demo-hub.html">Open page 2 →</a></div><div class="card"><div class="tag">03 · Workflow</div><h2>Three Phases</h2><p class="muted">Follow the manager's steps from signal to action and reassessment.</p><a class="btn secondary" href="manager-demo-phases.html">Open page 3 →</a></div><div class="card"><div class="tag">04 · Decision</div><h2>Mission Control V2.2</h2><p class="muted">Current master V2.2: evidence limits, privacy disclosures, manager judgment and reassessment.</p><a class="btn secondary" href="mission-control-v2-1.html">Open page 4 →</a></div></section>
-<section class="card"><h2>What to test</h2><ol><li>Navigate pages 1–4. On page 4 (Mission Control V2.2), use your browser’s Back button to return to the demo; that existing master page has no in-page return link.</li><li>Explore current V2.2 scenarios, evidence limits and privacy disclosures.</li><li>Review V2.2 coaching-resource controls and manager decisions.</li><li>Review override rationale and what evidence would change a judgment.</li><li>Review reassessment reporting and distinguish simulated from real evidence.</li><li>Check on mobile and keyboard. Report any unclear claims, confusing controls, or broken links.</li></ol><p class="muted"><strong>Reviewer question:</strong> Would this help an insurance or financial advisory team manager make a better coaching decision than using a generic AI chat alone? What is missing?</p></section>
-<section class="card"><h2>Before merging</h2><p class="muted">Please send feedback to the project owner. This page is a review guide, not proof that live browser UAT has passed. Production deployment and PR merge remain pending review.</p><a class="btn" href="manager-demo-opening.html">Begin review →</a></section></main></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AgentTraining.ai | Manager Demo</title>
+<meta name="description" content="Welcome to AgentTraining.ai: meet four connected Studios and the Team Growth and Retention Hub, then take the manager's seat to make coaching decisions and sketch a 14-day pilot.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* Design idea: the report and what is behind it.
+   Light "paper" surfaces show what training reports say. Dark "stage" surfaces show what simulated practice reveals.
+   The one orchestrated moment is the report cards turning over. Highlighter yellow is reserved for evidence. */
+:root{
+ --paper:#f7f9fd;--sheet:#fff;--ink:#0f1b33;--royal:#1f4fd6;--royal-dk:#1a42b6;--sky:#eaf1ff;--ink-2:#2856dc;--slate:#56637a;--body:#2b3a57;--line:#d4dbe8;--line-dark:#6a90f0;--mist:#dbe4ff;--pale:#eef3ff;
+ --blue:#2a5bd7;--hi:#ffe600;--pass:#1f7a55;--amber:#b86e12;
+ --serif:'Source Serif 4',Georgia,'Times New Roman',serif;--sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,p{margin:0}
+[hidden]{display:none!important}
+.wrap{max-width:1080px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px}
+.band{padding-top:72px;padding-bottom:80px}
+.stage{background:var(--royal);color:#fff}
+.muted{color:var(--slate)}.small{font-size:13.5px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.stage :focus-visible,.plan :focus-visible{outline-color:var(--hi)}
+.btn{display:inline-block;border:0;border-radius:6px;background:var(--royal);color:#fff;padding:17px 28px;font:600 17px var(--sans);text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--royal-dk)}
+.btn.secondary{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn.secondary:hover{background:#0f1b330d}
+.btn.hi{background:var(--hi);color:var(--ink)}.btn.hi:hover{background:#fff04d}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:24px}
+.fade{opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}.fade.in{opacity:1;transform:none}
+.hl{background:linear-gradient(var(--hi),var(--hi)) no-repeat 0 50%/100% 100%;color:var(--ink);padding:.06em .28em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+@keyframes swipe{from{background-size:0% 100%;color:inherit}}
+@keyframes stamp{from{opacity:0;transform:rotate(-3deg) scale(1.9)}}
+
+/* hero */
+.hero{background:radial-gradient(ellipse 42% 72% at 71% 50%,#cfdfff 0%,var(--sky) 72%);color:var(--ink);padding:48px 0 52px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:48px;align-items:center}
+.hero .brand span{color:var(--slate)}
+.brand{font:600 15px var(--sans);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.brand span{font-weight:400;color:var(--slate)}
+.brand{align-items:center;gap:12px}.brand .logo{width:34px;height:34px;flex:0 0 34px}
+.wordmark{font:600 23px/1 var(--sans);letter-spacing:-.015em;color:var(--ink)}.brand .wordmark .dot{color:var(--royal);font-weight:600}
+.brand .tag{font-size:13.5px;color:var(--slate);border:1.5px solid #c3d2f5;border-radius:30px;padding:3px 11px;background:#ffffffa8}
+h1{font:400 clamp(34px,3.9vw,56px)/1.06 var(--serif);letter-spacing:-.025em;margin-top:20px;max-width:13em;text-wrap:balance}
+.lede{font-size:clamp(17px,1.4vw,20px);max-width:30em;margin-top:20px;color:var(--body)}
+.decision-hero .wrap{grid-template-columns:minmax(0,1fr);max-width:920px}.decision-hero .hero-text{max-width:800px}
+.hero-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:28px}
+.hero-cta .btn{font-size:18px;padding:16px 26px;box-shadow:0 12px 26px -12px #1f4fd6}
+.hero-cta span{font-size:14.5px;color:var(--slate)}
+.fiction{margin-top:22px;font-size:14px;color:var(--slate)}
+.welcome-k{font:600 12px/1.4 var(--sans);color:var(--royal);letter-spacing:.13em;text-transform:uppercase;margin-top:24px}
+/* step navigation: a true sequence, so it is numbered */
+.stepsbar{border-bottom:1px solid var(--line)}
+.steps{display:flex;gap:26px;list-style:none;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
+.steps button{background:none;border:0;border-bottom:3px solid transparent;padding:16px 0 12px;font:500 15px var(--sans);color:var(--slate);cursor:pointer;display:flex;gap:10px;align-items:baseline;text-align:left}
+.steps button i{font:400 26px/1 var(--serif);font-style:normal;color:#9fb3dc}
+.steps button[aria-current=step]{color:var(--ink);border-bottom-color:var(--royal);font-weight:600}
+.steps button[aria-current=step] i{color:var(--royal)}
+
+h2{font:400 clamp(32px,4.8vw,58px)/1.06 var(--serif);letter-spacing:-.02em;max-width:18em;text-wrap:balance}
+.intro{font-size:19px;color:var(--body);max-width:36em;margin-top:20px}
+
+/* step 1: five training reports that turn over */
+.team{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:32px;perspective:1600px}
+.person{display:block;position:relative;cursor:pointer}
+.person input{position:absolute;opacity:0;inset:0;cursor:pointer;z-index:2}
+.flip{display:grid;height:100%;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.3,.7,.2,1)}
+.face{grid-area:1/1;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:6px;padding:14px 16px 18px;min-height:206px}
+.front{background:var(--sheet);border:1px solid var(--line);box-shadow:0 14px 26px -18px #0f1b3366}
+.back{background:var(--royal);color:#fff;transform:rotateY(180deg)}
+.person.flipped .flip{transform:rotateY(180deg)}
+.slip{display:block;font-size:12.5px;color:var(--slate);padding-bottom:9px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.back .slip{color:var(--mist);border-bottom-color:var(--line-dark)}
+.person b{display:block;font:600 25px/1.1 var(--serif)}
+.paper{display:block;font-size:14px;font-weight:500;color:var(--pass);margin-top:8px}
+.paper:before{content:"\2713\00a0"}
+.paper+.paper{margin-top:2px}
+.ctx{display:block;font-size:13.5px;color:var(--slate);margin-top:12px}
+.person:hover .front{border-color:var(--ink)}
+.person.picked .front{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue),0 14px 26px -18px #0f1b3366}
+.person:focus-within .front{outline:3px solid var(--blue);outline-offset:3px}
+.locked .person,.locked .person input{cursor:default}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.mark{display:none;font:600 12px var(--sans);padding:3px 8px;border-radius:3px;margin-bottom:8px}
+.person.picked .mark.mine{display:inline-block;color:#fff;box-shadow:inset 0 0 0 1.5px #fff}
+.person.top .mark.here{display:inline-block;background:var(--hi);color:var(--ink)}
+.person.top .back{box-shadow:0 0 0 4px var(--hi),0 18px 34px -16px #1f4fd6}
+.pill{display:inline-block;font:600 12.5px var(--sans);padding:3px 9px;border-radius:3px}
+.pill.thin{background:#f6e7e2;color:#8f3f2c}.pill.building{background:#f6eccc;color:#73540c}.pill.consistent{background:#dff0e7;color:#1f6a4b}
+.back .pill{margin-top:12px;background:none;border:1px solid currentColor}
+.back .pill.thin{color:#ffb4a1}.back .pill.building{color:#f0d27a}.back .pill.consistent{color:#8fd9b3}
+.back .t{display:block;font-size:14.5px;line-height:1.4;margin-top:10px;color:var(--pale)}
+.strength{display:flex;align-items:center;gap:8px;margin-top:10px;font:600 13px var(--sans);color:#fff}
+.meter{display:inline-flex;gap:3px}.meter i{display:block;width:7px;height:13px;border:1.5px solid #fff;border-radius:1px}
+.s-thin .meter i:nth-child(1),.s-building .meter i:nth-child(-n+2),.s-consistent .meter i{background:#fff}
+.prio{display:block;margin-top:12px;padding-top:10px;border-top:1px solid var(--line-dark);font-size:13.5px;color:var(--mist)}
+.prio strong{display:block;font:600 16px/1.25 var(--serif);color:#fff;margin-top:2px}
+.person.top .prio strong{color:var(--hi)}
+.person.top .back .t{color:var(--ink)}
+
+/* the reveal: what the report says against what practice shows */
+.verdict{padding:68px 0 64px;outline:0;scroll-margin-top:230px}
+.verdict h3{font:400 clamp(30px,4.6vw,56px)/1.08 var(--serif);letter-spacing:-.02em;max-width:17em;text-wrap:balance}
+.versus{display:grid;grid-template-columns:1fr 1fr;margin-top:44px}
+.vs{padding:30px 32px 34px}
+.vs.report{background:var(--sheet);color:var(--ink);border-radius:5px 0 0 5px}
+.vs.practice{border:1px solid var(--line-dark);border-left:0;border-radius:0 5px 5px 0}
+.vs-label{font:500 15px var(--sans);color:var(--slate)}.vs.practice .vs-label{color:var(--mist)}
+.vs-fig{font:600 clamp(76px,12vw,150px)/.9 var(--serif);letter-spacing:-.04em;margin-top:18px;color:var(--pass)}
+.vs.practice .vs-fig{color:var(--hi);font-size:clamp(96px,15vw,200px);transform-origin:left 80%;animation:impact .75s cubic-bezier(.2,1.6,.4,1) .5s backwards;text-shadow:0 0 42px #ffe60066}
+@keyframes impact{0%{opacity:0;transform:scale(1.9)}60%{opacity:1}}
+.vs-fig small{font-size:.34em;font-weight:400;letter-spacing:0;margin:0 .14em}
+.vs-cap{margin-top:18px;font-size:16px;max-width:26em}.vs.practice .vs-cap{color:var(--pale)}
+.sim-flag{display:inline-block;font:600 13px var(--sans);color:var(--ink);background:var(--pale);padding:4px 10px;border-radius:3px;margin-bottom:18px}
+.exec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:1px;margin-top:30px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:7px;overflow:hidden;align-items:stretch}
+.exec>div{background:var(--ink-2);padding:14px 18px 16px}
+.exec span{display:block;font-size:13px;color:var(--mist)}
+.exec b{display:block;font:600 clamp(17px,1.6vw,20px)/1.25 var(--serif);color:#fff;margin-top:4px}
+.exec .ex-ai{background:repeating-linear-gradient(135deg,var(--ink-2) 0 10px,#2d5ce0 10px 20px)}
+.exec .ex-ai b{color:var(--hi)}
+.exec .btn{border-radius:0;align-self:stretch;display:flex;align-items:center;justify-content:center;padding:14px 24px;font-size:16.5px}
+.moment{margin:44px 0 0;background:var(--ink-2);border-radius:6px;padding:24px 28px 26px;border-left:5px solid var(--hi)}
+.moment figcaption{font:500 14px var(--sans);color:var(--mist)}
+.moment i{display:block;font:600 13px var(--sans);font-style:normal;color:var(--mist);margin-bottom:2px}
+.m-client{margin-top:16px;font:400 clamp(17px,1.7vw,20px)/1.5 var(--mono);color:#fff}
+.m-agent{margin-top:14px;font:400 clamp(18px,1.9vw,23px)/1.5 var(--mono)}
+.m-agent .hl{animation:swipe .8s 1.1s backwards}
+.m-also{margin-top:18px;padding-top:14px;border-top:1px solid var(--line-dark);font-size:14.5px;color:var(--pale)}
+.chainwrap{margin-top:44px}
+.groups{display:grid;grid-template-columns:3fr 1fr 1fr;gap:0;font:600 13.5px var(--sans);color:#fff}
+.groups span{padding:0 20px 10px;border-bottom:3px solid #fff;margin-right:8px}
+.groups span:nth-child(2){border-bottom-style:dashed}
+.groups span:nth-child(3){border-bottom-color:var(--hi);color:var(--hi);margin-right:0}
+.attempts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.tr{background:var(--ink-2);border-radius:5px;padding:18px 22px 22px}
+.tr-h{font:500 13.5px var(--sans);color:var(--mist);margin-bottom:6px}
+.tr p{font:400 15px/1.65 var(--mono);margin-top:12px;color:#e8edf8}
+.tr i{display:block;font:600 13px var(--sans);font-style:normal;color:var(--mist)}
+.tr .hl{animation:swipe .8s 1s backwards}
+.sum .hl.swipe{animation:swipe .9s 2.4s backwards}
+.tr:nth-child(2) .hl{animation-delay:1.5s}
+
+.chain{margin-top:10px;border:1px solid var(--line-dark);border-radius:7px;overflow:hidden;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.chain>div{padding:20px 20px 22px;border-left:1px solid var(--line-dark);position:relative;background:var(--ink-2)}
+.chain>div:first-child{border-left:0}
+.chain>div:after{content:"";position:absolute;right:-9px;top:50%;width:16px;height:16px;margin-top:-8px;background:var(--ink-2);border-top:1px solid var(--line-dark);border-right:1px solid var(--line-dark);transform:rotate(45deg);z-index:1}
+.chain>div:last-child:after{content:none}
+.chain .ck{font:500 13px var(--sans);color:var(--mist)}
+.chain .cv{font:400 21px/1.2 var(--serif);margin-top:8px;color:#fff;text-wrap:balance}
+.chain .cv big{display:block;font:600 52px/1 var(--serif);letter-spacing:-.03em;color:var(--hi)}
+.chain .cv big small{font-size:.42em;font-weight:400;letter-spacing:0}
+.chain .cn strong{color:#fff}
+.chain .ai-cell{background:repeating-linear-gradient(135deg,var(--ink-2) 0 10px,#2d5ce0 10px 20px)}
+.chain>div[data-g]:before{display:none}
+.chain .cn{font-size:13.5px;color:var(--pale);margin-top:8px}
+.tier{display:inline-block;margin-top:10px;font:600 11.5px var(--sans);padding:3px 8px;border-radius:3px;border:1px solid currentColor}
+.tier.sim{color:#8fd9b3}.tier.lim{color:#f0d27a}.tier.ill{color:var(--mist)}
+.chain .decide-cell{background:var(--royal)}
+.chain .decide-cell.set{background:var(--hi)}.chain .decide-cell.set .ck,.chain .decide-cell.set .cn{color:var(--ink)}.chain .decide-cell.set .cv{color:var(--ink);font-weight:600}
+.chain .decide-cell.set:after{background:var(--hi)}
+.sum{margin-top:44px;font:400 clamp(22px,3vw,34px)/1.25 var(--serif);max-width:25em;text-wrap:balance}
+.stage .note{margin-top:14px;font-size:13.5px;color:var(--mist)}
+
+details.all{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+details.all summary{cursor:pointer;font-weight:600;padding:16px 0}
+.evidence{padding-bottom:6px}
+.ev{display:grid;grid-template-columns:130px 1fr 280px;gap:20px;padding:16px 0;border-top:1px solid var(--line)}
+.ev .who b{font:600 21px var(--serif)}.ev .who span{display:block;font-size:13px;color:var(--slate);margin-top:2px}
+.ev.top .who b{background:linear-gradient(transparent 60%,var(--hi) 60%)}
+.ev p{font-size:15px;margin-top:6px}
+.sug b{display:block;font-size:15px}.sug span{font-size:14px;color:var(--slate)}
+
+/* the manager's decision */
+.lab{margin-top:48px}
+.lab h3{font:400 clamp(24px,3.2vw,38px)/1.15 var(--serif);letter-spacing:-.01em;max-width:20em;text-wrap:balance}
+.lab-sub{margin-top:10px;color:var(--slate)}
+.demo-badge{display:inline-block;vertical-align:middle;font:600 13px var(--sans);letter-spacing:0;color:var(--ink);background:var(--pale);border:1.5px solid #c3d2f5;padding:3px 9px;border-radius:3px;margin-left:8px}
+.demo-flag{display:inline-block;margin-top:10px;font:600 14px var(--sans);color:var(--ink);border-left:4px solid var(--hi);background:var(--sheet);padding:7px 12px}
+.actionset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:26px}
+.actionset button{text-align:left;background:var(--sheet);border:1.5px solid var(--line);border-radius:6px;padding:20px 20px 22px;cursor:pointer;color:var(--ink);font-family:var(--sans)}
+.actionset button b{display:block;font:600 25px/1.1 var(--serif)}
+.actionset button small{display:block;margin-top:10px;font-size:14.5px;color:var(--body)}
+.actionset button small span{display:block;font-size:12.5px;font-weight:600;color:var(--slate);margin-bottom:2px}
+.actionset button[aria-pressed=true] small span{color:var(--mist)}
+.actionset .sugg{display:inline-block;font:600 12px var(--sans);font-style:normal;padding:3px 8px;border-radius:3px;border:1.5px dashed var(--royal);color:var(--royal);margin-bottom:10px}
+.actionset button[aria-pressed=true] .sugg{border-color:#fff;color:#fff}
+.ai-tag{display:inline-block;font:600 12.5px var(--sans);padding:2px 8px;border-radius:3px;border:1.5px dashed var(--royal);color:var(--royal);margin-right:6px}
+.actionset button:hover:not(:disabled){border-color:var(--ink)}
+.actionset button[aria-pressed=true]{background:var(--royal);border-color:var(--royal);color:#fff;box-shadow:inset 0 -5px 0 var(--hi)}
+.actionset button[aria-pressed=true] small{color:#fff}
+.actionset button:disabled{cursor:default}
+.optionalDeep{margin-top:22px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.optionalDeep>summary{cursor:pointer;font-weight:600;padding:14px 0}
+.optionalDeep[open]{padding-bottom:18px}
+.bound{border-left:4px solid var(--hi);background:var(--sheet);padding:12px 16px;font-size:14.5px}
+.resourcegrid{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.resourcegrid fieldset{display:flex;gap:14px;flex-wrap:wrap;border:0;padding:0;margin:0;align-items:center}
+.resourcegrid legend{font-size:14px;font-weight:600;margin-bottom:4px}
+.resourcegrid label{font-size:14.5px;display:flex;align-items:center;gap:6px;cursor:pointer}
+.resourcegrid input{accent-color:var(--ink)}
+.alloc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.alloc article{background:var(--sheet);border:1px solid var(--line);border-radius:5px;padding:14px 16px}
+.alloc article b{font:600 28px/1.1 var(--serif);display:block}.alloc article span{font-size:13.5px;color:var(--slate);display:block;margin-top:4px}
+.actionnote{font-size:14px;color:var(--slate);margin-top:10px}
+#reasonWrap{margin-top:20px}
+select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--sheet);border:1.5px solid var(--line);border-radius:5px;padding:10px 12px;width:100%;max-width:560px}
+.lab select,.lab textarea{display:block;margin-top:8px}
+.lab textarea{min-height:60px;resize:vertical}
+#decisionStatus{margin-top:14px;font-size:14px;color:var(--slate)}
+.decided{font:400 clamp(22px,3vw,32px)/1.2 var(--serif);margin-top:30px;max-width:27em;text-wrap:balance}
+#decided .small{margin-top:8px}
+.followCard{margin-top:26px}
+.followCard .choices{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.followCard .choices button{cursor:pointer;background:var(--sheet);color:var(--ink);border:1.5px solid var(--ink);border-radius:5px;padding:9px 14px;font:500 15px var(--sans)}
+.followCard .choices button[aria-pressed=true]{background:var(--royal);border-color:var(--royal);color:#fff}
+#outcomeDetail{font-size:15.5px;max-width:44em}
+
+/* step 2 */
+.casequote{margin-top:34px;border-left:4px solid var(--hi);padding-left:24px;max-width:46em}
+.casequote .line{font:400 clamp(22px,2.8vw,31px)/1.28 var(--serif)}
+.casequote .goal{margin-top:14px;color:var(--body)}
+.track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:44px 0 0}
+.track li{position:relative;padding:20px 20px 0 0;border-top:2px solid var(--ink)}
+.track li:before{content:"";position:absolute;top:-8px;left:0;width:14px;height:14px;border-radius:50%;background:var(--royal)}
+.track b{display:block;font:600 20px var(--serif)}
+.track span{display:block;color:var(--slate);font-size:14px;margin-top:6px}
+.stagenote{padding-top:30px;font-size:14px;color:var(--mist)}
+.show{padding:46px 0 56px}
+.show+.show{border-top:1px solid var(--line-dark)}
+.studio-name{font:400 clamp(38px,5.6vw,68px)/1 var(--serif);letter-spacing:-.02em}
+.studio-task{font-weight:400;font-size:clamp(17px,1.7vw,20px);color:var(--pale);max-width:34em;margin-top:14px}
+.showbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:48px;margin-top:38px;align-items:start}
+.col-h{font:500 15px var(--sans);color:var(--mist);margin-bottom:14px}
+.doc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:start;background:var(--sheet);color:var(--ink);border-radius:4px;padding:15px 16px 16px;margin-bottom:10px;box-shadow:0 14px 26px -18px #000;transition:box-shadow .4s}
+.doc b{font:600 17px/1.25 var(--serif)}
+.doc .why{grid-column:1/-1;font-size:14px;color:var(--slate)}
+.rate{font-size:12.5px;color:var(--slate);white-space:nowrap;padding-top:3px}
+.rate.important,.rate.review,.rate.general{font:600 11.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;padding:6px 8px 5px;border:2px solid currentColor;border-radius:3px;transform:rotate(-3deg);animation:stamp .38s cubic-bezier(.2,1.4,.4,1) backwards}
+.rate.important{color:var(--pass)}.rate.review{color:var(--amber)}.rate.general{color:#51607a}
+.doc.is-important{box-shadow:0 0 0 3px var(--hi),0 14px 26px -18px #000}
+.sample-source{margin:22px 0 26px;border-left:4px solid var(--hi);padding:2px 0 2px 18px}
+.sample-source b{display:block;font:500 13.5px var(--sans);color:var(--mist)}
+.sample-source p{font:italic 400 19px/1.45 var(--serif);margin-top:8px;color:#fff}
+.sample-source .hl{background-size:0% 100%;color:inherit;transition:background-size .8s ease .2s,color .4s ease .5s}
+.read .sample-source .hl{background-size:100% 100%;color:var(--ink)}
+.tab{display:inline-block;background:var(--sheet);color:var(--ink);font:600 13.5px var(--sans);padding:7px 16px 6px;border-radius:5px 5px 0 0}
+.filecard{background:var(--sheet);color:var(--ink);border-radius:0 5px 5px 5px;box-shadow:0 14px 26px -18px #000}
+.filecard dl{margin:0}
+.filecard div{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:15px}
+.filecard div:last-child{border-bottom:0}
+.filecard dt{font-size:13.5px;color:var(--slate);padding-top:1px}.filecard dd{margin:0}
+.filecard .hl{background-size:0% 100%;transition:background-size .8s ease .2s}
+.read .filecard .hl{background-size:100% 100%}
+.wait{border:1.5px dashed var(--line-dark);border-radius:5px;padding:34px 26px;font:italic 400 21px/1.35 var(--serif);color:var(--pale)}
+.outblock{padding:16px 0 16px 18px;border-top:1px solid var(--line-dark);border-left:3px solid transparent}
+.outblock:first-child{border-top:0}
+.outblock b{display:block;font:500 13.5px var(--sans);color:var(--mist);margin-bottom:5px}
+.outblock p,.outblock li{font-size:16px;color:#fff}
+.outblock ul{margin:0;padding-left:20px}.outblock li{margin:4px 0}
+.outblock.go{border-left-color:var(--hi)}.outblock.go b{color:var(--hi)}
+.showsum{margin-top:40px;font:400 clamp(22px,3vw,34px)/1.2 var(--serif);max-width:25em;text-wrap:balance}
+.show .small{color:var(--mist);margin-top:10px}
+
+/* two agents, two prescriptions */
+.rx h3{font:400 clamp(28px,4vw,46px)/1.1 var(--serif);letter-spacing:-.015em;max-width:18em;text-wrap:balance}
+.rx-lead{margin-top:14px;font-size:18px;color:var(--body);max-width:40em}
+.rx-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:32px}
+.rx-card{display:flex;flex-direction:column;background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:26px 28px 28px}
+.rx-card h4{font:600 16px var(--sans);color:var(--slate)}
+.rx-type{font:400 clamp(23px,2.6vw,31px)/1.15 var(--serif);margin-top:8px}
+.rx-card dl{margin:22px 0 28px}
+.rx-card dl div{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
+.rx-card dt{color:var(--slate);font-size:14px}.rx-card dd{margin:0}
+.lane{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:auto 0 0;position:relative}
+.lane:before{content:"";position:absolute;left:7px;right:calc(25% - 7px);top:6px;height:2px;background:var(--line)}
+.lane li{position:relative;padding-top:26px;font-size:13.5px;color:var(--slate)}
+.lane li:before{content:"";position:absolute;top:0;left:0;width:14px;height:14px;border-radius:50%;background:var(--sheet);border:2px solid var(--mist)}
+.lane li.start{color:var(--ink);font-weight:600}
+.lane li.start:before{background:var(--hi);border-color:var(--ink);box-shadow:0 0 0 5px #ffe14d66}
+.rx-start{margin-top:20px;font-size:16px;min-height:3.1em}
+.rx-close{margin-top:34px;font:400 clamp(20px,2.4vw,27px)/1.25 var(--serif);max-width:28em}
+.rx .small{margin-top:10px}
+
+/* the loop */
+/* The operating system: four Studios around one Hub. Small preview in the opening, large and interactive in step 2. */
+.sys{margin:0}
+.sys svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;overflow:visible}
+.sys text{font-family:var(--sans)}
+.sys .nd{fill:#fff;stroke:var(--royal);stroke-width:2}
+.sys .nt{font-size:22px;font-weight:600;fill:var(--ink)}
+.sys .ns{font-size:15.5px;fill:var(--slate)}
+.sys .seat .nd{fill:var(--hi);stroke:var(--ink);stroke-width:2}
+.sys .seat .nt,.sys .seat .ns{fill:var(--ink)}
+.sys .hb{fill:var(--royal);stroke:#fff;stroke-width:4}
+.sys .halo{fill:var(--royal);opacity:0;transform-box:fill-box;transform-origin:center;animation:breathe 4.8s ease-out infinite}
+@keyframes breathe{0%{opacity:.26;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}
+.sys .ht{font-size:20px;font-weight:600;fill:#fff}.sys .hs{font-size:14.5px;fill:var(--mist)}
+.sys .lp{fill:none;stroke:#8fb0ff;stroke-width:2;stroke-dasharray:7 9;animation:flow 26s linear infinite}
+.sys .ar{fill:#8fb0ff}
+.sys .ein line{stroke:var(--royal);stroke-width:3}.sys .ein polygon{fill:var(--royal)}
+.sys .dout .dl-under{stroke:var(--ink);stroke-width:12;stroke-linecap:round}
+.sys .dout .dl{stroke:var(--hi);stroke-width:7;stroke-linecap:round}
+.sys .dout polygon{fill:var(--hi);stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+.legend{list-style:none;padding:0;margin:14px auto 0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-size:14px;color:var(--body);max-width:520px}
+.legend li{display:flex;align-items:center;gap:8px}
+.legend li:before{content:"";display:inline-block;width:26px;flex:0 0 26px}
+.legend .lg-in:before{height:3px;background:var(--royal)}
+.legend .lg-out:before{height:7px;background:var(--hi);box-shadow:0 0 0 2px var(--ink);border-radius:4px}
+.cycle-line{margin:10px auto 0;max-width:520px;text-align:center;font-size:14px;color:var(--body)}
+@media(max-width:860px){.sys .nt{font-size:29px}.sys .ns{font-size:17.5px}.sys .ht{font-size:26px}.sys .hs{display:none}.sys svg{max-width:400px}.hero-cta{margin-top:22px}}
+@keyframes flow{to{stroke-dashoffset:-260}}
+.ring{position:relative;width:520px;height:520px;margin:auto}
+.ring:before{content:none}
+.ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ring .orb{fill:none;stroke:#8fb0ff;stroke-width:2.5;stroke-dasharray:7 8;animation:flow 16s linear infinite}
+.ring .arc{fill:none;stroke:var(--line);stroke-width:12;opacity:0;transition:opacity .4s}
+.ring .arc.on{stroke:var(--hi);opacity:1}
+.ring .ah{fill:var(--royal)}
+.hub{position:absolute;inset:150px;border-radius:50%;background:var(--royal);color:#fff;border:0;display:grid;place-content:center;text-align:center;font:600 18px/1.25 var(--serif);padding:22px;cursor:pointer;box-shadow:0 0 0 12px #0f1b330f,0 24px 50px -24px #0f1b33}
+.hub small{display:block;font:400 13px var(--sans);color:var(--mist);margin-top:8px}
+.hub:hover{background:var(--royal-dk)}
+.hub:after{content:"";position:absolute;inset:0;border-radius:50%;border:3px solid var(--royal);opacity:0;pointer-events:none;animation:ripple 4.4s ease-out infinite}
+@keyframes ripple{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.42)}}
+.node{position:absolute;width:160px;height:72px;margin:-36px 0 0 -80px;border-radius:7px;border:1.5px solid var(--royal);background:var(--sheet);color:var(--ink);font:600 17px/1.15 var(--sans);cursor:pointer;transition:background .3s,transform .3s}
+.node small{display:block;font-weight:400;font-size:12.5px;color:var(--slate);margin-top:3px}
+.node.active{background:var(--hi);transform:scale(1.06);box-shadow:0 14px 30px -16px #0f1b33}
+.node.active small{color:var(--ink)}
+.node.n0{left:50%;top:56px}.node.n1{left:calc(100% - 56px);top:50%}.node.n2{left:50%;top:calc(100% - 56px)}.node.n3{left:56px;top:50%}
+.orbit{display:none}
+.stop{position:relative}
+.stop .contrib{margin-top:22px;background:var(--sheet);border:1px solid var(--line);border-left:5px solid var(--hi);border-radius:0 6px 6px 0;padding:14px 18px}
+.stop .contrib b{display:block;font:500 13.5px var(--sans);color:var(--slate)}.stop .contrib p{margin-top:4px;font-size:15.5px;max-width:none}
+.loopwrap{grid-template-columns:540px 1fr}
+.loophead{margin-top:68px;padding-top:52px;border-top:1px solid var(--line)}
+.loophead h3{font:400 clamp(26px,3.4vw,42px)/1.12 var(--serif);letter-spacing:-.015em}
+.loophead p{margin-top:10px;color:var(--body);font-size:17px;max-width:40em}
+.loopwrap{display:grid;gap:56px;align-items:center;margin-top:40px}
+.stop .tag{font:500 15px var(--sans);color:var(--slate)}
+.stop h3{font:400 clamp(26px,3vw,38px)/1.12 var(--serif);margin-top:8px;text-wrap:balance}
+.stop p{margin-top:14px;font-size:17px;max-width:32em}
+.stop .case{border-left:4px solid var(--hi);padding-left:14px;color:var(--body)}
+.hubCount{font-size:14px;color:var(--slate)}
+.cycle{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-wrap:wrap;gap:6px;counter-reset:cy}
+.cycle li{counter-increment:cy;display:flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border:1.5px solid var(--line);border-radius:30px;background:var(--sheet);font-size:14.5px;color:var(--slate);transition:background .3s,border-color .3s,color .3s}
+.cycle li:before{content:counter(cy);display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--paper);font:600 12.5px var(--sans);color:var(--slate)}
+.cycle li.past{color:var(--body);border-color:#b9c9ee}.cycle li.past:before{background:#dbe5fb;color:var(--royal)}
+.cycle li.on{background:var(--hi);border-color:var(--ink);color:var(--ink);font-weight:600}.cycle li.on:before{background:var(--ink);color:var(--hi)}
+
+/* step 3 */
+.realvs{display:grid;grid-template-columns:1fr 1.6fr;gap:14px;margin-top:26px;max-width:880px}
+.realvs>div{border:1.5px solid var(--line);border-radius:6px;padding:16px 20px 18px;background:var(--sheet)}
+.realvs .yours{border-color:var(--royal);box-shadow:inset 4px 0 0 var(--royal)}
+.realvs b{font:600 17px var(--serif)}.realvs p{margin-top:6px;font-size:15px;color:var(--body)}
+.pilot-note{margin-top:12px;max-width:52em}
+.pilot-tie{margin-top:20px;max-width:44em}
+.pilot-tie b{display:block;font:400 clamp(20px,2.3vw,25px)/1.3 var(--serif)}
+.pilot-tie p{margin-top:10px;color:var(--body)}
+.two{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;margin-top:40px;align-items:start}
+.field+.field{margin-top:26px}
+.field label,#chipLabel{display:block;font-weight:600;font-size:16px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;border:1.5px solid var(--line);border-radius:5px;padding:10px 14px;background:var(--sheet);font-size:15px;font-weight:400;cursor:pointer;margin:0}
+.chips .chip{display:inline-block;margin-bottom:0;font-weight:400;font-size:15px}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--royal);border-color:var(--royal);color:#fff}
+.chip:focus-within{outline:3px solid var(--blue);outline-offset:3px}
+#chipHint{margin-top:10px}#chipHint.warn{color:#954716;font-weight:600}
+.plan{background:var(--royal);color:#fff;border-radius:6px;padding:32px 32px 30px}
+.plan-h{font:400 clamp(26px,3vw,38px)/1.1 var(--serif);letter-spacing:-.015em}
+.plan ol{list-style:none;margin:22px 0 0;padding:0}
+.plan li{display:grid;grid-template-columns:112px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--line-dark);font-size:15.5px;color:#e8edf8}
+.plan li strong{font:600 18px/1.3 var(--serif);color:#fff}
+.plan em{font-style:normal;background:var(--hi);color:var(--ink);padding:.05em .35em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.plan .pri{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.plan .pri span{background:var(--hi);color:var(--ink);font:600 17px var(--sans);padding:9px 14px;border-radius:5px}
+.plan .pri .empty{background:transparent;color:var(--mist);border:1.5px dashed var(--line-dark);font-weight:400}
+.plan .btn{font-size:19px;padding:19px 32px}
+.plan .row{margin-top:10px;padding-top:22px;border-top:1px solid var(--line-dark)}
+#pilotLink{display:block;width:100%;text-align:center;font-size:21px;padding:21px 24px;box-shadow:0 14px 34px -10px #ffe600aa;animation:beckon 2.2s ease-in-out 1s 2}
+@keyframes beckon{50%{box-shadow:0 0 0 10px #ffe60040,0 14px 34px -10px #ffe600aa}}
+.plan .after{margin-top:16px;font-size:15.5px;line-height:1.5;color:#fff}.plan .after strong{color:var(--hi)}
+.plan .small{color:var(--pale);margin-top:10px;font-size:14.5px}
+
+.foot{border-top:1px solid var(--line);padding:34px 0 56px}
+.foot p{max-width:62em}.foot p+p{margin-top:12px}
+.foot a{color:var(--ink)}
+
+@media(max-width:860px){
+ .hero{padding:34px 0 38px;background:radial-gradient(ellipse 80% 34% at 50% 76%,#cfdfff 0%,var(--sky) 72%)}.hero .wrap{grid-template-columns:1fr;gap:30px}
+ .band{padding-top:38px;padding-bottom:44px}
+ .steps{gap:18px}.steps button{font-size:14px;padding-top:12px}.steps button i{font-size:21px}
+ .team{grid-template-columns:1fr 1fr;gap:10px}.face{min-height:0;padding:12px 13px 14px}.person:last-child{grid-column:1/-1}.slip{margin-bottom:8px;padding-bottom:6px}.ctx{margin-top:8px}.back .t{font-size:14px}
+ .verdict{padding:48px 0;scroll-margin-top:120px}
+ .versus{grid-template-columns:1fr}.vs.report{border-radius:5px 5px 0 0}.vs.practice{border-left:1px solid var(--line-dark);border-top:0;border-radius:0 0 5px 5px}.vs{padding:24px 22px 26px}
+ .realvs,.attempts,.actionset,.alloc,.showbody,.rx-grid,.loopwrap,.two{grid-template-columns:minmax(0,1fr)}
+ .exec{grid-template-columns:1fr 1fr}.exec .ex-ai{grid-column:1/-1}.exec .btn{grid-column:1/-1;padding:15px}.exec>div{padding:12px 14px 13px}
+ .chain>div{display:grid;grid-template-columns:92px minmax(0,1fr);column-gap:12px;padding:13px 15px 14px}.chain>div>*{grid-column:2}.chain>div>.ck{grid-column:1;padding-top:3px}.chain>div[data-g]:before{grid-column:1/-1}.chain .cv{margin-top:0;font-size:18px}.chain .cv big{display:inline;font-size:30px;margin-right:6px}.chain .cn{margin-top:4px}
+ .groups{display:none}.chain>div[data-g]:before{content:attr(data-g);display:block;font:600 12.5px var(--sans);color:var(--hi);margin-bottom:6px}.moment{padding:18px 18px 20px}
+ .chain{grid-template-columns:1fr}.chain>div{border-left:0;border-top:1px solid var(--line-dark)}.chain>div:first-child{border-top:0}.chain>div:after{content:none}
+ .showbody,.two,.loopwrap{gap:30px}
+ .ev{grid-template-columns:1fr;gap:8px}
+ .track{grid-template-columns:1fr 1fr;row-gap:26px}
+ .ring{width:min(100%,380px);height:auto;aspect-ratio:1/1}.hub{inset:31%;font-size:clamp(12px,3.5vw,15px);padding:6px;line-height:1.2;box-shadow:0 0 0 8px #0f1b330f}.hub small{font-size:clamp(10px,2.8vw,12px);margin-top:4px}.node{width:30%;height:auto;min-height:15%;margin:0;transform:translate(-50%,-50%);padding:5px 4px;font-size:clamp(12px,3.7vw,15px);line-height:1.15}.node small{font-size:clamp(10px,2.9vw,12px);margin-top:2px}.node.active{transform:translate(-50%,-50%) scale(1.04)}.node.n0{top:10%}.node.n1{left:85%}.node.n2{top:90%}.node.n3{left:15%}.loopwrap{grid-template-columns:1fr}
+ .plan{padding:24px 22px}.plan li{grid-template-columns:1fr;gap:4px}
+ .filecard div{grid-template-columns:1fr;gap:2px}
+}
+@media(max-width:460px){.hub small{display:none}}
+@media(max-width:400px){.doc{grid-template-columns:minmax(0,1fr)}.doc .rate{justify-self:start}}
+@media(max-width:520px){
+ .team{grid-template-columns:1fr;gap:10px}.person:last-child{grid-column:auto}
+ .face{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;align-content:start;min-height:0;padding:12px 15px 14px}
+ .face>*{grid-column:1}.face>.slip{grid-column:1/-1;margin-bottom:6px;padding-bottom:6px}
+ .person b{font-size:25px}
+ .front>b{grid-row:2/4;align-self:center}.front>.paper{grid-column:2;margin-top:0}.front>.paper:nth-child(3){grid-row:2}.front>.paper:nth-child(4){grid-row:3}.front>.ctx{grid-column:1/-1;margin-top:8px}
+ .back>.badges{grid-row:2}.back>b{grid-row:3}.back>.strength{grid-row:4;margin-top:6px;font-size:14px}.back>.t{grid-column:1/-1;grid-row:5;margin-top:8px}
+ .back>.prio{grid-column:2;grid-row:2/5;align-self:center;margin:0;padding:0 0 0 14px;border-top:0;border-left:1px solid var(--line-dark);max-width:9.5em}
+ .prio strong{font-size:17px}
+}
+/* five learner paths: who you picked, who the AI suggests, who is on screen */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ctxbar{position:sticky;top:0;z-index:30;background:var(--sheet);border-bottom:1px solid var(--line);box-shadow:0 10px 22px -20px #0f1b3380}
+.cx{display:flex;align-items:center;gap:18px;padding-top:9px;padding-bottom:9px}
+.cx-dl{display:flex;flex-wrap:wrap;gap:4px 22px;margin:0;flex:1;min-width:0}
+.cx-dl div{display:flex;align-items:baseline;gap:7px;min-width:0}
+.cx-dl dt{font-size:12.5px;color:var(--slate)}
+.cx-dl dd{margin:0;font:600 15px var(--sans);color:var(--ink)}
+.cx-ai dd{padding:0 6px;border:1.5px dashed var(--royal);border-radius:3px;color:var(--royal)}
+.cx-now{margin:0;display:flex;align-items:baseline;gap:7px;flex:none}.cx-now span{font-size:12.5px;color:var(--slate)}.cx-now b{font:600 16px var(--sans);color:var(--ink);background:linear-gradient(transparent 58%,var(--hi) 58%)}
+.cx-switch{flex:none;background:var(--royal);color:#fff;border:0;border-radius:4px;padding:9px 14px;font:600 14px var(--sans);cursor:pointer}
+.cx-switch:hover{background:var(--royal-dk)}
+#managerLab,#h1,#decided,#decideRow{scroll-margin-top:110px}
+.v-note{margin-top:16px;font-size:18px;color:var(--pale);max-width:38em}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;max-width:760px}
+.path{text-align:left;background:none;color:#fff;border:1.5px solid var(--line-dark);border-radius:6px;padding:14px 18px 16px;cursor:pointer;font-family:var(--sans)}
+.path i{display:block;font:600 12.5px var(--sans);font-style:normal;color:var(--mist)}
+.path b{display:block;font:600 22px/1.15 var(--serif);margin-top:4px}
+.path small{display:block;font-size:14px;color:var(--pale);margin-top:6px}
+.path:hover{border-color:#fff}
+.path[aria-pressed=true]{background:var(--sheet);color:var(--ink);border-color:var(--sheet);box-shadow:inset 0 -5px 0 var(--hi)}
+.path[aria-pressed=true] i,.path[aria-pressed=true] small{color:var(--slate)}
+.m-obs{margin-top:14px;font:400 clamp(19px,2vw,23px)/1.45 var(--serif);color:#fff;max-width:34em}
+.mark.now{background:#fff;color:var(--royal)}
+.person.exploring .mark.now{display:inline-block}
+.person.exploring .back{box-shadow:0 0 0 4px #fff,0 18px 34px -16px #1f4fd6}
+.person.exploring.top .back{box-shadow:0 0 0 4px var(--hi),0 18px 34px -16px #1f4fd6}
+.ev.now{box-shadow:inset 4px 0 0 var(--royal);padding-left:14px}
+.ev-go{display:inline-block;margin-top:10px;background:var(--sheet);color:var(--royal);border:1.5px solid var(--royal);border-radius:4px;padding:6px 12px;font:600 13.5px var(--sans);cursor:pointer}
+.ev-go[aria-pressed=true]{background:var(--royal);color:#fff;cursor:default}
+.sug .ev-go{display:block;width:max-content}
+.rate.low{color:var(--slate)}
+.doc.is-low b{color:var(--slate);font-weight:500}
+.rx-ai{display:inline-block;vertical-align:middle;margin-left:6px;font:600 12px var(--sans);color:var(--ink);background:var(--hi);padding:2px 7px;border-radius:3px}
+.recap{background:var(--sheet);border:1px solid var(--line);border-left:5px solid var(--royal);border-radius:4px;padding:16px 20px 18px;margin-bottom:30px;max-width:44em}
+.recap .rc-h{font:600 15px var(--sans)}
+.recap ul{margin:8px 0 6px;padding-left:20px}.recap li{font-size:15.5px;margin-top:3px}
+@media(max-width:860px){.paths{grid-template-columns:1fr}.cx{flex-wrap:wrap;gap:6px 14px}}
+@media(max-width:600px){
+ .cx{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center;padding-top:6px;padding-bottom:7px}
+ .cx-now{grid-column:1;grid-row:1}.cx-now b{font-size:15px}
+ .cx-switch{grid-column:2;grid-row:1;max-width:10.5em;padding:6px 10px;font-size:13px;line-height:1.2;text-align:left}
+ .cx-dl{grid-column:1/-1;gap:0 12px}.cx-dl div{gap:4px}.cx-dl dt{font-size:11.5px}.cx-dl dd{font-size:12.5px}.cx-ai dd{padding:0 4px;border-width:1px}
+ #managerLab,#h1,#decided,#decideRow{scroll-margin-top:104px}
+ .path b{font-size:20px}
+ .rx-card{padding:22px 20px 24px}.lane{grid-template-columns:1fr 1fr;row-gap:12px}.lane:before{display:none}
+}
+/* one team budget, action-dependent follow-up, approved route, excerpts */
+.linkbtn{background:none;border:0;padding:0;color:var(--royal);font:600 14.5px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.fast{margin-top:14px}
+.usesTime{display:block;margin-top:10px;font:600 12px var(--sans);color:#8a520a}
+.actionset button[aria-pressed=true] .usesTime{color:var(--hi)}
+.mins{margin-top:18px}
+.mins fieldset{border:0;padding:0;margin:0}
+.mins legend{font:600 15px var(--sans);margin-bottom:8px}
+.minopts{display:flex;gap:8px;flex-wrap:wrap}
+.minopts label{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--sheet);border-radius:4px;padding:8px 14px;font:600 15px var(--sans);cursor:pointer}
+.minopts label:has(input:checked){background:var(--royal);border-color:var(--royal);color:#fff}
+.minopts label.off{color:#8a94a8;border-style:dashed;cursor:not-allowed}
+.mins .small{margin-top:8px}
+.warn{color:#a3361c}
+.teamtime{margin-top:24px;background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:18px 20px 16px}
+.tt-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tt-head h4{font:600 17px var(--sans)}
+.tt-head fieldset{display:flex;gap:14px;border:0;padding:0;margin:0}
+.tt-head label{display:flex;align-items:center;gap:6px;font-size:14.5px;cursor:pointer}
+.tt-bar{display:flex;height:34px;margin-top:14px;border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.seg{display:flex;align-items:center;min-width:0;padding:0 8px;background:var(--royal);color:#fff;font:600 12.5px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg+.seg{border-left:2px solid #fff}
+.seg.pend{background:repeating-linear-gradient(135deg,#d6e1fd 0 8px,#c3d2f8 8px 16px);color:var(--ink)}
+.seg.free{background:var(--pale);color:var(--slate)}
+.tt-nums{display:flex;gap:30px;margin:12px 0 0}
+.tt-nums dt{font-size:12.5px;color:var(--slate)}
+.tt-nums dd{margin:0;font:600 22px var(--serif);color:var(--ink)}
+.tt-nums dd.warn{color:#a3361c}
+.tt-pend{margin-top:6px;font-size:14.5px;color:var(--body)}
+.tt-pend:empty{display:none}
+.tt-warn{margin-top:10px;border-left:4px solid #c2410c;background:#fff4ec;color:#7a2a0c;padding:8px 12px;font-size:14.5px;font-weight:600}
+.tt-list{list-style:none;padding:0;margin:12px 0 8px}
+.tt-list li.none{display:block;color:var(--slate)}
+.fu{list-style:none;padding:0;margin:8px 0 10px;counter-reset:fu}
+.fu li{counter-increment:fu;position:relative;padding:4px 0 10px 40px;border-left:2px solid var(--line);margin-left:13px}
+.fu li:before{content:counter(fu);position:absolute;left:-14px;top:2px;width:26px;height:26px;border-radius:50%;background:var(--sheet);border:2px solid var(--royal);color:var(--royal);font:600 13px/22px var(--sans);text-align:center}
+.fu li:last-child{border-left-color:transparent}
+.fu b{display:block;font:600 14.5px var(--sans)}
+.fu p{margin-top:4px;font-size:15px}
+.fu .choices{margin-top:8px}
+.insp-src{margin-top:4px;border-left:4px solid var(--hi);padding:4px 0 4px 12px;font-size:14px;color:var(--body)}
+.excerpt{margin:12px 0 0;background:var(--sheet);border:1px solid var(--line);border-left:4px solid var(--royal);border-radius:4px;padding:12px 16px 14px}
+.excerpt figcaption{font:600 13.5px var(--sans);color:var(--slate)}
+.excerpt p{margin-top:8px;font:400 15px/1.5 var(--mono)}
+.excerpt i{display:block;font:600 12px var(--sans);font-style:normal;color:var(--slate)}
+.insp-rest{margin-top:10px;font-size:14px;color:var(--slate)}
+.route{margin-top:28px;padding:20px 24px 18px;border-radius:6px;background:var(--sheet)}
+.route.illus{border:1.5px dashed #9fb3dc}
+.route.set{border:1px solid var(--line);border-left:5px solid var(--royal)}
+.route-k{font:600 13px var(--sans);color:var(--slate)}
+.route.set .route-k{color:var(--royal)}
+.route h3{font:400 clamp(21px,2.4vw,27px)/1.2 var(--serif);margin-top:6px;max-width:30em}
+.route>p{margin-top:8px;font-size:15.5px;max-width:46em}
+.route .row{margin-top:14px}
+.route-grid{list-style:none;padding:0;margin:14px 0 10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.route-grid li{border-radius:4px;padding:10px 12px;font-size:14px}
+.route-grid li b{display:block;font:600 14px var(--sans);margin-bottom:3px}
+.route-grid li.on{background:var(--pale);color:var(--ink)}
+.route-grid li.off{border:1px dashed var(--line);color:var(--slate)}
+.recap li.warn{color:#a3361c}
+@media(max-width:860px){.route-grid{grid-template-columns:1fr 1fr}.route-grid li.r-hub{grid-column:1/-1}}
+@media(max-width:520px){.tt-nums{gap:18px}.tt-nums dd{font-size:19px}.route{padding:16px 16px 14px}.route-grid li{padding:8px 10px}}
+/* third review: goals, needs revision, team summary, comparison, layers */
+.conflict{margin-top:12px;border:1.5px solid #c2410c;background:#fff4ec;border-radius:5px;padding:12px 14px}
+.conflict p{font-size:15px;color:#5c2208}
+.conflict .row{margin-top:10px;gap:8px;flex-wrap:wrap;align-items:center}
+.conflict .btn{font-size:14.5px;padding:8px 12px}
+.carry-h{margin-top:16px;font-size:13.5px;color:var(--mist)}
+.plan .carry-h+.pri{margin-top:8px}
+.plan .pri:focus{outline:0}
+.carry-miss{margin-top:10px;border-left:4px solid var(--hi);background:var(--royal-dk);color:#fff;padding:6px 10px;font-size:14.5px}
+.carry-size{margin-top:8px;font-size:14px;color:var(--mist)}.carry-size b{color:#fff}
+.nr{display:inline-block;font:600 12px var(--sans);font-style:normal;color:#7a2a0c;background:#ffe3d3;border:1px solid #e9a27e;border-radius:3px;padding:1px 7px;vertical-align:middle}
+.needs{margin-top:10px;border-left:4px solid #c2410c;background:#fff4ec;color:#5c2208;padding:8px 12px;font-size:15px;max-width:44em}
+.tt-status{display:inline-block;vertical-align:middle;margin-left:8px;font:600 12.5px var(--sans);padding:2px 8px;border-radius:3px}
+.tt-status.ok{background:#dff0e7;color:#1f6a4b}.tt-status.bad{background:#ffe3d3;color:#7a2a0c}.tt-status.none{background:var(--pale);color:var(--slate)}
+.tt-ai{margin-top:8px;font-size:14.5px;color:var(--body);border-left:3px dashed var(--royal);padding-left:10px}
+.seg.bad{background:#b4441c}
+.tt-warn p{margin:0}.tt-warn .btn{margin-top:8px;font-size:14px;padding:7px 12px}
+.tt-list li{display:grid;grid-template-columns:11em minmax(0,1fr);gap:4px 14px;align-items:start;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px}
+.tt-list .g{font-weight:600;color:var(--ink)}
+.tt-list .its{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tt-list .its p{margin:0;color:var(--body)}
+.tt-list .it{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.tt-list .it b{font-weight:600}.tt-list .it .t{color:var(--body)}.tt-list .it .m{color:var(--slate)}
+.tt-list [data-group=undecided] .its{flex-direction:row;flex-wrap:wrap;gap:6px}
+.chipbtn{background:var(--sheet);border:1.5px solid var(--royal);color:var(--royal);border-radius:14px;padding:3px 12px;font:600 13.5px var(--sans);cursor:pointer}
+.chipbtn:hover{background:var(--pale)}
+.compare{margin-top:6px;border-top:1px solid var(--line)}
+.compare>summary{cursor:pointer;font-weight:600;padding:12px 0}
+.cmp-lead{font-size:14.5px;color:var(--body)}
+.cmp-same{margin-top:6px;font-weight:600;color:var(--pass)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 6px}
+.plancard{border:1px solid var(--line);border-radius:5px;padding:14px 16px;background:var(--paper)}
+.plancard h5{font:600 15.5px var(--sans)}
+.plancard dl{margin:8px 0 0}
+.plancard dl div{padding:7px 0;border-top:1px solid var(--line)}
+.plancard dt{font-size:12.5px;color:var(--slate)}
+.plancard dd{margin:2px 0 0;font-size:14.5px}
+.plancard ul{margin:2px 0 0;padding-left:18px}.plancard li{margin-top:2px}
+.lyr{display:inline-block;vertical-align:baseline;font:600 12px/1.5 var(--sans);font-style:normal;padding:1px 8px;border-radius:3px;margin-right:6px;white-space:nowrap}
+.lyr.dec{background:var(--royal);color:#fff}
+.lyr.hyp{background:var(--sheet);color:var(--royal);box-shadow:inset 0 0 0 1.5px var(--royal)}
+.lyr.gen{background:var(--pale);color:var(--ink);box-shadow:inset 0 0 0 1px #c3d2f5}
+.lyr.ill{background:var(--hi);color:var(--ink)}
+.layers{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--body)}
+.layers li{display:flex;align-items:baseline;gap:2px}
+.lyr-line{margin-bottom:8px}
+.route-sub{margin-top:14px;font-size:14px;color:var(--body)}
+.route.bad{border-left-color:#c2410c}
+.route-warn{margin-top:8px;border-left:4px solid #c2410c;background:#fff4ec;color:#5c2208;padding:6px 10px;font-size:14.5px}
+.fu-tag{margin-top:4px;font-size:14px;color:var(--body)}
+@media(max-width:860px){.cmp-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.tt-list li{grid-template-columns:minmax(0,1fr)}.layers{flex-direction:column;gap:6px}}
+.recap .rg{font-weight:600;color:var(--slate);margin-right:4px}
+.conflict{margin-bottom:20px}
+/* fourth review: the manager's action plan */
+.ap{margin-bottom:34px}
+.ap-top{background:var(--royal);color:#fff;border-radius:8px 8px 0 0;padding:30px 34px 26px}
+.ap.empty{background:var(--sheet);border:1.5px dashed #9fb3dc;border-radius:8px;padding:24px 26px}
+.ap.empty h3{font:400 clamp(22px,2.6vw,30px)/1.2 var(--serif);margin-top:8px;max-width:26em}
+.ap-ctx{margin:10px 0 0;padding-left:20px;font-size:15.5px}.ap-ctx li{margin-top:3px}
+.ap .row{margin-top:14px}
+.ap-k{font-size:13.5px;color:var(--mist)}
+.ap.empty .ap-k{color:var(--slate)}
+.ap-top h3{font:400 clamp(28px,3.6vw,44px)/1.12 var(--serif);letter-spacing:-.015em;margin-top:10px;max-width:22em;text-wrap:balance}
+.ap-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:22px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:7px;overflow:hidden}
+.kpi{background:var(--ink-2);padding:14px 18px 16px;min-width:0}
+.kpi span{display:block;font-size:13px;color:var(--mist)}
+.kpi b{display:block;font:600 clamp(26px,3vw,36px)/1.1 var(--serif);color:#fff;margin-top:4px}
+.kpi.k-coach b{color:var(--hi)}
+.kpi.k-cap.bad b{color:#ffb4a1}
+.kpi small{display:block;margin-top:4px;font-size:13.5px;color:var(--pale);overflow-wrap:anywhere}
+.ap-status{margin-top:16px;font-size:15px;color:#fff}
+.ap-ai{margin-top:6px;font-size:14.5px;color:var(--pale)}
+.linkbtn.on-dark{color:var(--hi)}
+.ap-copy{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:18px}
+.ap-copy span{font-size:14px;color:var(--pale)}
+.copyfb{display:block;width:100%;min-height:180px;margin-top:12px;padding:10px 12px;border-radius:5px;border:0;font:13px/1.5 var(--mono);color:var(--ink)}
+.copyfb[hidden]{display:none}
+.ap-items{list-style:none;margin:0;padding:0;background:var(--sheet);border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+.ap-item{padding:18px 24px 20px;border-top:1px solid var(--line)}
+.ap-item:first-child{border-top:0}
+.ap-ih{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.ap-n{flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--royal);color:var(--royal);font:600 14px/24px var(--sans);text-align:center}
+.ap-ih h4{font:400 21px/1.25 var(--serif)}.ap-ih h4 strong{font-weight:600}
+.ap-cat{font:600 12px var(--sans);padding:2px 8px;border-radius:3px}
+.c-coach .ap-cat{background:var(--royal);color:#fff}
+.c-evidence .ap-cat{background:var(--sheet);color:var(--royal);box-shadow:inset 0 0 0 1.5px var(--royal)}
+.c-practice .ap-cat{background:var(--pale);color:var(--ink)}
+.c-monitor .ap-cat{background:#eef0f4;color:var(--slate)}
+.ap-rev{margin-left:auto;font-size:13.5px;color:var(--slate)}
+.trace{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.trace li{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:9px 11px 10px;min-width:0}
+.trace li+li:before{content:"→";position:absolute;left:-14px;top:50%;transform:translateY(-50%);color:var(--royal);font:600 14px var(--sans)}
+.trace b{display:block;font:600 12.5px var(--sans);color:var(--slate)}
+.trace span{display:block;margin-top:3px;font-size:14px;line-height:1.4}
+.trace li.miss{border:1.5px dashed #c2410c;background:#fff4ec}.trace li.miss span{color:#7a2a0c;font-weight:600}
+.trace li.na{background:transparent;border-style:dashed}.trace li.na span{color:var(--slate)}
+.trace li.thin{border-left:3px solid #b86e12}
+.ap-undec{margin-top:14px;font-size:15px}
+.ap-foot{margin-top:12px;max-width:52em}
+.invite{margin:0 0 46px;background:var(--sky);border:1px solid #c3d2f5;border-radius:8px;padding:24px 28px 26px}
+.invite h3{font:400 clamp(24px,3vw,34px)/1.15 var(--serif);letter-spacing:-.01em;max-width:24em}
+.invite p{margin-top:8px;font-size:16px;color:var(--body);max-width:40em}
+.invite .btn{margin-top:16px}
+@media(max-width:860px){.ap-kpis{grid-template-columns:1fr 1fr}.trace{grid-template-columns:1fr;gap:14px}.trace li+li:before{content:"↓";left:14px;top:-14px;transform:none}.ap-rev{margin-left:0;flex-basis:100%}}
+@media(max-width:520px){.ap-top{padding:22px 18px 20px}.ap-item{padding:16px 16px 18px}.kpi{padding:12px 12px 13px}.invite{padding:20px 18px 22px}}
+
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+</style><script>
+/* Preserve deep links and the completed guided tour, but introduce new visitors through the tour. */
+if(!new URLSearchParams(location.search).has('tour') &&
+ !['#make-the-call','#the-loop','#your-team'].includes(location.hash)){
+ location.replace('manager-tour-welcome.html');
+}
+</script>
+</head>
+<body>
+<header class="hero decision-hero"><div class="wrap">
+ <div class="hero-text">
+  <p class="brand"><strong class="wordmark">AgentTraining<span class="dot">.ai</span></strong><span class="tag">Interactive Manager Demo</span></p>
+  <h1>You're in the manager's seat.</h1>
+  <p class="lede">Your team has five fictional agents and limited coaching time. Choose a learner, inspect practice evidence, compare the AI suggestion and make your own decision.</p>
+  <div class="hero-cta"><button class="btn" type="button" id="startDemo">Start with the five learners</button><a href="manager-tour-welcome.html" class="btn secondary">Review platform tour</a></div>
+  <p class="fiction">Fictional learners and evidence. Nothing is sent or saved in this demo.</p>
+ </div>
+</div></header>
+<nav class="stepsbar" aria-label="Demo steps"><ol class="steps wrap"><li><button type="button" data-go="0"><i>1</i>Make the call</button></li><li><button type="button" data-go="1"><i>2</i>Inside the Studios</button></li><li><button type="button" data-go="2"><i>3</i>Your team</button></li></ol></nav>
+<div class="ctxbar" id="ctxbar" hidden><div class="wrap cx" role="region" aria-label="Where you are in the demo"><p class="cx-now"><span>Exploring</span> <b id="cxNow"></b></p><dl class="cx-dl"><div><dt>Your pick</dt><dd id="cxPick"></dd></div><div class="cx-ai"><dt>AI suggests</dt><dd id="cxAI"></dd></div><div><dt>Decision</dt><dd id="cxAct"></dd></div></dl><button type="button" class="cx-switch" id="cxSwitch" hidden></button><span class="sr" id="cxLive" role="status" aria-live="polite"></span></div></div>
+<main>
+
+<section class="panel" id="p0" aria-labelledby="h0">
+ <div class="band"><div class="wrap">
+  <h2 id="h0" tabindex="-1" style="scroll-margin-top:24px">You have thirty minutes of one-to-one coaching this week. Who gets it?</h2>
+  <p class="intro" id="intro0">Five agents, five clean training reports, thirty minutes of coaching. Choose on instinct. Then the reports turn over.</p>
+  <form id="pickForm"><div class="team" id="team" role="radiogroup" aria-label="Choose one team member"></div>
+  <div class="row" id="lockRow"><button class="btn" type="submit" id="lock" disabled>Lock in my choice</button><span class="muted small">Then the reports turn over.</span></div></form>
+ </div></div>
+ <div id="reveal" class="fade" hidden>
+  <div class="stage"><div class="wrap"><div class="verdict" id="verdict" tabindex="-1"></div></div></div>
+  <div class="band"><div class="wrap">
+   <details class="all"><summary>See the practice evidence for all five, and explore any of them</summary><div class="evidence" id="evidence"></div></details>
+   <div class="lab" id="managerLab">
+    <h3>Your decision on <span id="labName">Michelle</span> <span class="demo-badge">Demo: fictional team</span></h3>
+    <p class="lab-sub" id="labSub"></p>
+    <div class="actionset" id="decideRow" role="group" aria-label="Manager choices"></div>
+    <div id="minutesWrap" class="mins" hidden><fieldset><legend>Coaching minutes for <span id="minName">Michelle</span></legend><div class="minopts" id="minOpts"></div></fieldset><p class="small" id="minNote"></p></div>
+    <div id="reasonWrap" hidden><label for="decisionReason"><strong>Why are you overriding the AI's suggestion for <span id="reasonName">Michelle</span>?</strong></label>
+     <select id="decisionReason"><option value="">Choose a reason…</option><option>Evidence is too narrow</option><option>My field experience contradicts it</option><option>Another priority is more urgent</option><option>Other</option></select>
+     <textarea id="decisionNote" maxlength="200" placeholder="Optional note, not saved or sent"></textarea>
+    </div>
+    <details class="optionalDeep inspect" id="inspect"><summary>Inspect <span id="inspName">Michelle</span>&#39;s practice excerpts</summary><div id="inspBody"></div></details>
+    <section class="teamtime" id="teamTime" aria-labelledby="ttH">
+     <div class="tt-head"><h4 id="ttH">Team plan this week <span class="tt-status none" id="ttStatus">No decisions yet</span></h4><fieldset><legend class="sr">Your coaching time this week</legend><label><input type="radio" name="demoBudget" value="30" checked>30 min</label><label><input type="radio" name="demoBudget" value="15">15 min</label></fieldset></div>
+     <p class="tt-ai" id="ttAI"></p>
+     <div class="tt-bar" id="ttBar" aria-hidden="true"></div>
+     <dl class="tt-nums" aria-live="polite"><div><dt>Available</dt><dd id="ttAvail"></dd></div><div><dt>Approved</dt><dd id="ttCommit"></dd></div><div><dt>Remaining</dt><dd id="ttLeft"></dd></div></dl>
+     <p class="tt-pend" id="ttPend"></p><div class="tt-warn" id="ttWarn" hidden></div><p class="sr" id="ttLive" role="status" aria-live="polite"></p>
+     <ul class="tt-list" id="ttList"></ul>
+     <details class="compare" id="compare"><summary>Compare the AI's suggested plan with yours</summary><div id="compareBody"></div></details>
+     <p class="small">Your own plan across the whole team. The minutes are your choice, not an AI optimisation.</p>
+    </section>
+    <details class="optionalDeep" id="judgmentDetails"><summary>Optional: what the evidence can and cannot tell you</summary><div class="bound" id="bound"></div></details>
+    <p id="decisionStatus" role="status" aria-live="polite"></p>
+    <div class="row"><button class="btn" id="confirmDecision" type="button" disabled>Choose an option above</button></div>
+    <div id="decided" hidden><p class="decided" id="decidedTxt"></p><p class="needs" id="decNeeds" hidden></p><p class="demo-flag">Demo decision. No assignment was sent to anyone.</p>
+     <div class="row"><button class="btn" type="button" data-go="1">See how the four Studios help</button><button class="btn secondary" id="changeDecision" type="button">Change my decision</button></div>
+     <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your action plan</button></p>
+    </div>
+    <details class="followCard optionalDeep" id="followupDetails" hidden><summary>Explore what could happen next (simulated)</summary>
+     <p class="fu-tag"><span class="lyr ill">Illustrative follow-up</span> Invented events for a fictional team, not results.</p>
+     <ol class="fu">
+      <li><b>Planned action</b><p id="fuPlan"></p></li>
+      <li><b>Simulated next event</b><p id="fuEvent"></p><p class="small" id="fuNoLearner" hidden>No learner activity: nothing was assigned.</p></li>
+      <li><b id="fuRespH">Hypothetical learner response</b><div class="choices" id="outcomeChoices" role="group" aria-labelledby="fuRespH"></div><p id="fuResp" aria-live="polite"></p></li>
+      <li><b>Your next decision</b><p id="fuNext" aria-live="polite"></p></li>
+     </ol>
+     <p class="small muted">Fictional and scripted. Not a prediction or a real learner result.</p>
+    </details>
+   </div>
+  </div></div>
+ </div>
+</section>
+
+<section class="panel" id="p1" aria-labelledby="h1" hidden>
+ <div class="band"><div class="wrap">
+  <h2 id="h1" tabindex="-1">What happens after you spot Michelle's risk?</h2>
+  <p class="intro">One problem, four Studios, one Hub. Watch it travel.</p>
+  <p class="fast"><button type="button" class="linkbtn" data-go="2">Short on time? Skip to your action plan</button></p>
+  <ul class="layers" aria-label="How to read this step"><li><span class="lyr dec">Your decision</span>a confirmed, fictional demo decision</li><li><span class="lyr hyp">Hypothetical workflow</span>what the Studios would do for it</li><li><span class="lyr gen">General demonstration</span>what each Studio can do</li><li><span class="lyr ill">Illustrative follow-up</span>invented events, not results</li></ul>
+  <div class="route" id="route" aria-live="polite"></div>
+  <div class="casequote">
+   <p class="line" id="s2line"></p>
+   <p class="goal" id="s2goal"></p>
+  </div>
+  <ol class="track" aria-label="How the four Studios contribute">
+   <li><b>Knowledge</b><span>Locate the approved material behind the next step; draft a practice prompt.</span></li>
+   <li><b>Client</b><span>Separate what the client note records from what is still unknown.</span></li>
+   <li><b>Practice</b><span>Rehearse the targeted conversation; compare transcript moments.</span></li>
+   <li><b>Leadership</b><span>Review evidence, decide, and reassess instead of trusting a score alone.</span></li>
+  </ol>
+ </div></div>
+
+ <div class="stage"><div class="wrap">
+  <p class="stagenote"><span class="lyr gen">General demonstration</span> General illustration for <span id="stageName">Michelle</span>&#39;s case: scripted examples with invented documents. No AI service runs on this page.</p>
+
+  <div class="show" id="showK"></div>
+  <div class="show" id="showC"></div>
+ </div></div>
+
+ <div class="band"><div class="wrap">
+  <div class="rx" aria-labelledby="rxTitle">
+   <p class="lyr-line"><span class="lyr gen">General demonstration</span></p><h3 id="rxTitle">The same loop writes different prescriptions.</h3>
+   <p class="rx-lead" id="rxLead"></p>
+   <div class="rx-grid" id="rxGrid"></div>
+   <p class="rx-close">Different evidence, a different starting point. A single training class would have given everyone the same lesson.</p>
+   <p class="muted small">Both cases are fictional illustrations.</p>
+  </div>
+
+  <div class="loophead"><p class="lyr-line"><span class="lyr ill">Illustrative follow-up</span></p><h3>Four Studios. One Hub. One continuous cycle.</h3><p>Your decision sends targeted coaching back into new practice, and the new evidence returns for reassessment. An illustration of the full cycle along the AI's suggested route for <span id="loopName">Michelle</span>.</p>
+  <ol class="cycle" id="cycle" aria-label="The management cycle"><li>Practice evidence</li><li>Your judgment</li><li>Targeted coaching</li><li>New practice</li><li>Reassessment</li><li>Next action</li></ol></div>
+  <div class="loopwrap">
+   <div class="ring">
+    <svg viewBox="0 0 520 520" aria-hidden="true">
+     <circle class="orb" cx="260" cy="260" r="204"/>
+     <path class="arc" data-arc="0" d="M296 58 A204 204 0 0 1 462 224"/>
+     <path class="arc" data-arc="1" d="M462 296 A204 204 0 0 1 296 462"/>
+     <path class="arc" data-arc="2" d="M224 462 A204 204 0 0 1 58 296"/>
+     <path class="arc" data-arc="3" d="M58 224 A204 204 0 0 1 224 58"/>
+     <polygon class="ah" points="396,104 418,112 404,130"/><polygon class="ah" points="416,396 408,418 390,404"/>
+     <polygon class="ah" points="124,416 102,408 116,390"/><polygon class="ah" points="104,124 112,102 130,116"/>
+    </svg>
+    <div class="orbit" id="orbit"></div>
+    <button class="hub" id="hubJump" type="button" title="Jump to reassessment">Team Growth &amp; Retention Hub<small>evidence in, decisions out</small></button>
+    <button type="button" class="node n0" data-node="0">Leadership<small>your decisions</small></button>
+    <button type="button" class="node n1" data-node="1">Knowledge<small>approved material</small></button>
+    <button type="button" class="node n2" data-node="2">Client<small>client context</small></button>
+    <button type="button" class="node n3" data-node="3">Practice<small>skill practice</small></button>
+   </div>
+   <div class="stop" aria-live="polite"><div class="tag" id="stopTag"></div><h3 id="stopTitle"></h3><p id="stopBody"></p><p class="case" id="stopCase"></p><div class="contrib"><b>What this Studio contributes</b><p id="loopEvidence"></p></div><p class="hubCount" id="hubCount"></p>
+    <div class="row"><button class="btn secondary" type="button" id="prevStop">Back</button><button class="btn" type="button" id="nextStop">Next stage</button></div></div>
+  </div>
+
+  <div class="row" style="margin-top:44px"><button class="btn" type="button" data-go="2">See your action plan</button></div>
+ </div></div>
+</section>
+
+<section class="panel" id="p2" aria-labelledby="h2" hidden>
+ <div class="band"><div class="wrap">
+  <section class="ap" id="actionPlan" aria-labelledby="apHead"></section>
+  <div class="invite"><h3>See what this could look like with your own team.</h3><p>Your agents, your approved material, 14 days. Your team's own practice evidence comes back to you, and you decide whether to continue. No outcome is promised.</p><button type="button" class="btn" id="toPilot" data-topilot="1">Plan your 14-day Private Pilot</button></div>
+  <h2 id="h2" tabindex="-1">What hidden conversation gap would you want to find in your team?</h2>
+  <div class="realvs"><div><b>This demo</b><p>A fictional team, scripted results, nothing sent.</p></div><div class="yours"><b>Your pilot</b><p>Your own team and your approved material. Text-based practice with an AI client. You review what comes back and decide whether to continue. No outcome is promised.</p></div></div>
+  <p class="muted small pilot-note">Choose training topics only, not confidential client details. Your choices go to the request form; no training or AI analysis starts on this page.</p>
+  <div class="two">
+   <div>
+    <div class="field"><p id="chipLabel">Which two conversations does your team find hardest?</p>
+     <div class="chips" id="chips" role="group" aria-labelledby="chipLabel"></div>
+     <p class="muted small" id="chipHint">Pick up to two, or write your own below.</p></div>
+    <div class="field"><label for="own">Your own conversation (optional)</label><input type="text" id="own" maxlength="80" placeholder="e.g. Medicare conversations"></div>
+    <div class="conflict" id="conflict" role="group" aria-labelledby="conflictMsg" hidden><p id="conflictMsg"></p><div class="row" id="conflictBtns"></div></div>
+    <p class="sr" id="goalLive" role="status" aria-live="polite"></p>
+    <div class="field"><label for="size">Team size</label><select id="size"><option>1–5</option><option selected>6–10</option><option>11–25</option><option>26–50</option><option>51+</option></select></div>
+   </div>
+   <div class="plan" aria-live="polite"><p class="plan-h">Your team's fourteen days</p><p class="carry-h">Carried into your Pilot request</p><div class="pri" id="pri" tabindex="-1" aria-label="Priorities carried into your Pilot request"></div><p class="carry-miss" id="carryMiss" hidden></p><p class="carry-size">Team size: <b id="carrySize"></b></p>
+    <ol><li><strong>Before day 1</strong><span>Confirm the pilot scope for the priorities above and share only approved materials.<span id="planConv" hidden></span></span></li><li><strong>Days 1 to 13</strong><span>Your team of <em id="planSize"></em> works on the confirmed scenarios; the manager reviews available practice evidence.</span></li><li><strong>Day 14</strong><span>Discuss patterns, evidence limits, coaching priorities, and whether to continue.</span></li></ol>
+    <div class="row"><a class="btn hi" id="pilotLink" href="pilot-start.html">Request this pilot</a></div>
+    <p class="after"><strong>After you request:</strong> we follow up by email to confirm the scope. If the pilot fits, we configure it for you: a manager view, your learners and focused practice scenarios.</p>
+    <p class="small">No credit card and no paid subscription. Your choices carry into the request form; nothing is sent until you submit it there.</p>
+   </div>
+  </div>
+ </div></div>
+</section>
+</main>
+<footer class="foot"><div class="wrap"><p class="muted small"><strong>Truth in the demo.</strong> Michelle, David, John, Grace and Anna, their prospects (Ms. Rivera, Mr. Okafor, Ms. Chen, Mr. Patel, Mr. Alvarez), all conversations, sample documents, source anchors and recommendations are fictional. The "reveal" buttons show scripted examples; they do not call an AI service, access customer data, send assignments, message anyone, save records, or prove outcomes. Only submitting the separate Pilot request form sends a request. Do not enter sensitive client details in the Pilot topic field.</p>
+<p class="muted small">A deeper look, with a different illustrative team: <a href="manager-demo-opening.html">Risk briefing</a>, <a href="manager-demo-hub.html">Four Studios and the Hub</a>, <a href="manager-demo-phases.html">Three phases</a>, <a href="mission-control-v2-1.html">Mission Control</a></p></div></footer>
+<script>
+/* ===== Five fictional learners. Every name, attempt, note and outcome below is illustrative; none is real learner data. =====
+   One renderer reads this table for every learner, so adding or correcting a case means editing data, not markup. */
+const TOP=`michelle`; /* the AI's highest-priority coaching suggestion for this fictional team's current evidence */
+const ORDER=[`david`,`michelle`,`john`,`grace`,`anna`];
+const LIBRARY=[
+ {id:`price`,title:`Approved coaching note, price concerns, §2`},
+ {id:`basics`,title:`Approved product guide: term and whole life basics`},
+ {id:`discovery`,title:`Approved needs-discovery question guide`},
+ {id:`agent`,title:`Approved objection guide: “I already have an agent”`},
+ {id:`brochure`,title:`Product brochure, older sample edition`}];
+const RATE={important:`Coaching source`,general:`Supporting`,low:`Not needed now`,review:`Needs review`};
+const GENERIC_WHY={general:n=>`Useful background for ${n}.`,low:n=>`Approved, but not the skill ${n} needs right now.`,review:()=>`May be out of date. Check it against current approved material before anyone uses it.`};
+const STOP_NODE=[0,1,2,3,0];
+const CASES={
+ michelle:{name:`Michelle`,pos:`her`,Pos:`Her`,ctx:`Highest test score on the team. Client meeting tomorrow.`,
+  short:`The same gap in all four attempts.`,pill:`consistent`,pillTxt:`Consistent evidence`,focus:`Price concerns`,sug:`Coach now`,
+  ev:`4 practice attempts across two conversations. Each time the simulated client raised price, she answered with product features.`,sugWhy:`The same gap in every attempt, and a client meeting tomorrow.`,
+  report:{fig:`#1`,cap:`Highest test score on the team.`,sum:`#1 in testing`},
+  practice:{fig:`0`,of:`4`,cap:`attempts in which she asked what the client was comparing before she pitched. A coaching signal, not proof of sales results.`,sum:`Same gap in 4 of 4 attempts`},
+  moment:{cap:`The moment that matters: practice attempt 4, simulated client`,client:`“Another agent quoted me less.”`,agent:`“Ours covers more, though. For example, it includes…”`,also:`Attempt 1 went the same way. Client: “This is more than we budgeted.” Michelle: “Let me walk you through what's included…”`},
+  sumHTML:`Four attempts. A price concern each time. Product features each time. <span class="hl swipe">Her client meeting is tomorrow.</span>`,
+  chain:{ctx:`Client meeting tomorrow.`,weak:`Pitches before she asks`,weakN:`Answers price concerns with features.`,big:`4`,bigOf:`4`,unit:`attempts`,sure:`Same gap every time, in two scenarios. Not yet seen with real clients.`,sug:`Coach before tomorrow`,because:`Because the gap repeats and the meeting is close.`},
+  aiShort:`Coach her before tomorrow`,labSub:`Coach Michelle before tomorrow's meeting.`,
+  bound:`Michelle showed the same gap in four simulated attempts across two scenarios. Worth acting on before tomorrow, but not proof of real-world performance.`,
+  actions:{
+   accept:{title:`Coach now`,coach:true,next:`Michelle gets one-to-one coaching before tomorrow. The rest of your time stays free.`,decided:`Your decision: coach Michelle before tomorrow, using {mine} minutes of your team coaching time.`},
+   verify:{title:`Verify first`,next:`Michelle gets a second practice scenario first. You decide again with more evidence.`,decided:`Your decision: verify first. Michelle gets a second scenario before any coaching time is spent.`},
+   override:{title:`Hold coaching`,next:`You decide not to coach her now and give a reason. The suggestion stays open.`,decided:`Your decision: hold coaching for Michelle, against the suggestion. The suggestion stays open.`}},
+  s2:{title:`What happens after you spot Michelle's risk?`,
+   line:`Michelle knows the product. When the client says <span class="hl">“another agent quoted less,”</span> she pitches features before finding out what is being compared.`,
+   goal:`The goal: practise a better discovery question before tomorrow's fictional client meeting, then bring the new evidence back to you.`,
+   kTask:`Find the coaching principle behind Michelle's price-objection gap.`,kWait:`Where would you look for the skill Michelle needs before her next meeting?`,
+   kRates:{price:`important`,basics:`low`,discovery:`general`,agent:`low`,brochure:`review`},
+   kWhy:{price:`Fictional §2: ask what the competing quote includes before describing policy features. Directly relevant to Michelle.`,discovery:`Supporting: the questions she should ask before she pitches.`},
+   kAnchor:{label:`coaching note, §2`,quote:`“Before describing features, ask which coverage and conditions the prospect is comparing.”`},
+   kOut:{priority:`Clarify the client's comparison before listing features. A low quote alone does not establish comparable coverage.`,qs:[`What should Michelle ask when a prospect mentions a lower quote?`,`Which differences must be verified before discussing value?`,`What should never be assumed from an unverified competing quote?`],scenario:`A simulated price-sensitive prospect says: “Another agent quoted me less.” Michelle must ask before explaining.`},
+   kSum:`From one recurring practice gap to a specific, source-checkable coaching objective.`,
+   cTask:`Turn Michelle's next client situation into the right rehearsal.`,
+   cRows:[[`Prospect`,`Ms. Rivera`],[`Conversation`,`<span class="hl">“Another agent quoted me less.”</span>`],[`Status`,`Follow-up meeting tomorrow`],[`Still unknown`,`Coverage amount, policy terms, and details of the competing quote`],[`Next focus`,`Ask what the client wants to compare; don't guess`]],
+   cAnchor:{label:`client note, follow-up entry`,html:`<span class="hl">The only recorded objection is the lower quoted price.</span> No conclusion about coverage, suitability, or the prospect's intent is supported by that note.`},
+   cWait:`What should Michelle ask before describing her product?`,
+   cOut:{known:`The prospect mentioned a lower quote and has a meeting scheduled. The price comparison is not yet documented.`,unknown:[`Which type and amount of coverage the other quote includes`,`What matters most to the prospect beyond price`],question:`“Would it help if we first looked at what each quote covers, so we're comparing the same things?”`,match:`Michelle rehearses this exact price objection with a simulated AI client, then you review the transcript and coach feedback.`},
+   cSum:`From a documented objection to one careful question Michelle can rehearse.`,
+   rx:{type:`Knows the product. Does not ask first.`,kind:`A communication-skill gap`,ev:`Four simulated attempts, the same gap each time.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> She rehearses the comparison question until it comes before the pitch.`},
+   stops:[
+    {tag:`Leadership, reveal the hidden risk`,title:`An excellent test score hides a repeatable coaching signal.`,body:`You see Michelle's four simulated attempts across two scenarios, review their limits and decide what deserves scarce coaching time.`,kase:`Michelle handles a lower-price objection by listing policy features instead of clarifying the comparison.`,proof:`Four illustrative transcripts support a practice concern, not a claim about live client calls or selling results.`},
+    {tag:`Knowledge, trace the source`,title:`Find a specific principle, not a generic sales script.`,body:`The fictional coaching note §2 says to ask what coverage is being compared before listing features. You review the source and approve any resulting material.`,kase:`Target skill: ask a useful comparison question before giving product information.`,proof:`Sample source: fictional approved coaching note §2, shown in the Knowledge example above.`},
+    {tag:`Client, understand context`,title:`The client file tells you what is known, and what is missing.`,body:`The illustrative note records a lower competing quote, but not the competing terms or the client's priorities. The suggested next question respects that uncertainty.`,kase:`Fictional prospect Ms. Rivera says: “Another agent quoted me less.” Michelle's follow-up is tomorrow.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, rehearse the correction`,title:`See whether Michelle asks before she pitches.`,body:`A targeted, simulated price-objection role-play tests the exact skill. You compare transcript moments and coach feedback before any further decision.`,kase:`Old response: “Ours covers more.” Target response: “What would you like us to compare first?”`,proof:`A proposed practice objective, not a live AI run, a measured improvement or a sent assignment.`},
+    {tag:`Leadership, reassess`,title:`The loop returns to you, with evidence.`,body:`If a later rehearsal shows the question working across different client situations, review that evidence. If not, adjust the coaching plan; do not infer sales success from a demo.`,kase:`The Hub links the issue, source, client context, planned rehearsal and your next judgment.`,proof:`No training, assignment or real-world outcome is created by this page.`}]}},
+ david:{name:`David`,pos:`his`,Pos:`His`,ctx:`New. First client calls start next week.`,
+  short:`One conversation. A product question he could not answer.`,pill:`thin`,pillTxt:`Thin evidence`,focus:`Product basics`,sug:`Verify first`,
+  ev:`2 practice attempts on one conversation. The second went further, until the simulated client asked how term and whole life differ and David could not explain it.`,sugWhy:`One conversation is a sample of one. Check product basics and assign a second scenario. No coaching time yet.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`2`,unit:`attempts`,cap:`on one conversation. When the simulated client asked how term and whole life differ, he could not explain it. Too little to judge his skills; enough to check his product basics.`,sum:`Thin evidence: 2 attempts, 1 conversation`},
+  moment:{cap:`What practice recorded (simulated)`,html:`Attempt 2 went further than attempt 1, until the simulated client asked how term and whole life differ. <span class="hl">David could not explain it.</span>`},
+  sumHTML:`Two attempts, one conversation, one product question he could not answer. <span class="hl swipe">His first client calls start next week.</span>`,
+  chain:{ctx:`First client calls next week.`,weak:`Product basics, possibly`,weakN:`Could not explain term versus whole life.`,big:`2`,unit:`attempts`,sure:`One conversation only. A real gap or a bad moment: too early to tell.`,sug:`Verify first, with product basics`,because:`Because one conversation is thin evidence and his calls start next week.`},
+  aiShort:`Verify first: product basics and a second scenario`,labSub:`Check whether David's product gap is real before spending coaching time: a product-basics question bank and a second scenario with a different client.`,
+  bound:`Two simulated attempts on one conversation. They show one product question he could not answer, not a pattern.`,
+  actions:{
+   accept:{title:`Basics + second scenario`,next:`David gets a product-basics question bank and a second scenario with a different client. No coaching time yet.`,decided:`Your decision: check the gap first. David gets a product-basics question bank and a second scenario; no coaching time is spent yet.`},
+   verify:{title:`Review it yourself`,next:`You read the excerpts from his two attempts before anything is assigned. Then you decide.`,decided:`Your decision: review the excerpts from David's two attempts yourself before assigning anything.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on David this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach David now, using {mine} minutes of your team coaching time, against the suggestion.`}},
+  s2:{title:`What happens when the evidence is thin?`,
+   line:`David asks good questions. But when the simulated client asked how term and whole life differ, <span class="hl">he could not explain it</span>.`,
+   goal:`The goal: find out whether this is a real product gap before his first client calls next week, using approved product material rather than a generic script.`,
+   kTask:`Find the approved product basics David needs, and check the rest of the library.`,kWait:`Which approved material answers the question David missed?`,
+   kRates:{price:`low`,basics:`important`,discovery:`general`,agent:`low`,brochure:`review`},
+   kWhy:{basics:`Explains how term and whole life differ in plain terms. Directly relevant to the question David could not answer.`,discovery:`Supporting: helps him ask what the client needs before explaining any product.`},
+   kAnchor:{label:`product guide, basics section`,quote:`“Explain the difference in length of coverage first, then ask what the client wants protected.”`},
+   kOut:{priority:`Product basics, anchored to the approved guide: explain how term and whole life differ before the first client calls.`,qs:[`How would you explain the difference between term and whole life in two sentences?`,`What should you ask before suggesting either one?`,`Which statements must come from approved material only?`],scenario:`A simulated young parent asks how term and whole life differ. David explains it plainly, then asks what the client wants to protect.`},
+   kSum:`From one missed question to a specific product-basics check, grounded in approved material.`,
+   cTask:`Prepare David for the kind of client he will meet next week.`,
+   cRows:[[`Prospect`,`Mr. Okafor`],[`Conversation`,`<span class="hl">Asked about term versus whole life.</span>`],[`Status`,`First call next week`],[`Still unknown`,`What he wants to protect, budget and existing coverage`],[`Next focus`,`Explain the basics plainly, then ask; no recommendation yet`]],
+   cAnchor:{label:`client note, intake entry`,html:`<span class="hl">The note records only that he asked about term versus whole life.</span> It says nothing about which would suit him.`},
+   cWait:`What should David be ready to explain, and what should he ask?`,
+   cOut:{known:`The prospect asked about term versus whole life. The first call is next week.`,unknown:[`What he wants the coverage to protect`,`Whether he already has coverage`],question:`“Before I compare them, can I ask what you'd most want the coverage to do for your family?”`,match:`After the product-basics questions, David rehearses this first call with a simulated client who asks the same question.`},
+   cSum:`From a client's question to a prepared, approved answer and one good question.`,
+   rx:{type:`Asks well. Cannot yet explain the product.`,kind:`Possibly a knowledge gap`,ev:`Two simulated attempts on one conversation. Thin evidence, so a check comes first.`,start:0,startTxt:`<strong>Starts in Knowledge Studio.</strong> A question bank on approved product basics, then a second scenario.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`One missed question is a signal, not yet a pattern.`,body:`You see two simulated attempts on one conversation. The AI marks the evidence as thin and suggests checking before spending coaching time.`,kase:`David could not explain how term and whole life differ when a simulated client asked.`,proof:`Two illustrative attempts support a check, not a conclusion about his skills.`},
+    {tag:`Knowledge, find the approved answer`,title:`Start from approved product material.`,body:`The approved product guide explains the difference plainly. A question bank built from it checks whether David can explain it. You review the questions before they are assigned.`,kase:`Target: explain term versus whole life in plain words, then ask a question.`,proof:`Sample source: fictional approved product guide, shown in the Knowledge example above.`},
+    {tag:`Client, prepare for next week`,title:`His next client may ask the same kind of question.`,body:`The fictional intake note shows the prospect asked about term versus whole life and nothing more. David should explain, then ask, not recommend.`,kase:`Fictional prospect Mr. Okafor, first call next week.`,proof:`Sample source: fictional client intake note, shown in the Client example above.`},
+    {tag:`Practice, a second scenario`,title:`A different client asks the same question.`,body:`A second simulated scenario with a different client shows whether the gap repeats. That second data point is what the first conversation lacked.`,kase:`If he explains it well, the first miss was a bad moment. If not, product coaching is justified.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Two data points, then your decision.`,body:`With the second scenario in, you decide: close the check, or spend coaching time on product basics.`,kase:`Either way the decision is yours, based on more than one conversation.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ john:{name:`John`,pos:`his`,Pos:`His`,ctx:`Joined two months ago.`,
+  short:`One attempt only.`,pill:`thin`,pillTxt:`Thin evidence`,focus:`Asking before presenting`,sug:`Assign one more practice`,
+  ev:`1 practice attempt. He presented the product before asking what the client needed.`,sugWhy:`A single attempt may be a bad day. No coaching time yet.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`1`,unit:`attempt`,cap:`so far. He presented the product before asking what the client needed. One attempt can be a bad day.`,sum:`Thin evidence: 1 attempt`},
+  moment:{cap:`What practice recorded (simulated)`,html:`In his only simulated attempt, John <span class="hl">described the product before asking what the client needed</span>.`},
+  sumHTML:`One attempt. Product first, questions later. <span class="hl swipe">Too early to know if it is a habit.</span>`,
+  chain:{ctx:`Joined two months ago.`,weak:`Presents before asking, once`,weakN:`Seen in a single attempt.`,big:`1`,unit:`attempt`,sure:`One attempt is not a pattern. Any conclusion now would be a guess.`,sug:`Assign one more practice`,because:`Because a second attempt costs no coaching time and shows whether it repeats.`},
+  aiShort:`Assign one more practice`,labSub:`Assign John one more practice before drawing any conclusion.`,
+  bound:`One simulated attempt. It shows one moment, not a habit.`,
+  actions:{
+   accept:{title:`One more practice`,next:`John gets a second practice on a needs-discovery conversation. No coaching time yet.`,decided:`Your decision: assign John one more practice before any coaching time is spent.`},
+   verify:{title:`Review it yourself`,next:`You read the excerpt from his one attempt before assigning anything. Then you decide.`,decided:`Your decision: read the excerpt from John's one attempt yourself before assigning anything.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on John this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach John now, using {mine} minutes of your team coaching time, against the suggestion.`}},
+  s2:{title:`What happens when there is only one attempt?`,
+   line:`In his only simulated attempt, John <span class="hl">presented the product before asking what the client needed</span>.`,
+   goal:`The goal: get a second data point cheaply, with a needs-discovery practice, before deciding whether he needs coaching at all.`,
+   kTask:`Find the approved material for one more, better-aimed practice.`,kWait:`Which approved material should John's next practice be built on?`,
+   kRates:{price:`low`,basics:`low`,discovery:`important`,agent:`low`,brochure:`review`},
+   kWhy:{discovery:`Approved questions for finding out what a client needs before presenting. Directly relevant to John's attempt.`},
+   kAnchor:{label:`discovery guide, opening questions`,quote:`“Ask at least one question about the client's situation before you describe any product.”`},
+   kOut:{priority:`Needs discovery, anchored to the approved guide: one question about the client before any product.`,qs:[`What is one question you would ask before describing a product?`,`How do you tell the client why you are asking?`,`What should you listen for in the answer?`],scenario:`A simulated new prospect asks what John is offering. John asks one question about the client's situation before answering.`},
+   kSum:`From one attempt to a second, well-aimed practice, at no coaching cost.`,
+   cTask:`Aim John's next practice at a realistic opening.`,
+   cRows:[[`Prospect`,`Ms. Chen`],[`Conversation`,`<span class="hl">Asked what John is offering.</span>`],[`Status`,`First meeting next week`],[`Still unknown`,`Her situation, needs and existing coverage`],[`Next focus`,`Ask about her situation before presenting`]],
+   cAnchor:{label:`client note, first contact`,html:`<span class="hl">The note records only that she asked what he offers.</span> Nothing about her needs is known yet.`},
+   cWait:`What should John ask before he presents anything?`,
+   cOut:{known:`She asked what he offers. A first meeting is booked.`,unknown:[`Her situation and what she wants to protect`,`Whether she already has coverage`],question:`“Happy to explain. Can I first ask what made you open to a conversation now?”`,match:`John rehearses this opening with a simulated client, then the transcript comes back to you.`},
+   cSum:`From a first-contact note to one question John can practise asking first.`,
+   rx:{type:`Presented before asking, once.`,kind:`Unclear so far`,ev:`One simulated attempt. Not enough to tell a skill gap from a bad day.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> One more attempt first, so the evidence can speak.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`One attempt is not a pattern.`,body:`You see a single simulated attempt. The AI marks the evidence as thin and suggests one more practice before any coaching time.`,kase:`John described the product before asking what the client needed.`,proof:`One illustrative attempt supports a second look, not a judgment.`},
+    {tag:`Knowledge, aim the next practice`,title:`Build the next practice from approved questions.`,body:`The approved needs-discovery guide gives the questions to practise. You review them before anything is assigned.`,kase:`Target: one question about the client before any product.`,proof:`Sample source: fictional approved discovery guide, shown in the Knowledge example above.`},
+    {tag:`Client, a realistic opening`,title:`Use the kind of opening he will actually hear.`,body:`The fictional note shows a prospect asking what he offers, and nothing about her needs. That is the moment to ask, not to present.`,kase:`Fictional prospect Ms. Chen, first meeting next week.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, the second attempt`,title:`A second attempt, at no coaching cost.`,body:`One more simulated practice shows whether presenting first is a habit or a one-off.`,kase:`If he asks first, close the concern. If not, practise discovery questions.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Decide with two attempts, not one.`,body:`With the second attempt in, you decide whether John needs coaching time or nothing more.`,kase:`Your coaching time stays free until the evidence asks for it.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ grace:{name:`Grace`,pos:`her`,Pos:`Her`,ctx:`Two years on the team.`,
+  short:`No gap in five attempts.`,pill:`consistent`,pillTxt:`Consistent evidence`,focus:`No gap seen`,sug:`No time this week`,
+  ev:`5 practice attempts across three conversations. She asks before she answers, every time.`,sugWhy:`Offer her a harder conversation to find her ceiling.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`5`,of:`5`,cap:`attempts in which she asked what the client needed before answering, across three conversations. No gap observed in simulated practice.`,sum:`No gap in 5 of 5 attempts`},
+  moment:{cap:`What practice recorded (simulated)`,html:`In all five simulated attempts, across three different conversations, Grace <span class="hl">asked what the client needed before answering</span>.`},
+  sumHTML:`Five attempts, three conversations, questions first every time. <span class="hl swipe">Her coaching time can go elsewhere.</span>`,
+  chain:{ctx:`Two years on the team.`,weak:`No gap observed`,weakN:`Asks before she answers.`,big:`5`,bigOf:`5`,unit:`attempts`,sure:`Consistent across three conversations. Still simulated, not real client calls.`,sug:`No coaching time; a harder scenario`,because:`Because nothing needs fixing, and a harder conversation can show her ceiling.`},
+  aiShort:`No coaching time; offer a harder scenario`,labSub:`Spend no coaching time on Grace this week. Offer her a harder scenario to find her ceiling.`,
+  bound:`Five simulated attempts across three conversations with no gap. Strong practice evidence, but not proof of real client results.`,
+  actions:{
+   accept:{title:`Harder scenario`,next:`Grace gets a harder simulated conversation. No coaching time; your minutes stay free for others.`,decided:`Your decision: no coaching time for Grace this week; she gets a harder scenario to find her ceiling.`},
+   verify:{title:`Review it yourself`,next:`You read sample excerpts from her five attempts before deciding.`,decided:`Your decision: read sample excerpts from Grace's attempts yourself before deciding.`},
+   override:{title:`Coach her anyway`,coach:true,next:`You spend one-to-one time on Grace this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach Grace this week, using {mine} minutes of your team coaching time, against the suggestion.`}},
+  s2:{title:`What happens when practice shows no gap?`,
+   line:`Grace <span class="hl">asks before she answers</span>, in every attempt and every conversation so far.`,
+   goal:`The goal: keep her growing with a harder conversation, without spending coaching time on a problem that does not exist.`,
+   kTask:`Find material for a harder conversation, not a fix.`,kWait:`What would stretch an agent who already asks good questions?`,
+   kRates:{price:`low`,basics:`low`,discovery:`general`,agent:`important`,brochure:`review`},
+   kWhy:{agent:`A harder objection she has not practised yet. Directly relevant to stretching Grace.`,discovery:`Supporting: her strength, and a useful example for others on the team.`},
+   kAnchor:{label:`objection guide, existing relationships`,quote:`“Acknowledge the existing relationship, then ask what the client values most in it.”`},
+   kOut:{priority:`A stretch goal, anchored to the approved objection guide: handle “I already have an agent” without pushing.`,qs:[`How do you respond when a client says they already have an agent?`,`What can you ask that respects that relationship?`,`When is it right to leave the door open and stop?`],scenario:`A simulated business owner says he already has an agent he trusts. Grace keeps the conversation open without pressure.`},
+   kSum:`From strong evidence to a stretch goal, not a fix.`,
+   cTask:`Match Grace's next practice to a tougher kind of client.`,
+   cRows:[[`Prospect`,`Mr. Patel`],[`Conversation`,`<span class="hl">Already works with another agent.</span>`],[`Status`,`Second conversation next month`],[`Still unknown`,`What he values in his current agent`],[`Next focus`,`Respect the relationship; ask what matters to him`]],
+   cAnchor:{label:`client note, first conversation`,html:`<span class="hl">The note records only that he already has an agent.</span> It does not say he is unhappy.`},
+   cWait:`How would Grace keep this door open without pushing?`,
+   cOut:{known:`He already works with another agent. A second conversation is planned.`,unknown:[`What he values in his current agent`,`Whether anything is missing for him`],question:`“That makes sense. What matters most to you in working with them?”`,match:`Grace rehearses this harder conversation with a simulated client. No coaching time is needed.`},
+   cSum:`From a tougher client note to a stretch practice that keeps her growing.`,
+   rx:{type:`Asks before she answers, every time.`,kind:`No gap seen`,ev:`Five simulated attempts across three conversations.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> A harder conversation to find her ceiling. No coaching time.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`Strong evidence that nothing needs fixing.`,body:`You see five simulated attempts across three conversations with no gap. The AI suggests no coaching time this week.`,kase:`Grace asks before she answers, every time.`,proof:`Illustrative attempts support a stretch goal, not a claim about real client results.`},
+    {tag:`Knowledge, find a stretch`,title:`Find material for a harder conversation.`,body:`The approved objection guide covers a conversation she has not practised yet. You review it before anything is assigned.`,kase:`Stretch goal: handle “I already have an agent” without pushing.`,proof:`Sample source: fictional approved objection guide, shown in the Knowledge example above.`},
+    {tag:`Client, a tougher client`,title:`A realistic client who is not looking to switch.`,body:`The fictional note records an existing agent relationship and nothing about dissatisfaction. Grace should respect it and ask what matters.`,kase:`Fictional prospect Mr. Patel, second conversation next month.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, a harder scenario`,title:`Find her ceiling.`,body:`A harder simulated conversation shows where her skill stops, which becomes her next goal.`,kase:`Not a fix. A next level.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Your time stays where it is needed.`,body:`With the harder scenario in, you set her next goal. Your coaching minutes stay free for agents whose evidence asks for them.`,kase:`Strong agents grow too, without urgent coaching.`,proof:`No training, assignment or outcome is created by this page.`}]}},
+ anna:{name:`Anna`,pos:`her`,Pos:`Her`,ctx:`Six months on the team.`,
+  short:`Improving, on one scenario.`,pill:`building`,pillTxt:`Building evidence`,focus:`Needs analysis`,sug:`Reassess next week`,
+  ev:`3 practice attempts, better each time, all on the same conversation.`,sugWhy:`The improvement may be familiarity with one scenario.`,
+  report:{fig:`✓`,cap:`Courses complete, tests passed.`,sum:`Courses complete, tests passed`},
+  practice:{fig:`3`,unit:`attempts`,cap:`better each time, all on the same conversation. The improvement may be familiarity with that one scenario.`,sum:`Improving: 3 attempts, 1 scenario`},
+  moment:{cap:`What practice recorded (simulated)`,html:`Each of Anna's three simulated attempts went further than the last. <span class="hl">All three used the same practice conversation.</span>`},
+  sumHTML:`Three attempts, better each time. <span class="hl swipe">All on the same scenario.</span>`,
+  chain:{ctx:`Six months on the team.`,weak:`Improving needs analysis`,weakN:`Better each time.`,big:`3`,unit:`attempts`,sure:`Real improvement, or familiarity with one scenario: a new scenario will tell.`,sug:`Reassess with a new scenario`,because:`Because the progress is promising but untested anywhere else.`},
+  aiShort:`Reassess next week with a new scenario`,labSub:`Check Anna's progress with a new scenario next week before deciding anything.`,
+  bound:`Three simulated attempts on one conversation, improving each time. Promising, but untested in a different scenario.`,
+  actions:{
+   accept:{title:`New scenario next week`,next:`Anna gets a different needs-analysis scenario next week. No coaching time yet.`,decided:`Your decision: reassess Anna next week with a new scenario; no coaching time is spent yet.`},
+   verify:{title:`Review it yourself`,next:`You compare excerpts from her three attempts yourself before deciding.`,decided:`Your decision: compare excerpts from Anna's three attempts yourself before deciding.`},
+   override:{title:`Coach now anyway`,coach:true,next:`You spend one-to-one time on Anna this week and give a reason. The suggestion stays open.`,decided:`Your decision: coach Anna now, using {mine} minutes of your team coaching time, against the suggestion.`}},
+  s2:{title:`What happens when practice shows improvement?`,
+   line:`Anna <span class="hl">gets better each time</span>, but every attempt so far used the same conversation.`,
+   goal:`The goal: test whether her progress holds in a different scenario before deciding anything.`,
+   kTask:`Find material for a new scenario that tests the same skill.`,kWait:`How would you test whether Anna's progress is real?`,
+   kRates:{price:`low`,basics:`general`,discovery:`important`,agent:`low`,brochure:`review`},
+   kWhy:{discovery:`Approved needs-analysis questions. Directly relevant to the skill Anna is improving.`,basics:`Supporting: a scenario built on product basics tests the same skill in different territory.`},
+   kAnchor:{label:`discovery guide, opening questions`,quote:`“Ask at least one question about the client's situation before you describe any product.”`},
+   kOut:{priority:`Needs analysis in new territory, anchored to the approved guide.`,qs:[`What would you ask a client whose situation you know nothing about?`,`How do you adjust your questions when the client changes topic?`,`How do you summarise what you heard before suggesting anything?`],scenario:`A simulated client with a different situation and a different concern. Anna runs the same needs analysis in new territory.`},
+   kSum:`From promising progress to a fair test in a new scenario.`,
+   cTask:`Choose a client situation she has not practised yet.`,
+   cRows:[[`Prospect`,`Mr. Alvarez`],[`Conversation`,`<span class="hl">Recently started his own business.</span>`],[`Status`,`First meeting in two weeks`],[`Still unknown`,`His family situation and what he wants to protect`],[`Next focus`,`The same needs analysis, in a new situation`]],
+   cAnchor:{label:`client note, referral entry`,html:`<span class="hl">The note records only that he recently started a business.</span> Nothing about his needs is known yet.`},
+   cWait:`What should Anna find out before suggesting anything?`,
+   cOut:{known:`He recently started a business. A first meeting is planned.`,unknown:[`His family situation`,`What he wants to protect`],question:`“Before anything else, can you tell me what has changed for you since starting the business?”`,match:`Anna rehearses this new kind of conversation with a simulated client. The result shows whether her progress holds.`},
+   cSum:`From one familiar scenario to a fair test in a new one.`,
+   rx:{type:`Getting better, on one scenario.`,kind:`An improving skill`,ev:`Three simulated attempts on the same conversation.`,start:2,startTxt:`<strong>Starts in Practice Studio.</strong> A new scenario next week tests whether the progress holds.`},
+   stops:[
+    {tag:`Leadership, read the evidence`,title:`Promising progress, tested once.`,body:`You see three simulated attempts, better each time, all on one conversation. The AI suggests reassessing with a new scenario before deciding.`,kase:`Anna improved each time on the same practice conversation.`,proof:`Illustrative attempts support a fair test, not a conclusion.`},
+    {tag:`Knowledge, a fair test`,title:`Test the same skill in new territory.`,body:`The approved discovery guide gives the questions. A new scenario changes the client, not the skill. You review it before anything is assigned.`,kase:`Target: the same needs analysis, in a different situation.`,proof:`Sample source: fictional approved discovery guide, shown in the Knowledge example above.`},
+    {tag:`Client, a new situation`,title:`A client situation she has not practised.`,body:`The fictional note records only that the client recently started a business. Anna has to find out the rest.`,kase:`Fictional prospect Mr. Alvarez, first meeting in two weeks.`,proof:`Sample source: fictional client note, shown in the Client example above.`},
+    {tag:`Practice, a new scenario`,title:`Does the progress hold?`,body:`A different simulated scenario shows whether the improvement is skill or familiarity.`,kase:`If it holds, close the priority. If not, practise across more conversations.`,proof:`A proposed practice, not a live AI run or a measured result.`},
+    {tag:`Leadership, reassess`,title:`Decide with a fair test behind you.`,body:`With the new scenario in, you decide: close the priority, raise the difficulty, or keep practising.`,kase:`Promising is not the same as proven, and the difference is now visible.`,proof:`No training, assignment or outcome is created by this page.`}]}}
+};
+
+/* What follows each management action, per learner. Fictional and scripted.
+   plan = the planned action; event = the simulated next event; opts = two hypothetical responses,
+   each with the manager's next decision. kind:`review` means nothing was assigned, so the
+   hypothetical is what the manager might conclude, not a learner response. {mins} = minutes approved. */
+const FOLLOW={
+ michelle:{
+  accept:{plan:`A {mins}-minute one-to-one with Michelle before tomorrow's meeting, then one targeted price-objection practice.`,event:`Day 1, simulated: the coaching session takes place and Michelle completes one new price-objection practice.`,
+   opts:[{label:`Asks first`,resp:`In the new practice she asks what the other quote covers before describing features.`,next:`Keep the priority open for one more scenario before calling it fixed. No more coaching time this week.`},
+         {label:`Pitches first again`,resp:`She still answers the price concern with features.`,next:`Try a different coaching approach next week and reassess. She stays your top coaching priority.`}]},
+  verify:{plan:`Michelle gets one second practice in a different price scenario. No coaching time yet.`,event:`Day 1, simulated: Michelle completes the second scenario.`,
+   opts:[{label:`Gap repeats`,resp:`Features before questions again, now in a third conversation.`,next:`The evidence is stronger. Decide on coaching time, if your team budget still allows it before the meeting.`},
+         {label:`Gap does not appear`,resp:`She asks what is being compared first this time.`,next:`Keep the finding provisional and keep your minutes. Check once more next week.`}]},
+  override:{plan:`No coaching and no new practice this week. You review Michelle's evidence again at your weekly check-in. The AI suggestion stays open, with your reason.`,event:`Day 7, simulated: weekly check-in. Only practice Michelle chose to do on her own appears in the Hub; you assigned nothing.`,
+   opts:[{label:`Same gap in her own practice`,resp:`She practised once on her own and pitched features first again.`,next:`Reopen the AI suggestion with your reason on record. Neither you nor the AI is assumed to be right.`},
+         {label:`No new practice`,resp:`She did no practice this week, so there is no new evidence.`,next:`The original four attempts are still the only evidence. Decide again next week.`}]}},
+ david:{
+  accept:{plan:`David gets the approved product-basics question bank, then a second scenario with a different client. No coaching time yet.`,event:`Day 3, simulated: David completes the question bank and the second scenario.`,
+   opts:[{label:`Explains it this time`,resp:`He explains how term and whole life differ, using the approved material.`,next:`Close the knowledge priority. Spot-check after his first client calls.`},
+         {label:`Still cannot explain it`,resp:`The simulated client asks again and he still cannot explain it.`,next:`Two conversations now show the gap. Consider coaching time next week, within your team budget.`}]},
+  verify:{kind:`review`,plan:`You read the excerpts from David's two attempts. Nothing is assigned and no coaching time is used.`,event:`Now: open the excerpts in “Inspect the practice excerpts” above. No new practice exists yet.`,
+   opts:[{label:`Looks like a knowledge gap`,resp:`You judge that he did not know the difference.`,next:`Approve the question bank and a second scenario.`},
+         {label:`Looks like nerves`,resp:`You judge that he knew it but froze under the question.`,next:`Assign a second scenario without the question bank, and reassess.`}]},
+  override:{plan:`A {mins}-minute one-to-one with David on product basics this week, against the suggestion.`,event:`Day 3, simulated: the coaching session takes place and David completes one practice afterwards.`,
+   opts:[{label:`Explains it now`,resp:`He explains the difference in the practice after coaching.`,next:`Compare with the suggestion you overrode: a second scenario would still show whether it holds.`},
+         {label:`Still unclear`,resp:`His explanation is still incomplete.`,next:`Move to the approved question bank before spending more coaching time.`}]}},
+ john:{
+  accept:{plan:`John gets one needs-discovery practice. No coaching time.`,event:`Day 2, simulated: John completes the second practice.`,
+   opts:[{label:`Asks first`,resp:`He asks about the client's situation before presenting.`,next:`Treat the first attempt as a bad day. No coaching needed now.`},
+         {label:`Presents first again`,resp:`He presents the product before asking, again.`,next:`Two attempts show a habit. Plan targeted discovery practice, and coaching time if your team budget allows.`}]},
+  verify:{kind:`review`,plan:`You read the excerpt from John's one attempt. Nothing is assigned and no coaching time is used.`,event:`Now: open the excerpt in “Inspect the practice excerpts” above. No new practice exists yet.`,
+   opts:[{label:`Can't tell yet`,resp:`One excerpt cannot separate a habit from a bad day.`,next:`Assign one more practice to find out.`},
+         {label:`Looks like a habit`,resp:`You judge that he relies on a memorised product opening.`,next:`Assign needs-discovery practice directly.`}]},
+  override:{plan:`A {mins}-minute one-to-one with John on discovery questions this week, against the suggestion.`,event:`Day 2, simulated: the coaching session takes place and John completes one practice afterwards.`,
+   opts:[{label:`Asks first`,resp:`He asks about the client's situation before presenting.`,next:`Useful, but one attempt after coaching is still thin evidence. Check once more.`},
+         {label:`Presents first`,resp:`He still presents first.`,next:`Reassess whether coaching or more practice is the better tool for John.`}]}},
+ grace:{
+  accept:{plan:`Grace gets one harder practice: a client who already has an agent. No coaching time; your minutes stay free for others.`,event:`Day 4, simulated: Grace completes the harder scenario.`,
+   opts:[{label:`Handles it`,resp:`She keeps the conversation open without pushing.`,next:`Consider asking her to share her approach with the team. No coaching needed.`},
+         {label:`Finds her ceiling`,resp:`She struggles to keep the conversation going.`,next:`Make it her next development goal, not an urgent problem.`}]},
+  verify:{kind:`review`,plan:`You read sample excerpts from Grace's attempts. Nothing is assigned and no coaching time is used.`,event:`Now: open the excerpts in “Inspect the practice excerpts” above. No new practice exists yet.`,
+   opts:[{label:`Consistent, as summarised`,resp:`The excerpts match the summary: questions first.`,next:`Offer her the harder scenario.`},
+         {label:`Something to develop`,resp:`You notice a point the summary did not capture.`,next:`Note it as a development goal. Still no urgent coaching.`}]},
+  override:{plan:`A {mins}-minute one-to-one with Grace this week, against the suggestion.`,event:`Day 4, simulated: the session takes place. There was no gap to fix, so it is used for development.`,
+   opts:[{label:`Uses it to stretch`,resp:`She asks for a harder scenario to practise.`,next:`Weigh this against what the same minutes could have done for someone with a clearer gap.`},
+         {label:`Little to work on`,resp:`The session confirms there is no gap right now.`,next:`Return the minutes to the rest of the team next week.`}]}},
+ anna:{
+  accept:{plan:`Anna gets a different needs-analysis scenario next week. No coaching time yet.`,event:`Next week, simulated: Anna completes the new scenario.`,
+   opts:[{label:`Progress holds`,resp:`She asks her needs questions in the new situation too.`,next:`Treat the improvement as real. Close the priority or raise the difficulty.`},
+         {label:`Progress drops`,resp:`She skips the needs questions in the new situation.`,next:`The gains were partly familiarity. Plan practice across different conversations, with coaching time if your team budget allows.`}]},
+  verify:{kind:`review`,plan:`You compare the excerpts from Anna's three attempts. Nothing is assigned and no coaching time is used.`,event:`Now: open the excerpts in “Inspect the practice excerpts” above. No new practice exists yet.`,
+   opts:[{label:`Looks like real progress`,resp:`You judge that her questions improved, not just her wording.`,next:`Still test it in a new scenario before closing the priority.`},
+         {label:`Looks memorised`,resp:`You judge that she repeats the same opening line in each attempt.`,next:`Assign a new scenario sooner.`}]},
+  override:{plan:`A {mins}-minute one-to-one with Anna this week, against the suggestion.`,event:`Day 3, simulated: the coaching session takes place and Anna completes one practice in a new scenario.`,
+   opts:[{label:`Progress holds`,resp:`She asks her needs questions in the new scenario.`,next:`Compare with the suggestion: a new scenario alone might have shown the same.`},
+         {label:`Progress drops`,resp:`She skips the needs questions in the new scenario.`,next:`Continue coaching and reassess next week.`}]}}
+};
+
+/* Which Studios each confirmed decision actually uses. Empty = not used by this decision. */
+const ROUTE={
+ michelle:{accept:{L:`You coach Michelle for {mins} min before tomorrow.`,K:`Coaching note §2 frames the session.`,C:`Ms. Rivera's note shapes the practice.`,P:`One targeted price-objection practice after coaching.`},
+  verify:{L:`You decide again after the second scenario.`,K:``,C:``,P:`One second price scenario. No coaching.`},
+  override:{L:`You hold coaching and review the evidence again at your weekly check-in.`,K:``,C:``,P:``}},
+ david:{accept:{L:`You decide again with the new evidence.`,K:`Approved product-basics question bank.`,C:`Mr. Okafor's note shapes the second scenario.`,P:`A second scenario with a different client.`},
+  verify:{L:`You read the excerpts, then decide.`,K:``,C:``,P:``},
+  override:{L:`You coach David for {mins} min this week.`,K:`The approved product guide frames the session.`,C:``,P:`One practice after coaching.`}},
+ john:{accept:{L:`You decide after the second attempt.`,K:`Approved needs-discovery question guide.`,C:`Ms. Chen's note sets the opening.`,P:`One more needs-discovery practice.`},
+  verify:{L:`You read the excerpt, then decide.`,K:``,C:``,P:``},
+  override:{L:`You coach John for {mins} min this week.`,K:`The discovery guide frames the session.`,C:``,P:`One practice after coaching.`}},
+ grace:{accept:{L:`No coaching time; you review the result.`,K:`Objection guide: “I already have an agent”.`,C:`Mr. Patel's note sets the harder scenario.`,P:`One harder practice.`},
+  verify:{L:`You read the sample excerpts, then decide.`,K:``,C:``,P:``},
+  override:{L:`You coach Grace for {mins} min this week.`,K:``,C:``,P:``}},
+ anna:{accept:{L:`You decide after next week's result.`,K:`The discovery guide, applied to a new situation.`,C:`Mr. Alvarez's note sets the new scenario.`,P:`One new scenario next week.`},
+  verify:{L:`You compare the excerpts, then decide.`,K:``,C:``,P:``},
+  override:{L:`You coach Anna for {mins} min this week.`,K:``,C:``,P:`One practice in a new scenario after coaching.`}}
+};
+
+/* Scripted demo excerpts. Short, labelled by attempt and scenario. Not records of real practice. */
+const EXCERPTS={
+ michelle:{shown:[{label:`Attempt 1. Scenario A: “More than we budgeted”`,lines:[[`Client`,`“This is more than we budgeted.”`],[`Michelle`,`“Let me walk you through what's included…”`]]},
+   {label:`Attempt 4. Scenario B: a lower competing quote`,lines:[[`Client`,`“Another agent quoted me less.”`],[`Michelle`,`“Ours covers more, though. For example, it includes…”`]]}],
+  rest:`Attempts 2 and 3 are summarised, not shown: the same pattern, features before questions.`},
+ david:{shown:[{label:`Attempt 2. Scenario: a new parent's first call`,lines:[[`Client`,`“How is term different from whole life?”`],[`David`,`“They're… both good options. I can send you a brochure.”`]]}],
+  rest:`Attempt 1 is summarised, not shown: the same conversation, which ended before the product question.`},
+ john:{shown:[{label:`Attempt 1. Scenario: a first meeting`,lines:[[`Client`,`“So what do you do, exactly?”`],[`John`,`“We offer three plans. The first one gives you…”`]]}],
+  rest:`This is his only attempt.`},
+ grace:{shown:[{label:`Attempt 2. Scenario: a price concern`,lines:[[`Client`,`“This seems expensive.”`],[`Grace`,`“Fair question. What are you comparing it with?”`]]},
+   {label:`Attempt 5. Scenario: “I need to think about it”`,lines:[[`Client`,`“I need to think about it.”`],[`Grace`,`“Of course. Which part would you like to think through?”`]]}],
+  rest:`Attempts 1, 3 and 4 are summarised, not shown: questions first each time.`},
+ anna:{shown:[{label:`Attempt 1. Scenario: a young family's needs analysis`,lines:[[`Client`,`“We just want something affordable.”`],[`Anna`,`“Our most affordable plan is…”`]]},
+   {label:`Attempt 3. The same scenario`,lines:[[`Client`,`“We just want something affordable.”`],[`Anna`,`“Before I suggest anything, who depends on your income?”`]]}],
+  rest:`Attempt 2 is summarised, not shown. All three attempts used the same client and opening line.`}
+};
+
+/* What kind of evidence each learner has, for plan trade-offs. */
+/* When the manager looks again, counted from the day the decision is approved (relative, not calendar dates). */
+const REVIEW={michelle:{accept:`Day 2, after the new practice`,verify:`Day 2, after the second scenario`,override:`Day 7, at your weekly check-in`},david:{accept:`Day 4, after the second scenario`,verify:`Day 1, after you read the excerpts`,override:`Day 4, after the practice that follows coaching`},john:{accept:`Day 3, after the second practice`,verify:`Day 1, after you read the excerpt`,override:`Day 3, after the practice that follows coaching`},grace:{accept:`Day 5, after the harder scenario`,verify:`Day 1, after you read the excerpts`,override:`Day 5, after the session`},anna:{accept:`Day 8, after next week's new scenario`,verify:`Day 1, after you compare the excerpts`,override:`Day 4, after the practice that follows coaching`}};
+
+const EVIDENCE_TRAIT={michelle:`repeat`,david:`thin`,john:`thin`,grace:`nogap`,anna:`one-scenario`};
+
+const $=id=>document.getElementById(id);
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const C=id=>CASES[id];
+/* State. pick = the manager's selection; TOP = the AI's suggestion; explored = the case on screen.
+   Each learner keeps its own demo decision, so switching never loses or mixes them. Nothing leaves this page. */
+let pick=null,locked=false,explored=null,step=0,stop=0,runTok=0;
+const dec={};ORDER.forEach(id=>dec[id]={action:``,reason:``,note:``,confirmed:false,outcome:``,minutes:0,minSel:0});
+const cur=()=>CASES[explored||TOP];
+
+/* ---------- step 1: five training reports that turn over ---------- */
+$('team').innerHTML=ORDER.map(id=>{const p=C(id);return `<label class="person" data-p="${id}"><input type="radio" name="pick" value="${id}" aria-label="${p.name}: ${esc(p.ctx)}"><span class="flip"><span class="face front"><span class="slip">Training report</span><b>${p.name}</b><span class="paper">Courses complete</span><span class="paper">Tests passed</span><span class="ctx">${esc(p.ctx)}</span></span><span class="face back" aria-hidden="true"><span class="slip">Simulated practice</span><span class="badges"><span class="mark mine">&#10003; Your choice</span><span class="mark here">&#9733; AI suggests</span><span class="mark now">&#9673; Exploring</span></span><b>${p.name}</b><span class="strength s-${p.pill}"><span class="meter"><i></i><i></i><i></i></span>${p.pillTxt}</span><span class="t">${id===TOP?'<span class="hl">'+esc(p.short)+'</span>':esc(p.short)}</span><span class="prio">Suggested: <strong>${esc(p.sug)}</strong></span></span></span></label>`}).join('');
+$('team').addEventListener('change',e=>{if(locked)return;pick=e.target.value;document.querySelectorAll('.person').forEach(l=>l.classList.toggle('picked',l.dataset.p===pick));$('lock').disabled=false});
+$('pickForm').addEventListener('submit',e=>{e.preventDefault();if(!pick||locked)return;locked=true;explored=pick;
+ $('team').classList.add('locked','revealed');document.querySelectorAll('.person input').forEach(i=>i.disabled=true);$('lockRow').hidden=true;
+ $('intro0').textContent='On paper, all five passed. In practice, they differ.';
+ const cards=[...document.querySelectorAll('.person')];
+ const seq=[...cards.filter(l=>l.dataset.p!==TOP),cards.find(l=>l.dataset.p===TOP)];
+ seq.forEach((l,i)=>setTimeout(()=>{l.classList.add('flipped');l.querySelector('.front').setAttribute('aria-hidden','true');l.querySelector('.back').removeAttribute('aria-hidden');if(l.dataset.p===TOP)l.classList.add('top')},still?0:200+i*260+(l.dataset.p===TOP?380:0)));
+ renderAll();
+ const wait=still?0:200+seq.length*260+380+900;
+ setTimeout(()=>{$('reveal').hidden=false;$('ctxbar').hidden=false;requestAnimationFrame(()=>{$('reveal').classList.add('in');$('verdict').focus({preventScroll:true});$('verdict').scrollIntoView({behavior:still?'auto':'smooth',block:'start'})})},wait);
+});
+
+function renderAll(){renderVerdict();renderEvidence();renderLab();markCards();renderCtx();if(step===1)renderStep2()}
+function setExplored(id,from){if(!CASES[id]||id===explored)return;explored=id;stop=0;renderAll();
+ if(from&&!document.body.contains(from)){const again=from.classList.contains('path')?document.querySelector('.path[data-explore="'+id+'"]'):document.querySelector('#evidence .ev-go[data-explore="'+id+'"]');if(again)again.focus({preventScroll:true})}
+ const target=step===1?$('h1'):$('verdict');target.scrollIntoView({behavior:still?'auto':'smooth',block:'start'});
+ $('cxLive').textContent='Now exploring '+C(id).name+'.'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-explore]');if(b)setExplored(b.dataset.explore,b)});
+
+function markCards(){document.querySelectorAll('.person').forEach(l=>l.classList.toggle('exploring',locked&&l.dataset.p===explored&&!(explored===pick&&pick===TOP)))}
+
+function renderVerdict(){
+ const c=cur(),id=explored,isPick=id===pick,isAI=id===TOP,split=pick&&pick!==TOP;
+ const h=isPick&&isAI?`You chose ${c.name}, and the AI agrees. Here is why.`:isPick?`You chose ${c.name}. Here is what ${c.pos} practice shows.`:isAI?`The AI suggests ${c.name}. Here is why.`:`Exploring ${c.name}. Here is what ${c.pos} practice shows.`;
+ const note=!split?``:isPick?`For this fictional team's current evidence, the AI's top coaching priority is ${C(TOP).name}. Compare both before you decide.`:isAI?`Your pick, ${C(pick).name}, stays saved. Switch back any time.`:`Your pick was ${C(pick).name}; the AI suggests ${C(TOP).name}. Switch any time.`;
+ const paths=split?`<div class="paths" role="group" aria-label="Choose which case to explore">${[pick,TOP].map(x=>{const k=C(x);return `<button type="button" class="path" data-explore="${x}" aria-pressed="${x===id}"><i>${x===pick?'Your selection':'AI recommendation'}</i><b>Explore ${k.name}</b><small>${esc(k.practice.sum)}</small></button>`}).join('')}</div>`:``;
+ const fig=f=>f.of?`${esc(f.fig)}<small>of</small>${esc(f.of)}`:f.unit?`${esc(f.fig)}<small>${esc(f.unit)}</small>`:esc(f.fig);
+ const m=c.moment;
+ const moment=m.client?`<figure class="moment"><figcaption>${esc(m.cap)}</figcaption><p class="m-client"><i>Client</i>${esc(m.client)}</p><p class="m-agent"><i>${c.name}</i><span class="hl">${esc(m.agent)}</span></p><p class="m-also">${esc(m.also)}</p></figure>`:`<figure class="moment obs"><figcaption>${esc(m.cap)}</figcaption><p class="m-obs">${m.html}</p></figure>`;
+ const ch=c.chain;
+ $('verdict').innerHTML=`<p class="sim-flag">Fictional team. Simulated practice.</p><h3>${esc(h)}</h3>${note?`<p class="v-note">${esc(note)}</p>`:``}${paths}<div class="exec" role="group" aria-label="Summary for ${c.name}"><div><span>Training report</span><b>${esc(c.report.sum)}</b></div><div><span>Simulated practice</span><b>${esc(c.practice.sum)}</b></div><div class="ex-ai"><span>AI suggests</span><b>${esc(c.aiShort)}</b></div><button type="button" class="btn hi" id="toDecision">Make your decision</button></div><div class="versus"><div class="vs report"><p class="vs-label">${c.Pos} training report</p><p class="vs-fig">${fig(c.report)}</p><p class="vs-cap">${esc(c.report.cap)}</p></div><div class="vs practice"><p class="vs-label">${c.Pos} simulated practice</p><p class="vs-fig">${fig(c.practice)}</p><p class="vs-cap">${esc(c.practice.cap)}</p></div></div>${moment}<p class="sum">${c.sumHTML}</p><div class="chainwrap"><div class="groups" aria-hidden="true"><span>Observed in practice</span><span>AI suggests</span><span>You decide</span></div><div class="chain" id="chain" role="list" aria-label="From evidence to decision for ${c.name}"><div role="listitem" data-g="Observed in practice"><p class="ck">Agent</p><p class="cv">${c.name}</p><p class="cn">${esc(ch.ctx)}</p></div><div role="listitem"><p class="ck">Finding</p><p class="cv">${esc(ch.weak)}</p><p class="cn">${esc(ch.weakN)}</p></div><div role="listitem"><p class="ck">Evidence</p><p class="cv"><big>${esc(ch.big)}${ch.bigOf?'<small> of </small>'+esc(ch.bigOf):''}</big>${esc(ch.unit)}</p><p class="cn"><strong>How sure?</strong> ${esc(ch.sure)}</p></div><div role="listitem" class="ai-cell" data-g="AI suggests"><p class="ck">Suggestion</p><p class="cv">${esc(ch.sug)}</p><p class="cn">${esc(ch.because)}</p></div><div role="listitem" class="decide-cell" id="chainDecide" data-g="You decide"><p class="ck">Decision</p><p class="cv" id="chainCv">Yours</p><p class="cn" id="chainCn">Choose below. Nothing happens until you approve.</p></div></div></div><p class="note">Text-based practice with an AI client. Every person and conversation here is simulated.</p>`;
+ renderChainDecision();
+}
+function renderChainDecision(){const d=dec[explored],cd=$('chainDecide');if(!cd)return;const c=cur();
+ cd.classList.toggle('set',d.confirmed);
+ $('chainCv').textContent=d.confirmed?c.actions[d.action].title+(d.minutes?`, ${d.minutes} min`:``):`Yours`;
+ $('chainCn').textContent=d.confirmed?(needsRevision(explored)?`Needs revision: the team plan is over budget.`:d.action===`override`?`Your demo override, with your reason. No assignment sent.`:`Your demo decision. No assignment sent.`):`Choose below. Nothing happens until you approve.`}
+
+function renderEvidence(){
+ const order=[TOP,...ORDER.filter(x=>x!==TOP)];
+ $('evidence').innerHTML=order.map(id=>{const p=C(id),tags=[id===TOP?'AI top priority':'',id===pick?'your choice':''].filter(Boolean).join(', ');return `<div class="ev${id===TOP?' top':''}${id===explored?' now':''}"><div class="who"><b>${p.name}</b><span>${esc(p.focus)}${tags?', '+tags:''}</span></div><div><span class="pill ${p.pill}">${p.pillTxt}</span><p>${esc(p.ev)}</p></div><div class="sug"><b>Suggestion: ${esc(p.sug)}</b><span>${esc(p.sugWhy)}</span><button type="button" class="ev-go" data-explore="${id}" aria-pressed="${id===explored}" aria-label="Explore ${p.name}'s case">${id===explored?'Exploring now':'Explore '+p.name}</button></div></div>`}).join('')}
+
+/* ---------- the manager's decision, per explored learner, inside one team budget ---------- */
+const MIN_OPTS=[10,15,20];
+const budget=()=>+document.querySelector('input[name="demoBudget"]:checked').value;
+const isCoach=(id,a)=>!!(a&&C(id).actions[a].coach);
+const committed=(except)=>ORDER.reduce((n,x)=>n+(x!==except&&dec[x].confirmed?dec[x].minutes:0),0);
+const roomFor=id=>budget()-committed(id);
+const fill=(t,m)=>t.replace(/\{mins\}/g,m);
+function fitMinutes(id){const d=dec[id],room=roomFor(id),ok=MIN_OPTS.filter(m=>m<=room);
+ if(!ok.length){d.minSel=0;return ok}if(!ok.includes(d.minSel))d.minSel=Math.max(...ok);return ok}
+function renderMinutes(){const id=explored,d=dec[id],c=cur(),show=isCoach(id,d.action)&&!d.confirmed;$('minutesWrap').hidden=!show;if(!show)return;
+ const ok=fitMinutes(id),room=roomFor(id);$('minName').textContent=c.name;
+ $('minOpts').innerHTML=MIN_OPTS.map(m=>`<label class="${ok.includes(m)?'':'off'}"><input type="radio" name="minSel" value="${m}"${m===d.minSel?' checked':''}${ok.includes(m)?'':' disabled'}>${m} min</label>`).join('');
+ $('minNote').textContent=ok.length?`${Math.max(room,0)} of ${budget()} min are still free this week.`:`No coaching time is free: ${committed(id)} of ${budget()} min are already approved for others. Revise one of them below, or choose another action for ${c.name}.`;
+ $('minNote').classList.toggle('warn',!ok.length)}
+const over=()=>committed(null)>budget();
+const needsRevision=id=>over()&&dec[id].confirmed&&dec[id].minutes>0;
+function kindOf(id){const d=dec[id];if(!d.confirmed)return null;if(d.minutes)return `coach`;if(FOLLOW[id][d.action].kind===`review`)return `review`;return ROUTE[id][d.action].P?`practice`:`monitor`}
+const GROUPS=[[`coach`,`Coaching now`],[`practice`,`Practice planned, not sent`],[`review`,`Your review pending`],[`monitor`,`Monitoring only`]];
+const names=ids=>ids.map(id=>C(id).name).join(`, `).replace(/, ([^,]*)$/,` and $1`);
+function renderTeam(){const b=budget(),used=committed(null),d=dec[explored],c=cur(),any=ORDER.some(x=>dec[x].confirmed);
+ const pend=isCoach(explored,d.action)&&!d.confirmed&&d.minSel?d.minSel:0,left=b-used,ov=used>b;
+ $('ttStatus').textContent=!any?`No decisions yet`:ov?`Needs revision`:`Within budget`;$('ttStatus').className=`tt-status `+(!any?`none`:ov?`bad`:`ok`);
+ $('ttAI').innerHTML=`AI's top priority: <b>${C(TOP).name}</b>. Evidence: ${esc(C(TOP).practice.sum.toLowerCase())} in simulated practice. ${esc(C(TOP).chain.because)}`;
+ const segs=ORDER.filter(x=>dec[x].confirmed&&dec[x].minutes).map(x=>`<span class="seg${ov?' bad':''}" style="flex:${dec[x].minutes}">${C(x).name} ${dec[x].minutes}</span>`).join('')+(pend?`<span class="seg pend" style="flex:${pend}">${c.name} +${pend}?</span>`:'')+(left-pend>0?`<span class="seg free" style="flex:${left-pend}">${left-pend} free</span>`:'');
+ $('ttBar').innerHTML=segs||`<span class="seg free" style="flex:1">${b} free</span>`;
+ $('ttAvail').textContent=b+' min';$('ttCommit').textContent=used+' min';$('ttLeft').textContent=ov?`Over by ${used-b} min`:left+' min';$('ttLeft').classList.toggle('warn',ov);
+ $('ttWarn').hidden=!ov;
+ if(ov)$('ttWarn').innerHTML=`<p><strong>Needs revision.</strong> ${used} min of coaching are approved, but only ${b} min are available, so this plan is not workable as it stands. Your decisions are kept for review: revise a coaching decision below${b<30?`, or go back to 30 min`:``}.</p>${b<30?`<button type="button" class="btn secondary" data-budget="30">Go back to 30 min</button>`:``}`;
+ const item=x=>`<div class="it"><b>${C(x).name}</b><span class="t">${esc(C(x).actions[dec[x].action].title)}</span>${dec[x].minutes?`<span class="m">${dec[x].minutes} min</span>`:``}${needsRevision(x)?`<em class="nr">Needs revision</em>`:``}<button type="button" class="linkbtn" data-revise="${x}" aria-label="Revise ${C(x).name}'s decision">Revise</button></div>`;
+ const rows=GROUPS.map(([k,label])=>{const ids=ORDER.filter(x=>kindOf(x)===k);return ids.length?`<li data-group="${k}"><span class="g">${label}</span><div class="its">${ids.map(item).join('')}</div></li>`:''}).join('');
+ const reassess=ORDER.filter(x=>dec[x].confirmed&&dec[x].action===`override`),undec=ORDER.filter(x=>!dec[x].confirmed);
+ $('ttList').innerHTML=(rows||`<li class="none">No decisions approved yet.</li>`)+(reassess.length?`<li data-group="reassess"><span class="g">Reassess at next check-in</span><div class="its"><p>${names(reassess)}: you overrode the AI suggestion, so compare the new evidence with it. Neither is assumed right.</p></div></li>`:``)+(undec.length?`<li data-group="undecided"><span class="g">Not decided yet</span><div class="its">${undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join('')}</div></li>`:``);
+ $('ttPend').textContent=pend?`If you approve: ${used+pend} of ${b} min committed, ${b-used-pend} left.`:'';
+ renderCompare()}
+/* Two hypothetical plans side by side. Read-only: the manager decides in each learner's panel. */
+function planFacts(plan){const b=budget(),coach=ORDER.filter(id=>plan[id]&&plan[id].minutes),other=ORDER.filter(id=>plan[id]&&!plan[id].minutes),undec=ORDER.filter(id=>!plan[id]);
+ const used=coach.reduce((n,id)=>n+plan[id].minutes,0);return {b,coach,other,undec,used,left:b-used}}
+function tradeoffs(plan,f){const t=[],coached=id=>!!(plan[id]&&plan[id].minutes);
+ if(!coached(TOP))t.push(`${C(TOP).name}, the AI's top priority (${C(TOP).practice.sum.toLowerCase()}), gets no coaching in this plan.`);
+ f.coach.forEach(id=>{const k=C(id),tr=EVIDENCE_TRAIT[id];
+  if(tr===`repeat`)t.push(`Puts time where the gap repeats. Still not observed with real clients.`);
+  if(tr===`thin`)t.push(`Coaches ${k.name} on thin evidence (${k.practice.sum.toLowerCase()}). A cheaper practice might show the same.`);
+  if(tr===`nogap`)t.push(`Spends ${plan[id].minutes} min on ${k.name}, where practice shows no gap.`);
+  if(tr===`one-scenario`)t.push(`Coaches ${k.name} before ${k.pos} progress is tested in a new scenario.`)});
+ const wait=f.other.filter(id=>EVIDENCE_TRAIT[id]===`thin`);if(wait.length)t.push(`${names(wait)} get${wait.length>1?``:`s`} more evidence first, so a real gap could wait a week.`);
+ if(f.left>0)t.push(`${f.left} min left unallocated.`);if(f.left<0)t.push(`Over budget by ${-f.left} min: needs revision.`);
+ if(f.undec.length)t.push(`No decision yet for ${names(f.undec)}.`);
+ t.push(`Based on simulated practice only. No outcome is known.`);return t}
+function planCard(title,plan,tag){const f=planFacts(plan);
+ const dl=[[`Immediate coaching`,f.coach.length?f.coach.map(id=>`${C(id).name} (${plan[id].minutes} min)`).join(`, `):`No one`],
+  [`Practice, review or monitoring instead`,f.other.length?f.other.map(id=>`${C(id).name}: ${esc(C(id).actions[plan[id].action].title)}`).join(`; `):`No one`],
+  [`Minutes`,`${f.used} of ${f.b} committed, `+(f.left<0?`over by ${-f.left}`:`${f.left} left`)],
+  [`Evidence behind each coaching priority`,f.coach.length?f.coach.map(id=>`${C(id).name}: ${esc(evidOf(id))}`).join(`; `):`No coaching priority`]];
+ return `<article class="plancard"><h5>${title} <span class="lyr hyp">${tag}</span></h5><dl>${dl.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div><dt>Trade-offs and limits</dt><dd><ul>${tradeoffs(plan,f).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></dd></div></dl></article>`}
+function renderCompare(){const b=budget(),aiM=Math.round(b*2/3);const ai={},mine={};
+ ORDER.forEach(id=>{ai[id]={action:`accept`,minutes:C(id).actions.accept.coach?aiM:0};if(dec[id].confirmed)mine[id]={action:dec[id].action,minutes:dec[id].minutes}});
+ const same=ORDER.every(id=>mine[id]&&mine[id].action===ai[id].action&&mine[id].minutes===ai[id].minutes);
+ const mineFacts=planFacts(mine);
+  const comparisonLead=mineFacts.left<0?`The AI's illustrative plan fits your ${b}-minute budget, but your current demo plan is over by ${-mineFacts.left} min and needs revision before it could be used.`:`Both illustrative plans are within your ${b}-minute budget.`;
+  $('compareBody').innerHTML=`<p class="cmp-lead">${comparisonLead} This compares what each plan commits and the evidence behind it, not results. Nothing here is applied: you decide in each learner's panel.</p>${same?`<p class="cmp-same">Your plan matches the AI's suggested plan.</p>`:``}<div class="cmp-grid">${planCard(`The AI's suggested plan`,ai,`Hypothetical`)}${planCard(`Your plan so far`,mine,`Your demo decisions`)}</div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-budget]');if(b){const r=document.querySelector(`input[name="demoBudget"][value="${b.dataset.budget}"]`);r.checked=true;afterDecisionChange();$('ttLive').textContent=`Budget set to ${b.dataset.budget} min.`}
+ const d=e.target.closest('[data-decidefor]');if(d){if(step!==0)go(0,true);setExplored(d.dataset.decidefor);$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const f=document.querySelector('#decideRow [data-decide]');if(f)f.focus({preventScroll:true})}});
+function decidedText(){const c=cur(),d=dec[explored];let t=c.actions[d.action].decided.replace(`{mine}`,d.minutes);if(d.action===`override`)t+=` Reason: `+d.reason+(d.note.trim()?` (`+d.note.trim()+`)`:``)+`.`;return t}
+function drawFollow(){const id=explored,d=dec[id],f=FOLLOW[id][d.action],review=f.kind===`review`;
+ $('fuPlan').textContent=(needsRevision(id)?`Needs revision before it could happen: `:``)+fill(f.plan,d.minutes);$('fuEvent').textContent=f.event;
+ $('fuRespH').textContent=review?`What you might conclude (hypothetical)`:`Hypothetical learner response`;
+ $('fuNoLearner').hidden=!review;
+ $('outcomeChoices').innerHTML=f.opts.map((o,i)=>`<button type="button" data-outcome="${i}" aria-pressed="${d.outcome===String(i)}">${esc(o.label)}</button>`).join('');
+ const o=d.outcome===``?null:f.opts[+d.outcome];
+ $('fuResp').textContent=o?o.resp:`Choose one of two possibilities. Neither is a prediction or a real result.`;
+ $('fuNext').textContent=o?o.next:`Appears after you choose a possibility above.`}
+function renderInspect(){const id=explored,x=EXCERPTS[id],c=cur();$('inspName').textContent=c.name;
+ $('inspBody').innerHTML=`<p class="insp-src">Scripted demo excerpts for a fictional agent, not records of real practice. In a pilot you would review your own team's practice transcripts.</p>${x.shown.map(e=>`<figure class="excerpt"><figcaption>${esc(e.label)}</figcaption>${e.lines.map(([who,line])=>`<p><i>${esc(who===`Client`?`Simulated client`:who)}</i>${esc(line)}</p>`).join('')}</figure>`).join('')}<p class="insp-rest">${esc(x.rest)}</p>`}
+function renderLab(){const c=cur(),d=dec[explored],id=explored;
+ $('labName').textContent=c.name;
+ $('labSub').innerHTML=`<span class="ai-tag">AI suggestion</span> ${esc(c.labSub)} It is a suggestion; nothing happens until you approve.`;
+ $('bound').innerHTML=`<strong>What the evidence can tell you:</strong> ${esc(c.bound)}`;
+ $('decideRow').innerHTML=[`accept`,`verify`,`override`].map(k=>{const a=c.actions[k];return `<button type="button" data-decide="${k}" aria-pressed="${d.action===k}"${d.confirmed?' disabled':''}>${k===`accept`?'<em class="sugg">AI suggestion</em>':''}<b>${esc(a.title)}</b><small><span>What happens next</span>${esc(a.next)}</small>${a.coach?'<span class="usesTime">Uses coaching time</span>':''}</button>`}).join('');
+ renderMinutes();renderInspect();
+ $('reasonWrap').hidden=d.action!==`override`||d.confirmed;$('reasonName').textContent=c.name;$('decisionReason').value=d.reason;$('decisionNote').value=d.note;
+ const blocked=isCoach(id,d.action)&&!d.confirmed&&!d.minSel;
+ $('confirmDecision').disabled=!d.action||d.confirmed||blocked;
+ $('confirmDecision').textContent=d.confirmed?`Demo decision made`:d.action?`Approve: `+c.actions[d.action].title+(isCoach(id,d.action)&&d.minSel?` (${d.minSel} min)`:``):`Choose an option above`;
+ $('decisionStatus').textContent=d.confirmed?`Demo decision made on this page only. No assignment sent, nothing saved.`:blocked?`Not enough coaching time is free. Revise another decision or choose another action.`:d.action?(d.action===`override`?`Choose a reason for the override, then approve.`:`Ready for your approval. This demo sends nothing.`):`Choose a management action for ${c.name}. This demo never sends assignments.`;
+ renderTeam();
+ $('decided').hidden=!d.confirmed;$('followupDetails').hidden=!d.confirmed;if(!d.confirmed)$('followupDetails').open=false;
+ if(d.confirmed){$('decidedTxt').textContent=decidedText();drawFollow()}
+ $('decNeeds').hidden=!needsRevision(id);if(needsRevision(id))$('decNeeds').innerHTML=`<strong>Needs revision.</strong> The team plan is over budget, so this coaching time is not workable as it stands. Revise it or another coaching decision in the team plan below.`}
+function afterDecisionChange(){renderLab();renderChainDecision();renderCtx();if(step===1)renderRoute();if(step===2)renderActionPlan()}
+$('decideRow').addEventListener('click',e=>{const b=e.target.closest('[data-decide]'),d=dec[explored];if(!b||d.confirmed)return;d.action=b.dataset.decide;
+ if(d.action===`verify`&&FOLLOW[explored].verify.kind===`review`)$('inspect').open=true;renderLab();renderCtx()});
+$('minOpts').addEventListener('change',e=>{if(e.target.name===`minSel`){dec[explored].minSel=+e.target.value;renderLab()}});
+$('decisionReason').addEventListener('change',()=>{dec[explored].reason=$('decisionReason').value});
+$('decisionNote').addEventListener('input',()=>{dec[explored].note=$('decisionNote').value});
+$('teamTime').addEventListener('change',e=>{if(e.target.name===`demoBudget`){afterDecisionChange();$('ttLive').textContent=over()?`Needs revision: approved coaching exceeds ${budget()} min.`:`Budget set to ${budget()} min.`}});
+$('confirmDecision').onclick=()=>{const d=dec[explored];if(!d.action||d.confirmed)return;
+ if(d.action===`override`&&!d.reason){$('decisionStatus').textContent=`Choose an override reason first.`;$('decisionReason').focus();return}
+ if(isCoach(explored,d.action)){fitMinutes(explored);if(!d.minSel){renderLab();return}d.minutes=d.minSel}else d.minutes=0;
+ d.confirmed=true;afterDecisionChange();$('decided').scrollIntoView({behavior:still?'auto':'smooth',block:'nearest'})};
+function unconfirm(id){const d=dec[id];d.confirmed=false;d.outcome=``;if(d.minutes)d.minSel=d.minutes;d.minutes=0}
+$('changeDecision').onclick=()=>{unconfirm(explored);afterDecisionChange();
+ $('decisionStatus').textContent=`Change your decision and approve again. All outcomes are illustrative.`;$('decideRow').scrollIntoView({behavior:still?'auto':'smooth',block:'nearest'})};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-revise]');if(!b)return;const id=b.dataset.revise;
+ if(id!==explored)setExplored(id);unconfirm(id);afterDecisionChange();
+ $('decisionStatus').textContent=`Revising ${C(id).name}: adjust the minutes or the action, then approve again.`;
+ $('decideRow').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});const p=document.querySelector('#decideRow [aria-pressed="true"]');if(p)p.focus({preventScroll:true})});
+$('outcomeChoices').addEventListener('click',e=>{const b=e.target.closest('[data-outcome]');if(!b)return;dec[explored].outcome=b.dataset.outcome;drawFollow()});
+
+/* ---------- context bar: pick, AI suggestion, exploring, action ---------- */
+function renderCtx(){if(!explored)return;const d=dec[explored],c=cur();
+ $('cxPick').textContent=pick?C(pick).name:`Not chosen yet`;$('cxAI').textContent=C(TOP).name;$('cxNow').textContent=c.name;
+ $('cxAct').textContent=d.confirmed?c.actions[d.action].title+(d.minutes?` · ${d.minutes} min`:``)+(needsRevision(explored)?` · needs revision`:``):d.action?`Choosing…`:`Not decided`;
+ const sw=$('cxSwitch');let target=null,label=``;
+ if(pick&&explored!==pick){target=pick;label=`Back to your pick: `+C(pick).name}else if(explored!==TOP){target=TOP;label=`Explore the AI's pick: `+C(TOP).name}
+ sw.hidden=!target;if(target){sw.dataset.explore=target;sw.textContent=label}}
+
+/* ---------- step 2: the explored learner travels around the four Studios ---------- */
+function renderStep2(){const c=cur(),s=c.s2;
+ $('h1').textContent=s.title;$('s2line').innerHTML=s.line;$('s2goal').textContent=s.goal;$('loopName').textContent=c.name;$('stageName').textContent=c.name;
+ renderRoute();renderK();renderC();renderRx();drawStop()}
+const STUDIOS=[[`L`,`Leadership`],[`K`,`Knowledge`],[`C`,`Client`],[`P`,`Practice`]];
+function renderRoute(){const id=explored,c=cur(),d=dec[id],el=$('route');
+ if(!d.confirmed){el.className='route illus';
+  el.innerHTML=`<p class="route-k"><span class="lyr gen">General demonstration</span> Optional illustration</p><h3>${pick?`No demo decision is confirmed for ${c.name}.`:`You have not chosen an agent yet, so this shows the AI's top suggestion, ${c.name}.`}</h3><p>The Studio examples below show what each Studio could do for this case. Nothing here carries out a management decision, and nothing has been assigned.</p><div class="row"><button type="button" class="btn secondary" data-todecide="1">${pick?`Decide for ${c.name}`:`Make a coaching call first`}</button></div>`;return}
+ const r=ROUTE[id][d.action],a=c.actions[d.action];el.className='route set';
+ const nr=needsRevision(id);el.className='route set'+(nr?' bad':'');
+ el.innerHTML=`<p class="route-k"><span class="lyr dec">Your decision</span> Your approved demo decision, fictional${nr?` <em class="nr">Needs revision</em>`:``}</p><h3>${c.name}: ${esc(a.title)}${d.minutes?`, ${d.minutes} min`:``}</h3>${nr?`<p class="route-warn">The team plan is over budget, so this coaching time is not workable as it stands. <button type="button" class="linkbtn" data-todecide="1">Revise in step 1</button></p>`:``}<p>${esc(fill(FOLLOW[id][d.action].plan,d.minutes))}</p><p class="route-sub"><span class="lyr hyp">Hypothetical workflow</span> What the Studios would do for this decision. Nothing was sent or assigned.</p><ul class="route-grid">${STUDIOS.map(([k,n])=>`<li class="${r[k]?'on':'off'}"><b>${n}</b><span>${r[k]?esc(fill(r[k],d.minutes)):`Not used by this decision.`}</span></li>`).join('')}<li class="on r-hub"><b>Hub</b><span>Keeps your decision${d.action===`override`?`, your reason`:``} and any new evidence for reassessment.</span></li></ul><p class="small">Fictional. Nothing was sent or assigned. The Studio examples further down are a general illustration of each Studio, not a record of what this decision started.</p>`}
+document.addEventListener('click',e=>{if(!e.target.closest('[data-todecide]'))return;go(0);if(locked)setTimeout(()=>{$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'})},still?0:300)});
+function stagger(els,start,gap){els.forEach((el,i)=>setTimeout(()=>el.classList.add('in'),still?0:start+i*gap))}
+function renderK(){runTok++;const s=cur().s2;$('showK').classList.remove('read');
+ $('showK').innerHTML=`<p class="studio-name">Knowledge Studio</p><h3 class="studio-task">${esc(s.kTask)}</h3><div class="showbody"><div><p class="col-h">Training library (fictional)</p>${LIBRARY.map(d=>`<div class="doc" data-doc="${d.id}"><b>${esc(d.title)}</b><span class="rate" data-rate>Not yet reviewed</span><span class="why" data-why hidden></span></div>`).join('')}<div class="sample-source"><b>Source anchor: ${esc(s.kAnchor.label)}</b><p><span class="hl">${esc(s.kAnchor.quote)}</span></p></div><button class="btn hi" type="button" data-run="K">Reveal example analysis</button></div><div class="out" aria-live="polite"><p class="col-h">What a manager could review</p><div class="wait" id="waitK">${esc(s.kWait)}</div><div id="outK" hidden><div class="outblock fade"><b>Training priority</b><p>${esc(s.kOut.priority)}</p></div><div class="outblock fade"><b>Draft question bank</b><ul>${s.kOut.qs.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div><div class="outblock fade"><b>Targeted Practice Studio scenario</b><p>${esc(s.kOut.scenario)}</p></div><div class="outblock go fade"><b>Your role</b><p>Review the actual approved source, revise the draft, and approve any assignment.</p></div></div></div></div><p class="showsum fade" id="sumK">${esc(s.kSum)}</p>`}
+function renderC(){runTok++;const c=cur(),s=c.s2;$('showC').classList.remove('read');
+ $('showC').innerHTML=`<p class="studio-name">Client Studio</p><h3 class="studio-task">${esc(s.cTask)}</h3><div class="showbody"><div><p class="tab">Client-context note (fictional)</p><div class="filecard"><dl>${[[`Agent`,c.name],...s.cRows].map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl></div><div class="sample-source"><b>Source anchor: ${esc(s.cAnchor.label)}</b><p>${s.cAnchor.html}</p></div><button class="btn hi" type="button" data-run="C">Reveal example guidance</button></div><div class="out" aria-live="polite"><p class="col-h">What a manager could review</p><div class="wait" id="waitC">${esc(s.cWait)}</div><div id="outC" hidden><div class="outblock fade"><b>Known from the sample file</b><p>${esc(s.cOut.known)}</p></div><div class="outblock fade"><b>Unknown, so do not infer</b><ul>${s.cOut.unknown.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div class="outblock fade"><b>Suggested discovery question</b><p>${esc(s.cOut.question)}</p></div><div class="outblock go fade"><b>Matched practice</b><p>${esc(s.cOut.match)}</p></div></div></div></div><p class="showsum fade" id="sumC">${esc(s.cSum)}</p><p class="small">The demo does not read real client calls or private client files.</p>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-run]');if(!b||b.disabled)return;const tok=runTok,c=cur(),s=c.s2,ok=()=>tok===runTok;b.disabled=true;b.textContent='Example revealed';
+ if(b.dataset.run===`K`){$('showK').classList.add('read');
+  document.querySelectorAll('#showK .doc').forEach((el,i)=>setTimeout(()=>{if(!ok())return;const id=el.dataset.doc,cls=s.kRates[id],r=el.querySelector('[data-rate]'),w=el.querySelector('[data-why]');r.textContent=RATE[cls];r.className='rate '+cls;w.textContent=(s.kWhy[id])||GENERIC_WHY[cls](c.name);w.hidden=false;el.classList.toggle('is-important',cls===`important`);el.classList.toggle('is-low',cls===`low`)},still?0:250+i*380));
+  setTimeout(()=>{if(!ok())return;$('waitK').hidden=true;$('outK').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outK .fade')],60,380);stagger([$('sumK')],60+4*380,0)})},still?0:250+LIBRARY.length*380+200)}
+ else{$('showC').classList.add('read');setTimeout(()=>{if(!ok())return;$('waitC').hidden=true;$('outC').hidden=false;requestAnimationFrame(()=>{stagger([...document.querySelectorAll('#outC .fade')],100,420);stagger([$('sumC')],100+4*420,0)})},still?0:900)}});
+function renderRx(){const c=cur(),oid=explored===TOP?`david`:TOP,o=C(oid);
+ $('rxLead').textContent=`${c.name} compared with ${o.name}: different evidence, a different starting point.`;
+ $('rxGrid').innerHTML=[c,o].map(k=>{const r=k.s2.rx;return `<article class="rx-card"><h4>${k.name}${k===C(TOP)?' <span class="rx-ai">AI top priority</span>':''}</h4><p class="rx-type">${esc(r.type)}</p><dl><div><dt>Practice shows</dt><dd>${esc(r.kind)}</dd></div><div><dt>Evidence</dt><dd>${esc(r.ev)}</dd></div></dl><ol class="lane" aria-label="Where ${k.name}'s loop starts">${[`Knowledge`,`Client`,`Practice`,`Leadership`].map((n,i)=>`<li${i===r.start?' class="start"':''}>${n}</li>`).join('')}</ol><p class="rx-start">${r.startTxt}</p></article>`}).join('')}
+const CYCLE=[[0,1],[2],[2],[3],[4,5]];
+function drawStop(){const stops=cur().s2.stops,s=stops[stop];
+ $('stopTag').textContent='Stage '+(stop+1)+' of '+stops.length+': '+s.tag;
+ $('stopTitle').textContent=s.title;$('stopBody').textContent=s.body;$('stopCase').textContent=s.kase;$('loopEvidence').textContent=s.proof;
+ $('hubCount').textContent=stop===4?'Back to Leadership. Ready for the next coaching cycle.':'Click any Studio, or select Next stage.';
+ document.querySelectorAll('.node').forEach(b=>b.classList.toggle('active',+b.dataset.node===STOP_NODE[stop]));
+ const cy=CYCLE[stop];document.querySelectorAll('#cycle li').forEach((li,i)=>{li.classList.toggle('on',cy.includes(i));li.classList.toggle('past',i<Math.min(...cy));if(cy.includes(i))li.setAttribute('aria-current','step');else li.removeAttribute('aria-current')});
+ document.querySelectorAll('.ring .arc').forEach(a=>a.classList.toggle('on',stop>0&&+a.dataset.arc===stop-1));$('prevStop').disabled=stop===0;
+ $('nextStop').textContent=stop===stops.length-1?'See your action plan':'Next stage'}
+$('nextStop').onclick=()=>{if(stop===4){go(2);return}stop++;drawStop()};
+$('prevStop').onclick=()=>{if(stop>0){stop--;drawStop()}};
+document.querySelectorAll('.node').forEach(b=>b.onclick=()=>{const n=+b.dataset.node;stop=(n===0&&stop>2)?4:n;drawStop()});
+$('hubJump').onclick=()=>{stop=4;drawStop()};
+
+/* ---------- step 3 ---------- */
+const CONVS=["“Your premium is too high”","Comparing a competitor's quote","“I need to think about it”","The first call to a new prospect","Asking for the first meeting","Following up after silence"];
+$('chips').innerHTML=CONVS.map((c,i)=>`<label class="chip"><input type="checkbox" value="${i}">${esc(c)}</label>`).join('');
+/* Pilot priorities: at most two, presets or the manager's own. Never drop the manager's own silently. */
+const own=()=>$('own').value.trim();
+const presets=()=>[...document.querySelectorAll('#chips input:checked')].map(i=>CONVS[+i.value]);
+const goalConflict=()=>!!own()&&presets().length===2;
+function chosen(){const a=presets();const o=own();if(o&&a.length<2)a.push(o);return a.slice(0,2)}
+function drawPlan(){const a=chosen(),o=own(),clash=goalConflict();
+ document.querySelectorAll('#chips .chip').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
+ $('planConv').textContent=a.length?a.join(' and '):'the two your team finds hardest';$('planSize').textContent=$('size').value;$('carrySize').textContent=$('size').value;
+ $('pri').innerHTML=(a.length?a.map(x=>'<span>'+esc(x)+'</span>').join(''):'')+(a.length<2?'<span class="empty">'+(a.length?'one more conversation (optional)':'choose up to two conversations')+'</span>':'');
+ $('conflict').hidden=!clash;$('carryMiss').hidden=!clash;
+ if(clash){const p=presets();$('conflictMsg').innerHTML=`Your own conversation, <strong>“${esc(o)}”</strong>, is not included yet: two conversations are already chosen. Which should it replace?`;
+  $('conflictBtns').innerHTML=p.map(x=>`<button type="button" class="btn secondary" data-replace="${CONVS.indexOf(x)}">Replace ${esc(x)}</button>`).join('')+`<button type="button" class="linkbtn" data-leaveout="1">Leave mine out</button>`;
+  $('carryMiss').innerHTML=`Not included yet: “${esc(o)}”. Choose what it replaces, or leave it out.`}
+ $('chipHint').textContent=presets().length===2&&!o?'Two chosen. Unselect one to change it.':'Pick up to two in total, including your own.';
+ const q=new URLSearchParams();if(a.length)q.set('goal',a.join('; '));q.set('team-size',$('size').value);$('pilotLink').href='pilot-start.html?'+q.toString()}
+$('chips').addEventListener('change',e=>{if(presets().length>2){e.target.checked=false;$('chipHint').textContent='Two is the limit for a pilot. Unselect one first.';return}drawPlan()});
+$('own').addEventListener('input',drawPlan);$('size').addEventListener('change',drawPlan);
+document.addEventListener('click',e=>{const r=e.target.closest('[data-replace]'),l=e.target.closest('[data-leaveout]');
+ if(r){const i=document.querySelector(`#chips input[value="${r.dataset.replace}"]`);if(i)i.checked=false;drawPlan();$('pri').focus({preventScroll:true});$('goalLive').textContent='Replaced. Carried into your request: '+chosen().join(' and ')+'.'}
+ if(l){$('own').value='';drawPlan();$('goalLive').textContent='Your own conversation was left out. Carried into your request: '+chosen().join(' and ')+'.'}});
+$('pilotLink').addEventListener('click',e=>{if(!goalConflict())return;e.preventDefault();$('conflict').scrollIntoView({behavior:still?'auto':'smooth',block:'center'});const b=document.querySelector('#conflictBtns button');if(b)b.focus({preventScroll:true});$('goalLive').textContent='Choose what your own conversation replaces, or leave it out, before requesting.'});
+const evidOf=id=>{const c=C(id);return c.practice.sum.toLowerCase().includes(c.pillTxt.toLowerCase())?c.practice.sum:`${c.practice.sum} (${c.pillTxt.toLowerCase()})`};
+/* ---------- step 3: the manager's action plan, built only from the demo decisions ---------- */
+const needsEvidence=id=>{const d=dec[id];return d.confirmed&&!d.minutes&&(d.action===`verify`||(d.action===`accept`&&[`thin`,`one-scenario`].includes(EVIDENCE_TRAIT[id])))};
+const CATS={coach:`Coach`,evidence:`More evidence first`,practice:`Practice and stretch`,monitor:`Monitor`};
+function attemptsOf(id){const n=EXCERPTS[id].shown.map(e=>(e.label.match(/^Attempt (\d+)/)||[])[1]).filter(Boolean);return n.length?`Scripted excerpt${n.length>1?`s`:``}: attempt${n.length>1?`s`:``} ${n.join(` and `)}.`:``}
+function planItem(id){const c=C(id),d=dec[id],r=ROUTE[id][d.action],f=FOLLOW[id][d.action],k=kindOf(id);
+ const cat=d.minutes?`coach`:needsEvidence(id)?`evidence`:k===`monitor`?`monitor`:`practice`,nr=needsRevision(id);
+ const gap=(v,what)=>v?{v:fill(v,d.minutes)}:cat===`coach`||cat===`practice`||(cat===`evidence`&&k!==`review`)?{v:`Missing: no ${what} is linked to this ${cat===`coach`?`coaching`:`practice`} yet.`,miss:true}:k===`review`?{v:`Not needed yet: you decide after your review.`,na:true}:{v:`Not used: no training is planned.`,na:true};
+ const acc=c.actions.accept.title;
+ const decision=d.action===`accept`?`Accepted the AI suggestion.`:d.action===`verify`?`Chose to verify first. The AI suggested: ${acc}.`:`Overrode the AI suggestion (${acc}). Reason: ${d.reason}${d.note.trim()?` (${d.note.trim()})`:``}.`;
+ return {id,name:c.name,cat,title:c.actions[d.action].title,minutes:d.minutes,review:REVIEW[id][d.action],nr,
+  trace:[[`Practice evidence`,{v:`${evidOf(id)}. ${attemptsOf(id)}`,warn:c.pill===`thin`}],[`Knowledge source`,gap(r.K,`approved source`)],[`Client context`,gap(r.C,`client note`)],[`Your decision`,{v:decision}],[`Next action`,{v:(nr?`Needs revision first. `:``)+fill(f.plan,d.minutes)}]]}}
+function buildPlan(){const b=budget(),used=committed(null),left=b-used,ov=used>b,rank={coach:0,evidence:1,practice:2,monitor:3};
+ const items=ORDER.filter(id=>dec[id].confirmed).map(planItem).sort((x,y)=>rank[x.cat]-rank[y.cat]||y.minutes-x.minutes||ORDER.indexOf(x.id)-ORDER.indexOf(y.id));
+ const by=k=>items.filter(i=>i.cat===k),coach=by(`coach`),ev=by(`evidence`),rest=[...by(`practice`),...by(`monitor`)],undec=ORDER.filter(id=>!dec[id].confirmed);
+ const nm=a=>names(a.map(i=>i.id));
+ let head=coach.length?`Coach ${nm(coach)} first`:`No one-to-one coaching this week`;
+ head+=ev.length?(coach.length?`, and check ${nm(ev)} before spending more time.`:`. Check ${nm(ev)} before spending coaching time.`):`.`;
+ const status=ov?`Plan status: Needs revision. Coaching time: ${used} min approved, but only ${b} min available.`:`Plan status: within budget. Coaching time: ${used} of ${b} min committed, ${left} left.`;
+ const pickLine=!pick?`You have not chosen an agent yet.`:pick===TOP?`You picked ${C(pick).name}, the same agent the AI suggested.`:`You picked ${C(pick).name}. The AI's top suggestion was ${C(TOP).name}.`;
+ const pickShort=pick&&pick!==TOP?`You picked ${C(pick).name}.`:pickLine;
+ return {b,used,left,ov,items,coach,ev,rest,undec,head,status,pickLine,pickShort,ai:`AI's top priority: ${C(TOP).name} (${C(TOP).practice.sum.toLowerCase()}).`}}
+function renderActionPlan(){const P=buildPlan(),el=$('actionPlan');
+ if(!P.items.length){el.className='ap empty';el.innerHTML=`<p class="ap-k"><span class="lyr dec">Manager action plan</span> Fictional team</p><h3 id="apHead">Your action plan for next week appears here once you make a demo decision.</h3><ul class="ap-ctx"><li>${esc(P.pickLine)}</li><li>No demo decision yet. The pilot request below does not depend on one.</li></ul><div class="row"><button type="button" class="btn" data-go="0">Make a coaching call</button></div><p class="small">Demo choices stay on this page and reset when you reload.</p>`;return}
+ const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} ${i.minutes} min`:i.name).join(`, `):`No one`;
+ el.className='ap'+(P.ov?' bad':'');
+ el.innerHTML=`<div class="ap-top"><p class="ap-k"><span class="lyr ill">Manager action plan</span> Next week, for a fictional team, from your demo decisions</p>
+ <h3 id="apHead">${esc(P.head)}</h3>
+ <div class="ap-kpis" role="list">
+  <div role="listitem" class="kpi k-coach"><span>Coach</span><b>${P.used} min</b><small>${esc(nm(P.coach))}</small></div>
+  <div role="listitem" class="kpi k-ev"><span>More evidence first</span><b>${P.ev.length}</b><small>${esc(nm(P.ev))}</small></div>
+  <div role="listitem" class="kpi k-pr"><span>Practice, stretch or monitor</span><b>${P.rest.length}</b><small>${esc(nm(P.rest))}</small></div>
+  <div role="listitem" class="kpi k-cap${P.ov?' bad':''}"><span>Capacity</span><b>${P.ov?`Over by ${-P.left}`:`${P.left} min left`}</b><small>of ${P.b} min · ${P.ov?`Needs revision`:`Within budget`}</small></div>
+ </div>
+ <p class="ap-status">${esc(P.status)}${P.ov?` <button type="button" class="linkbtn on-dark" data-todecide="1">Revise in step 1</button>`:``}</p>
+ <p class="ap-ai">${esc(P.ai)} ${esc(P.pickShort)}</p>
+ <div class="ap-copy"><button type="button" class="btn hi" data-copyplan="1">Copy action plan</button><span id="copyStatus" role="status" aria-live="polite">Plain text for your notes. Nothing is stored or sent.</span></div>
+ <textarea id="copyFallback" class="copyfb" readonly hidden aria-label="Action plan as plain text"></textarea></div>
+ <ol class="ap-items">${P.items.map((i,n)=>`<li class="ap-item c-${i.cat}" data-id="${i.id}"><div class="ap-ih"><span class="ap-n">${n+1}</span><h4>${i.name}: <strong>${esc(i.title)}</strong>${i.minutes?`, ${i.minutes} min`:``}</h4><span class="ap-cat">${CATS[i.cat]}</span>${i.nr?`<em class="nr">Needs revision</em>`:``}<span class="ap-rev">Review: ${esc(i.review)}</span></div>
+  <ol class="trace" aria-label="How ${i.name}'s recommendation traces back">${i.trace.map(([k,t])=>`<li class="${t.miss?'miss':t.na?'na':t.warn?'thin':''}"><b>${k}</b><span>${esc(t.v)}</span></li>`).join('')}</ol></li>`).join('')}</ol>
+ ${P.undec.length?`<p class="ap-undec"><strong>Not decided yet:</strong> ${P.undec.map(x=>`<button type="button" class="chipbtn" data-decidefor="${x}">${C(x).name}</button>`).join(' ')} <span class="small">No action is planned for them.</span></p>`:``}
+ <p class="small ap-foot">Fictional people, evidence, documents and follow-up. Demo decisions only: nothing was assigned, sent or saved, and no result is claimed. Review days are relative to a fictional demo decision, not actual approval or calendar dates. Demo choices stay on this page and reset when you reload.</p>`}
+function planText(){const P=buildPlan(),L=[];
+ L.push(`Manager action plan: next week`,`Fictional demo team. Simulated practice evidence. Demo decisions only: nothing was assigned or sent.`,``,P.head,P.status,`${P.ai} ${P.pickShort}`,``);
+ const nm=a=>a.length?a.map(i=>i.minutes?`${i.name} (${i.minutes} min)`:i.name).join(`, `):`none`;
+ L.push(`Coach: ${nm(P.coach)}`,`More evidence first: ${nm(P.ev)}`,`Practice, stretch or monitor: ${nm(P.rest)}`,`Not decided yet: ${P.undec.length?names(P.undec):`none`}`,``);
+ P.items.forEach((i,n)=>{L.push(`${n+1}. ${i.name}: ${i.title}${i.minutes?`, ${i.minutes} min`:``} [${CATS[i.cat]}]${i.nr?` [Needs revision]`:``}`,`   Review: ${i.review}.`);i.trace.forEach(([k,t])=>L.push(`   ${k}: ${t.v}`));L.push(``)});
+ L.push(`Review days are relative to a fictional demo decision, not actual approval or calendar dates.`,`From the AgentTraining.ai manager demo. Fictional people, evidence and follow-up.`);
+ return L.join(`\n`)}
+async function copyPlan(){const t=planText(),st=$('copyStatus'),fb=$('copyFallback');
+ const done=()=>{st.textContent=`Copied as plain text. Nothing was stored or sent.`;fb.hidden=true};
+ try{if(!navigator.clipboard||!window.isSecureContext)throw 0;await navigator.clipboard.writeText(t);done();return}catch(e){}
+ fb.value=t;fb.hidden=false;fb.focus();fb.select();let ok=false;try{ok=document.execCommand(`copy`)}catch(e){}
+ if(ok){done();fb.hidden=true}else st.textContent=`Your browser blocked copying. The plan is selected below: press Ctrl+C or Cmd+C.`}
+document.addEventListener('click',e=>{if(e.target.closest('[data-copyplan]'))copyPlan();if(e.target.closest('[data-topilot]')){$('h2').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});$('h2').focus({preventScroll:true})}});
+
+/* reveal summary: jump straight to the manager's choice */
+document.addEventListener('click',e=>{if(!e.target.closest('#toDecision'))return;$('managerLab').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const b=document.querySelector('#decideRow [data-decide]:not(:disabled)');if(b)b.focus({preventScroll:true})},still?0:650)});
+/* hero action: go straight to the first decision */
+$('startDemo').onclick=()=>{go(0,true);$('h0').scrollIntoView({behavior:still?'auto':'smooth',block:'start'});setTimeout(()=>{const i=document.querySelector('#team input:not(:disabled)');if(i)i.focus({preventScroll:true})},still?0:650)};
+
+/* navigation */
+const NAMES=['make-the-call','the-loop','your-team'];
+function go(i,quiet){step=i;[0,1,2].forEach(k=>{$('p'+k).hidden=k!==i});
+ document.querySelectorAll('.steps button').forEach(b=>{if(+b.dataset.go===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
+ if(i===1){if(!explored)explored=TOP;renderStep2();renderCtx()}
+ $('ctxbar').hidden=!explored||i===2||(i===0&&!locked);
+ if(i===2){drawPlan();renderActionPlan()}
+ if(!quiet){try{history.replaceState(null,'','#'+NAMES[i])}catch(e){}window.scrollTo({top:document.querySelector('.stepsbar').offsetTop-8,behavior:still?'auto':'smooth'})}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go)});
+addEventListener('hashchange',()=>{const i=NAMES.indexOf(location.hash.slice(1));if(i>=0&&i!==step)go(i)});
+const h=NAMES.indexOf(location.hash.slice(1));go(h<0?0:h,true);
+if(new URLSearchParams(location.search).get('tour')==='complete' && location.hash==='#make-the-call') {
+  addEventListener('load',()=>{setTimeout(()=>{$('h0').scrollIntoView({behavior:'auto',block:'start'})},0)}, {once:true});
+}
+
+</script>
+</body></html>
