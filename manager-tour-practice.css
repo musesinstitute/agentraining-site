@@ -38,5 +38,6 @@
 .practice-image-scroller{width:100%;display:flex;justify-content:center}
 .practice-stage .practice-image-scroller img{width:100%;max-width:100%;max-height:480px;object-fit:contain;flex:none}
 @media(max-width:760px){
+ .practice-image-scroller{justify-content:flex-start}
  .practice-stage .practice-image-scroller img{width:760px;max-width:none;max-height:none}
 }
