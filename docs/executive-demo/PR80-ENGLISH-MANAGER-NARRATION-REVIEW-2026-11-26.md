@@ -104,3 +104,18 @@ The reviewer correctly identified that the original 1028×448 browser screenshot
 **Current correction on this draft:** the original screenshot remains clearly labeled; **a separate coaching evidence panel** in the Practice Studio page and 16:9 film framing review displays the three values from the separately sourced run (80 / 72 / 70). Captions 2.6 and 2.7 distinguish the original conversation screen and the separate product-rendered score run. No cross-session splice or fictionalized "raw screenshot" is presented. The original user's source re-render is preserved in the local review materials for side-by-side acceptance and possible future faithful raw recapture.
 
 **Before final acceptance:** if the founder wants all three coaching scores literally inside the screenshot, obtain an unaltered taller browser capture of **one and the same session**, or explicitly approve the contributor's source-labeled product-rendered replay as film material. Do not quietly substitute it for a raw capture. Test the 16:9 frame and mobile layout with that replacement before revising narration to imply the scores are visible in the screenshot itself.
+
+
+## Founder decision, 2026-11-27 — product UI re-render accepted for Practice
+
+**Decision:** The founder explicitly accepts using the contributor's genuine product-UI **re-render** (1520×691 candidate) rather than requiring an untouched browser-window screenshot. This is approval of the *source format* only, **not** final image acceptance, film acceptance, PR merge permission, or permission to spend Genspark/filming credits.
+
+**Required for the next image revision**
+- Obtain and verify the **actual 1520×691 WebP** from the Nov 26 fictional "Premium Is Too High" / David Alvarez demonstration. Report the image source honestly as a product-UI replay/re-render, not a raw browser capture.
+- Only display transcript text, client follow-up, and Overall 82 / Empathy & Rapport 80 / Product Accuracy 72 / Closing Technique 70 that are verified in that single replay. Do not mix old PR75 dialogue with new-run scoring or manufacture missing content.
+- Replace the old Practice frame and the Practice tour image with **this one coherent screenshot** if and only if the source asset is available and verified; update alt text, image links, disclosure, score labels, and captions together. Avoid a duplicate unrelated-session score panel once replaced.
+- Check live 16:9 film framing, desktop and mobile legibility, soundtrack / English caption consistency, and all four Studios' manager-first product claims after the replacement. Document actual tests versus untested items.
+
+**Current branch status:** The 1520×691 replacement asset has **not been located in this branch**; the contributor's separate attachment is not available among the files accessible to this editing session. Therefore, **do not falsely claim a complete image swap**. The pre-existing original screenshot and distinctly labeled other-run score evidence remain in place temporarily. The standalone Practice step label and both pages' English spoken copy can be refined now without misrepresenting a single session.
+
+**Release gates:** PR #80 stays Draft, no merge to master; independent AI review before Genspark; founder reviews the exact deploy preview and explicitly approves any later PR merge. No outside distribution or paid film production yet.
