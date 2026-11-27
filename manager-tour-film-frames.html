@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>AgentTraining.ai | Four Studios - Film Framing Review</title>
+<style>
+:root{--navy:#101f41;--royal:#2252d4;--ink:#172440;--muted:#536482;--pale:#f4f7fe;--line:#cad7f3;--gold:#f5da64}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#e6ebf6;color:var(--ink)}
+h1,h2,p,figure{margin:0}.pagehead{max-width:1200px;margin:20px auto 12px;padding:0 14px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.pagehead h1{font-size:21px}.pagehead p{font-size:13px;color:var(--muted)}
+.frame-scroll{overflow-x:auto;padding:0 10px;scrollbar-color:var(--royal) #dbe3f1}
+.stage{width:100%;min-width:860px;aspect-ratio:16/9;max-width:1920px;margin:auto;position:relative;border:1px solid #c2cfe8;background:var(--pale);overflow:hidden;box-shadow:0 18px 46px #1a315820}
+.slide{position:absolute;inset:0;padding:clamp(22px,3vw,62px) clamp(30px,4vw,85px);display:none;flex-direction:column;background:linear-gradient(148deg,#fff 0%,#f1f5ff 66%,#e5edff 100%)}.slide.active{display:flex}
+.slide-top{display:flex;justify-content:space-between;align-items:center;gap:24px;color:#3d547f;font-size:clamp(12px,1.2vw,22px);font-weight:650;text-transform:uppercase;letter-spacing:.14em}
+.logo{font-weight:800;text-transform:none;color:var(--navy);letter-spacing:-.035em;font-size:clamp(20px,1.9vw,34px)}.logo span{color:var(--royal)}
+.slide h2{font-family:Georgia,serif;font-size:clamp(37px,4vw,75px);line-height:1.07;font-weight:500;letter-spacing:-.027em;margin:clamp(20px,2.7vw,50px) 0 clamp(18px,2vw,38px);color:var(--navy)}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(275px,.62fr);gap:clamp(22px,3vw,58px);min-height:0;flex:1;align-items:stretch}
+.ui-shell{min-width:0;min-height:0;display:flex;flex-direction:column;padding:clamp(10px,1vw,17px);border-radius:16px;background:white;border:1px solid var(--line);box-shadow:0 14px 26px #1b356817}
+.ui-label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:clamp(11px,1.1vw,17px);color:#2c466f;font-weight:700;margin-bottom:10px}
+.ui-art{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden}
+.ui-art>img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+.knowledge-crops{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;height:100%;min-height:0}
+.knowledge-pane{display:flex;flex-direction:column;min-height:0;min-width:0}
+.knowledge-pane span{display:block;font-size:clamp(12px,1vw,16px);font-weight:750;color:#284779;margin-bottom:6px}
+.knowledge-pane img{display:block;width:100%;height:calc(100% - 26px);max-height:none;object-fit:cover;object-position:center top;border:1px solid var(--line);border-radius:6px}
+.knowledge-pane.bottom img{object-position:center bottom}
+.explain{align-self:center;min-width:0}
+.explain h3{font:600 clamp(21px,2.15vw,39px)/1.22 Georgia,serif;color:var(--royal);margin:0 0 clamp(15px,1.8vw,32px)}
+.explain ol{margin:0;padding:0;list-style:none;display:grid;gap:clamp(14px,1.65vw,28px)}
+.explain li{font-size:clamp(19px,1.7vw,31px);line-height:1.34;color:#243856;display:flex;gap:12px}
+.explain li b{display:inline-grid;place-items:center;flex:none;width:clamp(29px,2.2vw,40px);height:clamp(29px,2.2vw,40px);background:#dbe7ff;border-radius:50%;font-size:clamp(14px,1.2vw,20px);color:var(--royal)}
+.foot{margin-top:clamp(14px,2vw,36px);display:flex;justify-content:space-between;gap:20px;align-items:center;border-top:1px solid #cbd7ef;padding-top:12px;color:#546584;font-size:clamp(12px,1.06vw,18px)}
+.foot strong{color:var(--navy)}.foot .warning{color:#725f2d;font-size:.87em}
+.actions{max-width:1200px;margin:12px auto 15px;padding:0 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;background:#2252d4;font-weight:700;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid #e6a813;outline-offset:3px}
+.actions a{color:#204cbd;font-weight:650}.actions p{margin-left:auto;font-size:13px;color:#53627c}
+.disclosure{max-width:1200px;margin:0 auto 24px;padding:0 14px;font-size:13px;color:#42536f}
+@media(max-width:980px){.stage{min-width:860px}.slide h2{font-size:37px}.pagehead{margin-top:12px}}
+</style></head>
+<body>
+<header class="pagehead"><div><h1>Four Studios · 16:9 film-shot review</h1><p>Source-preserving framing only; not a rendered film or approved outcome.</p></div><div>PR #80 · Film production candidate · DRAFT</div></header>
+<div class="frame-scroll"><main class="stage" id="filmStage" aria-label="16 by 9 Four Studios film framing preview">
+<section class="slide active" data-name="Knowledge"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>01 / Knowledge Studio</span></div>
+<h2>From approved knowledge to practice.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · FICTIONAL DATA</span><span>Two crops / one original</span></div>
+<div class="ui-art"><div class="knowledge-crops">
+<div class="knowledge-pane"><span>Approved training source + AI Summary</span><img src="assets/studio-screenshots/PR75-Knowledge-Studio.webp" alt="Top of original Knowledge Studio screenshot, approved sample guide and AI summary"></div>
+<div class="knowledge-pane bottom"><span>Practice Draft + Assign this Practice</span><img src="assets/studio-screenshots/PR75-Knowledge-Studio.webp" alt="Bottom of the very same original Knowledge Studio screenshot, practice draft and assignment action"></div>
+</div></div></figure>
+<aside class="explain"><h3>Review before assigning.</h3><ol><li><b>1</b> Company training guide</li><li><b>2</b> Review the AI summary</li><li><b>3</b> Approve practice for the team</li></ol></aside></div>
+<div class="foot"><strong>Knowledge → Practice</strong><span class="warning">No learner-specific priority-ranking automation claimed.</span></div>
+</section>
+<section class="slide" data-name="Practice"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>02 / Practice Studio</span></div>
+<h2>See the conversation. Coach the skill.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · ONE FICTIONAL PRACTICE EXCERPT</span><span>Overall 82 / 100</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR75-Practice-Studio.webp" alt="One genuine simulated client excerpt: objection, learner reply, client follow-up and overall score 82 out of 100."></div></figure>
+<aside class="explain"><h3>Evidence, not guesswork.</h3><ol><li><b>1</b> Client raises a price objection</li><li><b>2</b> Trainee replies in practice</li><li><b>3</b> AI client follows up; sample score appears</li></ol></aside></div>
+<div class="foot"><strong>Practice → Coaching evidence</strong><span class="warning">Partial score panel shown; no final trainee answer or sale implied.</span></div>
+</section>
+<section class="slide" data-name="Client"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>03 / Client Studio</span></div>
+<h2>Make each client need a coaching opportunity.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · ELENA RIVERA (DEMO)</span><span>Fictional case</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR75-Client-Studio.webp" alt="Fictional Elena Rivera Client Studio case showing need, objection, next follow-up and Start Practice."></div></figure>
+<aside class="explain"><h3>Context for the next practice.</h3><ol><li><b>1</b> Record need and situation</li><li><b>2</b> Keep the objection and follow-up</li><li><b>3</b> Start targeted practice</li></ol></aside></div>
+<div class="foot"><strong>Client context → Practice</strong><span class="warning">No completed practice, automatic call recording, or result writeback is shown.</span></div>
+</section>
+<section class="slide" data-name="Leadership"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>04 / Leadership Studio</span></div>
+<h2>Assign. Track. Coach.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · FICTIONAL LEARNERS</span><span>Manager workspace</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR75-Leadership-Studio.webp" alt="Leadership Studio shows Assign Practice, Current Assignments and Message Learner actions."></div></figure>
+<aside class="explain"><h3>The manager makes the call.</h3><ol><li><b>1</b> Assign the next practice</li><li><b>2</b> Track task statuses</li><li><b>3</b> Message the learner</li></ol></aside></div>
+<div class="foot"><strong>Leadership → Next assignment → Practice</strong><span class="warning">No real-time chat or verified messaging persistence is claimed.</span></div>
+</section>
+</main></div>
+<nav class="actions" aria-label="Frame preview controls"><button id="previous" type="button">← Previous frame</button><button id="next" type="button">Next frame →</button><a id="original" href="assets/studio-screenshots/PR75-Knowledge-Studio.webp" target="_blank" rel="noopener">Open unaltered original image</a><p id="position" aria-live="polite">Frame 1 / 4 · Knowledge</p></nav>
+<p class="disclosure">For a video editor: record only the 16:9 frame, not the control bar. All screenshot pixels come from PR #80's original WebP files. Knowledge shows two explicitly labeled top/bottom <em>crops from the same screenshot</em>. Four fictional examples are independent—not a single client journey. This is a review storyboard; independently confirm deployed UI, narration timing, mobile and Genspark UAT before paid production.</p>
+<script>
+(function(){
+  const scenes=Array.from(document.querySelectorAll('.slide'));
+  const names=['Knowledge','Practice','Client','Leadership'];
+  let index=0;
+  function show(next){
+    index=Math.max(0,Math.min(scenes.length-1,next));
+    scenes.forEach((scene,i)=>{scene.classList.toggle('active',i===index);scene.setAttribute('aria-hidden',String(i!==index));});
+    document.getElementById('previous').disabled=index===0;
+    document.getElementById('next').disabled=index===scenes.length-1;
+    document.getElementById('position').textContent='Frame '+(index+1)+' / 4 · '+names[index];
+    document.getElementById('original').href='assets/studio-screenshots/PR75-'+names[index]+'-Studio.webp';
+  }
+  document.getElementById('previous').addEventListener('click',()=>show(index-1));
+  document.getElementById('next').addEventListener('click',()=>show(index+1));
+  document.addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;if(e.key==='ArrowRight')show(index+1);if(e.key==='ArrowLeft')show(index-1)});
+  show(0);
+})();
+</script></body></html>
