@@ -80,42 +80,46 @@
 - **絕對不要**寫任何要求業務員「講解或推薦具體投資標的」的場景內容——不管是 ETF、股票、基金比較、加密貨幣配置、variable life/variable annuity 這類牽涉 separate account 的商品。這些需要另外的證券牌照，超出一般保險執照範圍。
 - 如果客戶角色提到投資、加密貨幣等話題（例如「我比較想投資 ETF」），這類場景**可以做**，但業務員的任務必須被設計成「理解客戶動機 → 轉回保障/保險的價值」，**絕不能**讓 AI 或業務員在對話裡實際教客戶怎麼做投資決策。已有的正確示範：`insurance-15`（crypto_curious_young_professional）。
 
+### 4b. AI 教練的語氣：不要動不動搬出卡內基、孫子兵法（使用者 Lei 的指示）
+
+教練的方法論背後確實是孫子兵法（先了解對方，再設法影響對方）和卡內基（真誠關心對方，讓客戶自己得出結論，不為贏得爭論而傷害關係）。但**教練回饋裡不可以動不動就點名引用**。學員一場練習碰到兩三次「根據卡內基原則……」「孫子兵法說……」，會覺得教條、說教，覺得 AI 很笨，久了就會生厭。
+
+規則：
+- 把這些想法**化進具體、白話的建議裡**，針對眼前這位客戶、這一句話來說，像一位有經驗的前輩，不像教科書。
+- 教練要**真正掌握並在對話中運用**這些原則，而不是只「知道」它們。`simulator.html` 的 `COACH_METHOD` 是給教練的內部方法論，所有教練 prompt 都會帶上，分兩部分：
+  1. **怎麼看銷售對話**：先了解客戶真正的顧慮再說服；選擇該打的仗（不是每個異議都要當場贏）；用提問引導，不用硬推；不贏了爭論卻輸了客戶（先認同再轉向）；真誠關心，用客戶說過的細節；讓客戶改變主意時保有面子。
+  2. **怎麼對待學員**：教練用同樣的原則對待學員，用行動示範，而不是說教。先具體肯定做得好的地方；一次只抓最重要的一個改進點；把錯誤說成容易做到的下一步，有空間時用提問讓學員自己看到更好的說法；注意並說出學員的進步；把學員當成有能力的專業人士。
+- 修改 `COACH_METHOD` 時，**內容本身也不可以出現書名、作者或「某某原則」的字眼**，否則模型會照著引用。
+- **每輪評分、教練插話、結束時的總評：一律不點名**（不提孫子、孫子兵法、卡內基或任何書名、作者、「某某原則」）。這些請求每輪各自獨立，模型無法知道這次練習是否已經提過，所以只能全面禁止。
+- **教練對話、複盤、Free Practice：預設也不點名。** 只有學員主動問起，或在非常少見、點名真的能幫上忙的情況下才可以，而且**整段對話最多一次、每位學員每星期最多兩次**。
+- 每星期的次數由網頁計算（單一 AI 請求記不得之前的練習）：教練回覆裡只要出現孫子、孫子兵法、卡內基（中英文），就記錄在學員瀏覽器的 `localStorage`（`agentraining_coach_name_mentions`）。7 天內已達 `COACH_NAME_WEEKLY_LIMIT`（2 次），或這段對話已經提過，就改用 STRICT 備忘錄，連學員主動問起也只用白話回答。限制：換裝置或瀏覽器、清除瀏覽資料會重新計算。
+- 程式位置：`simulator.html` 裡的 `COACH_STYLE_MEMO_STRICT`（評分、插話、總評）、`COACH_STYLE_MEMO_CHAT`，以及決定用哪一份的 `coachNameMemoForChat()`（教練對話、複盤、Free Practice）。新增或修改任何教練 prompt 時，都要帶上其中一個。
+- 不適用於行銷頁面（如 `index.html` 介紹方法論的段落）。那是介紹產品，不是在對學員說教。
+
 ## 5. `netlify/functions/claude.js`
 
-正確版本（前端 `simulator.html` 送出 `{ system, messages }` 格式，這個函式必須原樣轉發，不要改回舊版單一 `message` 字串格式）：
+前端 `simulator.html` 送出 `{ system, messages, role }`。這個函式把 `system` 和 `messages` **原樣轉發**給 Anthropic，不要改回舊版單一 `message` 字串格式。
 
-```js
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-  try {
-    const body = JSON.parse(event.body);
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: body.system || '',
-        messages: body.messages
-      })
-    });
-    const data = await response.json();
-    return {
-      statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    };
-  } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
-  }
-};
-```
+**模型分工（2026-11 起，為了降低 API 花費）：**
+
+| `role` | 用途 | 模型與設定 |
+|---|---|---|
+| `'client'` | AI 客戶角色扮演 | `claude-haiku-5-5`，thinking 關閉（`{type:'disabled'}`），effort `low`，max_tokens 1000 |
+| 其他（前端送 `'coach'`） | 評分、AI 教練插話、教練對話與複盤、Free Practice | `claude-sonnet-5-5`，adaptive thinking，effort `low`，max_tokens 2000，`fallbacks: "default"`（header `anthropic-beta: server-side-fallback-2026-07-01`） |
+
+規則：
+- **模型只能由伺服器端的 `MODEL_SETTINGS` 決定。** 前端只能選 `role`，不可以讓前端傳 `model`、`max_tokens` 等參數進來（防止被拿去跑昂貴的模型）。
+- **回應只保留 `text` 區塊**，所以前端可以繼續用 `data.content[0].text`。新模型可能先回傳 `thinking` 區塊，不能用位置取答案。
+- `stop_reason: "refusal"` 或沒有文字答案時回傳 502，不要回傳空內容。
+- 不要送 `temperature` / `top_p` / `top_k`（這些模型會回 400）。Sonnet 5.5 不接受 `thinking: {type:'disabled'}`；Haiku 5.5 沒有 server-side fallback，不要加 `fallbacks`。
+- 防濫用保護不可移除：來源網域白名單、輸入長度上限 20000 字元，以及**每個 IP 每 10 分鐘的雙重限制**：
+  1. **依費用加權的預算**：Sonnet 呼叫（評分、教練）算 1 單位，Haiku 呼叫（AI 客戶）算 0.1 單位，預設上限 100 單位（環境變數 `CLAUDE_RATE_LIMIT_UNITS`）。一場完整 10 輪練習約 12 單位，用滿 30 則教練對話和 5 次撤回約 50 單位，所以同一個辦公室 Wi-Fi 的幾位學員不會互相擋住。同一個 IP 的最壞花費約為「單位數 × 約 US$0.007」每 10 分鐘。
+  2. **原始請求數上限**：預設 250 次（`CLAUDE_RATE_LIMIT_REQUESTS`），避免用大量小呼叫灌爆函式。
+  - 調整上限請改環境變數，不要拿掉限制。被限制時回 429（附 `Retry-After`），前端會顯示清楚的提示；無效的 JSON 回 400。
+  - 限制以 Netlify Blobs 記錄；Blobs 暫時故障時採「放行」（既有設計）。
+- 測試：`tests/claude-proxy.test.mjs`（模型分流、回應處理、費用加權限制）；Practice Studio 的瀏覽器回歸測試在 `tests/practice-studio.test.mjs`（最終評分失敗與重試、撤回後還原分數）。皆由 `npm test` 執行。
+- **最終評分不可以無聲失敗**：429、5xx 或格式錯誤都要在畫面上顯示，並提供「重試最終評分」，用保留的對話重新評分，不可重複角色扮演。
+- 其他函式（`knowledge-chat.mjs`、`pilot-data.mjs`、`knowledge-question-bank.mjs`）目前仍使用 `claude-sonnet-4-6`，尚未切換。
 
 ## 6. 編輯 GitHub 網頁檔案編輯器時：只貼純內容
 
