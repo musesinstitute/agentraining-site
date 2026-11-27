@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Latest Review — V7 + Richard 2:48 | AgentTraining.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one quiet white stage on cool paper; a single column of calm type per scene; colour appears only on Michael's replies. Single light theme by choice. */
+:root{
+ color-scheme:light;
+ --paper:#eef1f4; --stage:#fcfdfe; --ink:#17222f; --muted:#5a6777; --faint:#8a95a3; --line:#d8dee6;
+ --accent:#2c5a7a; --accent-soft:#e6eef4;
+ --shut:#96483a; --shut-soft:#f6ebe8; --open:#2a6e52; --open-soft:#e7f2ec;
+ --display:'Source Serif 4',Georgia,'Times New Roman',serif;
+ --body:'IBM Plex Sans','Segoe UI',Arial,sans-serif;
+ --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:20px 20px 48px}
+.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.brand{font:600 20px var(--display);letter-spacing:-.2px}.brand i{font-style:normal;color:var(--accent)}
+.label{font:600 10px/1.7 var(--mono);letter-spacing:1.3px;color:var(--faint);text-transform:uppercase}
+.player{background:var(--stage);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px #17222f0a,0 18px 44px #17222f12}
+.stage{height:700px;position:relative;overflow:hidden;background:var(--stage)}
+.chapterbar{display:flex;align-items:center;justify-content:space-between;padding:24px 40px 0}
+.chapter{font:600 10.5px var(--mono);letter-spacing:1.8px;color:var(--accent)}
+.position{font:500 11px var(--mono);color:var(--faint)}
+.headline{padding:8px 40px 0;font:italic 400 14.5px/1.4 var(--display);color:var(--muted);min-height:22px}
+.frame{position:absolute;inset:92px 40px 52px;display:flex;align-items:center;justify-content:center}
+@keyframes sceneIn{from{opacity:0}to{opacity:1}}
+.stageFoot{position:absolute;bottom:18px;left:40px;right:40px;display:flex;justify-content:space-between;gap:14px;font:600 10px/1.5 var(--mono);letter-spacing:.9px;color:var(--muted)}
+.stageFoot .rt{color:var(--faint);font-weight:500}
+[data-t]{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease}
+[data-t].on{opacity:1;transform:none}
+[data-off]{transition:opacity 1s ease,transform 1s ease}
+.off,[data-t].on.off{opacity:0}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:600 17px var(--display);background:var(--accent-soft);color:var(--accent);flex:0 0 44px}
+.av.you{background:#edeff2;color:var(--muted);font:600 10px var(--mono);letter-spacing:1px}
+/* Scene 1 */
+.ledger{width:100%;max-width:600px}
+.ledger .label{margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 2px;border-bottom:1px solid var(--line);font:400 20px var(--display)}
+.row span{font:600 10px var(--mono);letter-spacing:1.2px;color:var(--faint);white-space:nowrap}
+.row.unseen{border-bottom:1px dashed var(--faint);color:var(--muted);font-style:italic}
+.row.unseen span{color:var(--shut);font-style:normal}
+.intro{display:flex;align-items:center;gap:12px;margin-top:26px}
+.intro b{font:600 17px var(--display)}.intro small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+/* Scene 2 */
+.cast{width:100%;max-width:820px}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.role{border:1px solid var(--line);border-radius:12px;padding:20px 18px;background:#fff;min-height:168px}
+.role b{display:block;margin-top:14px;font:600 20px var(--display)}
+.role small{display:block;margin-top:6px;color:var(--muted);font-size:13.5px;line-height:1.5}
+.ask{margin-top:30px;font:400 clamp(21px,2.5vw,27px)/1.35 var(--display);text-wrap:balance}
+.ask em{color:var(--muted)}
+/* Scene 3 */
+.quiet{width:100%;max-width:760px;display:grid}
+.quiet>div{grid-area:1/1;align-self:center}
+.nots p{margin:0;padding:11px 0;font:400 22px/1.4 var(--display);color:var(--muted);border-bottom:1px solid var(--line)}
+.nots p:last-child{border-bottom:none}
+.nots p q{color:var(--ink);quotes:"“" "”"}
+.shaped{font:italic 400 clamp(22px,2.7vw,29px)/1.45 var(--display);color:var(--muted);text-wrap:balance}
+.question{font:400 clamp(30px,4.3vw,50px)/1.22 var(--display);letter-spacing:-.4px;text-wrap:balance}
+/* Scene 4 */
+.release{width:100%;max-width:880px}
+.now{font:400 clamp(30px,3.8vw,42px) var(--display);letter-spacing:-.3px;margin-bottom:26px}
+.steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch}
+.step{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff}
+.step .label{color:var(--accent)}
+.step b{display:block;margin-top:8px;font:600 18px/1.3 var(--display)}
+.step small{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+.arrow{align-self:center;color:var(--faint);font-size:18px}
+.notcourse{margin-top:26px;font:italic 400 20px/1.4 var(--display);color:var(--muted)}
+.notcourse b{font-style:normal;font-weight:400;color:var(--ink)}
+/* Scene 5 */
+.loop{width:100%;max-width:1000px}
+.watch{font:400 23px var(--display);margin-bottom:14px}
+.watch s{color:var(--faint)}.watch b{font-weight:600;color:var(--accent)}
+.split{display:grid;grid-template-columns:1fr 220px 1fr;gap:14px;align-items:start}
+.attempt{border:1px solid var(--line);border-radius:12px;padding:14px 16px 16px;background:#fff;transition:opacity .6s}
+.attempt.rest .bub.d{opacity:.55}
+.bub{border-radius:10px;padding:10px 13px;margin-top:10px;font:400 14.5px/1.5 var(--display);transition:opacity .6s}
+.bub i{display:block;font:600 9.5px var(--mono);letter-spacing:1.1px;font-style:normal;margin-bottom:3px;color:var(--faint)}
+.bub.d{background:#f4f6f8;color:var(--muted)}
+.bub.m{background:var(--accent-soft);border:1px solid var(--accent);color:var(--ink);font-size:16px}
+.bub.m i{color:var(--accent)}
+.tag{display:inline-block;margin-top:12px;border-radius:6px;padding:5px 10px;font:600 10px var(--mono);letter-spacing:1.5px}
+.tag.shut{background:var(--shut-soft);color:var(--shut);border:1px solid #dcc0b9}
+.tag.open{background:var(--open-soft);color:var(--open);border:1px solid #b9d6c7}
+.note{margin-left:10px;font:500 11px var(--mono);color:var(--muted)}
+.punch{margin-top:16px;font:400 21px/1.35 var(--display);color:var(--muted)}.punch b{font-weight:600;color:var(--ink)}
+.coach{margin-top:34px;border-left:2px solid var(--accent);padding:4px 0 4px 14px;font:italic 400 15px/1.5 var(--display)}
+.coach .label{font-style:normal;color:var(--accent);margin-bottom:6px}
+.after{margin-top:10px;display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+.after span{font:400 16px var(--display);color:var(--muted)}
+.after strong{font:600 21px var(--display)}
+/* Scene 6 */
+.invite{width:100%;max-width:600px}
+.inv1{font:400 21px var(--display);color:var(--muted)}
+.inv2{font:400 clamp(27px,3.4vw,38px)/1.25 var(--display);letter-spacing:-.3px;margin-top:6px}
+.plan{list-style:none;margin:24px 0 0;padding:0;border-top:1px solid var(--line)}
+.plan li{padding:12px 2px;border-bottom:1px solid var(--line);font-size:15.5px;display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:baseline}
+.plan .label{color:var(--accent)}
+.cta{display:inline-block;margin-top:26px;background:var(--accent);color:#fff;border-radius:8px;padding:14px 24px;font:600 16px var(--body)}
+.ctasmall{margin-top:9px;font:500 10.5px var(--mono);letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.proto{margin-top:20px;font:500 9.5px var(--mono);letter-spacing:.8px;color:var(--faint)}
+/* caption + controls */
+.captionBar{border-top:1px solid var(--line);background:#f7f9fb;min-height:78px;display:flex;align-items:center;gap:16px;padding:14px 40px}
+.who{font:600 10px var(--mono);letter-spacing:1.5px;color:var(--accent);min-width:84px}
+.captionTxt{font:400 clamp(15px,1.55vw,19px)/1.45 var(--display);max-width:860px}
+.captionKind{margin-left:auto;font:500 9.5px var(--mono);letter-spacing:.6px;color:var(--faint);white-space:nowrap}
+.silent .stage *{transition:none!important}
+.controlarea{background:#fff;padding:12px 22px 16px;border-top:1px solid var(--line)}
+.segments{display:flex;gap:5px;margin-bottom:11px}
+.segment{height:6px;background:#e3e8ee;border:none;border-radius:20px;position:relative;cursor:pointer;overflow:hidden;padding:0}
+.fill{position:absolute;inset:0 auto 0 0;background:var(--accent);width:0}
+.scrub{width:100%;accent-color:var(--accent);margin:0 0 12px;cursor:pointer}
+.controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.mainctrl,.auxctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 14px;border-radius:8px;font:600 13px var(--body);cursor:pointer}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{color:#fff;background:var(--accent);border-color:var(--accent);min-width:105px}
+.btn:focus-visible,input:focus-visible,.segment:focus-visible,.navbtn:focus-visible{outline:3px solid #7fa6c0;outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.clock{font:500 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.meta{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px}
+.panel{background:var(--stage);border:1px solid var(--line);border-radius:12px;padding:18px 22px}
+.panel h2{font:600 11px var(--mono);letter-spacing:1.3px;color:var(--accent);margin:0 0 9px;text-transform:uppercase}
+.panel p{font-size:13.5px;line-height:1.6;color:var(--muted);margin:0 0 8px;max-width:65ch}
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.navbtn{border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 10px;border-radius:7px;font:500 12px var(--body);cursor:pointer}
+.navbtn.current{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.truth{padding:9px 12px;border-left:2px solid var(--accent);background:#f4f7fa;border-radius:0 6px 6px 0;margin-top:12px!important;color:var(--ink)!important}
+.notes{display:none}.expanded .notes{display:block}
+.footnote{color:var(--faint);font-size:11.5px;line-height:1.5;margin-top:14px}
+@media(max-width:860px){
+ .wrap{padding:12px 16px 36px}.stage{height:auto;min-height:640px}
+ .chapterbar{padding:16px 16px 0}.headline{padding:8px 16px 0}
+ .frame{position:static;padding:18px 16px 70px;min-height:500px}
+ .stageFoot{left:16px;right:16px;bottom:10px;font-size:9px}
+ .captionBar{padding:12px 16px}.captionKind{display:none}.who{min-width:68px}
+ .roles,.split,.steps{grid-template-columns:1fr}.arrow{display:none}.coach{margin-top:0}
+ .role{min-height:0}.meta{grid-template-columns:1fr}.row{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+.richard{max-width:900px}.richard .roles{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}.richard .role{min-height:180px}.richard .coach{margin:14px 0;border-left:3px solid var(--accent);padding:13px 18px}.richard .ask{margin-top:12px;font-size:clamp(20px,2.2vw,27px)}a.cta{display:inline-block;text-decoration:none}a.cta:focus-visible{outline:3px solid var(--accent);outline-offset:3px}@media(max-width:650px){.richard .roles{grid-template-columns:1fr;gap:8px}.richard .role{min-height:0;padding:11px 13px}.richard .role b{margin-top:5px}.richard .coach{margin:9px 0;padding:10px 12px}}
+</style></head>
+<body><main class="wrap">
+<header class="mast"><div><div class="brand">AgentTraining<i>.ai</i></div><div class="label">LATEST REVIEW · V7 + RICHARD · 2:48 · NOV 21, 2026</div></div><div class="label">RECONSTRUCTED REVIEW COPY · NOT PRODUCTION</div></header>
+
+<section class="player" aria-label="V7 with Richard 18-second shareable review">
+ <div id="stage" class="stage">
+  <div class="chapterbar"><span id="chapter" class="chapter"></span><span id="position" class="position"></span></div>
+  <div id="headline" class="headline"></div>
+  <div id="frame" class="frame"></div>
+  <div class="stageFoot"><span id="truthL"></span><span class="rt">V7 + RICHARD · LATEST REVIEW</span></div>
+ </div>
+ <div class="captionBar" aria-live="off"><span class="who" id="who"></span><span id="captionTxt" class="captionTxt"></span><span class="captionKind">NARRATION SCRIPT</span></div>
+ <div class="controlarea">
+  <div id="segments" class="segments"></div>
+  <input id="scrub" class="scrub" type="range" min="0" max="168" step="0.01" value="0" aria-label="Timeline">
+  <div class="controls">
+   <div class="mainctrl"><button class="btn primary" id="play">▶ Play</button><button class="btn" id="restart">↻ Restart</button><button class="btn" id="prev" aria-label="Previous scene">←</button><button class="btn" id="next" aria-label="Next scene">→</button><span class="clock" id="clock">00:00 / 02:48</span></div>
+   <div class="auxctrl"><button class="btn" id="toggleVoice" aria-pressed="false">Preview voice: off</button><button class="btn" id="showNotes" aria-pressed="false">Director notes</button></div>
+  </div>
+ </div>
+</section>
+
+<div class="meta">
+ <section class="panel"><h2>The restrained build</h2>
+  <p>The emotional opening and 2.6-second silence are preserved. Michael's two practice attempts are followed by an 18-second Richard advanced business-owner example at 2:09–2:27, then a single manager-demo invitation.</p>
+  <div class="nav" id="nav"></div></section>
+ <section class="panel"><h2>Review and honesty</h2>
+  <p>Everything here is a scripted storyboard with authored scenes, captions and dialogue. It uses no recorded client calls, no customer data and no live product UI. The Scene 05 exchange is a <strong>text-based practice illustration</strong>. Two-way spoken AI roleplay is not verified and is not depicted. The browser preview voice is approximate and is not a produced voiceover.</p>
+  <p class="truth notes" id="reviewNote"></p>
+  <div class="notes"><p class="truth">David's second attempt changes his opening only. It uses no private facts about Michael, no numbers, no fear-of-death line, no booked meeting and no promised outcome. There is a single CTA, and the pilot is by request and subject to confirmation.</p></div></section>
+</div>
+<p class="footnote">LATEST SHAREABLE REVIEW · RECONSTRUCTED NOV 21, 2026 from original V7 plus confirmed Richard timing plan, since the previously produced revision HTML could not be reopened. Not a byte-identical re-upload. Illustrative text-based storyboard, not final recorded narration, deployed app or approved production.</p>
+</main>
+<script>
+const TOTAL=168;
+const SCENES=[{"num":"01","label":"The Investment","start":0,"end":18,"head":"What a manager can count, and the one thing no report shows.","truth":"ILLUSTRATIVE STORY · NO CUSTOMER DATA","note":"No invented figures; David is introduced as a new trainee."},{"num":"02","label":"Meet David and Michael","start":18,"end":38,"head":"Three roles, named before any action.","truth":"ILLUSTRATIVE STORY · NO CUSTOMER DATA","note":"David is the learner, Michael a fictional prospective client, and you are the manager."},{"num":"03","label":"The Question","start":38,"end":66,"head":"The call you will never be in the room for.","truth":"ILLUSTRATIVE STORY · NO CUSTOMER DATA","note":"Original uninterrupted 2.6-second complete silence at 1:03.4–1:06.0."},{"num":"04","label":"The Release","start":66,"end":82.5,"head":"Approved material becomes practice.","truth":"SIMULATED PRACTICE · NOT A REAL CLIENT CALL","note":"Condensed explanation, preserving approved material → simulated practice → manager review."},{"num":"05","label":"Watch Michael","start":82.5,"end":129,"head":"One better question. A changed response.","truth":"TEXT-BASED PRACTICE · ILLUSTRATIVE","note":"Fictional text-based attempt one and attempt two; no promised outcome or sale."},{"num":"06","label":"Meet Richard","start":129,"end":147,"head":"An established business owner. A higher-value conversation.","truth":"FICTIONAL BUSINESS-OWNER PRACTICE · REVIEW ONLY","note":"Respect the existing insurance agent; verify protection neutrally before discussing business needs. No coverage gap or valuation assumed."},{"num":"07","label":"The Invitation","start":147,"end":168,"head":"See what your team can practice. You decide.","truth":"PILOT BY REQUEST · SUBJECT TO CONFIRMATION","note":"Links to the PR #75 manager demo Deploy Preview; not a verified production connection."}];
+const N="NARRATOR";
+const CUES=[
+{s:0,e:3.5,who:N,t:"You can count the agents you recruit."},
+{s:3.5,e:7,who:N,t:"The courses they finish. The tests they pass."},
+{s:7,e:12.5,who:N,t:"None of it tells you how an agent handles a real conversation with a client."},
+{s:12.5,e:18,who:N,t:"Think of David, one of your new agents. On paper, he has done everything you asked."},
+{s:18,e:22,who:N,t:"David is getting ready to speak with Michael."},
+{s:22,e:25,who:N,t:"David is your trainee."},
+{s:25,e:31,who:N,t:"Michael is a potential client, a father who wants to know his family would be protected."},
+{s:31,e:33.5,who:N,t:"And you are David's manager."},
+{s:33.5,e:38,who:N,t:"How well is David prepared? And how would you know?"},
+{s:38,e:40.5,who:N,t:"You can't be there for the call."},
+{s:40.5,e:43.5,who:N,t:"Not when David first reaches Michael."},
+{s:43.5,e:46.7,who:N,t:"Not when Michael says, “I'm pretty busy.”"},
+{s:46.7,e:50.5,who:N,t:"Not when the call ends, and Michael never tells you why."},
+{s:50.5,e:57.5,who:N,t:"And the words David reaches for, the habits he falls back on, were shaped in preparation you never saw."},
+{s:57.5,e:59.6,who:N,t:"So here is the question."},
+{s:59.6,e:63.4,who:N,t:"How can you coach what you cannot see?"},
+{s:63.4,e:66,who:"",t:"",sil:1},
+{s:66,e:67.535,who:N,t:"Now you can."},
+{s:67.535,e:70.988,who:N,t:"Start with the material your company already approved."},
+{s:70.988,e:75.209,who:N,t:"Turn it into a conversation David can practice, before it's ever real."},
+{s:75.209,e:79.047,who:N,t:"Not another course to finish. A conversation to prepare for."},
+{s:79.047,e:82.5,who:N,t:"And you can review how he did."},
+{s:82.5,e:86.204,who:N,t:"Here's what to watch. Not David. Michael. Attempt one."},
+{s:86.204,e:92.376,who:"DAVID",t:"“Hi Michael, this is David. I work with families on financial protection, and we have some great plans I'd love to walk you through. Do you have a few minutes?”"},
+{s:92.376,e:94.434,who:"MICHAEL",t:"“I'm pretty busy.”"},
+{s:94.434,e:99.783,who:N,t:"The AI Coach names one thing. Everything David said was about David. He gave Michael no reason to keep listening."},
+{s:99.783,e:102.664,who:N,t:"Attempt two. This time, David asks one question."},
+{s:102.664,e:109.659,who:"DAVID",t:"“Hi Michael, it's David. I'll be brief. One question, and then I'll let you go. When you think about your family's future, what's the one thing you'd most want to be sure of?”"},
+{s:109.659,e:115.42,who:"MICHAEL",t:"“…Huh. Probably that the kids would be okay if something happened to my income. My wife and I keep meaning to look at it.”"},
+{s:115.42,e:118.301,who:N,t:"Same client. One door shut, one door open."},
+{s:118.301,e:122.004,who:N,t:"David didn't tell Michael why it mattered. Michael told David."},
+{s:122.004,e:126.119,who:N,t:"Not a sale. Not proof he's ready. But now you can see what changed."},
+{s:126.119,e:129,who:N,t:"The AI recommends. You decide."},
+{s:129,e:133.5,who:"RICHARD · SIMULATED CLIENT",t:"I already have an insurance agent. We've grown, but we're covered."},
+{s:133.5,e:139.2,who:"DAVID",t:"Understood. Have you reviewed business protection since that growth?"},
+{s:139.2,e:144.5,who:"AI COACH · ILLUSTRATIVE",t:"Good. Verify existing coverage before discussing buy-sell or key-person needs."},
+{s:144.5,e:147,who:N,t:"Practice for higher-value conversations."},
+{s:147,e:150.063,who:N,t:"You already know how many agents finish training."},
+{s:150.063,e:152.688,who:N,t:"Now you can see how they prepare."},
+{s:152.688,e:157.5,who:N,t:"Start with one small team. Pick the two conversations your team finds hardest."},
+{s:157.5,e:161,who:N,t:"We build them for you, from your own material."},
+{s:161,e:163.625,who:N,t:"Fourteen days. Then you decide."},
+{s:163.625,e:166.688,who:N,t:"Request your fourteen-day private pilot."},
+{s:166.688,e:168,who:"",t:""}];
+];
+const TPL=[
+`<div class="ledger">
+  <div class="label" data-t="0">What your reports can tell you</div>
+  <div class="row" data-t="0">Agents recruited <span>COUNTED</span></div>
+  <div class="row" data-t="3.5">Courses finished <span>COUNTED</span></div>
+  <div class="row" data-t="5.2">Tests passed <span>COUNTED</span></div>
+  <div class="row unseen" data-t="7">How an agent handles a real client conversation <span>NOT ON ANY REPORT</span></div>
+  <div class="intro" data-t="12.5"><div class="av">D</div><div><b>David</b><small>One of your new agents</small></div></div>
+ </div>`,
+`<div class="cast">
+  <div class="roles">
+   <div class="role" data-t="18"><div class="av">D</div><b>David</b><small data-t="22">Your trainee. Getting ready for his first conversation with Michael.</small></div>
+   <div class="role" data-t="19.5"><div class="av">M</div><b>Michael</b><small data-t="25">A potential client. A father who wants to know his family would be protected.</small></div>
+   <div class="role" data-t="31"><div class="av you">YOU</div><b>You</b><small>David's manager.</small></div>
+  </div>
+  <div class="ask" data-t="33.5">How well is David prepared? <em>And how would you know?</em></div>
+ </div>`,
+`<div class="quiet">
+  <div class="nots" data-off="50.5">
+   <p data-t="38">You can't be there for the call.</p>
+   <p data-t="40.5">Not when David first reaches Michael.</p>
+   <p data-t="43.5">Not when Michael says, <q>I'm pretty busy.</q></p>
+   <p data-t="46.7">Not when the call ends, and Michael never tells you why.</p>
+  </div>
+  <div class="shaped" data-t="51.3" data-off="57.5">The words David reaches for, the habits he falls back on, were shaped in preparation you never saw.</div>
+  <div class="question" data-t="59.6">How can you coach<br>what you cannot see?</div>
+ </div>`,
+`<div class="release">
+  <div class="now" data-t="66">Now you can.</div>
+  <div class="steps">
+   <div class="step" data-t="67.535"><div class="label">Start with</div><b>Your approved material</b><small>What your company has already signed off.</small></div>
+   <div class="arrow" data-t="70.988">→</div>
+   <div class="step" data-t="70.988"><div class="label">Practice</div><b>A conversation David can rehearse</b><small>Simulated, before it's ever real.</small></div>
+   <div class="arrow" data-t="79.047">→</div>
+   <div class="step" data-t="79.047"><div class="label">Review</div><b>You see how he did</b><small>His practice attempts, open to you.</small></div>
+  </div>
+  <div class="notcourse" data-t="75.209">Not another course to finish. <b>A conversation to prepare for.</b></div>
+ </div>`,
+`<div class="loop">
+  <div class="watch" data-t="82.5">Watch <s>David</s> <b>Michael.</b></div>
+  <div class="split">
+   <div class="attempt" id="att1" data-t="84.969">
+    <div class="label">Practice attempt 1</div>
+    <div class="bub d" data-t="86.204"><i>DAVID</i>“Hi Michael, this is David. I work with families on financial protection, and we have some great plans I'd love to walk you through. Do you have a few minutes?”</div>
+    <div class="bub m" data-t="92.376"><i>MICHAEL · SIMULATED CLIENT</i>“I'm pretty busy.”</div>
+    <div data-t="93.611"><span class="tag shut">DOOR SHUT</span><span class="note">Michael: 3 words</span></div>
+   </div>
+   <div class="coach" data-t="94.434"><div class="label">AI Coach · one thing</div>Everything David said was about David. He gave Michael no reason to keep listening.</div>
+   <div class="attempt" data-t="99.783">
+    <div class="label">Practice attempt 2</div>
+    <div class="bub d" data-t="102.664"><i>DAVID</i>“Hi Michael, it's David. I'll be brief. One question, and then I'll let you go. When you think about your family's future, what's the one thing you'd most want to be sure of?”</div>
+    <div class="bub m" data-t="109.659"><i>MICHAEL · SIMULATED CLIENT</i>“…Huh. Probably that the kids would be okay if something happened to my income. My wife and I keep meaning to look at it.”</div>
+    <div data-t="112.54"><span class="tag open">DOOR OPEN</span><span class="note">Michael: 24 words, and the reason is his own</span></div>
+   </div>
+  </div>
+  <div class="punch" data-t="118.301">David didn't tell Michael why it mattered. <b>Michael told David.</b></div>
+  <div class="after"><span data-t="122.004">Not a sale. Not proof he's ready. But now you can see what changed.</span><strong data-t="126.119">The AI recommends. You decide.</strong></div>
+ </div>`,
+`<div class="richard cast">
+<div class="label" data-t="129">ADVANCED PRACTICE · FICTIONAL BUSINESS OWNER</div>
+<div class="roles">
+<div class="role" data-t="129"><div class="av">R</div><b>Richard</b><small>“I already have an insurance agent. We've grown, but we're covered.”</small></div>
+<div class="role" data-t="133.5"><div class="av">D</div><b>David</b><small>“Understood. Have you reviewed business protection since that growth?”</small></div>
+</div>
+<div class="coach" data-t="139.2"><div class="label">AI Coach · scripted feedback</div>Good. Verify existing coverage before discussing buy-sell or key-person needs.</div>
+<div class="ask" data-t="144.5">Practice for <em>higher-value conversations.</em></div>
+</div>`,
+`<div class="invite">
+  <div class="inv1" data-t="147">You already know how many agents finish training.</div>
+  <div class="inv2" data-t="150.063">Now you can see how they prepare.</div>
+  <ul class="plan">
+   <li data-t="152.688"><span class="label">You choose</span><span>One small team, and the two conversations it finds hardest.</span></li>
+   <li data-t="157.5"><span class="label">We build</span><span>Both practice conversations, from your own material.</span></li>
+   <li data-t="161"><span class="label">You decide</span><span>After fourteen days, what happens next is your call.</span></li>
+  </ul>
+  <div data-t="163.625"><a class="cta" href="https://deploy-preview-75--magical-platypus-ba1dfe.netlify.app/manager-demo-review.html" target="_blank" rel="noopener noreferrer">Explore the Manager Demo</a><div class="ctasmall">By request · subject to confirmation</div></div>
+  <div class="proto" data-t="166.688">PR #75 · MANAGER DEMO PREVIEW · NOT PRODUCTION</div>
+ </div>`];
+const $=id=>document.getElementById(id);
+let time=0,playing=false,lastStamp=0,frameReq=null,voice=false,lastCue=-1,lastScene=-1,dragging=false,beats=[],offs=[];
+let canSpeak=('speechSynthesis' in window);
+function fmt(t){let x=Math.floor(Math.max(0,t));return String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0')}
+function sceneOf(t){const i=SCENES.findIndex(x=>t>=x.start&&t<x.end);return i<0?SCENES.length-1:i}
+function cueOf(t){const i=CUES.findIndex(c=>t>=c.s&&t<c.e);return i<0?CUES.length-1:i}
+function stopVoice(){if(canSpeak)try{speechSynthesis.cancel()}catch(e){}}
+function speak(txt){if(!voice||!canSpeak||!txt)return;stopVoice();try{const u=new SpeechSynthesisUtterance(txt.replace(/[“”…]/g,''));u.lang='en-US';u.rate=1;speechSynthesis.speak(u)}catch(e){}}
+function draw(){
+ const si=sceneOf(time),s=SCENES[si],ci=cueOf(time),c=CUES[ci],sil=!!c.sil;
+ document.body.classList.toggle('silent',sil);
+ if(si!==lastScene){
+  lastScene=si;
+  const fr=$('frame');fr.innerHTML=TPL[si];fr.style.animation='none';void fr.offsetWidth;fr.style.animation='sceneIn .5s ease';
+  beats=[...document.querySelectorAll('#frame [data-t]')];
+  offs=[...document.querySelectorAll('#frame [data-off]')];
+  $('chapter').textContent='SCENE '+s.num+' · '+s.label.toUpperCase();
+  $('position').textContent=s.num+' / 07';
+  $('headline').textContent=s.head;
+  $('truthL').textContent=s.truth;
+  $('reviewNote').textContent=s.note;
+  document.querySelectorAll('.navbtn').forEach((b,i)=>b.classList.toggle('current',i===si));
+ }
+ beats.forEach(el=>el.classList.toggle('on',time>=+el.dataset.t));
+ offs.forEach(el=>el.classList.toggle('off',time>=+el.dataset.off));
+ if(si===4){const a1=$('att1');if(a1)a1.classList.toggle('rest',time>=99.783)}
+ $('clock').textContent=fmt(time)+' / '+fmt(TOTAL);
+ if(!dragging)$('scrub').value=time.toFixed(2);
+ $('segments').querySelectorAll('button').forEach((b,i)=>{
+  const sc=SCENES[i];let v=time>=sc.end?100:time<=sc.start?0:100*(time-sc.start)/(sc.end-sc.start);
+  b.firstElementChild.style.width=v+'%';
+ });
+ if(ci!==lastCue){
+  lastCue=ci;
+  $('captionTxt').textContent=sil?'':c.t;
+  $('who').textContent=sil?'':(c.who||'');
+  stopVoice();
+  if(playing&&c.t&&!sil)speak(c.t);
+ }
+}
+function setPlaying(v){
+ if(frameReq!==null){cancelAnimationFrame(frameReq);frameReq=null}
+ playing=v;$('play').textContent=playing?'Ⅱ Pause':time>=TOTAL?'▶ Play':'▶ '+(time>0?'Resume':'Play');
+ if(!playing){stopVoice();return}
+ lastStamp=performance.now();frameReq=requestAnimationFrame(tick);
+}
+function tick(){if(!playing)return;const now=performance.now();time=Math.min(TOTAL,time+Math.min(.24,Math.max(0,(now-lastStamp)/1000)));lastStamp=now;draw();if(time>=TOTAL){setPlaying(false);return}frameReq=requestAnimationFrame(tick)}
+function seek(t){time=Math.min(TOTAL,Math.max(0,t));lastCue=-1;stopVoice();draw();lastStamp=performance.now()}
+function jump(i){seek(SCENES[Math.max(0,Math.min(SCENES.length-1,i))].start)}
+function setup(){
+ SCENES.forEach((s,i)=>{
+  const b=document.createElement('button');b.className='segment';b.style.flex=String(s.end-s.start);b.title=s.num+' '+s.label;b.setAttribute('aria-label','Go to scene '+s.num);b.innerHTML='<span class="fill"></span>';b.onclick=()=>jump(i);$('segments').appendChild(b);
+  const nav=document.createElement('button');nav.className='navbtn';nav.textContent=s.num+' '+s.label;nav.onclick=()=>jump(i);$('nav').appendChild(nav);
+ });
+ $('play').onclick=()=>{if(time>=TOTAL&&!playing)seek(0);setPlaying(!playing)};
+ $('restart').onclick=()=>{seek(0);setPlaying(true)};
+ $('prev').onclick=()=>jump(sceneOf(time)-1);
+ $('next').onclick=()=>jump(sceneOf(time)+1);
+ $('scrub').addEventListener('input',()=>{dragging=true;seek(Number($('scrub').value))});
+ $('scrub').addEventListener('change',()=>{dragging=false;seek(Number($('scrub').value))});
+ $('toggleVoice').onclick=()=>{voice=!voice&&canSpeak;stopVoice();$('toggleVoice').textContent=voice?'Preview voice: on':'Preview voice: off';$('toggleVoice').setAttribute('aria-pressed',String(voice))};
+ if(!canSpeak)$('toggleVoice').disabled=true;
+ $('showNotes').onclick=()=>{const yes=document.body.classList.toggle('expanded');$('showNotes').setAttribute('aria-pressed',String(yes))};
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlaying(false)});
+ document.addEventListener('keydown',e=>{if(e.target.matches('button,input,textarea,select'))return;
+  if(e.code==='Space'){e.preventDefault();$('play').click()}
+  else if(e.code==='ArrowRight')jump(sceneOf(time)+1);
+  else if(e.code==='ArrowLeft')jump(sceneOf(time)-1)});
+ draw();
+}
+setup();
+</script></body></html>
