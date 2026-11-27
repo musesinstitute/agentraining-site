@@ -33,3 +33,17 @@
  .evidence-narration .narration-lines{grid-template-columns:1fr}
  .evidence-narration .narration-lines li{font-size:14px}
 }
+
+/* PR80 film framing fixes — no source pixels are altered. */
+.evidence-image-scroller{width:100%;display:flex;justify-content:center}
+.evidence-stage .evidence-image-scroller img{width:100%;max-width:100%;max-height:380px;object-fit:contain;flex:none}
+.knowledge-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.knowledge-cut{min-width:0;border:1px solid #d0dcef;background:#fff;border-radius:8px;padding:8px}
+.knowledge-cut-label{display:block;margin-bottom:6px;font-size:12px;font-weight:750;color:#28446d}
+.evidence-stage .knowledge-cut img{display:block;width:100%;height:288px;max-width:none;max-height:none;object-fit:cover;object-position:center top;border-radius:5px}
+.evidence-stage .knowledge-cut--bottom img{object-position:center bottom}
+@media(max-width:760px){
+ .knowledge-evidence-grid{grid-template-columns:1fr;gap:9px}
+ .evidence-stage .knowledge-cut img{height:190px}
+ .evidence-stage .evidence-image-scroller img{width:760px;max-width:none;max-height:none}
+}
