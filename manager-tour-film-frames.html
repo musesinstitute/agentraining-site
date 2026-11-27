@@ -56,6 +56,11 @@ button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;
 .coaching-scores strong{font-size:clamp(15px,1.3vw,22px);color:#144cab}
 .coaching-scores small{display:block;font-size:clamp(10px,.8vw,13px);line-height:1.28;margin-top:5px;color:#586782}
 @media(max-width:980px){.coaching-scores small{font-size:10px}.coaching-scores{font-size:12px}}
+
+/* Cue 2.7: reveal the real coaching-score panel in the SAME source image, no composite/cross-session asset. */
+.practice-zoom-source .ui-art>img{transition:transform .65s ease-out;transform-origin:right bottom}
+.practice-zoom-source.score-focus .ui-art>img{transform:scale(1.65)}
+@media(prefers-reduced-motion:reduce){.practice-zoom-source .ui-art>img{transition:none}}
 </style></head>
 <body>
 <header class="pagehead"><div><h1>Four Studios · English manager feature tour</h1><p>Manager-first feature narration · authentic screenshots and a disclosed product-rendered Practice session illustrate key capabilities.</p></div><div>PR #80 · Film production candidate · DRAFT</div></header>
@@ -72,7 +77,7 @@ button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;
 </section>
 <section class="slide" data-name="Practice"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>02 / Practice Studio</span></div>
 <h2>From knowing to doing.</h2><div class="main-grid">
-<figure class="ui-shell"><div class="ui-label"><span>ONE FICTIONAL SESSION · PRODUCT-UI RE-RENDER · SOURCE VERIFIED</span><span>Overall 82 / 100</span></div>
+<figure class="ui-shell practice-zoom-source"><div class="ui-label"><span>ONE FICTIONAL SESSION · PRODUCT-UI RE-RENDER · SOURCE VERIFIED</span><span>Overall 82 / 100</span></div>
 <div class="ui-art"><img src="assets/studio-screenshots/PR80-Practice-Source-ReRender-1520x691.webp" alt="One documented fictional premium-objection practice session, product UI re-render: AI client, trainee response, client follow-up, overall score 82, empathy 80, product accuracy 72, closing technique 70."></div></figure>
 <aside class="explain"><h3>Learn. Apply. Coach.</h3><ol><li><b>1</b> Set the learning objective</li><li><b>2</b> Rehearse a client objection</li><li><b>3</b> Coach empathy, accuracy and closing</li></ol></aside></div>
 <div class="foot"><strong>Practice → Coaching evidence</strong><span class="warning">Documented product test · editorial re-render</span></div>
@@ -137,6 +142,8 @@ button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;
   }
   function render(){
     scenes.forEach((scene,i)=>{scene.classList.toggle('active',i===index);scene.setAttribute('aria-hidden',String(i!==index))});
+    const practiceFigure=scenes[1].querySelector('.practice-zoom-source');
+    if(practiceFigure)practiceFigure.classList.toggle('score-focus',index===1&&cue===6);
     $('previous').disabled=index===0;
     $('next').disabled=index===scenes.length-1;
     $('position').textContent='Studio '+(index+1)+' / '+scenes.length+' · '+names[index]+' · caption '+(cue+1)+' / '+cuesPerScene;
