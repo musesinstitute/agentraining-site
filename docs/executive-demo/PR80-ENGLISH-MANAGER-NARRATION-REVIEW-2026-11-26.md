@@ -38,8 +38,8 @@
 3. Think of training in two layers. Learn builds understanding through course material and knowledge checks. Apply develops the skill through interactive role-play.
 4. Agents can rehearse premium objections, product explanations and follow-up questions in a setting where mistakes become learning opportunities.
 5. Unlike simply reading a script, the trainee responds to a simulated client who can ask another question and challenge the explanation.
-6. Here, a fictional client raises a premium objection, the trainee responds, and the client follows up. The original screen shows a sample overall score of eighty-two.
-7. In a separate product-rendered practice run of the same fictional scenario, coaching scores are empathy and rapport eighty, product accuracy seventy-two, and closing technique seventy. Each highlights a specific coaching priority.
+6. Here, a fictional client objects to a monthly premium of one hundred eighty dollars. The trainee asks what budget feels manageable and what protection matters most. The client follows up, and the practice earns an overall score of eighty-two.
+7. In that same fictional session, the AI Coach reports empathy and rapport eighty, product accuracy seventy-two, and closing technique seventy. These are different skills the manager can discuss and help the learner improve.
 8. Instead of assuming that training has worked, the manager can use practice evidence to make coaching more specific and actionable.
 
 ### 3. Client Studio — Coaching With Case Context
@@ -106,16 +106,16 @@ The reviewer correctly identified that the original 1028×448 browser screenshot
 **Before final acceptance:** if the founder wants all three coaching scores literally inside the screenshot, obtain an unaltered taller browser capture of **one and the same session**, or explicitly approve the contributor's source-labeled product-rendered replay as film material. Do not quietly substitute it for a raw capture. Test the 16:9 frame and mobile layout with that replacement before revising narration to imply the scores are visible in the screenshot itself.
 
 
-## Founder decision, 2026-11-27 — product UI re-render accepted for Practice
+## Founder decision and implementation update, 2026-11-27
 
-**Decision:** The founder explicitly accepts using the contributor's genuine product-UI **re-render** (1520×691 candidate) rather than requiring an untouched browser-window screenshot. This is approval of the *source format* only, **not** final image acceptance, film acceptance, PR merge permission, or permission to spend Genspark/filming credits.
+**Founder decision:** Product UI re-rendering is accepted for the Practice Studio film source. This is format acceptance, not final screenshot acceptance, video production approval or PR merge approval.
 
-**Required for the next image revision**
-- Obtain and verify the **actual 1520×691 WebP** from the Nov 26 fictional "Premium Is Too High" / David Alvarez demonstration. Report the image source honestly as a product-UI replay/re-render, not a raw browser capture.
-- Only display transcript text, client follow-up, and Overall 82 / Empathy & Rapport 80 / Product Accuracy 72 / Closing Technique 70 that are verified in that single replay. Do not mix old PR75 dialogue with new-run scoring or manufacture missing content.
-- Replace the old Practice frame and the Practice tour image with **this one coherent screenshot** if and only if the source asset is available and verified; update alt text, image links, disclosure, score labels, and captions together. Avoid a duplicate unrelated-session score panel once replaced.
-- Check live 16:9 film framing, desktop and mobile legibility, soundtrack / English caption consistency, and all four Studios' manager-first product claims after the replacement. Document actual tests versus untested items.
+**Exact source provided and visually inspected:** `PR-Practice-Screenshot-Upload.zip`, entry `upload/assets/studio-screenshots/PR75-Practice-Studio.webp`, 1520×691. It shows one fictional Nov 26 test: a $180 monthly-premium objection, the trainee's budget/protection question, an AI client follow-up mentioning the mortgage and two children, and Overall 82 / Empathy 80 / Product Accuracy 72 / Closing 70. This file was originally produced by the product's own renderer, not a raw browser screenshot. It is different from the earlier PR #75 1028×448 image.
 
-**Current branch status:** The 1520×691 replacement asset has **not been located in this branch**; the contributor's separate attachment is not available among the files accessible to this editing session. Therefore, **do not falsely claim a complete image swap**. The pre-existing original screenshot and distinctly labeled other-run score evidence remain in place temporarily. The standalone Practice step label and both pages' English spoken copy can be refined now without misrepresenting a single session.
+**What is now in the Draft PR:** A compact **source-faithful editorial SVG re-render** at `assets/studio-screenshots/PR80-Practice-Session-Replay.svg`, based on the verified single-run image. The Practice page and 16:9 film page have been switched to the SVG, and English captions 2.6–2.7 updated to describe the matching single run. The previous separate-session score boxes are removed. This SVG is an **editorial visual reconstruction from the source image, not a pixel-for-pixel copy of the contributor's 1520×691 product-rendered WebP**; the exact source WebP still belongs in the final film-quality asset package. Do not confuse the SVG with an authentic untouched product screenshot.
 
-**Release gates:** PR #80 stays Draft, no merge to master; independent AI review before Genspark; founder reviews the exact deploy preview and explicitly approves any later PR merge. No outside distribution or paid film production yet.
+**Production asset remaining:** Upload the **original full 1520×691 WebP** from the verified review package to the PR branch and point both pages to that exact asset before final film lock. This avoids using reconstructed vector pixels as the final proof of the shipped product UI. The SVG is a transparent temporary editorial proxy only.
+
+**Required validation still open:** real live Netlify Play/Pause, voice and captions, 16:9 frame dimensions, desktop/mobile rendering, full-size image link, transcript integrity, and handoff between PR #68 and PR #80. Independent AI reviews must precede Genspark, and Genspark precedes founder final acceptance. No paid filming or manager distribution until these gates are passed.
+
+**Repository governance:** PR #80 stays Draft; no merge to `master`. Approval of screenshot source format alone authorizes neither merge nor paid production.
