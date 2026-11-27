@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>AgentTraining.ai | Four Studios - Film Framing Review</title>
+<meta name="robots" content="noindex"><title>AgentTraining.ai | Four Studios - Narrated Film Preview</title>
 <style>
 :root{--navy:#101f41;--royal:#2252d4;--ink:#172440;--muted:#536482;--pale:#f4f7fe;--line:#cad7f3;--gold:#f5da64}
 *{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#e6ebf6;color:var(--ink)}
@@ -33,10 +33,25 @@ h1,h2,p,figure{margin:0}.pagehead{max-width:1200px;margin:20px auto 12px;padding
 button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;background:#2252d4;font-weight:700;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid #e6a813;outline-offset:3px}
 .actions a{color:#204cbd;font-weight:650}.actions p{margin-left:auto;font-size:13px;color:#53627c}
 .disclosure{max-width:1200px;margin:0 auto 24px;padding:0 14px;font-size:13px;color:#42536f}
+
+/* Playback overlay: product evidence stays unchanged and subtitles are outside each screenshot. */
+.stage .slide{padding-bottom:clamp(102px,9.4vw,148px)}
+.subtitle-band{position:absolute;left:0;right:0;bottom:0;z-index:5;min-height:104px;padding:13px clamp(26px,4vw,65px) 16px;background:#101f41f5;color:white;display:flex;flex-direction:column;justify-content:center;gap:5px;border-top:3px solid #f5da64}
+.subtitle-label{font-size:clamp(10px,1vw,15px);letter-spacing:.13em;text-transform:uppercase;color:#d1dfff;font-weight:750}
+.subtitle-text{font-size:clamp(16px,1.75vw,29px);font-weight:600;line-height:1.26;text-wrap:balance;min-height:1.4em}
+.actions .secondary{background:white;color:#1b4199;border-color:#a6bae6}
+.actions .secondary[aria-pressed="true"]{background:#dce8ff}
+.actions .play{background:#103b9f;border-color:#103b9f}
+.actions .film-progress{flex:1 1 220px;min-width:130px;accent-color:#2252d4;cursor:pointer}
+.actions .runtime{color:#172440;font-weight:750;white-space:nowrap;font-variant-numeric:tabular-nums}
+.actions .full-size{font-size:13px;flex:1 1 auto}
+.player-note{max-width:1200px;margin:0 auto 9px;padding:0 14px;font-size:13px;color:#42536f}
+#playerStatus{max-width:1200px;margin:0 auto 12px;padding:0 14px;font-size:13px;color:#324c79}
+@media(max-width:980px){.stage .slide{padding-bottom:113px}.subtitle-text{font-size:17px}.subtitle-band{min-height:108px}}
 @media(max-width:980px){.stage{min-width:860px}.slide h2{font-size:37px}.pagehead{margin-top:12px}}
 </style></head>
 <body>
-<header class="pagehead"><div><h1>Four Studios · 16:9 film-shot review</h1><p>Source-preserving framing only; not a rendered film or approved outcome.</p></div><div>PR #80 · Film production candidate · DRAFT</div></header>
+<header class="pagehead"><div><h1>Four Studios · narrated film preview</h1><p>Four authentic interface examples · synchronized captions and browser voice preview.</p></div><div>PR #80 · Film production candidate · DRAFT</div></header>
 <div class="frame-scroll"><main class="stage" id="filmStage" aria-label="16 by 9 Four Studios film framing preview">
 <section class="slide active" data-name="Knowledge"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>01 / Knowledge Studio</span></div>
 <h2>From approved knowledge to practice.</h2><div class="main-grid">
@@ -69,25 +84,154 @@ button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;
 <aside class="explain"><h3>The manager makes the call.</h3><ol><li><b>1</b> Assign the next practice</li><li><b>2</b> Track task statuses</li><li><b>3</b> Message the learner</li></ol></aside></div>
 <div class="foot"><strong>Leadership → Next assignment → Practice</strong><span class="warning">No real-time chat or verified messaging persistence is claimed.</span></div>
 </section>
+<div class="subtitle-band" aria-live="polite" aria-atomic="true" aria-label="Current narration and captions"><span class="subtitle-label" id="subtitleLabel">Knowledge Studio · English captions</span><p class="subtitle-text" id="subtitleText">Press Play to begin the Four Studios narrated tour.</p></div>
 </main></div>
-<nav class="actions" aria-label="Frame preview controls"><button id="previous" type="button">← Previous frame</button><button id="next" type="button">Next frame →</button><a id="original" href="assets/studio-screenshots/PR75-Knowledge-Studio.webp" target="_blank" rel="noopener">Open unaltered original image</a><p id="position" aria-live="polite">Frame 1 / 4 · Knowledge</p></nav>
-<p class="disclosure">For a video editor: record only the 16:9 frame, not the control bar. All screenshot pixels come from PR #80's original WebP files. Knowledge shows two explicitly labeled top/bottom <em>crops from the same screenshot</em>. Four fictional examples are independent—not a single client journey. This is a review storyboard; independently confirm deployed UI, narration timing, mobile and Genspark UAT before paid production.</p>
+<nav class="actions" aria-label="Narrated tour player controls">
+  <button id="play" class="play" type="button" aria-label="Play narrated tour">▶ Play tour</button>
+  <button id="restart" class="secondary" type="button">↻ Restart</button>
+  <button id="previous" class="secondary" type="button">← Previous Studio</button>
+  <button id="next" class="secondary" type="button">Next Studio →</button>
+  <label for="filmProgress" class="runtime" id="clock">00:00</label>
+  <input class="film-progress" id="filmProgress" type="range" min="0" max="23" step="1" value="0" aria-label="Seek to caption; 24 caption segments">
+  <button id="voiceToggle" class="secondary" type="button" aria-pressed="true">🔊 Voice on</button>
+  <button id="languageToggle" class="secondary" type="button">中文旁白</button>
+  <a class="full-size" id="original" href="assets/studio-screenshots/PR75-Knowledge-Studio.webp" target="_blank" rel="noopener">Open original screenshot</a>
+  <p id="position" aria-live="polite">Studio 1 / 4 · Knowledge</p>
+</nav>
+<p class="player-note">Click Play to hear the browser-generated voice alongside changing captions and studio screens. English / 中文 can be switched before or during review. This is an interactive narrated preview, not an encoded MP4 or professional voice recording.</p>
+<p id="playerStatus" role="status" aria-live="polite">Ready. Audio requires a click and browser speech support; captions work without audio.</p>
+<p class="disclosure">For a video editor: record only the 16:9 frame, not the control bar. All screenshot pixels come from PR #80's original WebP files. Knowledge shows two explicitly labeled top/bottom <em>crops from the same screenshot</em>. Four fictional examples are independent—not a single client journey. Speech timing and voice quality depend on the browser. Record and synchronize the final approved voice track before paid film production; independently confirm deployed UI, mobile and Genspark UAT.</p>
 <script>
+
 (function(){
+  'use strict';
   const scenes=Array.from(document.querySelectorAll('.slide'));
   const names=['Knowledge','Practice','Client','Leadership'];
-  let index=0;
-  function show(next){
-    index=Math.max(0,Math.min(scenes.length-1,next));
-    scenes.forEach((scene,i)=>{scene.classList.toggle('active',i===index);scene.setAttribute('aria-hidden',String(i!==index));});
-    document.getElementById('previous').disabled=index===0;
-    document.getElementById('next').disabled=index===scenes.length-1;
-    document.getElementById('position').textContent='Frame '+(index+1)+' / 4 · '+names[index];
-    document.getElementById('original').href='assets/studio-screenshots/PR75-'+names[index]+'-Studio.webp';
+  const scripts={"en":[["Knowledge Studio begins with a company training guide. The example on screen uses fictional demo information rather than a real client record.","Managers can inspect the source material and the AI-generated summary, checking that explanations are grounded in the training document before anyone relies on them.","The original product screenshot is quite tall, so this review presents its top and bottom sections side by side. Both views come from one unaltered source image.","Lower on that same page, the interface shows a draft practice activity. It is a starting point for review, not an automatically approved assignment.","The manager can decide whether that draft is appropriate for the team and use the Assign this Practice control when ready.","That is the first connection: knowledge can become practice, with human review in the middle. This screenshot does not demonstrate automated learner-specific prioritization."],["Practice Studio changes the setting from reading material to rehearsing a client conversation. The client and learner here are part of a simulation.","In the visible example, the client raises an objection about the premium. The trainee responds, and the simulated client asks a further question.","This screenshot preserves one actual example from the test interface. It does not join dialogue from several different attempts into a fictional success story.","The visible overall score is eighty-two out of one hundred. The image only shows part of the detailed scoring area, so we are not claiming that every category is visible.","For a manager, the important evidence is the trainee's choice of words, the client's reaction, and the specific skill that may need another practice round.","We do not show a final response to the last follow-up, a completed sale, or a verified real customer outcome. Those would require separate evidence."],["Client Studio lets a learner or manager organize the context of a specific client case, rather than treating every sales conversation as interchangeable.","Our screen shows Elena Rivera, a fictional example. The case records a need, a premium-related objection, and the intended next follow-up.","The information shown is entered into a case record. It should not be mistaken for automatic listening, call recording, or verification of an actual client conversation.","From that context, the Start Practice action offers a way to rehearse an issue that matters for the next conversation.","That connection is valuable because training can respond to a case-specific question instead of a generic sales script chosen without any context.","The screenshot demonstrates the entry point, not a completed rehearsal or an automatically synchronized result. Those additional behaviors need their own testing."],["Leadership Studio brings the manager back into the training process. The manager can see assignments and decide what practice should happen next.","In this example, the interface includes Assign Practice, Current Assignments, and Message Learner, with fictional data used for demonstration.","The manager can use assignment status as a prompt to follow up. A status alone does not prove the quality of a real client conversation.","The messaging action offers a path to guidance, but this screenshot is not proof of real-time chat or persistent delivery across every device.","The four Studios now form a coherent workflow: review knowledge, practice client conversations, record case context, and manage the next learning assignment.","The AI can support that cycle, but the manager remains responsible for interpreting evidence and approving the next step. This ends the Four Studios preview."]],"zh":[["Knowledge Studio 从公司的培训资料开始。画面里使用的是示范资料，并不是真实客户档案。","主管可以查看原始资料和 AI 摘要，核对内容是否有根据，再决定是否用于团队培训。","由于原始页面是一张纵向长图，这里把同一张真实截图的上半部分和下半部分并排展示，没有拼造不同的画面。","页面下方展示一份练习草稿。草稿只是供主管审核的起点，并不代表系统已经自动批准。","主管确认练习适合团队以后，可以使用 Assign this Practice 入口安排练习。","这是知识连接练习的第一步，中间保留主管的判断。这个截图没有证明系统能自动决定每位学员的训练优先级。"],["Practice Studio 把知识学习变成实际的客户对话演练。画面中的客户和学员属于模拟练习。","这里客户提出保费方面的异议，学员给出回应，随后模拟客户又提出进一步的问题。","我们保留同一次演练的真实界面，没有把不同场次的回答拼接成一个成功故事。","画面显示的总体成绩是八十二分，满分一百分。不过分项评分区域只有部分可见，所以不能声称全部评分细项都已经展示。","主管真正需要看到的是学员怎么回答、客户怎么追问，以及下一轮练习应该改善什么技巧。","画面没有显示对最后一个追问的最终回答，也没有证明成交或真实客户结果；这些内容不能凭空补上。"],["Client Studio 帮助团队记录具体客户的需求和情况，而不是让所有人只用同一套通用话术。","画面中的 Elena Rivera 是虚构的示范客户，案例包含保障需求、保费异议以及下一次跟进安排。","这些资料是输入到案例档案里的，不代表系统自动录音、监听或核实了真实客户的对话。","通过 Start Practice，团队可以围绕这个客户案例的关键问题，进入针对性的演练。","这样，训练就能更贴近下一次需要处理的客户问题，而不只是没有背景的标准脚本。","这个截图只证明练习入口存在，并没有展示一次已经完成的演练，也没有证明成绩自动回写。"],["Leadership Studio 让团队主管回到培训管理的核心位置，决定下一次要安排什么练习。","示范界面包括 Assign Practice、Current Assignments 和 Message Learner，使用的都是测试资料。","主管可以根据任务状态继续跟进，但任务状态本身不能证明真实客户沟通质量。","Message Learner 展示了发送指导信息的入口；单凭截图不能保证实时聊天或跨设备持久保存。","四个 Studio 由此形成一个清楚的工作流程：审核知识、练习对话、记录客户背景，再由主管安排下一轮训练。","AI 提供辅助，但主管仍然负责解释证据并批准下一步。这就是 Four Studios 的导览结尾。"]]};
+  const $=id=>document.getElementById(id);
+  const speechOK='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
+  const cuesPerScene=6,totalCues=scenes.length*cuesPerScene;
+  let index=0,cue=0,lang='en',playing=false,completed=false,voiceEnabled=speechOK;
+  let token=0,timer=null,watchdog=null,clockTimer=null,elapsedMs=0,startedAt=0;
+  const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+  const ftime=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+  function chooseVoice(){
+    if(!speechOK)return null;
+    const voices=speechSynthesis.getVoices();
+    const prefix=lang==='zh'?'zh':'en';
+    return voices.find(v=>v.lang.toLowerCase().startsWith(lang==='zh'?'zh-cn':'en-us'))
+      ||voices.find(v=>v.lang.toLowerCase().startsWith(prefix))||null;
   }
-  document.getElementById('previous').addEventListener('click',()=>show(index-1));
-  document.getElementById('next').addEventListener('click',()=>show(index+1));
-  document.addEventListener('keydown',e=>{if(e.target.closest('button,a,input'))return;if(e.key==='ArrowRight')show(index+1);if(e.key==='ArrowLeft')show(index-1)});
-  show(0);
+  function stopCurrent(){
+    token++;
+    if(timer!==null){clearTimeout(timer);timer=null}
+    if(watchdog!==null){clearTimeout(watchdog);watchdog=null}
+    if(speechOK)try{speechSynthesis.cancel()}catch(e){}
+  }
+  function render(){
+    scenes.forEach((scene,i)=>{scene.classList.toggle('active',i===index);scene.setAttribute('aria-hidden',String(i!==index))});
+    $('previous').disabled=index===0;
+    $('next').disabled=index===scenes.length-1;
+    $('position').textContent='Studio '+(index+1)+' / '+scenes.length+' · '+names[index]+' · caption '+(cue+1)+' / '+cuesPerScene;
+    $('original').href='assets/studio-screenshots/PR75-'+names[index]+'-Studio.webp';
+    $('subtitleLabel').textContent=names[index]+' Studio · '+(lang==='en'?'English':'中文字幕');
+    $('subtitleText').textContent=scripts[lang][index][cue];
+    $('filmProgress').value=String(index*cuesPerScene+cue);
+    $('clock').textContent=ftime(elapsedMs+(playing?Date.now()-startedAt:0));
+    $('play').textContent=playing?'Ⅱ Pause':completed?'▶ Replay':'▶ '+(elapsedMs?'Resume':'Play tour');
+    $('play').setAttribute('aria-label',playing?'Pause narrated tour':'Play narrated tour');
+    $('voiceToggle').textContent=voiceEnabled?'🔊 Voice on':'🔇 Voice off';
+    $('voiceToggle').setAttribute('aria-pressed',String(voiceEnabled));
+    $('languageToggle').textContent=lang==='en'?'中文旁白':'English narration';
+  }
+  function setStatus(s){$('playerStatus').textContent=s}
+  function finish(){
+    stopCurrent();
+    if(playing)elapsedMs+=Date.now()-startedAt;
+    playing=false;completed=true;render();
+    setStatus('Four Studios narration completed. Replay, review a Studio, or open its original screenshot.');
+  }
+  function nextCue(){
+    if(!playing)return;
+    if(cue+1<cuesPerScene)cue++;
+    else if(index+1<scenes.length){index++;cue=0}
+    else{finish();return}
+    beginCue();
+  }
+  function silentCue(){
+    const t=scripts[lang][index][cue];
+    const duration=lang==='en'
+      ?clamp(1100+t.trim().split(/\s+/).length*450,6000,18000)
+      :clamp(1400+t.length*180,5500,18000);
+    timer=setTimeout(()=>{timer=null;nextCue()},duration);
+    setStatus('Playing synchronized captions without generated speech. Voice can be enabled at any time.');
+  }
+  function beginCue(){
+    stopCurrent();render();
+    if(!playing)return;
+    if(!voiceEnabled||!speechOK){silentCue();return}
+    const own=token,text=scripts[lang][index][cue];
+    try{
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang=lang==='en'?'en-US':'zh-CN';
+      u.rate=0.93;
+      const v=chooseVoice();if(v)u.voice=v;
+      u.onend=()=>{if(own!==token||!playing)return;timer=setTimeout(()=>{timer=null;nextCue()},360)};
+      u.onerror=(e)=>{
+        if(own!==token||!playing)return;
+        voiceEnabled=false;stopCurrent();render();
+        setStatus('Browser voice is unavailable ('+(e.error||'speech error')+'). Captions will continue in silent preview.');
+        silentCue();
+      };
+      speechSynthesis.speak(u);
+      watchdog=setTimeout(()=>{
+        if(own!==token||!playing)return;
+        voiceEnabled=false;stopCurrent();render();
+        setStatus('Browser narration stalled; continuing with timed captions instead.');
+        silentCue();
+      },45000);
+      setStatus('Playing browser voice with captions. Actual duration depends on your installed system voice.');
+    }catch(e){
+      voiceEnabled=false;render();
+      setStatus('Browser voice could not start. The captioned preview is still available.');
+      silentCue();
+    }
+  }
+  function pause(){
+    if(!playing)return;
+    elapsedMs+=Date.now()-startedAt;playing=false;
+    stopCurrent();render();
+    setStatus('Paused. Resume will repeat the current caption so no sentence is cut in half.');
+  }
+  function play(){
+    if(playing){pause();return}
+    if(completed){index=0;cue=0;elapsedMs=0;completed=false}
+    playing=true;startedAt=Date.now();beginCue();render();
+  }
+  function seek(scene,caption=0){
+    const wasPlaying=playing;stopCurrent();
+    index=clamp(scene,0,scenes.length-1);
+    cue=clamp(caption,0,cuesPerScene-1);
+    completed=false;render();
+    if(wasPlaying)beginCue();
+    else setStatus('Selected '+names[index]+' Studio, caption '+(cue+1)+'. Press Play to hear it.');
+  }
+  $('play').addEventListener('click',play);
+  $('restart').addEventListener('click',()=>{pause();index=0;cue=0;elapsedMs=0;completed=false;play()});
+  $('previous').addEventListener('click',()=>seek(index-1));
+  $('next').addEventListener('click',()=>seek(index+1));
+  $('filmProgress').addEventListener('input',e=>{const n=Number(e.target.value);seek(Math.floor(n/cuesPerScene),n%cuesPerScene)});
+  $('voiceToggle').addEventListener('click',()=>{
+    voiceEnabled=speechOK&&!voiceEnabled;
+    if(playing)beginCue();else render();
+    setStatus(voiceEnabled?'Browser narration is on; Play or Resume will speak the current caption.':'Voice is off. Timed captions remain available.');
+  });
+  $('languageToggle').addEventListener('click',()=>{lang=lang==='en'?'zh':'en';cue=0;if(playing)beginCue();else render();setStatus('Switched to '+(lang==='en'?'English':'Chinese')+' narration and captions. Timing restarts at the current Studio.')});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)pause()});
+  document.addEventListener('keydown',e=>{if(e.target.closest('button,input,a'))return;if(e.code==='Space'){e.preventDefault();play()}});
+  clockTimer=setInterval(()=>{if(playing)$('clock').textContent=ftime(elapsedMs+Date.now()-startedAt)},300);
+  if(!speechOK){voiceEnabled=false;$('voiceToggle').disabled=true;setStatus('This browser does not offer speech synthesis. Timed captions and scene playback are available.')}
+  render();
 })();
+
 </script></body></html>
