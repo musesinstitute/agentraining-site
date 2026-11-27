@@ -221,6 +221,12 @@ label.fl{font-family:var(--font-display);font-weight:700;font-size:.78rem;displa
 @media(max-width:620px){.report-grid{grid-template-columns:1fr}.report-card.full{grid-column:auto}}
 .foot{color:var(--faint);font-size:.8rem;line-height:1.7;margin-top:1.4rem;max-width:44rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.pilot-next{margin:1.5rem 0 1rem;padding:1.25rem 1.4rem;background:var(--surface);border:2px solid var(--accent);border-radius:.9rem}
+.pilot-next h2{font-size:clamp(1.25rem,3vw,1.7rem);margin:.25rem 0 .65rem}
+.pilot-next p{font-size:.95rem;color:var(--muted);max-width:72ch;margin:.35rem 0 .8rem}
+.pilot-next .pilot-action{display:inline-block;background:var(--accent);color:#fff;border-radius:.6rem;padding:.85rem 1.15rem;font:800 .92rem var(--font-display);text-decoration:none;margin:.35rem 0}
+.pilot-next .pilot-action:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.pilot-next .pilot-note{font-size:.8rem;line-height:1.6;color:var(--muted);margin-bottom:0}
 </style>
 
 <div class="illus">
@@ -244,6 +250,12 @@ label.fl{font-family:var(--font-display);font-weight:700;font-size:.78rem;displa
   <div class="wrap">
     <div class="panel" id="panel"></div>
     <p class="foot" id="footnote"></p>
+    <section class="pilot-next" aria-labelledby="pilotNextHeading">
+      <h2 id="pilotNextHeading">Your next step: Test this with your own team.</h2>
+      <p>Start with a small group, choose two important client conversations, and review practice evidence with your manager at the end of a free 14-day Pilot.</p>
+      <a class="pilot-action" href="/pilot-start.html">Request My Free 14-Day Pilot →</a>
+      <p class="pilot-note">The advisors and outcomes in this demo are fictional. This form requests Pilot access; it does not automatically activate an account or create a paid subscription. Improvement is measured, not guaranteed.</p>
+    </section>
   </div>
 </main>
 
