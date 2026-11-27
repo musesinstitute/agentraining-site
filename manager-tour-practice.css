@@ -40,3 +40,14 @@
 @media(max-width:760px){
  .practice-stage .practice-image-scroller img{width:760px;max-width:none;max-height:none}
 }
+
+/* Source-labeled companion evidence. Kept OUTSIDE the original screenshot so two distinct fictional sessions are not falsely spliced. */
+.practice-score-evidence{margin:12px 0 0;width:100%;background:#fff;border:1px solid #c8d7f3;border-radius:12px;padding:14px 16px;color:#213653}
+.practice-score-evidence>div:first-child{display:flex;gap:8px 20px;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+.practice-score-evidence>div:first-child strong{font-size:17px;color:#152d67}
+.practice-score-source{font-size:11px;color:#56647e;max-width:620px}
+.practice-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0 8px}
+.practice-score-grid p{margin:0;background:#f0f5ff;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:7px;flex-wrap:wrap;font-size:13px}
+.practice-score-grid p strong{white-space:nowrap;font-variant-numeric:tabular-nums;color:#1745a4;font-size:16px}
+.practice-score-disclosure{margin:6px 0 0;font-size:11px;color:#55647d}
+@media(max-width:760px){.practice-score-evidence{padding:12px}.practice-score-grid{grid-template-columns:1fr;gap:5px}.practice-score-grid p{padding:7px 10px}.practice-score-grid p strong{font-size:15px}}
