@@ -8,7 +8,7 @@
 
 **GitHub PR:** https://github.com/musesinstitute/agentraining-site/pull/80
 
-**Narration change commit:** 15e3e084ebd6996d0e79667b604d81ddbe44180d
+**Earlier narration foundation:** `15e3e084ebd6996d0e79667b604d81ddbe44180d` (historical; the current wording and four-stage handoff are on the PR #80 Draft branch).
 
 ## Editorial rules
 
@@ -18,51 +18,55 @@
 - No strict duration cap during content review; measure and edit for pacing after content is accepted.
 - English-only version now. Chinese version must be a separate localized edition, not a language toggle in the English manager film.
 
+## Narrative structure — explicit chapter cuts
+
+After the preceding manager challenge, the first film caption explicitly introduces the solution. The four product frames retain their existing Knowledge → Practice → Client → Leadership order and each stage begins with **First / Second / Third / Fourth**. The last narration caption invites managers to open the fictional interactive decision demo with **Take the Manager's Seat**. The invitation is a user-clicked handoff, not an automatic page redirect. All product images and coaching scores remain unchanged.
+
 ## Narration — English, 32 caption segments
 
 ### 1. Knowledge Studio — Teaching What Matters
 
-1. Every agency receives more information than a team can absorb: carrier updates, product guides, new training files, and insurance fundamentals. The manager must decide what matters most.
-2. Knowledge Studio addresses two different learning needs: foundational insurance knowledge, and your own company's approved training library.
+1. You've seen how hard it can be to identify coaching priorities across a team. Now let me show you how AgentTraining.ai addresses those challenges through four connected Studios. First, Knowledge Studio: teach what matters most.
+2. Every week, teams work through insurance fundamentals, carrier updates, product guides and company assignments. Knowledge Studio combines foundational learning with your company's approved training library.
 3. For a manager, the question is importance: what should the team learn first? For a trainee, the question is relevance: what knowledge is most useful for the next client conversation?
 4. AI can help organize materials and prepare summaries. The manager reviews the source evidence, chooses priorities and decides which content is suitable for the team.
 5. In this real test interface, a sample company training guide appears alongside an AI-generated summary for the manager to inspect.
 6. The same workflow shows a practice draft and an assignment entry point. The manager reviews the draft before deciding to assign it.
 7. The value is more than storing documents. It is turning trusted knowledge into purposeful training, without handing important decisions over to an unverified ranking algorithm.
-8. Now the question becomes: can an agent actually use that knowledge when a client pushes back?
+8. But knowledge alone is not enough. Agents also need to use what they've learned when a client raises a difficult question. That brings us to the second Studio.
 
 ### 2. Practice Studio — Applying Knowledge in Conversation
 
-1. Knowing a product feature is one thing. Explaining it under pressure, when a prospective client objects, is another.
+1. Second, Practice Studio. Knowing a product is one thing. Explaining it under pressure, when a prospective client objects, is another.
 2. Practice Studio bridges that gap. The manager sets the learning objective, while an AI-simulated client gives the trainee a conversation to rehearse.
 3. Think of training in two layers. Learn builds understanding through course material and knowledge checks. Apply develops the skill through interactive role-play.
 4. Agents can rehearse premium objections, product explanations and follow-up questions in a setting where mistakes become learning opportunities.
 5. Unlike simply reading a script, the trainee responds to a simulated client who can ask another question and challenge the explanation.
 6. Here, a fictional client objects to a monthly premium of one hundred eighty dollars. The trainee asks what budget feels manageable and what protection matters most. The client follows up, and the practice earns an overall score of eighty-two.
 7. In that same fictional session, the AI Coach reports empathy and rapport eighty, product accuracy seventy-two, and closing technique seventy. These are different skills the manager can discuss and help the learner improve.
-8. Instead of assuming that training has worked, the manager can use practice evidence to make coaching more specific and actionable.
+8. Practice turns knowledge into coaching evidence. But practice alone is not enough: training should prepare an agent for the needs of a particular client. That brings us to the third Studio.
 
 ### 3. Client Studio — Coaching With Case Context
 
-1. Of course, an agent's next appointment is not a generic simulation. Every prospective client has different needs, concerns and timing.
+1. Third, Client Studio. Every prospective client has different needs, objections and timing. Client Studio brings that context into more focused training.
 2. Client Studio maintains a case portfolio that records client needs, objections, interaction context, status and planned follow-up.
 3. For managers, that context matters. A training score alone does not tell you what kind of real conversation the learner needs to prepare for.
 4. AI can help organize the information entered into a case and suggest follow-up questions. The platform does not claim to automatically listen to or verify live customer calls.
 5. In this fictional example, Elena Rivera's case records a coverage need, a premium objection and the next planned follow-up.
 6. The Start Practice action connects that case context with a more focused rehearsal. The screenshot illustrates the entry point, not a completed customer outcome.
 7. Now the learner can prepare for a specific concern rather than spending every practice session on the same generic sales script.
-8. That is the benefit of Client Studio: connect case context to the next useful training action, so coaching addresses the conversation ahead.
+8. Client Studio connects a case to the next useful rehearsal. But a manager still needs to review the evidence, guide the learner and decide what happens next.
 
 ### 4. Leadership Studio — Manager Judgment and Action
 
-1. The final question is the manager's: with this information in hand, what should I do next for each learner?
+1. Fourth, Leadership Studio. With knowledge, practice and client context in hand, the manager can decide whom to coach, what to assign and when to follow up.
 2. Leadership Studio brings the manager's assignment decisions, learner results and coaching follow-up into one management workflow.
 3. Review practice evidence and AI-assisted coaching suggestions, but look beyond a score. The trainee needs a manager's judgment, not an automatic verdict.
 4. You can assign the next practice, review Current Assignments and their statuses, and use Message Learner to guide the person.
 5. This real manager interface illustrates those actions with fictional learner data. It does not represent verified real-time chat or delivery across every device.
 6. After the next practice, the manager can reassess the learner's work and choose what needs to be reinforced or changed.
-7. The four Studios therefore work as a system: Knowledge organizes what matters, Practice reveals applied skill, Client adds case context, and Leadership turns evidence into action.
-8. That is the Team Growth and Retention Hub in motion: evidence, manager judgment, targeted coaching and another assignment. AI facilitates. You lead.
+7. Together, the four Studios form the Team Growth and Retention Hub: Knowledge builds a foundation, Practice develops skills, Client adds case context, and Leadership guides the next action. AI facilitates. You lead.
+8. Now, it's your turn to take the manager's seat. On the next page, you'll experience how to evaluate your team's performance, make coaching decisions, and guide your team with the support of AI.
 
 ## Evidence and marketing-claim guardrails
 
