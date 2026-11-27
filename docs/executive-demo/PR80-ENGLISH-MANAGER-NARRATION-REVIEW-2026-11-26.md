@@ -69,7 +69,7 @@
 | Studio | What the authentic UI illustrates | Do not claim without separate verification |
 | --- | --- | --- |
 | Knowledge | Approved fictional training guide, AI summary, practice draft and assignment entry point | An automatic per-trainee priority-ranking algorithm, automatic approval of all generated content |
-| Practice | Original screenshot: one fictional client exchange and overall 82. A **separate** Nov 26 product-rendered test of the same scenario provides Empathy & Rapport 80, Product Accuracy 72, Closing Technique 70 in a distinctly labeled evidence panel. | Do not say all three dimensions are in the original raw screenshot, misrepresent separate attempts as one session, or imply a sale or outcome prediction |
+| Practice | One contributor-sourced **1520×691 product-rendered WebP**, copied byte-for-byte into this Draft PR, shows a single fictional AI conversation, Overall 82, Empathy & Rapport 80, Product Accuracy 72 and Closing Technique 70. It is not an untouched raw browser capture. | Do not claim a real customer call, a verified sale, an unedited browser screenshot or measured real-world outcomes |
 | Client | Fictional Elena Rivera case: need, premium objection, follow-up and Start Practice | Automatic recording/analysis of actual prospect calls; verified practice result writeback |
 | Leadership | Assign Practice, Current Assignments, Message Learner in a manager workspace | Real-time live chat, verified cross-device message persistence, or outcomes beyond the visible evidence |
 
@@ -90,16 +90,16 @@ Review this as a skeptical insurance agency owner, Sales Manager, or Training Ma
 
 ## Engineering validation state
 
-- GitHub branch file readback: English-only navigation, four original assets, four chapters, 8 captions/chapter and total 32 caption segments — checked.
+- GitHub branch file readback: English-only navigation; three original PR75 WebP sources (Knowledge, Client, Leadership); one explicitly labeled PR80 product-rendered WebP (Practice); four chapters; 8 captions/chapter and 32 caption segments — checked.
 - Browser-generated speech remains only a preview tool and does not constitute a professionally timed or encoded final film.
 - Actual playback, responsive text fit, speech/caption synchronization and fresh Netlify browser UAT — **not yet signed off**.
 - Netlify build success, if subsequently confirmed, cannot substitute for runtime UAT or founder approval.
 
-## Nov 27 review response — three Practice coaching dimensions
+## Nov 27 historical review response — three Practice coaching dimensions (SUPERSEDED BY SOURCE SWAP BELOW)
 
 Source: [PR #80 issue comment #7213487779](https://github.com/musesinstitute/agentraining-site/pull/80#issuecomment-7213487779) and the contributor-provided 1520×691 source re-render in the founder's review package.
 
-The reviewer correctly identified that the original 1028×448 browser screenshot ends at the Empathy & Rapport bar. CSS cannot reveal Product Accuracy or Closing Technique because these pixels are absent. The original screenshot is **not replaced** in the PR at this stage: the proposed new image was produced by re-rendering one authentic fictional simulator run with the product's UI at 2×, rather than capturing a browser window without alterations, and it has a different AI client follow-up from the original screenshot.
+Historical finding, now superseded by the installed 1520×691 WebP: the original 1028×448 browser screenshot ends at the Empathy & Rapport bar. CSS cannot reveal Product Accuracy or Closing Technique because these pixels are absent. The original screenshot is **not replaced** in the PR at this stage: the proposed new image was produced by re-rendering one authentic fictional simulator run with the product's UI at 2×, rather than capturing a browser window without alterations, and it has a different AI client follow-up from the original screenshot.
 
 **Current correction on this draft:** the original screenshot remains clearly labeled; **a separate coaching evidence panel** in the Practice Studio page and 16:9 film framing review displays the three values from the separately sourced run (80 / 72 / 70). Captions 2.6 and 2.7 distinguish the original conversation screen and the separate product-rendered score run. No cross-session splice or fictionalized "raw screenshot" is presented. The original user's source re-render is preserved in the local review materials for side-by-side acceptance and possible future faithful raw recapture.
 
