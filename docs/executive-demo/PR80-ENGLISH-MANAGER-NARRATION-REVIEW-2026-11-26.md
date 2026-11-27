@@ -38,8 +38,8 @@
 3. Think of training in two layers. Learn builds understanding through course material and knowledge checks. Apply develops the skill through interactive role-play.
 4. Agents can rehearse premium objections, product explanations and follow-up questions in a setting where mistakes become learning opportunities.
 5. Unlike simply reading a script, the trainee responds to a simulated client who can ask another question and challenge the explanation.
-6. Here is one actual demonstration attempt: a fictional client raises a premium concern, the trainee responds, and the client follows up. A sample overall score of eighty-two is visible.
-7. That response and the coaching feedback give a manager evidence to discuss: what was clear, what was missed and which skill deserves another round of practice.
+6. Here, a fictional client raises a premium objection, the trainee responds, and the client follows up. The original screen shows a sample overall score of eighty-two.
+7. In a separate product-rendered practice run of the same fictional scenario, coaching scores are empathy and rapport eighty, product accuracy seventy-two, and closing technique seventy. Each highlights a specific coaching priority.
 8. Instead of assuming that training has worked, the manager can use practice evidence to make coaching more specific and actionable.
 
 ### 3. Client Studio — Coaching With Case Context
@@ -69,7 +69,7 @@
 | Studio | What the authentic UI illustrates | Do not claim without separate verification |
 | --- | --- | --- |
 | Knowledge | Approved fictional training guide, AI summary, practice draft and assignment entry point | An automatic per-trainee priority-ranking algorithm, automatic approval of all generated content |
-| Practice | One fictional AI client exchange, agent reply and a visible sample overall score of 82 | A completed sale, final answer after the last shown client follow-up, or fully visible unseen sub-scores |
+| Practice | Original screenshot: one fictional client exchange and overall 82. A **separate** Nov 26 product-rendered test of the same scenario provides Empathy & Rapport 80, Product Accuracy 72, Closing Technique 70 in a distinctly labeled evidence panel. | Do not say all three dimensions are in the original raw screenshot, misrepresent separate attempts as one session, or imply a sale or outcome prediction |
 | Client | Fictional Elena Rivera case: need, premium objection, follow-up and Start Practice | Automatic recording/analysis of actual prospect calls; verified practice result writeback |
 | Leadership | Assign Practice, Current Assignments, Message Learner in a manager workspace | Real-time live chat, verified cross-device message persistence, or outcomes beyond the visible evidence |
 
@@ -94,3 +94,13 @@ Review this as a skeptical insurance agency owner, Sales Manager, or Training Ma
 - Browser-generated speech remains only a preview tool and does not constitute a professionally timed or encoded final film.
 - Actual playback, responsive text fit, speech/caption synchronization and fresh Netlify browser UAT — **not yet signed off**.
 - Netlify build success, if subsequently confirmed, cannot substitute for runtime UAT or founder approval.
+
+## Nov 27 review response — three Practice coaching dimensions
+
+Source: [PR #80 issue comment #7213487779](https://github.com/musesinstitute/agentraining-site/pull/80#issuecomment-7213487779) and the contributor-provided 1520×691 source re-render in the founder's review package.
+
+The reviewer correctly identified that the original 1028×448 browser screenshot ends at the Empathy & Rapport bar. CSS cannot reveal Product Accuracy or Closing Technique because these pixels are absent. The original screenshot is **not replaced** in the PR at this stage: the proposed new image was produced by re-rendering one authentic fictional simulator run with the product's UI at 2×, rather than capturing a browser window without alterations, and it has a different AI client follow-up from the original screenshot.
+
+**Current correction on this draft:** the original screenshot remains clearly labeled; **a separate coaching evidence panel** in the Practice Studio page and 16:9 film framing review displays the three values from the separately sourced run (80 / 72 / 70). Captions 2.6 and 2.7 distinguish the original conversation screen and the separate product-rendered score run. No cross-session splice or fictionalized "raw screenshot" is presented. The original user's source re-render is preserved in the local review materials for side-by-side acceptance and possible future faithful raw recapture.
+
+**Before final acceptance:** if the founder wants all three coaching scores literally inside the screenshot, obtain an unaltered taller browser capture of **one and the same session**, or explicitly approve the contributor's source-labeled product-rendered replay as film material. Do not quietly substitute it for a raw capture. Test the 16:9 frame and mobile layout with that replacement before revising narration to imply the scores are visible in the screenshot itself.
