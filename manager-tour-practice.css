@@ -1,0 +1,43 @@
+/* Scoped to the Practice Studio tour page. Other chapters are unchanged. */
+.practice-frame{width:min(100%,1180px);justify-content:flex-start;padding-top:clamp(16px,2.8vw,28px);padding-bottom:145px}
+.practice-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.practice-frame .eyebrow{margin:0}
+.practice-caption-jump{font-size:13px;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.practice-frame h1{font-size:clamp(30px,3.8vw,48px);line-height:1.09;margin:10px 0 0;max-width:none}
+.practice-frame .lead{max-width:100%;margin:10px 0 0;font-size:clamp(16px,1.45vw,18px);line-height:1.4}
+.practice-steps{margin:15px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#203557;font-size:13px;font-weight:650}
+.practice-steps span:not(.practice-flow-arrow){display:flex;align-items:center;gap:8px;border:1px solid #cddbf7;background:white;border-radius:24px;padding:6px 11px}
+.practice-steps strong{display:grid;place-items:center;border-radius:50%;background:#e8efff;color:#204cce;width:20px;height:20px;font-size:12px}
+.practice-flow-arrow{color:#4062ac;font-size:18px}
+.practice-stage{width:100%;min-height:0;display:block;margin:0;padding:10px 12px 12px;background:#edf3ff;text-align:left}
+.practice-stage-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:0 2px 8px;font-size:12px;font-weight:650;color:#31456a}
+.practice-stage-head a{color:#204cce;text-decoration:underline;text-underline-offset:3px}
+.practice-image-scroller{overflow-x:auto;overflow-y:hidden;background:#fff;border:1px solid #d0dcef;border-radius:8px;max-width:100%;scrollbar-color:#728bc7 #edf3ff}
+.practice-image-scroller:focus-visible{outline:3px solid #204cce;outline-offset:2px}
+.practice-stage .practice-image-scroller img{display:block;width:100%;max-width:none;max-height:none;height:auto;border-radius:0}
+.practice-stage figcaption{font-size:12px;text-align:left;color:#53617b;margin-top:8px}
+.practice-scroll-hint{display:none;font-size:12px;color:#344a70;margin:7px 0 0}
+.practice-narration{max-width:100%;width:100%;margin-top:15px;padding:14px 16px;scroll-margin-top:12px;scroll-margin-bottom:170px}
+.practice-narration .narration-lines{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+.practice-narration .narration-lines li{padding:4px 8px;font-size:13px}
+@media(max-width:760px){
+ .practice-frame{padding-top:20px;padding-bottom:165px}
+ .practice-frame h1{font-size:31px}
+ .practice-frame .lead{font-size:16px}
+ .practice-steps{gap:5px;margin:12px 0}
+ .practice-steps span:not(.practice-flow-arrow){font-size:12px;padding:5px 8px}
+ .practice-flow-arrow{display:none}
+ .practice-stage{padding:8px}
+ .practice-stage .practice-image-scroller img{width:760px;max-width:none}
+ .practice-scroll-hint{display:block}
+ .practice-narration .narration-lines{grid-template-columns:1fr}
+ .practice-narration .narration-lines li{font-size:14px}
+}
+
+/* PR80 score framing fixes: readable bounded screenshot on desktop, pan inside viewer on phones. */
+.practice-image-scroller{width:100%;display:flex;justify-content:center}
+.practice-stage .practice-image-scroller img{width:100%;max-width:100%;max-height:480px;object-fit:contain;flex:none}
+@media(max-width:760px){
+ .practice-image-scroller{justify-content:flex-start}
+ .practice-stage .practice-image-scroller img{width:760px;max-width:none;max-height:none}
+}

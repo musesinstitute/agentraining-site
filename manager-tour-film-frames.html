@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>AgentTraining.ai | Four Studios - English Manager Feature Tour</title>
+<style>
+:root{--navy:#101f41;--royal:#2252d4;--ink:#172440;--muted:#536482;--pale:#f4f7fe;--line:#cad7f3;--gold:#f5da64}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#e6ebf6;color:var(--ink)}
+h1,h2,p,figure{margin:0}.pagehead{max-width:1200px;margin:20px auto 12px;padding:0 14px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.pagehead h1{font-size:21px}.pagehead p{font-size:13px;color:var(--muted)}
+.frame-scroll{overflow-x:auto;padding:0 10px;scrollbar-color:var(--royal) #dbe3f1}
+.stage{width:100%;min-width:860px;aspect-ratio:16/9;max-width:1920px;margin:auto;position:relative;border:1px solid #c2cfe8;background:var(--pale);overflow:hidden;box-shadow:0 18px 46px #1a315820}
+.slide{position:absolute;inset:0;padding:clamp(22px,3vw,62px) clamp(30px,4vw,85px);display:none;flex-direction:column;background:linear-gradient(148deg,#fff 0%,#f1f5ff 66%,#e5edff 100%)}.slide.active{display:flex}
+.slide-top{display:flex;justify-content:space-between;align-items:center;gap:24px;color:#3d547f;font-size:clamp(12px,1.2vw,22px);font-weight:650;text-transform:uppercase;letter-spacing:.14em}
+.logo{font-weight:800;text-transform:none;color:var(--navy);letter-spacing:-.035em;font-size:clamp(20px,1.9vw,34px)}.logo span{color:var(--royal)}
+.slide h2{font-family:Georgia,serif;font-size:clamp(37px,4vw,75px);line-height:1.07;font-weight:500;letter-spacing:-.027em;margin:clamp(20px,2.7vw,50px) 0 clamp(18px,2vw,38px);color:var(--navy)}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(275px,.62fr);gap:clamp(22px,3vw,58px);min-height:0;flex:1;align-items:stretch}
+.ui-shell{min-width:0;min-height:0;display:flex;flex-direction:column;padding:clamp(10px,1vw,17px);border-radius:16px;background:white;border:1px solid var(--line);box-shadow:0 14px 26px #1b356817}
+.ui-label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:clamp(11px,1.1vw,17px);color:#2c466f;font-weight:700;margin-bottom:10px}
+.ui-art{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden}
+.ui-art>img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+.knowledge-crops{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;height:100%;min-height:0}
+.knowledge-pane{display:flex;flex-direction:column;min-height:0;min-width:0}
+.knowledge-pane span{display:block;font-size:clamp(12px,1vw,16px);font-weight:750;color:#284779;margin-bottom:6px}
+.knowledge-pane img{display:block;width:100%;height:calc(100% - 26px);max-height:none;object-fit:cover;object-position:center top;border:1px solid var(--line);border-radius:6px}
+.knowledge-pane.bottom img{object-position:center bottom}
+.explain{align-self:center;min-width:0}
+.explain h3{font:600 clamp(21px,2.15vw,39px)/1.22 Georgia,serif;color:var(--royal);margin:0 0 clamp(15px,1.8vw,32px)}
+.explain ol{margin:0;padding:0;list-style:none;display:grid;gap:clamp(14px,1.65vw,28px)}
+.explain li{font-size:clamp(19px,1.7vw,31px);line-height:1.34;color:#243856;display:flex;gap:12px}
+.explain li b{display:inline-grid;place-items:center;flex:none;width:clamp(29px,2.2vw,40px);height:clamp(29px,2.2vw,40px);background:#dbe7ff;border-radius:50%;font-size:clamp(14px,1.2vw,20px);color:var(--royal)}
+.foot{margin-top:clamp(14px,2vw,36px);display:flex;justify-content:space-between;gap:20px;align-items:center;border-top:1px solid #cbd7ef;padding-top:12px;color:#546584;font-size:clamp(12px,1.06vw,18px)}
+.foot strong{color:var(--navy)}.foot .warning{color:#725f2d;font-size:.87em}
+.actions{max-width:1200px;margin:12px auto 15px;padding:0 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{padding:11px 17px;border-radius:7px;border:1px solid #1947ba;color:white;background:#2252d4;font-weight:700;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid #e6a813;outline-offset:3px}
+.actions a{color:#204cbd;font-weight:650}.actions p{margin-left:auto;font-size:13px;color:#53627c}
+.disclosure{max-width:1200px;margin:0 auto 24px;padding:0 14px;font-size:13px;color:#42536f}
+
+/* Playback overlay: product evidence stays unchanged and subtitles are outside each screenshot. */
+.stage .slide{padding-bottom:clamp(102px,9.4vw,148px)}
+.subtitle-band{position:absolute;left:0;right:0;bottom:0;z-index:5;min-height:104px;padding:13px clamp(26px,4vw,65px) 16px;background:#101f41f5;color:white;display:flex;flex-direction:column;justify-content:center;gap:5px;border-top:3px solid #f5da64}
+.subtitle-label{font-size:clamp(10px,1vw,15px);letter-spacing:.13em;text-transform:uppercase;color:#d1dfff;font-weight:750}
+.subtitle-text{font-size:clamp(16px,1.75vw,29px);font-weight:600;line-height:1.26;text-wrap:balance;min-height:1.4em}
+.actions .secondary{background:white;color:#1b4199;border-color:#a6bae6}
+.actions .secondary[aria-pressed="true"]{background:#dce8ff}
+.actions .play{background:#103b9f;border-color:#103b9f}
+.actions .film-progress{flex:1 1 220px;min-width:130px;accent-color:#2252d4;cursor:pointer}
+.actions .runtime{color:#172440;font-weight:750;white-space:nowrap;font-variant-numeric:tabular-nums}
+.actions .full-size{font-size:13px;flex:1 1 auto}
+.challenge-cta{display:none;margin-top:16px;padding:12px 18px;background:#103b9f;color:#fff;border-radius:8px;font-weight:750;text-decoration:none;max-width:max-content;box-shadow:0 6px 16px #1a315830}.challenge-cta.show{display:inline-flex}.challenge-cta:hover{background:#2252d4}
+.player-note{max-width:1200px;margin:0 auto 9px;padding:0 14px;font-size:13px;color:#42536f}
+#playerStatus{max-width:1200px;margin:0 auto 12px;padding:0 14px;font-size:13px;color:#324c79}
+@media(max-width:980px){.stage .slide{padding-bottom:113px}.subtitle-text{font-size:17px}.subtitle-band{min-height:108px}}
+@media(max-width:980px){.stage{min-width:860px}.slide h2{font-size:37px}.pagehead{margin-top:12px}}
+
+/* Independent sourced score evidence; never presented as if it were within the original screenshot. */
+.coaching-scores{border-top:1px solid #bfd0ef;padding-top:clamp(6px,.8vw,14px);margin-top:clamp(7px,1vw,17px);font-size:clamp(12px,1.05vw,18px);color:#21375c}
+.coaching-scores>div{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:3px 0;font-variant-numeric:tabular-nums}
+.coaching-scores strong{font-size:clamp(15px,1.3vw,22px);color:#144cab}
+.coaching-scores small{display:block;font-size:clamp(10px,.8vw,13px);line-height:1.28;margin-top:5px;color:#586782}
+@media(max-width:980px){.coaching-scores small{font-size:10px}.coaching-scores{font-size:12px}}
+
+/* Cue 2.7: reveal the real coaching-score panel in the SAME source image, no composite/cross-session asset. */
+.practice-zoom-source .ui-art>img{transition:transform .65s ease-out;transform-origin:right bottom}
+.practice-zoom-source.score-focus .ui-art>img{transform:scale(1.65)}
+@media(prefers-reduced-motion:reduce){.practice-zoom-source .ui-art>img{transition:none}}
+
+/* Responsive review: use normal flow at compact widths; no overlay on disclosures. */
+@media(max-width:1100px){
+.frame-scroll{overflow-x:visible;padding:0 10px}.stage{min-width:0;aspect-ratio:auto;overflow:visible}
+.stage .slide{position:relative;inset:auto;padding:18px 16px;min-width:0}
+.slide-top{gap:10px;flex-wrap:wrap}.slide h2{font-size:clamp(27px,5vw,37px);margin:16px 0}
+.main-grid{grid-template-columns:minmax(0,1fr);gap:16px}.ui-shell{padding:10px}.ui-label{flex-wrap:wrap;gap:5px}
+.ui-art{flex:none;min-height:0}.ui-art>img{width:100%;height:auto;max-height:none}
+.explain h3{margin:0 0 10px}.explain ol{gap:9px}.explain li{font-size:16px}
+.foot{flex-wrap:wrap;gap:6px;margin-top:15px}.challenge-cta{margin-top:12px}
+.subtitle-band{position:relative;min-height:104px;padding:12px 16px}.subtitle-text{font-size:17px}
+}
+/* Keep footer and CTA in their own row, including long desktop captions. */
+@media(min-width:1101px){
+.stage{display:grid;grid-template-rows:minmax(0,1fr) auto}
+.stage .slide{position:relative;inset:auto;padding-bottom:clamp(14px,1.5vw,26px);min-height:0}
+.subtitle-band{position:relative;min-height:104px}
+.explain ol{gap:clamp(8px,1vw,18px)}.explain li{font-size:clamp(17px,1.5vw,28px)}
+.slide h2{margin:clamp(12px,1.7vw,32px) 0 clamp(12px,1.5vw,30px)}
+.foot{margin-top:clamp(8px,1vw,18px);padding-top:8px}
+}
+</style></head>
+<body>
+<header class="pagehead"><div><h1>Four Studios · English manager feature tour</h1><p>Manager-first feature narration · authentic screenshots and a disclosed product-rendered Practice session illustrate key capabilities.</p></div><div>PR #80 · Film production candidate · DRAFT</div></header>
+<div class="frame-scroll"><main class="stage" id="filmStage" aria-label="16 by 9 Four Studios film framing preview">
+<section class="slide active" data-name="Knowledge"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>01 / Knowledge Studio</span></div>
+<h2>Turn approved knowledge into practice.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · FICTIONAL DATA</span><span id="knowledgeLabel">Training workflow</span></div>
+<div class="ui-art"><img id="knowledgeVisual" src="assets/studio-screenshots/PR80-K1-knowledge-four-step-workflow.png" alt="Knowledge Studio four-step training workflow"></div></figure>
+<aside class="explain"><h3>Your material. Your approval.</h3><ol><li><b>1</b> Approved company material</li><li><b>2</b> AI summary and key points</li><li><b>3</b> Practice drafts from your material</li></ol></aside></div>
+<div class="foot"><strong>Knowledge → Practice</strong><span class="warning">Fictional guide · manager approval required</span></div>
+</section>
+<section class="slide" data-name="Practice"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>02 / Practice Studio</span></div>
+<h2>From knowing to doing.</h2><div class="main-grid">
+<figure class="ui-shell practice-zoom-source"><div class="ui-label"><span>ONE FICTIONAL SESSION · PRODUCT-UI RE-RENDER · SOURCE VERIFIED</span><span>Overall 82 / 100</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR80-Practice-Source-ReRender-1520x691.webp" alt="One documented fictional premium-objection practice session, product UI re-render: AI client, trainee response, client follow-up, overall score 82, empathy 80, product accuracy 72, closing technique 70."></div></figure>
+<aside class="explain"><h3>Learn. Apply. Coach.</h3><ol><li><b>1</b> Set the learning objective</li><li><b>2</b> Rehearse a client objection</li><li><b>3</b> Coach empathy, accuracy and closing</li></ol></aside></div>
+<div class="foot"><strong>Practice → Coaching evidence</strong><span class="warning">Simulated session · re-render · scores do not predict sales</span></div>
+</section>
+<section class="slide" data-name="Client"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>03 / Client Studio</span></div>
+<h2>Prepare for the next client meeting.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · ELENA RIVERA (DEMO)</span><span>Fictional case</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR75-Client-Studio.webp" alt="Fictional Elena Rivera Client Studio case showing need, objection, next follow-up and Start Practice."></div></figure>
+<aside class="explain"><h3>From case to rehearsal.</h3><ol><li><b>1</b> Case portfolio and status</li><li><b>2</b> Needs, objections, follow-up</li><li><b>3</b> Start focused rehearsal</li></ol></aside></div>
+<div class="foot"><strong>Client context → Practice</strong><span class="warning">Fictional case · browser-local notes · no live-call analysis</span></div>
+</section>
+<section class="slide" data-name="Leadership"><div class="slide-top"><div class="logo">AgentTraining<span>.ai</span></div><span>04 / Leadership Studio</span></div>
+<h2>The AI recommends. You decide.</h2><div class="main-grid">
+<figure class="ui-shell"><div class="ui-label"><span>ACTUAL PRODUCT UI · FICTIONAL LEARNERS</span><span>Manager workspace</span></div>
+<div class="ui-art"><img src="assets/studio-screenshots/PR75-Leadership-Studio.webp" alt="Leadership Studio shows Assign Practice, Current Assignments and Message Learner actions."></div></figure>
+<aside class="explain"><h3>Evidence becomes action.</h3><ol><li><b>1</b> Review learner performance</li><li><b>2</b> Assign and track practice</li><li><b>3</b> Message and coach learners</li></ol></aside></div>
+<div class="foot"><strong>Leadership → Next assignment → Practice</strong><span class="warning">Fictional learner data · message delivery not verified across devices</span></div>
+<a id="challengeLink" class="challenge-cta" href="manager-demo-review.html?tour=complete#make-the-call">Take the Manager&#39;s Seat →</a>
+</section>
+<div class="subtitle-band" aria-live="polite" aria-atomic="true" aria-label="Current narration and captions"><span class="subtitle-label" id="subtitleLabel">Knowledge Studio · English captions</span><p class="subtitle-text" id="subtitleText">Press Play to begin the Four Studios narrated tour.</p></div>
+</main></div>
+<nav class="actions" aria-label="Narrated tour player controls">
+  <button id="play" class="play" type="button" aria-label="Play narrated tour">▶ Play tour</button>
+  <button id="restart" class="secondary" type="button">↻ Restart</button>
+  <button id="previous" class="secondary" type="button">← Previous Studio</button>
+  <button id="next" class="secondary" type="button">Next Studio →</button>
+  <label for="filmProgress" class="runtime" id="clock">00:00</label>
+  <input class="film-progress" id="filmProgress" type="range" min="0" max="31" step="1" value="0" aria-label="Seek to caption; 32 caption segments">
+  <button id="voiceToggle" class="secondary" type="button" aria-pressed="true">🔊 Voice on</button>
+  <a class="full-size" id="original" href="assets/studio-screenshots/PR80-K1-knowledge-four-step-workflow.png" target="_blank" rel="noopener">Open source visual</a>
+  <p id="position" aria-live="polite">Studio 1 / 4 · Knowledge</p>
+</nav>
+<p class="player-note">This is the complete English manager-facing review. Click Play to hear browser-generated English narration with captions, or move Studio by Studio. This is not a rendered MP4 or paid professional narration.</p>
+<p id="playerStatus" role="status" aria-live="polite">Ready. Audio requires a click and browser speech support; captions work without audio.</p>
+<p class="disclosure">Editorial note: PR #75’s feature and manager-value story is the primary script; the source screenshots and disclosed Practice re-render illustrate selected functions. Knowledge shows three original screenshots captured on Nov 27 from the signed-in production product with fictional data; the email badge was redacted. All examples are fictional and independent; they do not prove a single connected client journey. Source notes: no automatic learner-specific importance or relevance ranking, no verified call capture, browser-local Client case notes, no proven cross-device message persistence, and no real sale or completed client outcome. AI Client Discovery and the Client Understanding Map remain a separate PR #74 preview, not evidence of a capability in PR #80. Knowledge cue 1.6 displays the original generated scenarios with source-section references; the manager review and workflow images illustrate other steps, not a verified completed assignment. Source-section naming is not proof of independent verification of every claim. The Practice frame uses the contributor's original 1520×691 WebP, re-rendered with the product's own simulator UI from one sourced fictional Nov 26 practice run. The conversation and all three scores are from that same test; it is NOT an unaltered browser screenshot. For an editor: Record only the 16:9 frame, not the control bar. Client and Leadership use original PR #75 WebP screenshots; Knowledge uses three Nov 27 production screenshots; Practice uses the contributor's original product-rendered WebP of one fictional test session. Knowledge screenshots are separate captures, not a continuous recording. Four fictional examples are independent—not a single client journey. Speech timing and voice quality depend on the browser. Record and synchronize the final approved voice track before paid film production; independently confirm deployed UI, mobile and Genspark UAT.</p>
+<script>
+
+(function(){
+  'use strict';
+  const scenes=Array.from(document.querySelectorAll('.slide'));
+  const names=['Knowledge','Practice','Client','Leadership'];
+  const scripts={en:[["David faced two closed doors. His manager could not see what happened inside. How can you coach a conversation you never saw?", "You cannot replay an unrecorded client meeting. But you can prepare your agents before the next one and review how they practice.", "First, Knowledge Studio. Are your agents learning what matters most, or simply completing courses?", "Start with your company's approved product guides, underwriting rules, carrier updates and training procedures.", "AI summarizes the material and extracts key points. That helps you judge what matters to your team and what is relevant to each learner.", "AI can draft practice scenarios from the same material, with source-section references you can review. Your company's knowledge becomes the starting point for practice.", "You review the draft, approve the training and decide what to assign. Company knowledge becomes an actionable training task.", "But knowing the right answer is not the same as delivering it when a client pushes back."], ["Second, Practice Studio. Turn what your agents know into something they can actually do.", "Instead of memorizing a script, they can rehearse difficult conversations with an AI client before the real meeting.", "Think of Michael's tight budget. Here is that kind of conversation in practice.", "An AI client says a hundred and eighty dollars a month is too much for insurance.", "Instead of arguing about price, the agent asks what feels manageable and what matters most to protect.", "The client explains the budget, the mortgage and two children to protect. Now the agent can ask better questions.", "In this simulated session, the AI Coach scores empathy and rapport eighty, product accuracy seventy-two, and closing technique seventy.", "These scores are not a verdict on the agent. They help you identify what to coach. But every client brings a different challenge."], ["Third, Client Studio. Is your agent prepared for this particular client, rather than just a familiar objection?", "Think of Richard. After fifteen years in business, he had new partners and new concerns. He needed understanding, not another sales pitch.", "A client record tells you who to follow up with. But is your agent ready for that conversation?", "Client Studio organizes the client's needs, current objections, case status and next follow-up in a portfolio.", "Start Practice uses the client's recorded concern to select a relevant exercise or build a case-based rehearsal.", "That gives the agent a chance to explore questions, explain options and respond to objections before the next meeting.", "For a manager, the goal is not just to track an opportunity, but to develop the skills needed to move it forward responsibly.", "Knowledge, rehearsal and client context give your coaching a clearer purpose. How will you turn that into your next decision?"], ["Fourth, Leadership Studio. Who needs support before a quiet struggle becomes a reason to leave?", "Practice results, assignments and coaching follow-up give you evidence beyond a completed training checklist.", "Review the work, assign a targeted practice and follow up with the learner through Message Learner.", "AI feedback helps you identify practice gaps. You decide whether to coach now, gather more evidence or assign another exercise.", "Review the next practice to see whether the same difficulty persists, and adjust the coaching plan.", "This is the Team Growth and Retention Hub: company knowledge, applied skills, client preparation and targeted coaching, feeding the next round of development.", "The AI recommends. You decide.", "Now take the manager's seat. Five agents. Five clean training reports. Thirty minutes of coaching. David is one of them. Who gets your time first?"]]};
+  const $=id=>document.getElementById(id);
+  const speechOK='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
+  const cuesPerScene=8,totalCues=scenes.length*cuesPerScene;
+  const lang='en';
+  let index=0,cue=0,playing=false,completed=false,voiceEnabled=speechOK;
+  let token=0,timer=null,watchdog=null,clockTimer=null,elapsedMs=0,startedAt=0;
+  const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+  const ftime=ms=>{const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+  function chooseVoice(){
+    if(!speechOK)return null;
+    const voices=speechSynthesis.getVoices();
+    const prefix=lang==='zh'?'zh':'en';
+    return voices.find(v=>v.lang.toLowerCase().startsWith(lang==='zh'?'zh-cn':'en-us'))
+      ||voices.find(v=>v.lang.toLowerCase().startsWith(prefix))||null;
+  }
+  function stopCurrent(){
+    token++;
+    if(timer!==null){clearTimeout(timer);timer=null}
+    if(watchdog!==null){clearTimeout(watchdog);watchdog=null}
+    if(speechOK)try{speechSynthesis.cancel()}catch(e){}
+  }
+  function render(){
+    scenes.forEach((scene,i)=>{scene.classList.toggle('active',i===index);scene.setAttribute('aria-hidden',String(i!==index))});
+    const practiceFigure=scenes[1].querySelector('.practice-zoom-source');
+    if(practiceFigure)practiceFigure.classList.toggle('score-focus',index===1&&cue===6);
+    $('challengeLink').classList.toggle('show',index===3&&(cue===7||completed));
+    $('previous').disabled=index===0;
+    $('next').disabled=index===scenes.length-1;
+    $('position').textContent='Studio '+(index+1)+' / '+scenes.length+' · '+names[index]+' · caption '+(cue+1)+' / '+cuesPerScene;
+    const knowledgeFrames=[
+      ['K1-knowledge-four-step-workflow.png','Training workflow','Knowledge Studio: add source, AI analyzes, manager approves, assign practice'],
+      ['K2-K6-ai-summary-and-practice-draft-review.png','AI summary and manager review','AI summary, key points and practice draft awaiting manager review'],
+      ['K4-K5-ai-generated-source-grounded-scenarios.png','AI-generated scenarios with source references','Generated scenarios with Application Review Priorities and Case B source references']
+    ];
+    const k=knowledgeFrames[cue<=3?0:cue===4||cue>=6?1:2];
+    const ksrc='assets/studio-screenshots/PR80-'+k[0];
+    if(index===0){const img=$('knowledgeVisual');if(img.getAttribute('src')!==ksrc)img.src=ksrc;img.alt=k[2];$('knowledgeLabel').textContent=k[1];}
+    $('original').href=index===0?ksrc:index===1?'assets/studio-screenshots/PR80-Practice-Source-ReRender-1520x691.webp':'assets/studio-screenshots/PR75-'+names[index]+'-Studio.webp';
+    $('subtitleLabel').textContent=names[index]+' Studio · '+(lang==='en'?'English':'中文字幕');
+    $('subtitleText').textContent=scripts[lang][index][cue];
+    $('filmProgress').value=String(index*cuesPerScene+cue);
+    $('clock').textContent=ftime(elapsedMs+(playing?Date.now()-startedAt:0));
+    $('play').textContent=playing?'Ⅱ Pause':completed?'▶ Replay':'▶ '+(elapsedMs?'Resume':'Play tour');
+    $('play').setAttribute('aria-label',playing?'Pause narrated tour':'Play narrated tour');
+    $('voiceToggle').textContent=voiceEnabled?'🔊 Voice on':'🔇 Voice off';
+    $('voiceToggle').setAttribute('aria-pressed',String(voiceEnabled));
+  }
+  function setStatus(s){$('playerStatus').textContent=s}
+  function finish(){
+    stopCurrent();
+    if(playing)elapsedMs+=Date.now()-startedAt;
+    playing=false;completed=true;render();
+    setStatus('Four Studios tour completed. Choose Take the Manager\u0027s Seat to try the fictional five-learner decision demo, or replay the tour.');
+  }
+  function nextCue(){
+    if(!playing)return;
+    if(cue+1<cuesPerScene)cue++;
+    else if(index+1<scenes.length){index++;cue=0}
+    else{finish();return}
+    beginCue();
+  }
+  function silentCue(){
+    const t=scripts[lang][index][cue];
+    const duration=lang==='en'
+      ?clamp(1100+t.trim().split(/\s+/).length*450,6000,18000)
+      :clamp(1400+t.length*180,5500,18000);
+    timer=setTimeout(()=>{timer=null;nextCue()},duration);
+    setStatus('Playing synchronized captions without generated speech. Voice can be enabled at any time.');
+  }
+  function beginCue(){
+    stopCurrent();render();
+    if(!playing)return;
+    if(!voiceEnabled||!speechOK){silentCue();return}
+    const own=token,text=scripts[lang][index][cue];
+    try{
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang=lang==='en'?'en-US':'zh-CN';
+      u.rate=0.93;
+      const v=chooseVoice();if(v)u.voice=v;
+      u.onend=()=>{if(own!==token||!playing)return;timer=setTimeout(()=>{timer=null;nextCue()},360)};
+      u.onerror=(e)=>{
+        if(own!==token||!playing)return;
+        voiceEnabled=false;stopCurrent();render();
+        setStatus('Browser voice is unavailable ('+(e.error||'speech error')+'). Captions will continue in silent preview.');
+        silentCue();
+      };
+      speechSynthesis.speak(u);
+      watchdog=setTimeout(()=>{
+        if(own!==token||!playing)return;
+        voiceEnabled=false;stopCurrent();render();
+        setStatus('Browser narration stalled; continuing with timed captions instead.');
+        silentCue();
+      },45000);
+      setStatus('Playing browser voice with captions. Actual duration depends on your installed system voice.');
+    }catch(e){
+      voiceEnabled=false;render();
+      setStatus('Browser voice could not start. The captioned preview is still available.');
+      silentCue();
+    }
+  }
+  function pause(){
+    if(!playing)return;
+    elapsedMs+=Date.now()-startedAt;playing=false;
+    stopCurrent();render();
+    setStatus('Paused. Resume will repeat the current caption so no sentence is cut in half.');
+  }
+  function play(){
+    if(playing){pause();return}
+    if(completed){index=0;cue=0;elapsedMs=0;completed=false}
+    playing=true;startedAt=Date.now();beginCue();render();
+  }
+  function seek(scene,caption=0){
+    const wasPlaying=playing;stopCurrent();
+    index=clamp(scene,0,scenes.length-1);
+    cue=clamp(caption,0,cuesPerScene-1);
+    completed=false;render();
+    if(wasPlaying)beginCue();
+    else setStatus('Selected '+names[index]+' Studio, caption '+(cue+1)+'. Press Play to hear it.');
+  }
+  $('play').addEventListener('click',play);
+  $('restart').addEventListener('click',()=>{pause();index=0;cue=0;elapsedMs=0;completed=false;play()});
+  $('previous').addEventListener('click',()=>seek(index-1));
+  $('next').addEventListener('click',()=>seek(index+1));
+  $('filmProgress').addEventListener('input',e=>{const n=Number(e.target.value);seek(Math.floor(n/cuesPerScene),n%cuesPerScene)});
+  $('voiceToggle').addEventListener('click',()=>{
+    voiceEnabled=speechOK&&!voiceEnabled;
+    if(playing)beginCue();else render();
+    setStatus(voiceEnabled?'Browser narration is on; Play or Resume will speak the current caption.':'Voice is off. Timed captions remain available.');
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)pause()});
+  document.addEventListener('keydown',e=>{if(e.target.closest('button,input,a'))return;if(e.code==='Space'){e.preventDefault();play()}});
+  clockTimer=setInterval(()=>{if(playing)$('clock').textContent=ftime(elapsedMs+Date.now()-startedAt)},300);
+  if(!speechOK){voiceEnabled=false;$('voiceToggle').disabled=true;setStatus('This browser does not offer speech synthesis. Timed captions and scene playback are available.')}
+  render();
+})();
+
+</script></body></html>
